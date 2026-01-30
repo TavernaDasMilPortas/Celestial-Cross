@@ -1,0 +1,55 @@
+using UnityEngine;
+using System.Collections.Generic;
+
+public class CombatInitializer : MonoBehaviour
+{
+    [Header("Combat Setup")]
+    [Tooltip("Inicia o combate automaticamente no Start")]
+    public bool autoStart = true;
+
+    [Tooltip("Units que participarão do combate (opcional)")]
+    public List<Unit> predefinedUnits = new();
+
+    void Start()
+    {
+        if (autoStart)
+            StartCombat();
+    }
+
+    // =============================
+    // PUBLIC API
+    // =============================
+
+    public void StartCombat()
+    {
+        List<Unit> units = CollectUnits();
+
+        if (units.Count == 0)
+        {
+            Debug.LogWarning("[CombatInitializer] Nenhuma Unit encontrada para iniciar combate.");
+            return;
+        }
+
+        Debug.Log($"[CombatInitializer] Iniciando combate com {units.Count} units.");
+
+        TurnManager.Instance.StartCombat(units);
+    }
+
+    // =============================
+    // INTERNAL
+    // =============================
+
+    List<Unit> CollectUnits()
+    {
+        // Se houver units pré-definidas, use elas
+        if (predefinedUnits != null && predefinedUnits.Count > 0)
+        {
+            // remove nulls por segurança
+            predefinedUnits.RemoveAll(u => u == null);
+            return new List<Unit>(predefinedUnits);
+        }
+
+        // Caso contrário, encontra todas as Units na cena
+        return new List<Unit>(FindObjectsOfType<Unit>());
+    }
+}

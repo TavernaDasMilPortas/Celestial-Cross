@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb249868a85523b4686441d22073799e, type: 3}
+  m_Name: teste 2
+  m_EditorClassIdentifier: 
+  displayName: Inimigo
+  maxHealth: 10
+  speed: 10
+  actions:
+  - rid: 694666629746786397
+  - rid: 694666629746786398
+  references:
+    version: 2
+    RefIds:
+    - rid: 694666629746786397
+      type: {class: MoveActionData, ns: , asm: Assembly-CSharp}
+      data:
+        actionName: 
+        range: 2
+    - rid: 694666629746786398
+      type: {class: AttackActionData, ns: , asm: Assembly-CSharp}
+      data:
+        actionName: 
+        range: 1
+        damage: 2
