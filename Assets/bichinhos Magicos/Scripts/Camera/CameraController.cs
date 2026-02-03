@@ -10,9 +10,28 @@ public class CameraController : MonoBehaviour
         Free
     }
 
+    // =========================
+    // REFS
+    // =========================
+
     [Header("Refs")]
     public Camera cam;
     public CameraBounds bounds;
+
+    // =========================
+    // VIEW CONFIG
+    // =========================
+
+    [Header("View Offsets")]
+    public float heightOffset = 12f;   // altura real da câmera
+    public float depthOffset = 12f;    // recuo visual (forward)
+
+    [Header("Rotation")]
+    public Vector3 cameraRotation = new(45f, 45f, 0f);
+
+    // =========================
+    // MOVEMENT
+    // =========================
 
     [Header("Movement")]
     public float dragSpeed = 0.01f;
@@ -23,17 +42,24 @@ public class CameraController : MonoBehaviour
     public float minFollowFactor = 0.6f;
     public float maxFollowFactor = 2.2f;
 
+    // =========================
+    // ZOOM
+    // =========================
+
     [Header("Zoom")]
     public float zoomSpeed = 0.1f;
     public float minZoom = 5f;
     public float maxZoom = 12f;
 
+    // =========================
+    // STATE
+    // =========================
+
     [Header("State")]
     public CameraMode cameraMode = CameraMode.FollowUnit;
 
-    Vector3 targetProjectedPoint; // ponto no plano do mapa
+    Vector3 targetProjectedPoint;
     float targetZoom;
-    float cameraHeight;
 
     Unit followTarget;
 
@@ -53,10 +79,11 @@ public class CameraController : MonoBehaviour
         if (cam == null)
             cam = Camera.main;
 
-        cameraHeight = transform.position.y;
+        cam.orthographic = true;
         targetZoom = cam.orthographicSize;
 
-        // inicializa ponto projetado
+        transform.rotation = Quaternion.Euler(cameraRotation);
+
         targetProjectedPoint = ProjectCameraToPlane(transform.position);
 
         cam.nearClipPlane = Mathf.Max(cam.nearClipPlane, 0.3f);
@@ -167,7 +194,8 @@ public class CameraController : MonoBehaviour
 
         Vector3 desiredCameraPos =
             targetProjectedPoint
-            + cam.transform.rotation * Vector3.back * cameraHeight;
+            + Vector3.up * heightOffset
+            - cam.transform.forward * depthOffset;
 
         transform.position = Vector3.Lerp(
             transform.position,
@@ -210,20 +238,27 @@ public class CameraController : MonoBehaviour
         cameraMode = enable ? CameraMode.Free : CameraMode.FollowUnit;
     }
 
-  void OnDrawGizmos()
+    // =========================
+    // DEBUG
+    // =========================
+
+void OnDrawGizmos()
+{
+    if (!Application.isPlaying)
+        return;
+
+    // ponto desejado (antes do clamp)
+    Gizmos.color = Color.blue;
+    Gizmos.DrawSphere(targetProjectedPoint, 0.25f);
+
+    if (bounds != null)
     {
-        // só desenha se estivermos no editor e com dados válidos
-        if (!Application.isPlaying)
-            return;
+        Vector3 clamped =
+            bounds.ClampProjectedPoint(targetProjectedPoint);
 
-        // linha câmera → ponto projetado real
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawLine(transform.position, targetProjectedPoint);
-
-        // ponto projetado no mapa
         Gizmos.color = Color.red;
-        Gizmos.DrawSphere(targetProjectedPoint, 1f);
+        Gizmos.DrawSphere(clamped, 0.3f);
     }
-
+}
 
 }
