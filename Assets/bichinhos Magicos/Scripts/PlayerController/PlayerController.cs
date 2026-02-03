@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     public void StartTurn(Unit unit)
     {
         activeUnit = unit;
+     
         Debug.Log($"Turno de {unit.name}");
     }
 

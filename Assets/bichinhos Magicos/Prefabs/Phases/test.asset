@@ -22,8 +22,8 @@ MonoBehaviour:
   - columns: 0000000000000000000000000000000000000000
   unitSpawns:
   - unitPrefab: {fileID: 8701181467720189833, guid: 78ee9d9a0c9be6547aa15928e2cfdf7b, type: 3}
-    gridPosition: {x: 2, y: 2}
+    gridPosition: {x: 0, y: 2}
   - unitPrefab: {fileID: 4461724650246820294, guid: 9bd781df8d37e8d4d9feaabd4af585e3, type: 3}
-    gridPosition: {x: 3, y: 3}
+    gridPosition: {x: 4, y: 2}
   - unitPrefab: {fileID: 8701181467720189833, guid: 78ee9d9a0c9be6547aa15928e2cfdf7b, type: 3}
-    gridPosition: {x: 3, y: 4}
+    gridPosition: {x: 0, y: 3}
