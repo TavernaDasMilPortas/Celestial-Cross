@@ -38,15 +38,56 @@ Os sistemas de **stats aleatorizados** incentivam dedicação e otimização con
 
 ## 💰 Estratégia de Monetização
 
-O jogo **não contará com anúncios frequentes**.
+### 🔹 Recursos Limitados
 
-A monetização será baseada principalmente em:
+O jogo contará com uma **moeda premium**, que poderá ser adquirida:
 
-- Compras in-game  
-- Sistema de gacha  
-- Incentivo à permanência na "meta" do jogo  
+- Em pequenas quantidades ao longo da gameplay base  
+- Em maiores quantidades através de eventos especiais  
+- Assistindo anúncios (opcional)  
+- Por meio de microtransações  
 
-Modelo semelhante aos principais jogos mobile do gênero.
+A moeda premium será utilizada principalmente no **sistema de gacha**.
+
+**Possíveis nomes para a moeda premium:**
+
+- Stardust  
+- Cosmos  
+- Starlight  
+
+---
+
+### 🔹 Microtransações
+
+Pacotes de moeda premium poderão ser comprados na loja, oferecendo:
+
+- Grandes quantidades da moeda utilizada no gacha  
+- Melhor custo-benefício em pacotes maiores  
+
+Além disso, poderão existir:
+
+- Skins exclusivas  
+- Criaturas exclusivas  
+- Itens cosméticos limitados  
+
+Alguns conteúdos poderão ser vinculados exclusivamente à compra de pacotes específicos.
+
+---
+
+### 🔹 Passes de Temporada e Eventos
+
+O jogo poderá contar com:
+
+- Passes de Temporada  
+- Passes de Evento  
+
+Esses passes oferecerão:
+
+- Melhor custo-benefício comparado à compra direta de moeda  
+- Recompensas progressivas  
+- Conteúdo exclusivo  
+
+Esse sistema incentiva o engajamento contínuo, estimulando o jogador a completar os objetivos do passe para maximizar o retorno do investimento.
 
 ---
 
