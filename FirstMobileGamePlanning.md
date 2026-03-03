@@ -1,5 +1,25 @@
-# GDD
+# GDD - Celestial Cross
+---
+## Grupo
+### Cassandra
+**RA:** 00345937
 
+### Rubens
+**RA:** 00350249
+
+### Bruno
+**RA:** 00345752
+
+### Lais
+**RA:** 00351573
+
+### Marina
+**RA:** 00347578
+
+### Giulia
+**RA:** 00334010
+
+---
 ## 🎯 Conceito e Proposta de Valor
 
 Um *Tactical RPG* de turnos para celulares, com foco em narrativa e desenvolvimento de personagens, além de elementos de **gacha** e **coleção de criaturas**.
