@@ -15,15 +15,18 @@ public class UnitDataEditor : Editor
     {
         serializedObject.Update();
 
-        EditorGUILayout.PropertyField(
-            serializedObject.FindProperty("displayName")
-        );
-        EditorGUILayout.PropertyField(
-            serializedObject.FindProperty("maxHealth")
-        );
-        EditorGUILayout.PropertyField(
-            serializedObject.FindProperty("speed")
-        );
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("displayName"));
+
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("Magical Girl Setup", EditorStyles.boldLabel);
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("baseStats"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("characterAbility"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("defaultPet"));
+
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("Legacy Stats", EditorStyles.boldLabel);
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("maxHealth"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("speed"));
 
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Actions", EditorStyles.boldLabel);
@@ -41,7 +44,7 @@ public class UnitDataEditor : Editor
             if (GUILayout.Button("X", GUILayout.Width(24)))
             {
                 actionsProp.DeleteArrayElementAtIndex(i);
-                break; // evita erro de iteração
+                break;
             }
 
             EditorGUILayout.EndHorizontal();

@@ -9,6 +9,7 @@ public abstract class Unit : MonoBehaviour
 {
     [Header("Base Data")]
     [SerializeField] private UnitData unitData;
+    [SerializeField] private PetData equippedPet;
 
     [Header("Runtime")]
     public Vector2Int GridPosition;
@@ -22,11 +23,14 @@ public abstract class Unit : MonoBehaviour
     public string DisplayName =>
         unitData != null ? unitData.displayName : name;
 
-    public int Speed =>
-        unitData != null ? unitData.speed : 0;
+    public CombatStats Stats =>
+        unitData != null
+            ? unitData.GetCombinedStats(equippedPet)
+            : new CombatStats(1, 0, 0, 0, 0, 0);
 
-    public int MaxHealth =>
-        unitData != null ? unitData.maxHealth : 0;
+    public int Speed => Stats.speed;
+
+    public int MaxHealth => Stats.health;
 
     public Health Health { get; private set; }
 
@@ -45,10 +49,40 @@ public abstract class Unit : MonoBehaviour
     {
         Health = GetComponent<Health>();
 
-        if (Health != null && unitData != null)
-            Health.SetMaxHealth(unitData.maxHealth);
+        if (Health != null)
+            Health.SetMaxHealth(MaxHealth);
 
         SetupActionsFromData();
+    }
+
+    // =========================
+    // COMBAT
+    // =========================
+
+    public int GetAttacksAgainst(Unit target)
+    {
+        if (target == null)
+            return 1;
+
+        return DamageModel.GetAttackCountBySpeed(Stats, target.Stats);
+    }
+
+    public AttackResult CalculateAttack(Unit target, DamageBonus damageBonus, DamageReduction damageReduction)
+    {
+        if (target == null)
+            return new AttackResult(1, false);
+
+        return DamageModel.ResolveHit(Stats, target.Stats, damageBonus, damageReduction);
+    }
+
+    public PetData EquippedPet => equippedPet;
+
+    public void EquipPet(PetData pet)
+    {
+        equippedPet = pet;
+
+        if (Health != null)
+            Health.SetMaxHealth(MaxHealth);
     }
 
     // =========================
