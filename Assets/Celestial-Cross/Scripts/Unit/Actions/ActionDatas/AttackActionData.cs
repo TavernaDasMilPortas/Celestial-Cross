@@ -1,10 +1,17 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 [System.Serializable]
 public class AttackActionData : UnitActionData
 {
     public int range = 1;
     public int damage = 5;
+
+    [Header("Targeting")]
+    public TargetingRuleData targeting = new TargetingRuleData();
+
+    [Header("Area")]
+    public AreaPatternData areaPattern;
+    [Range(0, 3)] public int areaRotationSteps;
 
     public override System.Type GetRuntimeActionType()
     {
@@ -22,12 +29,12 @@ public class AttackActionData : UnitActionData
 
         attack.Range = range;
         attack.Damage = damage;
+        attack.TargetingRule = targeting;
+        attack.AreaPattern = areaPattern;
+        attack.AreaRotationSteps = areaRotationSteps;
 
-        // 🔴 LINHA CRÍTICA QUE ESTAVA FALTANDO
         attack.MarkConfigured();
 
-        Debug.Log(
-            $"[AttackActionData] Configure OK | Range={range} Damage={damage}"
-        );
+        Debug.Log($"[AttackActionData] Configure OK | Range={range} Damage={damage} Mode={targeting.mode}");
     }
 }

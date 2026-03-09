@@ -1,13 +1,15 @@
 using System;
 
-[System.Serializable]
-public abstract class UnitActionData
+[Serializable]
+public abstract class UnitActionData : IExecutableDefinitionData
 {
     public string actionName;
 
-    /// Cada aÁ„o sabe qual runtime action cria
-    public abstract System.Type GetRuntimeActionType();
+    public string DefinitionName => actionName;
 
-    /// Hook para passar dados para o runtime action
+    // Cada a√ß√£o sabe qual runtime action cria
+    public abstract Type GetRuntimeActionType();
+
+    // Hook para passar dados para o runtime action
     public abstract void Configure(IUnitAction action);
 }

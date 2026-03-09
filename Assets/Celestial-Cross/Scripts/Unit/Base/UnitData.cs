@@ -36,4 +36,21 @@ public class UnitData : ScriptableObject
         PetData selectedPet = equippedPet != null ? equippedPet : defaultPet;
         return selectedPet != null ? selectedPet.ability : null;
     }
+
+    public IEnumerable<IExecutableDefinitionData> GetExecutableDefinitions(PetData equippedPet = null)
+    {
+        foreach (var action in actions)
+        {
+            if (action != null)
+                yield return action;
+        }
+
+        AbilityData charAbility = GetCharacterAbility();
+        if (charAbility != null && charAbility.IsActive && charAbility.GetExecutableDefinition() != null)
+            yield return charAbility.GetExecutableDefinition();
+
+        AbilityData petAbility = GetPetAbility(equippedPet);
+        if (petAbility != null && petAbility.IsActive && petAbility.GetExecutableDefinition() != null)
+            yield return petAbility.GetExecutableDefinition();
+    }
 }
