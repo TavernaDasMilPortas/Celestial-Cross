@@ -75,8 +75,17 @@ Exemplos de habilidade que cabem nessa estrutura:
 - "Ao iniciar combate, +10 de ataque"
 - "Personagens com este pet recebem 5% de redução de dano"
 
-## Próximo passo recomendado
+## Efeitos ativos
 
+Foi adicionado `ActiveCombatEffect` para permitir buffs/debuffs no personagem durante combate.
+
+Cada efeito pode contribuir com:
+- `DamageBonus` persistente
+- `DamageReduction` persistente
+- bônus/redução ativados em gatilho de início de combate
+- redução extra ao receber ataque
+
+No fluxo de ataque, os efeitos são aplicados automaticamente em `Unit.CalculateAttack`.
 Adicionar um sistema de efeitos ativos (buff/debuff) por turno para aplicar:
 - `DamageBonus`
 - `DamageReduction`
