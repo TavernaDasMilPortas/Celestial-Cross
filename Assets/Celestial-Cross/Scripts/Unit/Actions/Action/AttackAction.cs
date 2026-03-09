@@ -1,10 +1,14 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
-public class AttackAction : UnitActionBase
+public class AttackAction : UnitActionBase, IRangeConfigurable
 {
     public int Range { get; set; }
     public int Damage { get; set; }
+    public TargetingRuleData TargetingRule { get; set; } = new TargetingRuleData();
+    public AreaPatternData AreaPattern { get; set; }
+    public int AreaRotationSteps { get; set; }
 
     TargetSelector targetSelector;
 
@@ -15,9 +19,7 @@ public class AttackAction : UnitActionBase
 
     protected override void OnEnter()
     {
-        Debug.Log(
-            $"[AttackAction] {unit.DisplayName} | Range {Range} | Flat Bonus {Damage}"
-        );
+        Debug.Log($"[AttackAction] {unit.DisplayName} | Range {Range} | Flat Bonus {Damage} | Mode {TargetingRule.mode}");
 
         StartTargetSelection();
         unit.LogCanConfirm(false);
@@ -48,9 +50,7 @@ public class AttackAction : UnitActionBase
 
                 totalDamage += result.damage;
 
-                Debug.Log(
-                    $"[AttackAction] Hit {i + 1}/{hits} | {unit.DisplayName} -> {target.DisplayName} | Damage: {result.damage} | Critical: {result.isCritical}"
-                );
+                Debug.Log($"[AttackAction] Hit {i + 1}/{hits} | {unit.DisplayName} -> {target.DisplayName} | Damage: {result.damage} | Critical: {result.isCritical}");
             }
 
             target.Health.TakeDamage(totalDamage);
@@ -64,10 +64,6 @@ public class AttackAction : UnitActionBase
         ClearSelection();
     }
 
-    // =========================
-    // TARGET SELECTION
-    // =========================
-
     void StartTargetSelection()
     {
         targetSelector = gameObject.AddComponent<TargetSelector>();
@@ -75,8 +71,7 @@ public class AttackAction : UnitActionBase
         targetSelector.Begin(
             sourceUnit: unit,
             selectionRange: Range,
-            multipleTargets: false,
-            canTargetSelf: false
+            rule: TargetingRule
         );
 
         targetSelector.OnTargetsConfirmed += OnTargetsConfirmed;
@@ -87,14 +82,37 @@ public class AttackAction : UnitActionBase
 
     void OnTargetsConfirmed(List<Unit> targets)
     {
-        context.targets = targets;
+        context.targets = ExpandAreaTargetsIfNeeded(targets);
         state = ActionState.ReadyToConfirm;
 
-        Debug.Log(
-            $"[AttackAction] Alvo confirmado: {targets[0].DisplayName}"
-        );
+        Debug.Log($"[AttackAction] Alvos confirmados: {context.targets.Count}");
 
         unit.LogCanConfirm(true);
+    }
+
+    List<Unit> ExpandAreaTargetsIfNeeded(List<Unit> targets)
+    {
+        if (targets == null || targets.Count == 0)
+            return new List<Unit>();
+
+        if ((TargetingRule.mode != TargetingMode.AreaFromTarget && TargetingRule.mode != TargetingMode.AreaFromPoint) || AreaPattern == null)
+            return targets;
+
+        HashSet<Vector2Int> affectedCells = new();
+        foreach (var target in targets)
+        {
+            foreach (var cell in AreaResolver.ResolveCells(target.GridPosition, AreaPattern, AreaRotationSteps))
+                affectedCells.Add(cell);
+        }
+
+        List<Unit> affectedUnits = FindObjectsOfType<Unit>()
+            .Where(u => affectedCells.Contains(u.GridPosition))
+            .Where(u => TargetingRule.canTargetSelf || u != unit)
+            .Distinct()
+            .ToList();
+
+        Debug.Log($"[AttackAction] Área aplicada | Células: {affectedCells.Count} | Units afetadas: {affectedUnits.Count}");
+        return affectedUnits;
     }
 
     void OnSelectionCanceled()

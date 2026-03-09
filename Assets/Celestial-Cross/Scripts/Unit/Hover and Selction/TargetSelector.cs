@@ -9,18 +9,13 @@ public class TargetSelector : MonoBehaviour
 
     Unit source;
     int range;
-    bool allowMultiple;
-    bool includeSelf;
+    TargetingRuleData targetingRule;
 
     HashSet<Unit> validTargets = new();
     List<Unit> selectedTargets = new();
 
     Camera cam;
     bool isActive;
-
-    // =========================
-    // UNITY
-    // =========================
 
     void Awake()
     {
@@ -36,34 +31,34 @@ public class TargetSelector : MonoBehaviour
         HandleConfirmCancel();
     }
 
-    // =========================
-    // SETUP
-    // =========================
-
-    public void Begin(
-        Unit sourceUnit,
-        int selectionRange,
-        bool multipleTargets = false,
-        bool canTargetSelf = false
-    )
+    public void Begin(Unit sourceUnit, int selectionRange, TargetingRuleData rule = null)
     {
         source = sourceUnit;
         range = selectionRange;
-        allowMultiple = multipleTargets;
-        includeSelf = canTargetSelf;
+        targetingRule = rule ?? new TargetingRuleData();
+
+        ClampRule();
 
         isActive = true;
 
         FindValidTargets();
         HighlightValidTargets();
 
-        Debug.Log($"[TargetSelector] Iniciado | Range: {range} | Múltiplos: {allowMultiple}");
-        Debug.Log($"[TargetSelector] Alvos válidos: {validTargets.Count}");
+        Debug.Log($"[TargetSelector] Iniciado | Range: {range} | Mode: {targetingRule.mode} | Max: {targetingRule.maxTargets}");
+        Debug.Log($"[TargetSelector] Alvos vÃ¡lidos: {validTargets.Count}");
     }
 
-    // =========================
-    // CORE
-    // =========================
+    void ClampRule()
+    {
+        targetingRule.minTargets = Mathf.Max(1, targetingRule.minTargets);
+        targetingRule.maxTargets = Mathf.Max(targetingRule.minTargets, targetingRule.maxTargets);
+
+        if (!targetingRule.AllowMultiple)
+        {
+            targetingRule.minTargets = 1;
+            targetingRule.maxTargets = 1;
+        }
+    }
 
     void FindValidTargets()
     {
@@ -71,7 +66,7 @@ public class TargetSelector : MonoBehaviour
 
         foreach (var unit in FindObjectsOfType<Unit>())
         {
-            if (!includeSelf && unit == source)
+            if (!CanTargetUnit(unit))
                 continue;
 
             int dist = GridDistance(source.GridPosition, unit.GridPosition);
@@ -80,13 +75,28 @@ public class TargetSelector : MonoBehaviour
         }
     }
 
+    bool CanTargetUnit(Unit unit)
+    {
+        if (unit == null)
+            return false;
+
+        if (!targetingRule.canTargetSelf && unit == source)
+            return false;
+
+        return targetingRule.targetFaction switch
+        {
+            TargetFaction.Allies => unit.GetType() == source.GetType(),
+            TargetFaction.Enemies => unit.GetType() != source.GetType(),
+            _ => true,
+        };
+    }
+
     void HighlightValidTargets()
     {
         foreach (var unit in validTargets)
         {
             var outline = unit.GetComponent<UnitOutlineController>();
-            if (outline != null)
-                outline.SetHover(true);
+            outline?.SetHover(true);
         }
     }
 
@@ -95,17 +105,13 @@ public class TargetSelector : MonoBehaviour
         foreach (var unit in validTargets)
         {
             var outline = unit.GetComponent<UnitOutlineController>();
-            if (outline != null)
-            {
-                outline.SetHover(false);
-                outline.SetSelected(false);
-            }
+            if (outline == null)
+                continue;
+
+            outline.SetHover(false);
+            outline.SetSelected(false);
         }
     }
-
-    // =========================
-    // INPUT
-    // =========================
 
     void HandleMouseInput()
     {
@@ -122,7 +128,7 @@ public class TargetSelector : MonoBehaviour
 
         if (!validTargets.Contains(unit))
         {
-            Debug.Log("[TargetSelector] Clique em alvo inválido");
+            Debug.Log("[TargetSelector] Clique em alvo invÃ¡lido");
             return;
         }
 
@@ -141,8 +147,14 @@ public class TargetSelector : MonoBehaviour
             return;
         }
 
-        if (!allowMultiple)
+        if (!targetingRule.AllowMultiple)
             ClearSelection();
+
+        if (selectedTargets.Count >= targetingRule.maxTargets)
+        {
+            Debug.Log($"[TargetSelector] Limite de alvos atingido ({targetingRule.maxTargets})");
+            return;
+        }
 
         selectedTargets.Add(unit);
         outline?.SetSelected(true);
@@ -165,9 +177,9 @@ public class TargetSelector : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            if (selectedTargets.Count == 0)
+            if (selectedTargets.Count < targetingRule.minTargets)
             {
-                Debug.Log("[TargetSelector] Nenhum alvo selecionado");
+                Debug.Log($"[TargetSelector] Selecione pelo menos {targetingRule.minTargets} alvo(s)");
                 return;
             }
 
@@ -175,14 +187,8 @@ public class TargetSelector : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
-        {
             Cancel();
-        }
     }
-
-    // =========================
-    // FINALIZAÇÃO
-    // =========================
 
     void Confirm()
     {
@@ -208,10 +214,6 @@ public class TargetSelector : MonoBehaviour
         OnCanceled?.Invoke();
         Destroy(this);
     }
-
-    // =========================
-    // UTIL
-    // =========================
 
     int GridDistance(Vector2Int a, Vector2Int b)
     {

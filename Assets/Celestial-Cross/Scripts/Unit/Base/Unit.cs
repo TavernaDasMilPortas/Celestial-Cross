@@ -94,6 +94,8 @@ public abstract class Unit : MonoBehaviour
 
         if (Health != null)
             Health.SetMaxHealth(MaxHealth);
+
+        SetupActionsFromData();
     }
 
     public void StartCombat()
@@ -161,15 +163,15 @@ public abstract class Unit : MonoBehaviour
 
         Debug.Log($"[Unit] Criando ações para {DisplayName}");
 
-        foreach (var actionData in unitData.actions)
+        foreach (var definition in unitData.GetExecutableDefinitions(equippedPet))
         {
-            if (actionData == null)
+            if (definition == null)
                 continue;
 
-            System.Type actionType = actionData.GetRuntimeActionType();
+            System.Type actionType = definition.GetRuntimeActionType();
             if (actionType == null)
             {
-                Debug.LogError("[Unit] ActionData sem RuntimeActionType.");
+                Debug.LogError("[Unit] Definição executável sem RuntimeActionType.");
                 continue;
             }
 
@@ -180,10 +182,10 @@ public abstract class Unit : MonoBehaviour
                 continue;
             }
 
-            actionData.Configure(action);
+            definition.Configure(action);
             actions.Add(action);
 
-            Debug.Log($"[Unit] Action adicionada: {actionType.Name}");
+            Debug.Log($"[Unit] Ação/Habilidade adicionada: {actionType.Name}");
         }
     }
 
