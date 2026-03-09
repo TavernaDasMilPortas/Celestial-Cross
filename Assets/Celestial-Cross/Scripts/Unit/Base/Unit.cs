@@ -10,6 +10,7 @@ public abstract class Unit : MonoBehaviour
     [Header("Base Data")]
     [SerializeField] private UnitData unitData;
     [SerializeField] private PetData equippedPet;
+    [SerializeField] private List<ActiveCombatEffect> activeEffects = new();
 
     [Header("Runtime")]
     public Vector2Int GridPosition;
@@ -40,6 +41,7 @@ public abstract class Unit : MonoBehaviour
 
     protected List<IUnitAction> actions = new();
     protected IUnitAction currentAction;
+    bool combatStarted;
 
     // =========================
     // UNITY
@@ -72,7 +74,16 @@ public abstract class Unit : MonoBehaviour
         if (target == null)
             return new AttackResult(1, false);
 
-        return DamageModel.ResolveHit(Stats, target.Stats, damageBonus, damageReduction);
+        StartCombat();
+        target.StartCombat();
+
+        DamageBonus finalBonus = DamageBonus.Combine(damageBonus, GetEffectDamageBonus());
+        DamageReduction finalReduction = DamageReduction.Combine(
+            damageReduction,
+            target.GetEffectDamageReduction(isReceivingAttack: true)
+        );
+
+        return DamageModel.ResolveHit(Stats, target.Stats, finalBonus, finalReduction);
     }
 
     public PetData EquippedPet => equippedPet;
@@ -83,6 +94,52 @@ public abstract class Unit : MonoBehaviour
 
         if (Health != null)
             Health.SetMaxHealth(MaxHealth);
+    }
+
+    public void StartCombat()
+    {
+        if (combatStarted)
+            return;
+
+        combatStarted = true;
+
+        foreach (var effect in activeEffects)
+        {
+            if (effect == null)
+                continue;
+
+            effect.TriggerCombatStart();
+        }
+    }
+
+    DamageBonus GetEffectDamageBonus()
+    {
+        DamageBonus total = new DamageBonus { flat = 0, percent = 0f };
+
+        foreach (var effect in activeEffects)
+        {
+            if (effect == null)
+                continue;
+
+            total = DamageBonus.Combine(total, effect.GetOutgoingDamageBonus());
+        }
+
+        return total;
+    }
+
+    DamageReduction GetEffectDamageReduction(bool isReceivingAttack)
+    {
+        DamageReduction total = new DamageReduction { flat = 0, percent = 0f };
+
+        foreach (var effect in activeEffects)
+        {
+            if (effect == null)
+                continue;
+
+            total = DamageReduction.Combine(total, effect.GetIncomingReduction(isReceivingAttack));
+        }
+
+        return total;
     }
 
     // =========================
