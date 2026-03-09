@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class MoveAction : UnitActionBase
+public class MoveAction : UnitActionBase, IRangeConfigurable
 {
     public int Range { get; set; }
 
