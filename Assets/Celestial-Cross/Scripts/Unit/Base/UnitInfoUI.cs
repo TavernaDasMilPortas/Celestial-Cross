@@ -47,7 +47,7 @@ public class UnitInfoUI : MonoBehaviour
             return;
         }
 
-        nameText.text = unit.name;
+        nameText.text = unit.DisplayName;
 
         targetHealth.OnHealthChanged += UpdateHealth;
         UpdateHealth(targetHealth.CurrentHealth, targetHealth.MaxHealth);

@@ -16,7 +16,7 @@ public class AttackAction : UnitActionBase
     protected override void OnEnter()
     {
         Debug.Log(
-            $"[AttackAction] {unit.DisplayName} | Range {Range} | Damage {Damage}"
+            $"[AttackAction] {unit.DisplayName} | Range {Range} | Flat Bonus {Damage}"
         );
 
         StartTargetSelection();
@@ -35,11 +35,25 @@ public class AttackAction : UnitActionBase
             if (target.Health == null)
                 continue;
 
-            Debug.Log(
-                $"[AttackAction] {unit.DisplayName} causa {Damage} de dano em {target.DisplayName}"
-            );
+            int hits = unit.GetAttacksAgainst(target);
+            int totalDamage = 0;
 
-            target.Health.TakeDamage(Damage);
+            for (int i = 0; i < hits; i++)
+            {
+                AttackResult result = unit.CalculateAttack(
+                    target,
+                    new DamageBonus { flat = Damage, percent = 0f },
+                    new DamageReduction { flat = 0, percent = 0f }
+                );
+
+                totalDamage += result.damage;
+
+                Debug.Log(
+                    $"[AttackAction] Hit {i + 1}/{hits} | {unit.DisplayName} -> {target.DisplayName} | Damage: {result.damage} | Critical: {result.isCritical}"
+                );
+            }
+
+            target.Health.TakeDamage(totalDamage);
         }
 
         ClearSelection();
