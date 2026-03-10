@@ -228,6 +228,34 @@ public class TargetSelector : MonoBehaviour
             tile.Highlight();
             return;
         }
+    }
+
+    IEnumerable<Vector2Int> GetPreviewOrigins()
+    {
+        if (targetingRule.mode == TargetingMode.AreaFromPoint)
+        {
+            foreach (var point in selectedPoints)
+                yield return point;
+
+            yield break;
+        }
+
+        foreach (var target in selectedTargets)
+            yield return target.GridPosition;
+    }
+
+    void ClearAreaPreview()
+    {
+        foreach (var tile in areaPreviewTiles)
+            tile.Clear();
+
+        areaPreviewTiles.Clear();
+    }
+
+    void ClearSelection()
+    {
+        foreach (var unit in selectedTargets)
+            unit.GetComponent<UnitOutlineController>()?.SetSelected(false);
 
         if (!targetingRule.AllowMultiple)
             ClearTileSelection();
