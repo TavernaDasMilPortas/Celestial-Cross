@@ -29,7 +29,7 @@ public class AttackActionData : UnitActionData
 
         attack.Range = range;
         attack.Damage = damage;
-        attack.TargetingRule = targeting;
+        attack.TargetingRule = targeting != null ? targeting.Clone() : new TargetingRuleData();
         attack.AreaPattern = areaPattern;
         attack.AreaRotationSteps = areaRotationSteps;
 

@@ -7,12 +7,21 @@ public class TargetSelector : MonoBehaviour
     public event Action<List<Unit>> OnTargetsConfirmed;
     public event Action OnCanceled;
 
+    public IReadOnlyList<Vector2Int> SelectedPoints => selectedPoints;
+
     Unit source;
     int range;
     TargetingRuleData targetingRule;
+    AreaPatternData areaPattern;
+    int areaRotationSteps;
 
     HashSet<Unit> validTargets = new();
     List<Unit> selectedTargets = new();
+
+    HashSet<GridTile> validTiles = new();
+    List<GridTile> selectedTiles = new();
+    List<Vector2Int> selectedPoints = new();
+    HashSet<GridTile> areaPreviewTiles = new();
 
     Camera cam;
     bool isActive;
@@ -31,21 +40,37 @@ public class TargetSelector : MonoBehaviour
         HandleConfirmCancel();
     }
 
-    public void Begin(Unit sourceUnit, int selectionRange, TargetingRuleData rule = null)
+    public void Begin(
+        Unit sourceUnit,
+        int selectionRange,
+        TargetingRuleData rule = null,
+        AreaPatternData selectedAreaPattern = null,
+        int selectedAreaRotationSteps = 0
+    )
     {
         source = sourceUnit;
         range = selectionRange;
-        targetingRule = rule ?? new TargetingRuleData();
+        targetingRule = rule != null ? rule.Clone() : new TargetingRuleData();
+        areaPattern = selectedAreaPattern;
+        areaRotationSteps = selectedAreaRotationSteps;
+
+        selectedTargets.Clear();
+        validTargets.Clear();
+        selectedTiles.Clear();
+        validTiles.Clear();
+        selectedPoints.Clear();
+        areaPreviewTiles.Clear();
 
         ClampRule();
 
         isActive = true;
 
-        FindValidTargets();
-        HighlightValidTargets();
+        if (targetingRule.mode == TargetingMode.AreaFromPoint)
+            PrepareTileSelection();
+        else
+            PrepareUnitSelection();
 
         Debug.Log($"[TargetSelector] Iniciado | Range: {range} | Mode: {targetingRule.mode} | Max: {targetingRule.maxTargets}");
-        Debug.Log($"[TargetSelector] Alvos válidos: {validTargets.Count}");
     }
 
     void ClampRule()
@@ -60,10 +85,22 @@ public class TargetSelector : MonoBehaviour
         }
     }
 
+    void PrepareUnitSelection()
+    {
+        FindValidTargets();
+        HighlightValidTargets();
+        Debug.Log($"[TargetSelector] Alvos válidos: {validTargets.Count}");
+    }
+
+    void PrepareTileSelection()
+    {
+        FindValidTiles();
+        HighlightValidTiles();
+        Debug.Log($"[TargetSelector] Tiles válidos: {validTiles.Count}");
+    }
+
     void FindValidTargets()
     {
-        validTargets.Clear();
-
         foreach (var unit in FindObjectsOfType<Unit>())
         {
             if (!CanTargetUnit(unit))
@@ -72,6 +109,18 @@ public class TargetSelector : MonoBehaviour
             int dist = GridDistance(source.GridPosition, unit.GridPosition);
             if (dist <= range)
                 validTargets.Add(unit);
+        }
+    }
+
+    void FindValidTiles()
+    {
+        if (GridMap.Instance == null)
+            return;
+
+        foreach (var tile in FindObjectsOfType<GridTile>())
+        {
+            if (GridDistance(source.GridPosition, tile.GridPosition) <= range)
+                validTiles.Add(tile);
         }
     }
 
@@ -94,14 +143,19 @@ public class TargetSelector : MonoBehaviour
     void HighlightValidTargets()
     {
         foreach (var unit in validTargets)
-        {
-            var outline = unit.GetComponent<UnitOutlineController>();
-            outline?.SetHover(true);
-        }
+            unit.GetComponent<UnitOutlineController>()?.SetHover(true);
+    }
+
+    void HighlightValidTiles()
+    {
+        foreach (var tile in validTiles)
+            tile.Highlight();
     }
 
     void ClearAllHighlights()
     {
+        ClearAreaPreview();
+
         foreach (var unit in validTargets)
         {
             var outline = unit.GetComponent<UnitOutlineController>();
@@ -111,6 +165,9 @@ public class TargetSelector : MonoBehaviour
             outline.SetHover(false);
             outline.SetSelected(false);
         }
+
+        foreach (var tile in validTiles)
+            tile.Clear();
     }
 
     void HandleMouseInput()
@@ -121,6 +178,16 @@ public class TargetSelector : MonoBehaviour
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
         if (!Physics.Raycast(ray, out RaycastHit hit))
             return;
+
+        if (targetingRule.mode == TargetingMode.AreaFromPoint)
+        {
+            GridTile tile = hit.collider.GetComponent<GridTile>();
+            if (tile == null || !validTiles.Contains(tile))
+                return;
+
+            ToggleTileSelection(tile);
+            return;
+        }
 
         Unit unit = hit.collider.GetComponent<Unit>();
         if (unit == null)
@@ -143,7 +210,7 @@ public class TargetSelector : MonoBehaviour
         {
             selectedTargets.Remove(unit);
             outline?.SetSelected(false);
-            Debug.Log($"[TargetSelector] Removido: {unit.DisplayName}");
+            RefreshAreaPreview();
             return;
         }
 
@@ -151,33 +218,110 @@ public class TargetSelector : MonoBehaviour
             ClearSelection();
 
         if (selectedTargets.Count >= targetingRule.maxTargets)
-        {
-            Debug.Log($"[TargetSelector] Limite de alvos atingido ({targetingRule.maxTargets})");
             return;
-        }
 
         selectedTargets.Add(unit);
         outline?.SetSelected(true);
+        RefreshAreaPreview();
+    }
 
-        Debug.Log($"[TargetSelector] Selecionado: {unit.DisplayName}");
+    void ToggleTileSelection(GridTile tile)
+    {
+        if (selectedTiles.Contains(tile))
+        {
+            selectedTiles.Remove(tile);
+            selectedPoints.Remove(tile.GridPosition);
+            tile.Highlight();
+            RefreshAreaPreview();
+            return;
+        }
+
+        if (!targetingRule.AllowMultiple)
+            ClearTileSelectionsState();
+
+        if (selectedTiles.Count >= targetingRule.maxTargets)
+            return;
+
+        selectedTiles.Add(tile);
+        selectedPoints.Add(tile.GridPosition);
+        tile.Select();
+        RefreshAreaPreview();
+    }
+
+    void RefreshAreaPreview()
+    {
+        ClearAreaPreview();
+
+        if (areaPattern == null)
+            return;
+
+        if (targetingRule.mode != TargetingMode.AreaFromPoint && targetingRule.mode != TargetingMode.AreaFromTarget)
+            return;
+
+        foreach (var origin in GetPreviewOrigins())
+        {
+            foreach (var cell in AreaResolver.ResolveCells(origin, areaPattern, areaRotationSteps))
+            {
+                var tile = GridMap.Instance != null ? GridMap.Instance.GetTile(cell) : null;
+                if (tile == null || selectedTiles.Contains(tile))
+                    continue;
+
+                tile.PreviewArea();
+                areaPreviewTiles.Add(tile);
+            }
+        }
+    }
+
+    IEnumerable<Vector2Int> GetPreviewOrigins()
+    {
+        if (targetingRule.mode == TargetingMode.AreaFromPoint)
+        {
+            foreach (var point in selectedPoints)
+                yield return point;
+
+            yield break;
+        }
+
+        foreach (var target in selectedTargets)
+            yield return target.GridPosition;
+    }
+
+    void ClearAreaPreview()
+    {
+        foreach (var tile in areaPreviewTiles)
+            tile.Clear();
+
+        areaPreviewTiles.Clear();
     }
 
     void ClearSelection()
     {
         foreach (var unit in selectedTargets)
-        {
-            var outline = unit.GetComponent<UnitOutlineController>();
-            outline?.SetSelected(false);
-        }
+            unit.GetComponent<UnitOutlineController>()?.SetSelected(false);
 
         selectedTargets.Clear();
+        RefreshAreaPreview();
+    }
+
+    void ClearTileSelectionsState()
+    {
+        foreach (var tile in selectedTiles)
+            tile.Highlight();
+
+        selectedTiles.Clear();
+        selectedPoints.Clear();
+        RefreshAreaPreview();
     }
 
     void HandleConfirmCancel()
     {
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            if (selectedTargets.Count < targetingRule.minTargets)
+            int count = targetingRule.mode == TargetingMode.AreaFromPoint
+                ? selectedTiles.Count
+                : selectedTargets.Count;
+
+            if (count < targetingRule.minTargets)
             {
                 Debug.Log($"[TargetSelector] Selecione pelo menos {targetingRule.minTargets} alvo(s)");
                 return;
@@ -194,8 +338,6 @@ public class TargetSelector : MonoBehaviour
     {
         isActive = false;
 
-        Debug.Log($"[TargetSelector] Confirmado ({selectedTargets.Count} alvo(s))");
-
         ClearAllHighlights();
         OnTargetsConfirmed?.Invoke(new List<Unit>(selectedTargets));
 
@@ -206,10 +348,10 @@ public class TargetSelector : MonoBehaviour
     {
         isActive = false;
 
-        Debug.Log("[TargetSelector] Cancelado");
-
         ClearAllHighlights();
         selectedTargets.Clear();
+        selectedTiles.Clear();
+        selectedPoints.Clear();
 
         OnCanceled?.Invoke();
         Destroy(this);
