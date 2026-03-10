@@ -1,4 +1,4 @@
-#Estratégia de Monetização:  
+# Estratégia de Monetização:  
 --- 
 
 ## Recursos limitados  
