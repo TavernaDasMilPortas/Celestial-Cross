@@ -21,7 +21,6 @@ public class TargetSelector : MonoBehaviour
     HashSet<GridTile> validTiles = new();
     List<GridTile> selectedTiles = new();
     List<Vector2Int> selectedPoints = new();
-    HashSet<GridTile> areaPreviewTiles = new();
 
     Camera cam;
     bool isActive;
@@ -51,15 +50,12 @@ public class TargetSelector : MonoBehaviour
         source = sourceUnit;
         range = selectionRange;
         targetingRule = rule != null ? rule.Clone() : new TargetingRuleData();
-        areaPattern = selectedAreaPattern;
-        areaRotationSteps = selectedAreaRotationSteps;
 
         selectedTargets.Clear();
         validTargets.Clear();
         selectedTiles.Clear();
         validTiles.Clear();
         selectedPoints.Clear();
-        areaPreviewTiles.Clear();
 
         ClampRule();
 
@@ -210,7 +206,6 @@ public class TargetSelector : MonoBehaviour
         {
             selectedTargets.Remove(unit);
             outline?.SetSelected(false);
-            RefreshAreaPreview();
             return;
         }
 
@@ -222,7 +217,6 @@ public class TargetSelector : MonoBehaviour
 
         selectedTargets.Add(unit);
         outline?.SetSelected(true);
-        RefreshAreaPreview();
     }
 
     void ToggleTileSelection(GridTile tile)
@@ -232,43 +226,7 @@ public class TargetSelector : MonoBehaviour
             selectedTiles.Remove(tile);
             selectedPoints.Remove(tile.GridPosition);
             tile.Highlight();
-            RefreshAreaPreview();
             return;
-        }
-
-        if (!targetingRule.AllowMultiple)
-            ClearTileSelectionsState();
-
-        if (selectedTiles.Count >= targetingRule.maxTargets)
-            return;
-
-        selectedTiles.Add(tile);
-        selectedPoints.Add(tile.GridPosition);
-        tile.Select();
-        RefreshAreaPreview();
-    }
-
-    void RefreshAreaPreview()
-    {
-        ClearAreaPreview();
-
-        if (areaPattern == null)
-            return;
-
-        if (targetingRule.mode != TargetingMode.AreaFromPoint && targetingRule.mode != TargetingMode.AreaFromTarget)
-            return;
-
-        foreach (var origin in GetPreviewOrigins())
-        {
-            foreach (var cell in AreaResolver.ResolveCells(origin, areaPattern, areaRotationSteps))
-            {
-                var tile = GridMap.Instance != null ? GridMap.Instance.GetTile(cell) : null;
-                if (tile == null || selectedTiles.Contains(tile))
-                    continue;
-
-                tile.PreviewArea();
-                areaPreviewTiles.Add(tile);
-            }
         }
     }
 
@@ -299,11 +257,27 @@ public class TargetSelector : MonoBehaviour
         foreach (var unit in selectedTargets)
             unit.GetComponent<UnitOutlineController>()?.SetSelected(false);
 
+        if (!targetingRule.AllowMultiple)
+            ClearTileSelection();
+
+        if (selectedTiles.Count >= targetingRule.maxTargets)
+            return;
+
+        selectedTiles.Add(tile);
+        selectedPoints.Add(tile.GridPosition);
+        tile.Select();
+    }
+
+    void RefreshAreaPreview()
+    {
+        foreach (var unit in selectedTargets)
+            unit.GetComponent<UnitOutlineController>()?.SetSelected(false);
+
         selectedTargets.Clear();
         RefreshAreaPreview();
     }
 
-    void ClearTileSelectionsState()
+    void ClearTileSelection()
     {
         foreach (var tile in selectedTiles)
             tile.Highlight();
@@ -311,6 +285,15 @@ public class TargetSelector : MonoBehaviour
         selectedTiles.Clear();
         selectedPoints.Clear();
         RefreshAreaPreview();
+    }
+
+    void ClearTileSelection()
+    {
+        foreach (var tile in selectedTiles)
+            tile.Highlight();
+
+        selectedTiles.Clear();
+        selectedPoints.Clear();
     }
 
     void HandleConfirmCancel()
