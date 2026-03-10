@@ -20,6 +20,7 @@ public class TargetSelector : MonoBehaviour
 
     HashSet<GridTile> validTiles = new();
     List<GridTile> selectedTiles = new();
+    List<GridTile> areaPreviewTiles = new();
     List<Vector2Int> selectedPoints = new();
 
     Camera cam;
@@ -50,11 +51,14 @@ public class TargetSelector : MonoBehaviour
         source = sourceUnit;
         range = selectionRange;
         targetingRule = rule != null ? rule.Clone() : new TargetingRuleData();
+        areaPattern = selectedAreaPattern;
+        areaRotationSteps = selectedAreaRotationSteps;
 
         selectedTargets.Clear();
         validTargets.Clear();
         selectedTiles.Clear();
         validTiles.Clear();
+        areaPreviewTiles.Clear();
         selectedPoints.Clear();
 
         ClampRule();
@@ -226,8 +230,21 @@ public class TargetSelector : MonoBehaviour
             selectedTiles.Remove(tile);
             selectedPoints.Remove(tile.GridPosition);
             tile.Highlight();
+            RefreshAreaPreview();
             return;
         }
+
+        if (!targetingRule.AllowMultiple)
+            ClearTileSelection();
+
+        if (selectedTiles.Count >= targetingRule.maxTargets)
+            return;
+
+        selectedTiles.Add(tile);
+        selectedPoints.Add(tile.GridPosition);
+        tile.Select();
+
+        RefreshAreaPreview();
     }
 
     IEnumerable<Vector2Int> GetPreviewOrigins()
@@ -257,24 +274,34 @@ public class TargetSelector : MonoBehaviour
         foreach (var unit in selectedTargets)
             unit.GetComponent<UnitOutlineController>()?.SetSelected(false);
 
-        if (!targetingRule.AllowMultiple)
-            ClearTileSelection();
-
-        if (selectedTiles.Count >= targetingRule.maxTargets)
-            return;
-
-        selectedTiles.Add(tile);
-        selectedPoints.Add(tile.GridPosition);
-        tile.Select();
+        selectedTargets.Clear();
     }
 
     void RefreshAreaPreview()
     {
-        foreach (var unit in selectedTargets)
-            unit.GetComponent<UnitOutlineController>()?.SetSelected(false);
+        ClearAreaPreview();
 
-        selectedTargets.Clear();
-        RefreshAreaPreview();
+        if (areaPattern == null)
+            return;
+
+        if (GridMap.Instance == null)
+            return;
+
+        foreach (var origin in GetPreviewOrigins())
+        {
+            foreach (var cell in AreaResolver.ResolveCells(origin, areaPattern, areaRotationSteps))
+            {
+                var previewTile = GridMap.Instance.GetTile(cell);
+                if (previewTile == null || areaPreviewTiles.Contains(previewTile))
+                    continue;
+
+                previewTile.PreviewArea();
+                areaPreviewTiles.Add(previewTile);
+            }
+        }
+
+        foreach (var selectedTile in selectedTiles)
+            selectedTile.Select();
     }
 
     void ClearTileSelection()
