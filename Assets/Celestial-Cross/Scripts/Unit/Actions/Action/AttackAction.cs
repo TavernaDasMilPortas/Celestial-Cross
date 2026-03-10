@@ -71,7 +71,9 @@ public class AttackAction : UnitActionBase, IRangeConfigurable
         targetSelector.Begin(
             sourceUnit: unit,
             selectionRange: Range,
-            rule: TargetingRule
+            rule: TargetingRule,
+            selectedAreaPattern: AreaPattern,
+            selectedAreaRotationSteps: AreaRotationSteps
         );
 
         targetSelector.OnTargetsConfirmed += OnTargetsConfirmed;

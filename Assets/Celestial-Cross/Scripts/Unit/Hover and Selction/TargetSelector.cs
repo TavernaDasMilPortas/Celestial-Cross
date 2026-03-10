@@ -12,6 +12,8 @@ public class TargetSelector : MonoBehaviour
     Unit source;
     int range;
     TargetingRuleData targetingRule;
+    AreaPatternData areaPattern;
+    int areaRotationSteps;
 
     HashSet<Unit> validTargets = new();
     List<Unit> selectedTargets = new();
@@ -37,7 +39,13 @@ public class TargetSelector : MonoBehaviour
         HandleConfirmCancel();
     }
 
-    public void Begin(Unit sourceUnit, int selectionRange, TargetingRuleData rule = null)
+    public void Begin(
+        Unit sourceUnit,
+        int selectionRange,
+        TargetingRuleData rule = null,
+        AreaPatternData selectedAreaPattern = null,
+        int selectedAreaRotationSteps = 0
+    )
     {
         source = sourceUnit;
         range = selectionRange;
@@ -142,6 +150,8 @@ public class TargetSelector : MonoBehaviour
 
     void ClearAllHighlights()
     {
+        ClearAreaPreview();
+
         foreach (var unit in validTargets)
         {
             var outline = unit.GetComponent<UnitOutlineController>();
@@ -230,12 +240,23 @@ public class TargetSelector : MonoBehaviour
         tile.Select();
     }
 
-    void ClearSelection()
+    void RefreshAreaPreview()
     {
         foreach (var unit in selectedTargets)
             unit.GetComponent<UnitOutlineController>()?.SetSelected(false);
 
         selectedTargets.Clear();
+        RefreshAreaPreview();
+    }
+
+    void ClearTileSelection()
+    {
+        foreach (var tile in selectedTiles)
+            tile.Highlight();
+
+        selectedTiles.Clear();
+        selectedPoints.Clear();
+        RefreshAreaPreview();
     }
 
     void ClearTileSelection()
