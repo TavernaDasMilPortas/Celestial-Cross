@@ -82,7 +82,7 @@ public class AttackAction : UnitActionBase, IRangeConfigurable
 
     void OnTargetsConfirmed(List<Unit> targets)
     {
-        context.targets = ExpandAreaTargetsIfNeeded(targets);
+        context.targets = ExpandAreaTargetsIfNeeded(targets, targetSelector != null ? targetSelector.SelectedPoints : null);
         state = ActionState.ReadyToConfirm;
 
         Debug.Log($"[AttackAction] Alvos confirmados: {context.targets.Count}");
@@ -90,19 +90,31 @@ public class AttackAction : UnitActionBase, IRangeConfigurable
         unit.LogCanConfirm(true);
     }
 
-    List<Unit> ExpandAreaTargetsIfNeeded(List<Unit> targets)
+    List<Unit> ExpandAreaTargetsIfNeeded(List<Unit> targets, IReadOnlyList<Vector2Int> selectedPoints)
     {
-        if (targets == null || targets.Count == 0)
+        if ((targets == null || targets.Count == 0) && (selectedPoints == null || selectedPoints.Count == 0))
             return new List<Unit>();
 
         if ((TargetingRule.mode != TargetingMode.AreaFromTarget && TargetingRule.mode != TargetingMode.AreaFromPoint) || AreaPattern == null)
             return targets;
 
         HashSet<Vector2Int> affectedCells = new();
-        foreach (var target in targets)
+
+        if (TargetingRule.mode == TargetingMode.AreaFromPoint && selectedPoints != null && selectedPoints.Count > 0)
         {
-            foreach (var cell in AreaResolver.ResolveCells(target.GridPosition, AreaPattern, AreaRotationSteps))
-                affectedCells.Add(cell);
+            foreach (var point in selectedPoints)
+            {
+                foreach (var cell in AreaResolver.ResolveCells(point, AreaPattern, AreaRotationSteps))
+                    affectedCells.Add(cell);
+            }
+        }
+        else
+        {
+            foreach (var target in targets)
+            {
+                foreach (var cell in AreaResolver.ResolveCells(target.GridPosition, AreaPattern, AreaRotationSteps))
+                    affectedCells.Add(cell);
+            }
         }
 
         List<Unit> affectedUnits = FindObjectsOfType<Unit>()

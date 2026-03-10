@@ -11,4 +11,16 @@ public class TargetingRuleData
     public TargetFaction targetFaction = TargetFaction.Any;
 
     public bool AllowMultiple => mode == TargetingMode.Multiple || mode == TargetingMode.AreaFromTarget || mode == TargetingMode.AreaFromPoint;
+
+    public TargetingRuleData Clone()
+    {
+        return new TargetingRuleData
+        {
+            mode = mode,
+            minTargets = minTargets,
+            maxTargets = maxTargets,
+            canTargetSelf = canTargetSelf,
+            targetFaction = targetFaction
+        };
+    }
 }
