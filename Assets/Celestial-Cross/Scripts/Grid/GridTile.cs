@@ -12,6 +12,7 @@ public class GridTile : MonoBehaviour
     [SerializeField] private Color baseColor = Color.gray;
     [SerializeField] private Color highlightColor = Color.green;
     [SerializeField] private Color selectedColor = Color.yellow;
+    [SerializeField] private Color areaPreviewColor = new Color(1f, 0.5f, 0f, 1f);
 
     public event Action OnHighlight;
     public event Action OnClearHighlight;
@@ -19,7 +20,7 @@ public class GridTile : MonoBehaviour
 
     private MaterialPropertyBlock propertyBlock;
 
-    // IDs possíveis de cor (compatibilidade total)
+    // IDs possÃ­veis de cor (compatibilidade total)
     private static readonly int ColorId = Shader.PropertyToID("_Color");
     private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
 
@@ -46,7 +47,7 @@ public class GridTile : MonoBehaviour
     }
 
     // =====================
-    // API PÚBLICA
+    // API PÃšBLICA
     // =====================
 
     public void Highlight()
@@ -62,6 +63,11 @@ public class GridTile : MonoBehaviour
     public void Select()
     {
         ApplyColor(selectedColor);
+    }
+
+    public void PreviewArea()
+    {
+        ApplyColor(areaPreviewColor);
     }
 
     // =====================
@@ -124,7 +130,7 @@ public class GridTile : MonoBehaviour
         else
         {
             Debug.LogError(
-                $"[GridTile] Shader do tile '{name}' não possui _Color nem _BaseColor"
+                $"[GridTile] Shader do tile '{name}' nÃ£o possui _Color nem _BaseColor"
             );
         }
     }
