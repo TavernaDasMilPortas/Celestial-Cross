@@ -287,14 +287,6 @@ public class TargetSelector : MonoBehaviour
         RefreshAreaPreview();
     }
 
-    void ClearTileSelection()
-    {
-        foreach (var tile in selectedTiles)
-            tile.Highlight();
-
-        selectedTiles.Clear();
-        selectedPoints.Clear();
-    }
 
     void HandleConfirmCancel()
     {
