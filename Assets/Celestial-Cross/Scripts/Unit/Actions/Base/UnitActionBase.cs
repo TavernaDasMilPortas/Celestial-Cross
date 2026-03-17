@@ -54,7 +54,15 @@ public abstract class UnitActionBase : MonoBehaviour, IUnitAction
         Resolve();
         state = ActionState.Finished;
 
-        PlayerController.Instance.EndTurn();
+        OnActionFinished();
+    }
+
+    protected virtual void OnActionFinished()
+    {
+        if (unit is EnemyUnit)
+            TurnManager.Instance.EndTurn();
+        else
+            PlayerController.Instance.EndTurn();
     }
 
     public void Cancel()

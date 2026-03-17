@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -45,10 +45,22 @@ public class TurnManager : MonoBehaviour
 
         Debug.Log($"[TurnManager] Turno de {current.DisplayName}");
 
-        if (current is Pet)
+        if (current is EnemyUnit enemy)
+        {
+            AIBrain brain = enemy.GetComponent<AIBrain>();
+            if (brain != null)
+                brain.ExecuteTurn();
+            else
+                EndTurn();
+        }
+        else if (current is Pet)
+        {
             PlayerController.Instance.StartTurn(current);
+        }
         else
+        {
             EndTurn();
+        }
     }
 
     public void EndTurn()

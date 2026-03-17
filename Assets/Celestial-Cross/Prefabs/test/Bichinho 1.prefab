@@ -129,8 +129,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a40a08f0acafdea4992493b3bb42f393, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitData: {fileID: 11400000, guid: d25b938b30bbdcc4aa44545bd797f180, type: 2}
-  equippedPet: {fileID: 11400000, guid: 900ae4f5098769c41b8c14ee61484ab5, type: 2}
+  unitData: {fileID: 11400000, guid: e826e4ac2548473498be53bd46bc5793, type: 2}
+  equippedPet: {fileID: 0}
   activeEffects: []
   GridPosition: {x: 0, y: 0}
 --- !u!114 &2285687602826378805
