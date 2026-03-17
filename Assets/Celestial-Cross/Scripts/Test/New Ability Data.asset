@@ -12,21 +12,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6e768e6ae8f432d9b040cfea25e7e3f, type: 3}
   m_Name: New Ability Data
   m_EditorClassIdentifier: Assembly-CSharp::AbilityData
-  id: 
-  abilityName: 
+  id: 1
+  abilityName: bola de fogo
   description: 
   icon: {fileID: 0}
-  abilityType: 0
+  abilityType: 1
   passive:
     trigger: AlwaysOn
     effectSummary: 
   active:
-    actionName: Active Ability
-    range: 1
+    actionName: Ataque foda
     actionDefinition:
-      rid: -2
+      rid: 7428665979644674118
   references:
     version: 2
     RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
+    - rid: 7428665979644674118
+      type: {class: AttackActionData, ns: , asm: Assembly-CSharp}
+      data:
+        actionName: 
+        range: 15
+        damage: 5
+        targeting:
+          mode: 1
+          origin: 0
+          allowMultiple: 0
+          minTargets: 1
+          maxTargets: 1
+          canTargetSelf: 0
+          targetFaction: 0
+        areaPattern: {fileID: 11400000, guid: 5741df0aeed056a479ce987ef4f758b8, type: 2}
+        areaRotationSteps: 0

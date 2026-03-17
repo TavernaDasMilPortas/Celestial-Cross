@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 
-public class AttackAction : UnitActionBase, IRangeConfigurable
+public class AttackAction : UnitActionBase
 {
     public int Range { get; set; }
     public int Damage { get; set; }
@@ -97,12 +97,12 @@ public class AttackAction : UnitActionBase, IRangeConfigurable
         if ((targets == null || targets.Count == 0) && (selectedPoints == null || selectedPoints.Count == 0))
             return new List<Unit>();
 
-        if ((TargetingRule.mode != TargetingMode.AreaFromTarget && TargetingRule.mode != TargetingMode.AreaFromPoint) || AreaPattern == null)
+        if (TargetingRule.mode != TargetingMode.Area || AreaPattern == null)
             return targets;
 
         HashSet<Vector2Int> affectedCells = new();
 
-        if (TargetingRule.mode == TargetingMode.AreaFromPoint && selectedPoints != null && selectedPoints.Count > 0)
+        if (TargetingRule.origin == TargetOrigin.Point && selectedPoints != null && selectedPoints.Count > 0)
         {
             foreach (var point in selectedPoints)
             {

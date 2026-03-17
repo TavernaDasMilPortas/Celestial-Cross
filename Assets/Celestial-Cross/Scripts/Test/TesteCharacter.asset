@@ -22,7 +22,7 @@ MonoBehaviour:
     speed: 7
     criticalChance: 7
     effectAccuracy: 1
-  characterAbility: {fileID: 11400000, guid: 2ba45882560184b4bb7721ea78c219f2, type: 2}
+  characterAbility: {fileID: 0}
   defaultPet: {fileID: 11400000, guid: 900ae4f5098769c41b8c14ee61484ab5, type: 2}
   actions:
   - rid: 7428665820824731650

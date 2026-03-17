@@ -21,7 +21,7 @@ public static class AreaResolver
                 if (!pattern.IsActive(x, y))
                     continue;
 
-                Vector2Int local = new Vector2Int(x - pattern.originX, y - pattern.originY);
+                Vector2Int local = new Vector2Int(x - pattern.originX, -(y - pattern.originY));
                 Vector2Int rotated = Rotate(local, normalizedRotation);
                 cells.Add(origin + rotated);
             }

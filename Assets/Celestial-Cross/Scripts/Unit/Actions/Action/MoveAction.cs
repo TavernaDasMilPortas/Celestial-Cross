@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class MoveAction : UnitActionBase, IRangeConfigurable
+public class MoveAction : UnitActionBase
 {
     public int Range { get; set; }
 
@@ -114,7 +114,10 @@ public class MoveAction : UnitActionBase, IRangeConfigurable
     void ClearHighlight()
     {
         foreach (var t in validTiles)
-            t.Clear();
+            t.HardClearAllStates();
+
+        if (selectedTile != null)
+            selectedTile.ClearSelect();
 
         validTiles.Clear();
         selectedTile = null;

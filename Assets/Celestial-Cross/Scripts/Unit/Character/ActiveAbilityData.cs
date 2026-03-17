@@ -5,7 +5,6 @@ using UnityEngine;
 public class ActiveAbilityData : IExecutableDefinitionData
 {
     public string actionName = "Active Ability";
-    [Min(0)] public int range = 1;
 
     [SerializeReference]
     public UnitActionData actionDefinition;
@@ -26,8 +25,5 @@ public class ActiveAbilityData : IExecutableDefinitionData
         }
 
         actionDefinition.Configure(action);
-
-        if (action is IRangeConfigurable rangeConfigurable)
-            rangeConfigurable.Range = range;
     }
 }

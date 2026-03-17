@@ -199,6 +199,8 @@ public abstract class Unit : MonoBehaviour
             return;
 
         currentAction?.Cancel();
+        GridMap.Instance?.ResetAllTileVisuals();
+
         currentAction = actions[index];
         currentAction.EnterAction();
     }

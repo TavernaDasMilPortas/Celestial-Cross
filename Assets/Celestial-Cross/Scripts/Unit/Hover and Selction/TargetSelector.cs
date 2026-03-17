@@ -65,12 +65,12 @@ public class TargetSelector : MonoBehaviour
 
         isActive = true;
 
-        if (targetingRule.mode == TargetingMode.AreaFromPoint)
+        if (targetingRule.origin == TargetOrigin.Point)
             PrepareTileSelection();
         else
             PrepareUnitSelection();
 
-        Debug.Log($"[TargetSelector] Iniciado | Range: {range} | Mode: {targetingRule.mode} | Max: {targetingRule.maxTargets}");
+        Debug.Log($"[TargetSelector] Iniciado | Range: {range} | Type: {targetingRule.mode} | Origin: {targetingRule.origin}");
     }
 
     void ClampRule()
@@ -78,7 +78,7 @@ public class TargetSelector : MonoBehaviour
         targetingRule.minTargets = Mathf.Max(1, targetingRule.minTargets);
         targetingRule.maxTargets = Mathf.Max(targetingRule.minTargets, targetingRule.maxTargets);
 
-        if (!targetingRule.AllowMultiple)
+        if (!targetingRule.allowMultiple)
         {
             targetingRule.minTargets = 1;
             targetingRule.maxTargets = 1;
@@ -167,7 +167,7 @@ public class TargetSelector : MonoBehaviour
         }
 
         foreach (var tile in validTiles)
-            tile.Clear();
+            tile.HardClearAllStates();
     }
 
     void HandleMouseInput()
@@ -179,9 +179,20 @@ public class TargetSelector : MonoBehaviour
         if (!Physics.Raycast(ray, out RaycastHit hit))
             return;
 
-        if (targetingRule.mode == TargetingMode.AreaFromPoint)
+        if (targetingRule.origin == TargetOrigin.Point)
         {
             GridTile tile = hit.collider.GetComponent<GridTile>();
+
+            // Fallback: se clicou em uma Unit, tentar pegar o Tile embaixo dela
+            if (tile == null)
+            {
+                Unit unitHit = hit.collider.GetComponent<Unit>();
+                if (unitHit != null && GridMap.Instance != null)
+                {
+                    tile = GridMap.Instance.GetTile(unitHit.GridPosition);
+                }
+            }
+
             if (tile == null || !validTiles.Contains(tile))
                 return;
 
@@ -213,10 +224,10 @@ public class TargetSelector : MonoBehaviour
             return;
         }
 
-        if (!targetingRule.AllowMultiple)
+        if (!targetingRule.allowMultiple)
             ClearSelection();
 
-        if (selectedTargets.Count >= targetingRule.maxTargets)
+        if (targetingRule.maxTargets > 0 && selectedTargets.Count >= targetingRule.maxTargets)
             return;
 
         selectedTargets.Add(unit);
@@ -229,15 +240,18 @@ public class TargetSelector : MonoBehaviour
         {
             selectedTiles.Remove(tile);
             selectedPoints.Remove(tile.GridPosition);
-            tile.Highlight();
+            tile.ClearSelect();
             RefreshAreaPreview();
             return;
         }
 
-        if (!targetingRule.AllowMultiple)
+        // Fix: Se não permite múltiplos alvos, limpar seleção anterior antes de adicionar nova
+        if (!targetingRule.allowMultiple)
+        {
             ClearTileSelection();
+        }
 
-        if (selectedTiles.Count >= targetingRule.maxTargets)
+        if (targetingRule.maxTargets > 0 && selectedTiles.Count >= targetingRule.maxTargets)
             return;
 
         selectedTiles.Add(tile);
@@ -249,7 +263,7 @@ public class TargetSelector : MonoBehaviour
 
     IEnumerable<Vector2Int> GetPreviewOrigins()
     {
-        if (targetingRule.mode == TargetingMode.AreaFromPoint)
+        if (targetingRule.origin == TargetOrigin.Point)
         {
             foreach (var point in selectedPoints)
                 yield return point;
@@ -264,7 +278,10 @@ public class TargetSelector : MonoBehaviour
     void ClearAreaPreview()
     {
         foreach (var tile in areaPreviewTiles)
-            tile.Clear();
+        {
+            tile.ClearAreaPreview();
+            tile.SetAreaCenter(false);
+        }
 
         areaPreviewTiles.Clear();
     }
@@ -281,7 +298,7 @@ public class TargetSelector : MonoBehaviour
     {
         ClearAreaPreview();
 
-        if (areaPattern == null)
+        if (targetingRule.mode != TargetingMode.Area || areaPattern == null)
             return;
 
         if (GridMap.Instance == null)
@@ -295,7 +312,15 @@ public class TargetSelector : MonoBehaviour
                 if (previewTile == null || areaPreviewTiles.Contains(previewTile))
                     continue;
 
-                previewTile.PreviewArea();
+                if (cell == origin)
+                {
+                    previewTile.SetAreaCenter(true);
+                }
+                else
+                {
+                    previewTile.PreviewArea();
+                }
+                
                 areaPreviewTiles.Add(previewTile);
             }
         }
@@ -307,7 +332,7 @@ public class TargetSelector : MonoBehaviour
     void ClearTileSelection()
     {
         foreach (var tile in selectedTiles)
-            tile.Highlight();
+            tile.ClearSelect();
 
         selectedTiles.Clear();
         selectedPoints.Clear();
@@ -319,7 +344,7 @@ public class TargetSelector : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            int count = targetingRule.mode == TargetingMode.AreaFromPoint
+            int count = targetingRule.origin == TargetOrigin.Point
                 ? selectedTiles.Count
                 : selectedTargets.Count;
 

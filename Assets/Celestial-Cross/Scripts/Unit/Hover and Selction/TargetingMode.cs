@@ -1,7 +1,5 @@
 public enum TargetingMode
 {
-    Single,
-    Multiple,
-    AreaFromPoint,
-    AreaFromTarget
+    Unit,
+    Area
 }

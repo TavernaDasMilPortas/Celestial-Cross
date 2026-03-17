@@ -30,7 +30,6 @@ public class AbilityDataEditor : Editor
         {
             EditorGUILayout.LabelField("Active Setup", EditorStyles.boldLabel);
             EditorGUILayout.PropertyField(activeProp.FindPropertyRelative("actionName"));
-            EditorGUILayout.PropertyField(activeProp.FindPropertyRelative("range"));
             EditorGUILayout.PropertyField(activeProp.FindPropertyRelative("actionDefinition"), true);
 
             if (activeProp.FindPropertyRelative("actionDefinition").managedReferenceValue == null)

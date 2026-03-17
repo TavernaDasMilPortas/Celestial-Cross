@@ -13,6 +13,7 @@ public class GridTile : MonoBehaviour
     [SerializeField] private Color highlightColor = Color.green;
     [SerializeField] private Color selectedColor = Color.yellow;
     [SerializeField] private Color areaPreviewColor = new Color(1f, 0.5f, 0f, 1f);
+    [SerializeField] private Color areaCenterColor = new Color(0.8f, 0.2f, 0f, 1f);
 
     public event Action OnHighlight;
     public event Action OnClearHighlight;
@@ -25,6 +26,12 @@ public class GridTile : MonoBehaviour
     private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
 
     private int activeColorProperty = -1;
+
+    // Estado visual empilhado (prioridades)
+    private bool isSelected = false;
+    private bool isAreaCenter = false;
+    private bool isAreaPreview = false;
+    private bool isHighlight = false;
 
     public void Init(Vector2Int pos)
     {
@@ -43,40 +50,84 @@ public class GridTile : MonoBehaviour
         OnClearHighlight += ClearHighlight;
         OnSelect += ApplySelected;
 
-        Clear();
+        HardClearAllStates();
     }
 
     // =====================
-    // API PÚBLICA
+    // API PÚBLICA (Flags)
     // =====================
 
     public void Highlight()
     {
-        ApplyColor(highlightColor);
+        isHighlight = true;
+        UpdateVisuals();
     }
 
     public void Clear()
     {
-        ApplyColor(baseColor);
+        isHighlight = false;
+        UpdateVisuals();
     }
 
     public void Select()
     {
-        ApplyColor(selectedColor);
+        isSelected = true;
+        UpdateVisuals();
+    }
+
+    public void ClearSelect()
+    {
+        isSelected = false;
+        UpdateVisuals();
     }
 
     public void PreviewArea()
     {
-        ApplyColor(areaPreviewColor);
+        isAreaPreview = true;
+        UpdateVisuals();
+    }
+
+    public void ClearAreaPreview()
+    {
+        isAreaPreview = false;
+        UpdateVisuals();
+    }
+
+    public void SetAreaCenter(bool state)
+    {
+        isAreaCenter = state;
+        UpdateVisuals();
+    }
+    
+    public void HardClearAllStates()
+    {
+        isSelected = false;
+        isAreaCenter = false;
+        isAreaPreview = false;
+        isHighlight = false;
+        UpdateVisuals();
     }
 
     // =====================
-    // VISUAL
+    // EVENT CALLBACKS (Mantidos para compatibilidade, caso usados externamente)
     // =====================
 
-    void ApplyHighlight() => ApplyColor(highlightColor);
-    void ApplySelected() => ApplyColor(selectedColor);
-    void ClearHighlight() => ApplyColor(baseColor);
+    void ApplyHighlight() => Highlight();
+    void ApplySelected() => Select();
+    void ClearHighlight() => Clear();
+
+    // =====================
+    // VISUAL UPDATE LOGIC
+    // =====================
+
+    void UpdateVisuals()
+    {
+        if (isSelected) ApplyColor(selectedColor);
+        else if (isAreaCenter) ApplyColor(areaCenterColor);
+        else if (isAreaPreview) ApplyColor(areaPreviewColor);
+        else if (isHighlight) ApplyColor(highlightColor);
+        else ApplyColor(baseColor);
+    }
 
     void ApplyColor(Color color)
     {

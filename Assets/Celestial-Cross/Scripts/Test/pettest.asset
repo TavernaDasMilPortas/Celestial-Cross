@@ -20,4 +20,4 @@ MonoBehaviour:
     speed: 1
     criticalChance: 10
     effectAccuracy: 0
-  ability: {fileID: 11400000, guid: 1d76ef35f26b94740b894c406dac8f48, type: 2}
+  ability: {fileID: 11400000, guid: 2ba45882560184b4bb7721ea78c219f2, type: 2}

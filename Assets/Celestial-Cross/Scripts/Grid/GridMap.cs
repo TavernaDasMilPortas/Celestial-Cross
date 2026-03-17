@@ -21,7 +21,7 @@ public class GridMap : MonoBehaviour
     {
         Instance = this;
 
-        // Garante que o grid lógico existe tanto no Editor quanto no Play
+        // Garante que o grid lÃ³gico existe tanto no Editor quanto no Play
         if (phaseMap != null)
             RegenerateRuntimeGrid();
     }
@@ -45,6 +45,15 @@ public class GridMap : MonoBehaviour
         return tile;
     }
 
+    public void ResetAllTileVisuals()
+    {
+        foreach (var tile in tiles.Values)
+        {
+            if (tile != null)
+                tile.HardClearAllStates();
+        }
+    }
+
     // =============================
     // INTERNAL
     // =============================
@@ -56,7 +65,7 @@ public class GridMap : MonoBehaviour
         GenerateTiles();
         GenerateUnits();
 
-        Debug.Log($"[GridMap] Grid lógico reconstruído. Tiles: {tiles.Count}");
+        Debug.Log($"[GridMap] Grid lÃ³gico reconstruÃ­do. Tiles: {tiles.Count}");
     }
 
     void GenerateTiles()

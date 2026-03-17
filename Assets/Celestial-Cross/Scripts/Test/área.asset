@@ -12,14 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 587de4382aa8437797ae2f035445533d, type: 3}
   m_Name: "\xE1rea"
   m_EditorClassIdentifier: Assembly-CSharp::AreaPatternData
-  width: 5
-  height: 5
+  width: 3
+  height: 3
   originX: 1
   originY: 1
   allowRotation: 1
   rows:
-  - cells: 0000000000
-  - cells: 0000010000
-  - cells: 0001010100
-  - cells: 0000010000
-  - cells: 0000000000
+  - cells: 000100
+  - cells: 010101
+  - cells: 000100

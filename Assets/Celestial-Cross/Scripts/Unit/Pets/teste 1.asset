@@ -15,6 +15,15 @@ MonoBehaviour:
   displayName: 'teste '
   maxHealth: 12
   speed: 10
+  baseStats:
+    health: 30
+    attack: 10
+    defense: 6
+    speed: 7
+    criticalChance: 7
+    effectAccuracy: 1
+  characterAbility: {fileID: 0}
+  defaultPet: {fileID: 11400000, guid: 900ae4f5098769c41b8c14ee61484ab5, type: 2}
   actions:
   - rid: 694666629746786397
   - rid: 694666629746786398
@@ -32,3 +41,12 @@ MonoBehaviour:
         actionName: 
         range: 1
         damage: 2
+        targeting:
+          mode: 0
+          allowMultiple: 0
+          minTargets: 1
+          maxTargets: 1
+          canTargetSelf: 0
+          targetFaction: 0
+        areaPattern: {fileID: 0}
+        areaRotationSteps: 0
