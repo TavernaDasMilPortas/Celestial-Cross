@@ -1,9 +1,11 @@
 using System;
+using UnityEngine;
 
 [Serializable]
 public abstract class UnitActionData : IExecutableDefinitionData
 {
     public string actionName;
+    public Sprite actionIcon;
 
     public string DefinitionName => actionName;
 
@@ -12,4 +14,10 @@ public abstract class UnitActionData : IExecutableDefinitionData
 
     // Hook para passar dados para o runtime action
     public abstract void Configure(IUnitAction action);
+
+    protected void ConfigureBase(UnitActionBase actionBase)
+    {
+        actionBase.ActionName = actionName;
+        actionBase.ActionIcon = actionIcon;
+    }
 }

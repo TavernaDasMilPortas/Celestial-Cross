@@ -27,6 +27,7 @@ public class AttackActionData : UnitActionData
             return;
         }
 
+        ConfigureBase(attack);
         attack.Range = range;
         attack.Damage = damage;
         attack.TargetingRule = targeting != null ? targeting.Clone() : new TargetingRuleData();

@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 [ExecuteAlways]
 public class GridMap : MonoBehaviour
@@ -64,8 +65,31 @@ public class GridMap : MonoBehaviour
 
         GenerateTiles();
         GenerateUnits();
+        SyncCameraBounds();
 
         Debug.Log($"[GridMap] Grid lógico reconstruído. Tiles: {tiles.Count}");
+    }
+
+    void SyncCameraBounds()
+    {
+        CameraBounds bounds = FindObjectOfType<CameraBounds>();
+        if (bounds == null || tiles.Count == 0) return;
+
+        var first = tiles.Keys.First();
+        int minX = first.x, minY = first.y, maxX = first.x, maxY = first.y;
+
+        foreach (var pos in tiles.Keys)
+        {
+            minX = Mathf.Min(minX, pos.x);
+            minY = Mathf.Min(minY, pos.y);
+            maxX = Mathf.Max(maxX, pos.x);
+            maxY = Mathf.Max(maxY, pos.y);
+        }
+
+        if (bounds.bottomLeft != null)
+            bounds.bottomLeft.position = new Vector3(minX * tileSize, 0, minY * tileSize);
+        if (bounds.topRight != null)
+            bounds.topRight.position = new Vector3(maxX * tileSize, 0, maxY * tileSize);
     }
 
     void GenerateTiles()

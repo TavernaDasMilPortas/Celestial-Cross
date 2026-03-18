@@ -6,6 +6,9 @@ public class TurnManager : MonoBehaviour
 {
     public static TurnManager Instance;
 
+    public static event System.Action<Unit> OnTurnStarted;
+    public static event System.Action<IEnumerable<Unit>> OnQueueChanged;
+
     Queue<Unit> turnQueue = new();
 
     void Awake()
@@ -32,6 +35,7 @@ public class TurnManager : MonoBehaviour
         turnQueue = new Queue<Unit>(ordered);
 
         Debug.Log("[TurnManager] Combate iniciado.");
+        OnQueueChanged?.Invoke(turnQueue);
         NextTurn();
     }
 
@@ -44,6 +48,8 @@ public class TurnManager : MonoBehaviour
         turnQueue.Enqueue(current);
 
         Debug.Log($"[TurnManager] Turno de {current.DisplayName}");
+        OnQueueChanged?.Invoke(turnQueue);
+        OnTurnStarted?.Invoke(current);
 
         if (current is EnemyUnit enemy)
         {
@@ -66,5 +72,10 @@ public class TurnManager : MonoBehaviour
     public void EndTurn()
     {
         Invoke(nameof(NextTurn), 0.5f);
+    }
+
+    public IEnumerable<Unit> GetTurnQueue()
+    {
+        return turnQueue;
     }
 }

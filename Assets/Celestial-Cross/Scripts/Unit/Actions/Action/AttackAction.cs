@@ -40,6 +40,7 @@ public class AttackAction : UnitActionBase
             int hits = unit.GetAttacksAgainst(target);
             int totalDamage = 0;
 
+            bool anyCrit = false;
             for (int i = 0; i < hits; i++)
             {
                 AttackResult result = unit.CalculateAttack(
@@ -49,11 +50,13 @@ public class AttackAction : UnitActionBase
                 );
 
                 totalDamage += result.damage;
+                if (result.isCritical) anyCrit = true;
 
                 Debug.Log($"[AttackAction] Hit {i + 1}/{hits} | {unit.DisplayName} -> {target.DisplayName} | Damage: {result.damage} | Critical: {result.isCritical}");
             }
 
-            target.Health.TakeDamage(totalDamage);
+            target.Health.TakeDamage(totalDamage, anyCrit);
+
         }
 
         ClearSelection();
@@ -77,9 +80,40 @@ public class AttackAction : UnitActionBase
         );
 
         targetSelector.OnTargetsConfirmed += OnTargetsConfirmed;
+        targetSelector.OnSelectedTargetsChanged += OnSelectionChanged;
         targetSelector.OnCanceled += OnSelectionCanceled;
 
         state = ActionState.SelectingTargets;
+    }
+
+    void OnSelectionChanged(List<Unit> targets)
+    {
+        if (targets == null || targets.Count == 0)
+        {
+            InvokeForecastUpdated(default);
+            return;
+        }
+
+        Unit lastTarget = targets.Last();
+        if (lastTarget == null) return;
+
+        AttackResult sample = unit.CalculateAttack(
+            lastTarget,
+            new DamageBonus { flat = Damage, percent = 0f },
+            new DamageReduction { flat = 0, percent = 0f }
+        );
+
+        ActionForecast forecast = new ActionForecast
+        {
+            Source = unit,
+            Target = lastTarget,
+            Damage = sample.damage,
+            IsCritical = sample.isCritical,
+            AttackCount = unit.GetAttacksAgainst(lastTarget),
+            CriticalChance = unit.Stats.criticalChance // Simple display
+        };
+
+        InvokeForecastUpdated(forecast);
     }
 
     void OnTargetsConfirmed(List<Unit> targets)
@@ -140,6 +174,7 @@ public class AttackAction : UnitActionBase
         if (targetSelector != null)
         {
             targetSelector.OnTargetsConfirmed -= OnTargetsConfirmed;
+            targetSelector.OnSelectedTargetsChanged -= OnSelectionChanged;
             targetSelector.OnCanceled -= OnSelectionCanceled;
             Destroy(targetSelector);
         }

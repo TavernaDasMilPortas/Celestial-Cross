@@ -6,6 +6,15 @@ public abstract class UnitActionBase : MonoBehaviour, IUnitAction
     protected ActionState state = ActionState.Idle;
     protected ActionContext context;
 
+    public string ActionName { get; set; }
+    public Sprite ActionIcon { get; set; }
+    public event System.Action<ActionForecast> OnForecastUpdated;
+
+    protected void InvokeForecastUpdated(ActionForecast forecast)
+    {
+        OnForecastUpdated?.Invoke(forecast);
+    }
+
     bool configured;
 
     protected virtual void Awake()

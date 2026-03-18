@@ -9,6 +9,7 @@ public class Health : MonoBehaviour
     public int CurrentHealth { get; private set; }
 
     public event Action<int, int> OnHealthChanged;
+    public event Action<int, bool> OnDamageTaken;
     public event Action OnDeath;
 
     void Awake()
@@ -24,13 +25,14 @@ public class Health : MonoBehaviour
         OnHealthChanged?.Invoke(CurrentHealth, maxHealth);
     }
 
-    public void TakeDamage(int amount)
+    public void TakeDamage(int amount, bool isCritical = false)
     {
         if (amount <= 0)
             return;
 
         CurrentHealth = Mathf.Clamp(CurrentHealth - amount, 0, maxHealth);
         OnHealthChanged?.Invoke(CurrentHealth, maxHealth);
+        OnDamageTaken?.Invoke(amount, isCritical);
 
         if (CurrentHealth <= 0)
             Die();

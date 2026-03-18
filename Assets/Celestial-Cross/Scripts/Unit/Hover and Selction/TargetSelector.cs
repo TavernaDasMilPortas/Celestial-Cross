@@ -5,6 +5,8 @@ using System.Collections.Generic;
 public class TargetSelector : MonoBehaviour
 {
     public event Action<List<Unit>> OnTargetsConfirmed;
+    public event Action<List<Unit>> OnSelectedTargetsChanged;
+    public event Action<Unit> OnHoverChanged;
     public event Action OnCanceled;
 
     public IReadOnlyList<Vector2Int> SelectedPoints => selectedPoints;
@@ -221,6 +223,7 @@ public class TargetSelector : MonoBehaviour
         {
             selectedTargets.Remove(unit);
             outline?.SetSelected(false);
+            OnSelectedTargetsChanged?.Invoke(new List<Unit>(selectedTargets));
             return;
         }
 
@@ -232,6 +235,8 @@ public class TargetSelector : MonoBehaviour
 
         selectedTargets.Add(unit);
         outline?.SetSelected(true);
+
+        OnSelectedTargetsChanged?.Invoke(new List<Unit>(selectedTargets));
     }
 
     void ToggleTileSelection(GridTile tile)

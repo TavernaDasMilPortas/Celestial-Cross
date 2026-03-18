@@ -23,11 +23,11 @@ public class CameraController : MonoBehaviour
     // =========================
 
     [Header("View Offsets")]
-    public float heightOffset = 12f;   // altura real da câmera
-    public float depthOffset = 12f;    // recuo visual (forward)
+    public float heightOffset = 15f;
+    public float depthOffset = 5f;
 
     [Header("Rotation")]
-    public Vector3 cameraRotation = new(45f, 45f, 0f);
+    public Vector3 cameraRotation = new(75f, 0f, 0f);
 
     // =========================
     // MOVEMENT
@@ -65,6 +65,10 @@ public class CameraController : MonoBehaviour
 
     Plane mapPlane = new(Vector3.up, Vector3.zero);
 
+    [Header("Clamping & Framing")]
+    public float edgePadding = 1f;
+    public float verticalCenterOffset = 1f; // Sobe um pouco o foco dos pés para o corpo
+
     // =========================
     // UNITY
     // =========================
@@ -72,6 +76,16 @@ public class CameraController : MonoBehaviour
     void Awake()
     {
         Instance = this;
+    }
+
+    void OnEnable()
+    {
+        TurnManager.OnTurnStarted += Follow;
+    }
+
+    void OnDisable()
+    {
+        TurnManager.OnTurnStarted -= Follow;
     }
 
     void Start()
@@ -116,7 +130,8 @@ public class CameraController : MonoBehaviour
         if (followTarget == null)
             return;
 
-        targetProjectedPoint = followTarget.transform.position;
+        // Centraliza na base + offset vertical para não cortar a cabeça
+        targetProjectedPoint = followTarget.transform.position + Vector3.forward * verticalCenterOffset;
     }
 
     // =========================
@@ -175,11 +190,33 @@ public class CameraController : MonoBehaviour
 
     void ApplyClamp()
     {
-        if (bounds == null)
+        if (bounds == null || cam == null || bounds.bottomLeft == null || bounds.topRight == null)
             return;
 
-        targetProjectedPoint =
-            bounds.ClampProjectedPoint(targetProjectedPoint);
+        float orthoHeight = cam.orthographicSize;
+        float orthoWidth = orthoHeight * cam.aspect;
+
+        // Adiciona padding para os personagens "respirarem" nas bordas
+        float minX = bounds.bottomLeft.position.x - edgePadding;
+        float maxX = bounds.topRight.position.x + edgePadding;
+        float minZ = bounds.bottomLeft.position.z - edgePadding;
+        float maxZ = bounds.topRight.position.z + edgePadding;
+
+        float clampedX, clampedZ;
+
+        // Se o mapa for menor que a tela no eixo X, centraliza no mapa
+        if (maxX - minX < orthoWidth * 2f)
+            clampedX = (minX + maxX) / 2f;
+        else
+            clampedX = Mathf.Clamp(targetProjectedPoint.x, minX + orthoWidth, maxX - orthoWidth);
+
+        // Se o mapa for menor que a tela no eixo Z, centraliza no mapa
+        if (maxZ - minZ < orthoHeight * 2f)
+            clampedZ = (minZ + maxZ) / 2f;
+        else
+            clampedZ = Mathf.Clamp(targetProjectedPoint.z, minZ + orthoHeight, maxZ - orthoHeight);
+
+        targetProjectedPoint = new Vector3(clampedX, 0f, clampedZ);
     }
 
     void ApplyMovement()
@@ -192,9 +229,11 @@ public class CameraController : MonoBehaviour
 
         float speed = followSpeed * zoomFactor;
 
+        // Simplificação: Para centralizar no orthographic, a posição da câmera deve ser:
+        // PosiçãoFocada - forward * distância
+        // Usamos depthOffset como essa distância total. heightOffset passa a ser 0 ou um ajuste fino.
         Vector3 desiredCameraPos =
             targetProjectedPoint
-            + Vector3.up * heightOffset
             - cam.transform.forward * depthOffset;
 
         transform.position = Vector3.Lerp(
@@ -216,7 +255,7 @@ public class CameraController : MonoBehaviour
 
     Vector3 ProjectCameraToPlane(Vector3 camPos)
     {
-        Ray ray = new Ray(camPos, -cam.transform.up);
+        Ray ray = new Ray(camPos, cam.transform.forward);
         if (mapPlane.Raycast(ray, out float dist))
             return ray.GetPoint(dist);
 
@@ -229,8 +268,23 @@ public class CameraController : MonoBehaviour
 
     public void Follow(Unit unit)
     {
+        if (unit == null) return;
+        Debug.Log($"[CameraController] Seguindo unidade: {unit.DisplayName}");
         followTarget = unit;
         cameraMode = CameraMode.FollowUnit;
+
+        // Se for a primeira unidade ou o herói, podemos forçar um snap inicial
+        if (Time.timeSinceLevelLoad < 2f) 
+            SnapToTarget();
+    }
+
+    public void SnapToTarget()
+    {
+        HandleFollow();
+        ApplyClamp();
+        
+        Vector3 desiredCameraPos = targetProjectedPoint - cam.transform.forward * depthOffset;
+        transform.position = desiredCameraPos;
     }
 
     public void EnableFreeCamera(bool enable)

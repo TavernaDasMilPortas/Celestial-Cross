@@ -40,7 +40,10 @@ public abstract class Unit : MonoBehaviour
     // =========================
 
     protected List<IUnitAction> actions = new();
+    public IReadOnlyList<IUnitAction> Actions => actions;
     protected IUnitAction currentAction;
+    public IUnitAction CurrentAction => currentAction;
+    public event System.Action<IUnitAction> OnActionChanged;
     bool combatStarted;
 
     // =========================
@@ -202,6 +205,7 @@ public abstract class Unit : MonoBehaviour
         GridMap.Instance?.ResetAllTileVisuals();
 
         currentAction = actions[index];
+        OnActionChanged?.Invoke(currentAction);
         currentAction.EnterAction();
     }
 

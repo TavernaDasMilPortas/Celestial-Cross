@@ -18,6 +18,12 @@ public class PlayerController : MonoBehaviour
         Debug.Log($"Turno de {unit.name}");
     }
 
+    public void SelectAction(int index)
+    {
+        if (activeUnit != null)
+            activeUnit.SelectAction(index);
+    }
+
     void Update()
     {
         if (activeUnit == null)

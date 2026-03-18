@@ -1,4 +1,4 @@
-using UnityEngine;
+Ôªøusing UnityEngine;
 
 [System.Serializable]
 public class MoveActionData : UnitActionData
@@ -15,10 +15,11 @@ public class MoveActionData : UnitActionData
         MoveAction move = action as MoveAction;
         if (move == null)
         {
-            Debug.LogError("[MoveActionData] Action n„o È MoveAction");
+            Debug.LogError("[MoveActionData] Action n√£o √© MoveAction");
             return;
         }
 
+        ConfigureBase(move);
         move.Range = range;
         move.MarkConfigured();
 
