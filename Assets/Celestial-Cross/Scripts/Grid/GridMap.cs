@@ -46,6 +46,8 @@ public class GridMap : MonoBehaviour
         return tile;
     }
 
+    public IEnumerable<GridTile> GetAllTiles() => tiles.Values;
+
     public void ResetAllTileVisuals()
     {
         foreach (var tile in tiles.Values)

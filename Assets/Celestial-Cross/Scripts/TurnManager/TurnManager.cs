@@ -5,8 +5,10 @@ using System.Linq;
 public class TurnManager : MonoBehaviour
 {
     public static TurnManager Instance;
+    public Unit CurrentUnit { get; private set; }
 
     public static event System.Action<Unit> OnTurnStarted;
+    public static event System.Action OnTurnEnded;
     public static event System.Action<IEnumerable<Unit>> OnQueueChanged;
 
     Queue<Unit> turnQueue = new();
@@ -46,6 +48,7 @@ public class TurnManager : MonoBehaviour
 
         Unit current = turnQueue.Dequeue();
         turnQueue.Enqueue(current);
+        CurrentUnit = current;
 
         Debug.Log($"[TurnManager] Turno de {current.DisplayName}");
         OnQueueChanged?.Invoke(turnQueue);
@@ -71,6 +74,7 @@ public class TurnManager : MonoBehaviour
 
     public void EndTurn()
     {
+        OnTurnEnded?.Invoke();
         Invoke(nameof(NextTurn), 0.5f);
     }
 

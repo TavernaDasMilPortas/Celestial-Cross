@@ -20,9 +20,8 @@ public class TurnTimelineUI : MonoBehaviour
         foreach (var unit in turnQueue)
         {
             GameObject portraitObj = Instantiate(portraitPrefab, container);
-            // Assuming the portrait is a simple image or a small script
-            // Image img = portraitObj.GetComponentInChildren<Image>();
-            // if (img != null && unit.EquippedPet != null) img.sprite = unit.EquippedPet.icon;
+            TurnPortraitUI pUI = portraitObj.GetComponent<TurnPortraitUI>();
+            if (pUI != null) pUI.Setup(unit);
             
             activePortraits.Add(portraitObj);
         }

@@ -6,6 +6,7 @@ public abstract class UnitActionData : IExecutableDefinitionData
 {
     public string actionName;
     public Sprite actionIcon;
+    [TextArea] public string description;
 
     public string DefinitionName => actionName;
 
@@ -19,5 +20,6 @@ public abstract class UnitActionData : IExecutableDefinitionData
     {
         actionBase.ActionName = actionName;
         actionBase.ActionIcon = actionIcon;
+        actionBase.ActionDescription = description;
     }
 }

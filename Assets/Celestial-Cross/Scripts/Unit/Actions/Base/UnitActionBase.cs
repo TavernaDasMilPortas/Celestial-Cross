@@ -1,13 +1,20 @@
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 public abstract class UnitActionBase : MonoBehaviour, IUnitAction
 {
     protected Unit unit;
     protected ActionState state = ActionState.Idle;
     protected ActionContext context;
+    protected TargetSelector targetSelector;
 
     public string ActionName { get; set; }
     public Sprite ActionIcon { get; set; }
+    public string ActionDescription { get; set; }
+    public virtual int Range { get; set; }
+    public virtual string GetDetailStats() => "";
     public event System.Action<ActionForecast> OnForecastUpdated;
 
     protected void InvokeForecastUpdated(ActionForecast forecast)
@@ -54,20 +61,81 @@ public abstract class UnitActionBase : MonoBehaviour, IUnitAction
         OnUpdate();
     }
 
+    protected void StartTargetSelection(int range, TargetingRuleData rule = null)
+    {
+        // Se já existir um seletor (por exemplo, após um swap), limpamos o anterior
+        if (targetSelector != null) Destroy(targetSelector);
+
+        targetSelector = gameObject.AddComponent<TargetSelector>();
+        targetSelector.OnTargetsConfirmed += OnTargetsConfirmed;
+        targetSelector.OnCanceled += OnSelectionCanceled;
+        targetSelector.OnExecuteRequested += PerformFinalExecution;
+        targetSelector.Begin(unit, range, rule);
+    }
+
+    protected virtual void OnTargetsConfirmed(List<Unit> targets)
+    {
+        context.targets = targets;
+        state = ActionState.ReadyToConfirm;
+        unit.LogCanConfirm(true);
+    }
+
+    protected virtual void OnSelectionCanceled()
+    {
+        state = ActionState.Finished;
+        unit.LogCanConfirm(false);
+    }
+
+    protected void PerformFinalExecution()
+    {
+        if (state != ActionState.ReadyToConfirm) return;
+        StartCoroutine(ExecuteRoutine());
+    }
+
+    private IEnumerator ExecuteRoutine()
+    {
+        state = ActionState.Resolving;
+
+        // Feedback Visual: Darken apenas nos Tiles
+        foreach (var pos in context.targetPoints)
+        {
+            GridMap.Instance?.GetTile(pos)?.Darken();
+        }
+
+        foreach (var pos in context.affectedAreaCells)
+        {
+            GridMap.Instance?.GetTile(pos)?.Darken();
+        }
+
+        yield return new WaitForSeconds(0.5f);
+
+        Execute();
+
+        if (targetSelector != null)
+        {
+            targetSelector.ClearAllHighlights();
+            Destroy(targetSelector);
+        }
+
+        GridMap.Instance?.ResetAllTileVisuals();
+    }
+
     public void Confirm()
     {
-        if (state != ActionState.ReadyToConfirm)
-            return;
+        PerformFinalExecution();
+    }
 
-        state = ActionState.Resolving;
+    public void Execute()
+    {
         Resolve();
         state = ActionState.Finished;
-
         OnActionFinished();
     }
 
     protected virtual void OnActionFinished()
     {
+        CameraController.Instance?.ResetFocus();
+
         if (unit is EnemyUnit)
             TurnManager.Instance.EndTurn();
         else
@@ -77,6 +145,14 @@ public abstract class UnitActionBase : MonoBehaviour, IUnitAction
     public void Cancel()
     {
         OnCancel();
+        
+        if (targetSelector != null)
+        {
+            targetSelector.ClearAllHighlights();
+            Destroy(targetSelector);
+        }
+
+        GridMap.Instance?.ResetAllTileVisuals();
         state = ActionState.Finished;
     }
 

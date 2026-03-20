@@ -55,7 +55,7 @@ public abstract class Unit : MonoBehaviour
         Health = GetComponent<Health>();
 
         if (Health != null)
-            Health.SetMaxHealth(MaxHealth);
+            Health.SetMaxHealth(Stats.health);
 
         SetupActionsFromData();
     }
@@ -96,7 +96,7 @@ public abstract class Unit : MonoBehaviour
         equippedPet = pet;
 
         if (Health != null)
-            Health.SetMaxHealth(MaxHealth);
+            Health.SetMaxHealth(Stats.health);
 
         SetupActionsFromData();
     }
@@ -207,6 +207,8 @@ public abstract class Unit : MonoBehaviour
         currentAction = actions[index];
         OnActionChanged?.Invoke(currentAction);
         currentAction.EnterAction();
+
+        CameraController.Instance?.SetActionFocus(currentAction);
     }
 
     public void UpdateAction()
@@ -222,6 +224,7 @@ public abstract class Unit : MonoBehaviour
     public void CancelAction()
     {
         currentAction?.Cancel();
+        CameraController.Instance?.ResetFocus();
     }
 
     // =========================

@@ -62,6 +62,9 @@ public class CameraController : MonoBehaviour
     float targetZoom;
 
     Unit followTarget;
+    IUnitAction targetedAction;
+    float originalZoom;
+    CameraMode originalMode;
 
     Plane mapPlane = new(Vector3.up, Vector3.zero);
 
@@ -105,15 +108,20 @@ public class CameraController : MonoBehaviour
 
     void Update()
     {
+        HandleKeyboard();
+
         switch (cameraMode)
         {
             case CameraMode.Free:
                 HandleDrag();
+                HandleMouseDrag();
                 HandleZoom();
+                HandleMouseZoom();
                 break;
 
             case CameraMode.FollowUnit:
                 HandleFollow();
+                HandleMouseZoom();
                 break;
         }
 
@@ -164,6 +172,41 @@ public class CameraController : MonoBehaviour
         targetProjectedPoint += move;
     }
 
+    void HandleMouseDrag()
+    {
+        if (!Input.GetMouseButton(1)) // Clique direito
+            return;
+
+        float mouseX = Input.GetAxis("Mouse X");
+        float mouseY = Input.GetAxis("Mouse Y");
+
+        Vector3 right = cam.transform.right;
+        Vector3 forward = cam.transform.forward;
+
+        right.y = 0f;
+        forward.y = 0f;
+        right.Normalize();
+        forward.Normalize();
+
+        // Sensibilidade do mouse baseada no zoom para ser consistente
+        float sensitivity = cam.orthographicSize * 0.1f;
+        Vector3 move = (-right * mouseX + -forward * mouseY) * sensitivity;
+
+        targetProjectedPoint += move;
+    }
+
+    void HandleKeyboard()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            bool isFree = cameraMode == CameraMode.Free;
+            EnableFreeCamera(!isFree);
+            
+            // Se as pessoas usarem a UI, o botão deve atualizar. 
+            // Como não temos ref direta fácil sem Find, deixamos a UI se atualizar se houver evento (opcional)
+        }
+    }
+
     void HandleZoom()
     {
         if (Input.touchCount != 2)
@@ -180,7 +223,21 @@ public class CameraController : MonoBehaviour
 
         float delta = currDist - prevDist;
 
-        targetZoom -= delta * zoomSpeed;
+        UpdateZoomState(-delta * zoomSpeed);
+    }
+
+    void HandleMouseZoom()
+    {
+        float scroll = Input.GetAxis("Mouse ScrollWheel");
+        if (Mathf.Abs(scroll) > 0.001f)
+        {
+            UpdateZoomState(-scroll * 10f * zoomSpeed);
+        }
+    }
+
+    void UpdateZoomState(float delta)
+    {
+        targetZoom += delta;
         targetZoom = Mathf.Clamp(targetZoom, minZoom, maxZoom);
     }
 
@@ -196,25 +253,25 @@ public class CameraController : MonoBehaviour
         float orthoHeight = cam.orthographicSize;
         float orthoWidth = orthoHeight * cam.aspect;
 
-        // Adiciona padding para os personagens "respirarem" nas bordas
-        float minX = bounds.bottomLeft.position.x - edgePadding;
-        float maxX = bounds.topRight.position.x + edgePadding;
-        float minZ = bounds.bottomLeft.position.z - edgePadding;
-        float maxZ = bounds.topRight.position.z + edgePadding;
+        // Limites estritos do mapa (sem padding externo para não mostrar o vazio)
+        float minMapX = bounds.bottomLeft.position.x;
+        float maxMapX = bounds.topRight.position.x;
+        float minMapZ = bounds.bottomLeft.position.z;
+        float maxMapZ = bounds.topRight.position.z;
 
         float clampedX, clampedZ;
 
         // Se o mapa for menor que a tela no eixo X, centraliza no mapa
-        if (maxX - minX < orthoWidth * 2f)
-            clampedX = (minX + maxX) / 2f;
+        if (maxMapX - minMapX < orthoWidth * 2f)
+            clampedX = (minMapX + maxMapX) / 2f;
         else
-            clampedX = Mathf.Clamp(targetProjectedPoint.x, minX + orthoWidth, maxX - orthoWidth);
+            clampedX = Mathf.Clamp(targetProjectedPoint.x, minMapX + orthoWidth, maxMapX - orthoWidth);
 
         // Se o mapa for menor que a tela no eixo Z, centraliza no mapa
-        if (maxZ - minZ < orthoHeight * 2f)
-            clampedZ = (minZ + maxZ) / 2f;
+        if (maxMapZ - minMapZ < orthoHeight * 2f)
+            clampedZ = (minMapZ + maxMapZ) / 2f;
         else
-            clampedZ = Mathf.Clamp(targetProjectedPoint.z, minZ + orthoHeight, maxZ - orthoHeight);
+            clampedZ = Mathf.Clamp(targetProjectedPoint.z, minMapZ + orthoHeight, maxMapZ - orthoHeight);
 
         targetProjectedPoint = new Vector3(clampedX, 0f, clampedZ);
     }
@@ -290,6 +347,47 @@ public class CameraController : MonoBehaviour
     public void EnableFreeCamera(bool enable)
     {
         cameraMode = enable ? CameraMode.Free : CameraMode.FollowUnit;
+        Debug.Log($"[CameraController] Modo alterado para: {cameraMode}");
+    }
+
+    public void SetActionFocus(IUnitAction action)
+    {
+        if (action == null)
+        {
+            ResetFocus();
+            return;
+        }
+
+        targetedAction = action;
+        
+        // Salva estado anterior para poder voltar
+        if (cameraMode != CameraMode.Free || targetedAction == null)
+        {
+            originalZoom = targetZoom;
+            originalMode = cameraMode;
+        }
+
+        // Se o alcance for grande, precisamos de uma visão mais ampla ou livre
+        if (action.Range >= 4)
+        {
+            targetZoom = Mathf.Max(targetZoom, 10f); // Zoom out mínimo para ver a ação
+            
+            if (action.Range >= 7)
+            {
+                cameraMode = CameraMode.Free;
+                Debug.Log("[CameraController] Alcance alto detectado. Habilitando Câmera Livre e Zoom Out.");
+            }
+        }
+    }
+
+    public void ResetFocus()
+    {
+        if (targetedAction == null) return;
+
+        targetedAction = null;
+        targetZoom = originalZoom;
+        cameraMode = originalMode;
+        Debug.Log("[CameraController] Foco da ação resetado.");
     }
 
     // =========================

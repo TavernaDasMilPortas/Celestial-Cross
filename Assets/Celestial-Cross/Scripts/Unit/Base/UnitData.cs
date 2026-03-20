@@ -6,48 +6,46 @@ public class UnitData : ScriptableObject
 {
     public string displayName;
 
-    [Header("Legacy Stats")]
-    public int maxHealth;
-    public int speed;
-
-    [Header("Magical Girl Stats")]
+    [Header("Stats")]
     public CombatStats baseStats = new CombatStats(30, 10, 6, 7, 7, 1);
-    public AbilityData characterAbility;
-    public PetData defaultPet;
 
+    [Header("Abilities")]
+    public List<AbilityData> characterAbilities = new();
+
+    [Header("Actions (Native)")]
     [SerializeReference]
-    public List<UnitActionData> actions = new();
+    public List<UnitActionData> nativeActions = new();
 
     public CombatStats GetCombinedStats(PetData equippedPet = null)
     {
-        PetData selectedPet = equippedPet != null ? equippedPet : defaultPet;
         CombatStats total = baseStats;
 
-        if (selectedPet != null)
-            total += selectedPet.baseStats;
+        if (equippedPet != null)
+            total += equippedPet.baseStats;
 
         return total;
     }
 
-    public AbilityData GetCharacterAbility() => characterAbility;
+    public List<AbilityData> GetCharacterAbilities() => characterAbilities;
 
     public AbilityData GetPetAbility(PetData equippedPet = null)
     {
-        PetData selectedPet = equippedPet != null ? equippedPet : defaultPet;
-        return selectedPet != null ? selectedPet.ability : null;
+        return equippedPet != null ? equippedPet.ability : null;
     }
 
     public IEnumerable<IExecutableDefinitionData> GetExecutableDefinitions(PetData equippedPet = null)
     {
-        foreach (var action in actions)
+        foreach (var action in nativeActions)
         {
             if (action != null)
                 yield return action;
         }
 
-        AbilityData charAbility = GetCharacterAbility();
-        if (charAbility != null && charAbility.IsActive && charAbility.GetExecutableDefinition() != null)
-            yield return charAbility.GetExecutableDefinition();
+        foreach (var ability in characterAbilities)
+        {
+            if (ability != null && ability.IsActive && ability.GetExecutableDefinition() != null)
+                yield return ability.GetExecutableDefinition();
+        }
 
         AbilityData petAbility = GetPetAbility(equippedPet);
         if (petAbility != null && petAbility.IsActive && petAbility.GetExecutableDefinition() != null)

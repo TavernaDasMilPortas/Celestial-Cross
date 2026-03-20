@@ -10,11 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cb249868a85523b4686441d22073799e, type: 3}
-  m_Name: TesteCharacter
+  m_Name: New Unit Data
   m_EditorClassIdentifier: Assembly-CSharp::UnitData
-  displayName: fofucha
-  maxHealth: 0
-  speed: 0
+  displayName: 
   baseStats:
     health: 30
     attack: 10
@@ -22,17 +20,8 @@ MonoBehaviour:
     speed: 7
     criticalChance: 7
     effectAccuracy: 1
-  characterAbility: {fileID: 0}
-  defaultPet: {fileID: 11400000, guid: 900ae4f5098769c41b8c14ee61484ab5, type: 2}
-  actions:
-  - rid: 7428665820824731650
+  characterAbilities: []
+  nativeActions: []
   references:
     version: 2
-    RefIds:
-    - rid: 7428665820824731650
-      type: {class: MoveActionData, ns: , asm: Assembly-CSharp}
-      data:
-        actionName: 
-        actionIcon: {fileID: 21300000, guid: 15b9e745d70d9f641b4a9ecb7b417e90, type: 3}
-        description: 'Se movimenta '
-        range: 3
+    RefIds: []

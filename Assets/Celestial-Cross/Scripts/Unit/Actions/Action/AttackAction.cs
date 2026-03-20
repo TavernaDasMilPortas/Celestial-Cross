@@ -4,13 +4,13 @@ using System.Linq;
 
 public class AttackAction : UnitActionBase
 {
-    public int Range { get; set; }
+    public override int Range { get; set; }
     public int Damage { get; set; }
+    public override string GetDetailStats() => $"Dano: {Damage}";
     public TargetingRuleData TargetingRule { get; set; } = new TargetingRuleData();
     public AreaPatternData AreaPattern { get; set; }
     public int AreaRotationSteps { get; set; }
 
-    TargetSelector targetSelector;
 
     protected override ActionContext CreateContext()
     {
@@ -21,7 +21,12 @@ public class AttackAction : UnitActionBase
     {
         Debug.Log($"[AttackAction] {unit.DisplayName} | Range {Range} | Flat Bonus {Damage} | Mode {TargetingRule.mode}");
 
-        StartTargetSelection();
+        StartTargetSelection(Range, TargetingRule);
+        
+        // Configuração adicional do seletor (Área)
+        targetSelector.OnSelectedTargetsChanged += OnSelectionChanged;
+        targetSelector.UpdateAreaConfig(AreaPattern, AreaRotationSteps);
+
         unit.LogCanConfirm(false);
     }
 
@@ -34,7 +39,7 @@ public class AttackAction : UnitActionBase
     {
         foreach (var target in context.targets)
         {
-            if (target.Health == null)
+            if (target == null || target.Health == null)
                 continue;
 
             int hits = unit.GetAttacksAgainst(target);
@@ -51,40 +56,17 @@ public class AttackAction : UnitActionBase
 
                 totalDamage += result.damage;
                 if (result.isCritical) anyCrit = true;
-
-                Debug.Log($"[AttackAction] Hit {i + 1}/{hits} | {unit.DisplayName} -> {target.DisplayName} | Damage: {result.damage} | Critical: {result.isCritical}");
             }
 
             target.Health.TakeDamage(totalDamage, anyCrit);
-
         }
-
-        ClearSelection();
     }
 
     protected override void OnCancel()
     {
-        ClearSelection();
+        // Limpeza básica via UnitActionBase
     }
 
-    void StartTargetSelection()
-    {
-        targetSelector = gameObject.AddComponent<TargetSelector>();
-
-        targetSelector.Begin(
-            sourceUnit: unit,
-            selectionRange: Range,
-            rule: TargetingRule,
-            selectedAreaPattern: AreaPattern,
-            selectedAreaRotationSteps: AreaRotationSteps
-        );
-
-        targetSelector.OnTargetsConfirmed += OnTargetsConfirmed;
-        targetSelector.OnSelectedTargetsChanged += OnSelectionChanged;
-        targetSelector.OnCanceled += OnSelectionCanceled;
-
-        state = ActionState.SelectingTargets;
-    }
 
     void OnSelectionChanged(List<Unit> targets)
     {
@@ -116,7 +98,7 @@ public class AttackAction : UnitActionBase
         InvokeForecastUpdated(forecast);
     }
 
-    void OnTargetsConfirmed(List<Unit> targets)
+    protected override void OnTargetsConfirmed(List<Unit> targets)
     {
         context.targets = ExpandAreaTargetsIfNeeded(targets, targetSelector != null ? targetSelector.SelectedPoints : null);
         state = ActionState.ReadyToConfirm;
@@ -135,6 +117,7 @@ public class AttackAction : UnitActionBase
             return targets;
 
         HashSet<Vector2Int> affectedCells = new();
+        context.affectedAreaCells.Clear();
 
         if (TargetingRule.origin == TargetOrigin.Point && selectedPoints != null && selectedPoints.Count > 0)
         {
@@ -153,6 +136,8 @@ public class AttackAction : UnitActionBase
             }
         }
 
+        context.affectedAreaCells.AddRange(affectedCells);
+        
         List<Unit> affectedUnits = FindObjectsOfType<Unit>()
             .Where(u => affectedCells.Contains(u.GridPosition))
             .Where(u => TargetingRule.canTargetSelf || u != unit)
@@ -163,22 +148,4 @@ public class AttackAction : UnitActionBase
         return affectedUnits;
     }
 
-    void OnSelectionCanceled()
-    {
-        state = ActionState.Finished;
-        unit.LogCanConfirm(false);
-    }
-
-    void ClearSelection()
-    {
-        if (targetSelector != null)
-        {
-            targetSelector.OnTargetsConfirmed -= OnTargetsConfirmed;
-            targetSelector.OnSelectedTargetsChanged -= OnSelectionChanged;
-            targetSelector.OnCanceled -= OnSelectionCanceled;
-            Destroy(targetSelector);
-        }
-
-        targetSelector = null;
-    }
 }

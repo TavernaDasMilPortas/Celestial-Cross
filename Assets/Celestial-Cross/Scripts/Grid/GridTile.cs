@@ -10,6 +10,7 @@ public class GridTile : MonoBehaviour
 
     [Header("Colors")]
     [SerializeField] private Color baseColor = Color.gray;
+    [SerializeField] private Color executionColor = new Color(0.15f, 0.15f, 0.15f, 1f);
     [SerializeField] private Color highlightColor = Color.green;
     [SerializeField] private Color selectedColor = Color.yellow;
     [SerializeField] private Color areaPreviewColor = new Color(1f, 0.5f, 0f, 1f);
@@ -28,6 +29,7 @@ public class GridTile : MonoBehaviour
     private int activeColorProperty = -1;
 
     // Estado visual empilhado (prioridades)
+    private bool isExecution = false;
     private bool isSelected = false;
     private bool isAreaCenter = false;
     private bool isAreaPreview = false;
@@ -98,9 +100,22 @@ public class GridTile : MonoBehaviour
         isAreaCenter = state;
         UpdateVisuals();
     }
+
+    public void Darken()
+    {
+        isExecution = true;
+        UpdateVisuals();
+    }
+
+    public void ClearDarken()
+    {
+        isExecution = false;
+        UpdateVisuals();
+    }
     
     public void HardClearAllStates()
     {
+        isExecution = false;
         isSelected = false;
         isAreaCenter = false;
         isAreaPreview = false;
@@ -122,7 +137,8 @@ public class GridTile : MonoBehaviour
 
     void UpdateVisuals()
     {
-        if (isSelected) ApplyColor(selectedColor);
+        if (isExecution) ApplyColor(executionColor);
+        else if (isSelected) ApplyColor(selectedColor);
         else if (isAreaCenter) ApplyColor(areaCenterColor);
         else if (isAreaPreview) ApplyColor(areaPreviewColor);
         else if (isHighlight) ApplyColor(highlightColor);

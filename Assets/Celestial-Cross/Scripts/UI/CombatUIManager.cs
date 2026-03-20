@@ -23,7 +23,18 @@ public class CombatUIManager : MonoBehaviour
     private void Start()
     {
         TurnManager.OnTurnStarted += HandleTurnStarted;
+        TurnManager.OnTurnEnded += HandleTurnEnded;
         TurnManager.OnQueueChanged += HandleQueueChanged;
+
+        UnitHoverDetector.OnHoverStarted += HandleUnitHoverStarted;
+        UnitHoverDetector.OnHoverEnded += HandleUnitHoverEnded;
+
+        // Sync initial state if combat already started
+        if (TurnManager.Instance != null && TurnManager.Instance.CurrentUnit != null)
+        {
+            HandleQueueChanged(TurnManager.Instance.GetTurnQueue());
+            HandleTurnStarted(TurnManager.Instance.CurrentUnit);
+        }
     }
 
     private Unit currentActiveUnit;
@@ -31,9 +42,18 @@ public class CombatUIManager : MonoBehaviour
     private void OnDestroy()
     {
         TurnManager.OnTurnStarted -= HandleTurnStarted;
+        TurnManager.OnTurnEnded -= HandleTurnEnded;
         TurnManager.OnQueueChanged -= HandleQueueChanged;
+
+        UnitHoverDetector.OnHoverStarted -= HandleUnitHoverStarted;
+        UnitHoverDetector.OnHoverEnded -= HandleUnitHoverEnded;
         if (currentActiveUnit != null)
             currentActiveUnit.OnActionChanged -= HandleActionChanged;
+    }
+
+    private void HandleTurnEnded()
+    {
+        if (actionBarUI != null) actionBarUI.ClearButtons();
     }
 
     private void HandleTurnStarted(Unit unit)
@@ -65,6 +85,19 @@ public class CombatUIManager : MonoBehaviour
     {
         if (combatForecastUI != null)
             combatForecastUI.SetAction(newAction);
+    }
+
+    private void HandleUnitHoverStarted(Unit hoveredUnit)
+    {
+        if (unitPanelUI != null && hoveredUnit != null)
+            unitPanelUI.UpdatePanel(hoveredUnit);
+    }
+
+    private void HandleUnitHoverEnded(Unit hoveredUnit)
+    {
+        // Ao sair do hover, voltamos a exibir a unidade que está jogando no momento
+        if (unitPanelUI != null && currentActiveUnit != null)
+            unitPanelUI.UpdatePanel(currentActiveUnit);
     }
 
     private void HandleQueueChanged(IEnumerable<Unit> queue)

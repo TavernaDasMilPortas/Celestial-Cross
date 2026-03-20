@@ -8,7 +8,7 @@ public class UnitPanelUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI hpText;
     [SerializeField] private TextMeshProUGUI speedText;
     [SerializeField] private Image petIconImage;
-    [SerializeField] private Slider hpSlider;
+    [SerializeField] private Image hpFillImage;
 
     private Unit currentUnit;
 
@@ -56,10 +56,9 @@ public class UnitPanelUI : MonoBehaviour
         if (hpText != null)
             hpText.text = $"HP: {current} / {max}";
             
-        if (hpSlider != null)
+        if (hpFillImage != null)
         {
-            hpSlider.maxValue = max;
-            hpSlider.value = current;
+            hpFillImage.fillAmount = (float)current / max;
         }
     }
 

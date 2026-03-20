@@ -4,11 +4,13 @@ using UnityEngine;
 [CustomEditor(typeof(UnitData))]
 public class UnitDataEditor : Editor
 {
-    SerializedProperty actionsProp;
+    SerializedProperty nativeActionsProp;
+    SerializedProperty characterAbilitiesProp;
 
     void OnEnable()
     {
-        actionsProp = serializedObject.FindProperty("actions");
+        nativeActionsProp = serializedObject.FindProperty("nativeActions");
+        characterAbilitiesProp = serializedObject.FindProperty("characterAbilities");
     }
 
     public override void OnInspectorGUI()
@@ -18,43 +20,55 @@ public class UnitDataEditor : Editor
         EditorGUILayout.PropertyField(serializedObject.FindProperty("displayName"));
 
         EditorGUILayout.Space();
-        EditorGUILayout.LabelField("Magical Girl Setup", EditorStyles.boldLabel);
+        EditorGUILayout.LabelField("Character Core", EditorStyles.boldLabel);
         EditorGUILayout.PropertyField(serializedObject.FindProperty("baseStats"));
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("characterAbility"));
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("defaultPet"));
+        
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("Abilities (External SO)", EditorStyles.boldLabel);
+        EditorGUILayout.PropertyField(characterAbilitiesProp, true);
 
         EditorGUILayout.Space();
-        EditorGUILayout.LabelField("Legacy Stats", EditorStyles.boldLabel);
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("maxHealth"));
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("speed"));
+        EditorGUILayout.LabelField("Native Actions (Inline)", EditorStyles.boldLabel);
 
-        EditorGUILayout.Space();
-        EditorGUILayout.LabelField("Actions", EditorStyles.boldLabel);
-
-        for (int i = 0; i < actionsProp.arraySize; i++)
+        // Renderiza lista de ações de forma customizada para ter botões de Add/Remove limpos
+        for (int i = 0; i < nativeActionsProp.arraySize; i++)
         {
+            SerializedProperty element = nativeActionsProp.GetArrayElementAtIndex(i);
+            
+            EditorGUILayout.BeginVertical("helpbox");
             EditorGUILayout.BeginHorizontal();
-
-            EditorGUILayout.PropertyField(
-                actionsProp.GetArrayElementAtIndex(i),
-                GUIContent.none,
-                true
-            );
+            
+            EditorGUILayout.PropertyField(element, true);
 
             if (GUILayout.Button("X", GUILayout.Width(24)))
             {
-                actionsProp.DeleteArrayElementAtIndex(i);
+                nativeActionsProp.DeleteArrayElementAtIndex(i);
                 break;
             }
 
             EditorGUILayout.EndHorizontal();
+            EditorGUILayout.EndVertical();
         }
 
-        if (GUILayout.Button("+ Add Action"))
+        EditorGUILayout.Space();
+        EditorGUILayout.BeginHorizontal();
+        if (GUILayout.Button("+ Add Attack"))
         {
-            actionsProp.arraySize++;
+            AddAction(new AttackActionData());
         }
+        if (GUILayout.Button("+ Add Move"))
+        {
+            AddAction(new MoveActionData());
+        }
+        EditorGUILayout.EndHorizontal();
 
         serializedObject.ApplyModifiedProperties();
+    }
+
+    void AddAction(UnitActionData action)
+    {
+        int index = nativeActionsProp.arraySize;
+        nativeActionsProp.InsertArrayElementAtIndex(index);
+        nativeActionsProp.GetArrayElementAtIndex(index).managedReferenceValue = action;
     }
 }

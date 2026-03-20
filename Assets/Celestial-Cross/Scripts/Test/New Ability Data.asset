@@ -15,7 +15,7 @@ MonoBehaviour:
   id: 1
   abilityName: bola de fogo
   description: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: d0876e582dba55f47b6394a1f5743758, type: 3}
   abilityType: 1
   passive:
     trigger: AlwaysOn
@@ -31,6 +31,8 @@ MonoBehaviour:
       type: {class: AttackActionData, ns: , asm: Assembly-CSharp}
       data:
         actionName: 
+        actionIcon: {fileID: 21300000, guid: d0876e582dba55f47b6394a1f5743758, type: 3}
+        description: Bola de fogo!!!!!!!!!!
         range: 15
         damage: 5
         targeting:

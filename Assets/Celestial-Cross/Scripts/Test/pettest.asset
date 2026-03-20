@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9fa029edc35a40c7b4610452fc91464a, type: 3}
   m_Name: pettest
   m_EditorClassIdentifier: Assembly-CSharp::PetData
-  displayName: 
+  displayName: Doguxo
+  icon: {fileID: 21300000, guid: eaf0aeb3beba45c4598425c16100a8aa, type: 3}
   baseStats:
     health: 5
     attack: 2
