@@ -20,8 +20,17 @@ MonoBehaviour:
     speed: 7
     criticalChance: 7
     effectAccuracy: 1
-  characterAbilities: []
-  nativeActions: []
+  characterAbilities:
+  - {fileID: 11400000, guid: 7e933667d0009ce438343264906210ca, type: 2}
+  nativeActions:
+  - rid: 7428666044191080547
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 7428666044191080547
+      type: {class: MoveActionData, ns: , asm: Assembly-CSharp}
+      data:
+        actionName: 
+        actionIcon: {fileID: 21300000, guid: 15b9e745d70d9f641b4a9ecb7b417e90, type: 3}
+        description: Se movimenta
+        range: 3

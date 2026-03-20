@@ -13,37 +13,31 @@ MonoBehaviour:
   m_Name: soldierUnity
   m_EditorClassIdentifier: Assembly-CSharp::UnitData
   displayName: soldado
-  maxHealth: 0
-  speed: 0
   baseStats:
-    health: 20
+    health: 50
     attack: 8
     defense: 4
     speed: 5
     criticalChance: 5
     effectAccuracy: 0
-  characterAbility: {fileID: 0}
-  defaultPet: {fileID: 0}
-  actions:
-  - rid: 7866182559869435981
-  - rid: 7866182559869435982
+  characterAbilities: []
+  nativeActions:
+  - rid: 7428666044191080577
+  - rid: 7428666044191080578
   references:
     version: 2
     RefIds:
-    - rid: 7866182559869435981
-      type: {class: MoveActionData, ns: , asm: Assembly-CSharp}
-      data:
-        actionName: 
-        range: 3
-    - rid: 7866182559869435982
+    - rid: 7428666044191080577
       type: {class: AttackActionData, ns: , asm: Assembly-CSharp}
       data:
         actionName: 
+        actionIcon: {fileID: 0}
+        description: 
         range: 1
         damage: 5
         targeting:
           mode: 0
-          origin: 0
+          origin: 1
           allowMultiple: 0
           minTargets: 1
           maxTargets: 1
@@ -51,3 +45,10 @@ MonoBehaviour:
           targetFaction: 2
         areaPattern: {fileID: 0}
         areaRotationSteps: 0
+    - rid: 7428666044191080578
+      type: {class: MoveActionData, ns: , asm: Assembly-CSharp}
+      data:
+        actionName: 
+        actionIcon: {fileID: 0}
+        description: 
+        range: 3

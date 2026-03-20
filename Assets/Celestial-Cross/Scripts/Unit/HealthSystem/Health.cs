@@ -10,12 +10,18 @@ public class Health : MonoBehaviour
 
     public event Action<int, int> OnHealthChanged;
     public event Action<int, bool> OnDamageTaken;
+    public event Action<int> OnHealed;
     public event Action OnDeath;
 
     void Awake()
     {
         CurrentHealth = maxHealth;
         OnHealthChanged?.Invoke(CurrentHealth, maxHealth);
+    }
+
+    void Start()
+    {
+        DamagePopupManager.Instance?.Register(this);
     }
 
     public void SetMaxHealth(int value)
@@ -45,6 +51,7 @@ public class Health : MonoBehaviour
 
         CurrentHealth = Mathf.Clamp(CurrentHealth + amount, 0, maxHealth);
         OnHealthChanged?.Invoke(CurrentHealth, maxHealth);
+        OnHealed?.Invoke(amount);
     }
 
     void Die()
