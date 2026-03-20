@@ -1,4 +1,6 @@
 using UnityEngine;
+using System.Collections.Generic;
+using CelestialCross.Combat;
 
 [CreateAssetMenu(menuName = "Units/Ability Data")]
 public class AbilityData : ScriptableObject
@@ -10,10 +12,10 @@ public class AbilityData : ScriptableObject
     public Sprite icon;
     public AbilityType abilityType = AbilityType.Passive;
 
-    [Header("Passive")]
-    public PassiveAbilityData passive = new PassiveAbilityData();
+    [Header("Weaver Passives (For Passive or Active abilities)")]
+    public List<WeaverPassiveEntry> weaverPassives = new();
 
-    [Header("Active")]
+    [Header("Active Action (Only if Active type)")]
     public ActiveAbilityData active = new ActiveAbilityData();
 
     public bool IsPassive => abilityType == AbilityType.Passive;
@@ -23,4 +25,14 @@ public class AbilityData : ScriptableObject
     {
         return IsActive ? active : null;
     }
+}
+
+[System.Serializable]
+public class WeaverPassiveEntry
+{
+    public string entryName;
+    public CombatHook trigger;
+    
+    [SerializeReference]
+    public List<AbilityEffectBase> effects = new();
 }

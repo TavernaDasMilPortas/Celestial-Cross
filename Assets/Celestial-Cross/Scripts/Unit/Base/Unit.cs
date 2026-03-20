@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using CelestialCross.Combat;
 
 [RequireComponent(typeof(Health))]
 [RequireComponent(typeof(Collider))]
@@ -15,6 +16,9 @@ public abstract class Unit : MonoBehaviour
     [Header("Runtime")]
     public Vector2Int GridPosition;
 
+    [Header("Runtime Stats")]
+    [SerializeField] protected CombatStats modifierStats = new CombatStats(0, 0, 0, 0, 0, 0);
+
     // =========================
     // PROPERTIES
     // =========================
@@ -24,16 +28,35 @@ public abstract class Unit : MonoBehaviour
     public string DisplayName =>
         unitData != null ? unitData.displayName : name;
 
-    public CombatStats Stats =>
-        unitData != null
-            ? unitData.GetCombinedStats(equippedPet)
-            : new CombatStats(1, 0, 0, 0, 0, 0);
+    public CombatStats Stats
+    {
+        get
+        {
+            CombatStats baseStats = unitData != null
+                ? unitData.GetCombinedStats(equippedPet)
+                : new CombatStats(1, 0, 0, 0, 0, 0);
+            
+            return baseStats + modifierStats;
+        }
+    }
 
     public int Speed => Stats.speed;
 
     public int MaxHealth => Stats.health;
 
     public Health Health { get; private set; }
+    public PassiveManager PassiveManager { get; private set; }
+
+    // =========================
+    // MODIFIERS
+    // =========================
+
+    public void AddStatModifier(CombatStats mods)
+    {
+        modifierStats += mods;
+        // Se HP máximo aumentou, curar a diferença? Geralmente sim.
+        if (mods.health > 0) Health?.Heal(mods.health);
+    }
 
     // =========================
     // ACTIONS
@@ -56,8 +79,43 @@ public abstract class Unit : MonoBehaviour
 
         if (Health != null)
             Health.SetMaxHealth(Stats.health);
+        
+        PassiveManager = GetComponent<PassiveManager>();
+        if (PassiveManager == null)
+            PassiveManager = gameObject.AddComponent<PassiveManager>();
 
+        RegisterAbilityPassives();
         SetupActionsFromData();
+    }
+
+    private void RegisterAbilityPassives()
+    {
+        if (unitData == null || PassiveManager == null) return;
+
+        Debug.Log($"[Unit] Registrando passivas para {DisplayName}");
+
+        List<AbilityData> allAbilities = new List<AbilityData>(unitData.GetCharacterAbilities());
+        AbilityData petAbility = unitData.GetPetAbility(equippedPet);
+        if (petAbility != null) 
+        {
+            allAbilities.Add(petAbility);
+            Debug.Log($"[Unit] Adicionando habilidade do Pet: {petAbility.abilityName}");
+        }
+
+        foreach (var ability in allAbilities)
+        {
+            if (ability == null) continue;
+            
+            if (ability.weaverPassives.Count > 0)
+            {
+                Debug.Log($"[Unit] Habilidade '{ability.abilityName}' possui {ability.weaverPassives.Count} passivas Weaver.");
+            }
+
+            foreach (var WeaverPassive in ability.weaverPassives)
+            {
+                PassiveManager.AddPassive(WeaverPassive);
+            }
+        }
     }
 
     // =========================
@@ -206,6 +264,10 @@ public abstract class Unit : MonoBehaviour
 
         currentAction = actions[index];
         OnActionChanged?.Invoke(currentAction);
+        
+        // No SelectAction ainda não temos um alvo final, então target é null ou self
+        PassiveManager?.TriggerHook(CombatHook.OnBeforeAction, new CombatContext(this, this, 0, currentAction));
+        
         currentAction.EnterAction();
 
         CameraController.Instance?.SetActionFocus(currentAction);

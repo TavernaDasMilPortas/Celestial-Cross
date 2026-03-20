@@ -16,18 +16,18 @@ public class AbilityDataEditor : Editor
         EditorGUILayout.PropertyField(serializedObject.FindProperty("abilityType"));
 
         var typeProp = serializedObject.FindProperty("abilityType");
-        var passiveProp = serializedObject.FindProperty("passive");
+        var weaverPassivesProp = serializedObject.FindProperty("weaverPassives");
         var activeProp = serializedObject.FindProperty("active");
 
         EditorGUILayout.Space();
+        EditorGUILayout.LabelField("Weaver Settings", EditorStyles.boldLabel);
+        
+        // Sempre mostrar as passivas weaver (podem existir em ativas tbm)
+        EditorGUILayout.PropertyField(weaverPassivesProp, new GUIContent("Weaver Passives"), true);
 
-        if ((AbilityType)typeProp.enumValueIndex == AbilityType.Passive)
+        if ((AbilityType)typeProp.enumValueIndex == AbilityType.Active)
         {
-            EditorGUILayout.LabelField("Passive Setup", EditorStyles.boldLabel);
-            EditorGUILayout.PropertyField(passiveProp, true);
-        }
-        else
-        {
+            EditorGUILayout.Space();
             EditorGUILayout.LabelField("Active Setup", EditorStyles.boldLabel);
             EditorGUILayout.PropertyField(activeProp.FindPropertyRelative("actionName"));
             EditorGUILayout.PropertyField(activeProp.FindPropertyRelative("actionDefinition"), true);

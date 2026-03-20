@@ -65,4 +65,23 @@ namespace CelestialCross.Combat
             this.action = action;
         }
     }
+
+    /// <summary>
+    /// Tipos de seleção de alvos para efeitos do Weaver System.
+    /// </summary>
+    public enum EffectTargetType
+    {
+        Default,            // Mantém o alvo do contexto (ex: quem sofreu o dano)
+        Self,               // A própria unidade (source)
+        AllEnemies,         // Todos os inimigos do dono da passiva
+        AllAllies,          // Todos os aliados do dono da passiva
+        EnemyMostHP,        // Inimigo com mais HP
+        EnemyLeastHP,       // Inimigo com menos HP
+        AllyMostHP,         // Aliado com mais HP
+        AllyLeastHP,        // Aliado com menos HP
+        NearestEnemy,       // Inimigo mais próximo
+        FarthestEnemy,      // Inimigo mais distante
+        NearestAlly,        // Aliado mais próximo
+        FarthestAlly        // Aliado mais distante
+    }
 }

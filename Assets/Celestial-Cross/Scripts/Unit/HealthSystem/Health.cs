@@ -1,4 +1,5 @@
 using UnityEngine;
+using CelestialCross.Combat;
 using System;
 
 public class Health : MonoBehaviour
@@ -13,6 +14,8 @@ public class Health : MonoBehaviour
     public event Action<int> OnHealed;
     public event Action OnDeath;
 
+    private PassiveManager passiveManager;
+
     void Awake()
     {
         CurrentHealth = maxHealth;
@@ -22,6 +25,7 @@ public class Health : MonoBehaviour
     void Start()
     {
         DamagePopupManager.Instance?.Register(this);
+        passiveManager = GetComponent<PassiveManager>();
     }
 
     public void SetMaxHealth(int value)
@@ -36,9 +40,19 @@ public class Health : MonoBehaviour
         if (amount <= 0)
             return;
 
+        // Hook: Antes de Tomar Dano
+        var context = new CelestialCross.Combat.CombatContext(null, GetComponent<Unit>(), amount);
+        passiveManager?.TriggerHook(CelestialCross.Combat.CombatHook.OnBeforeTakeDamage, context);
+        
+        // Se alguma passiva alterou o amount no contexto (futuro), usaríamos context.amount.
+        // Por agora, apenas notificamos.
+        
         CurrentHealth = Mathf.Clamp(CurrentHealth - amount, 0, maxHealth);
         OnHealthChanged?.Invoke(CurrentHealth, maxHealth);
         OnDamageTaken?.Invoke(amount, isCritical);
+
+        // Hook: Após Tomar Dano
+        passiveManager?.TriggerHook(CelestialCross.Combat.CombatHook.OnAfterTakeDamage, context);
 
         if (CurrentHealth <= 0)
             Die();
