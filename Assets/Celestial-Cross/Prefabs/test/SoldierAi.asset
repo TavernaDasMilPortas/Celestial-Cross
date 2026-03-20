@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AIBehaviorProfile
   profileName: New Profile
   rules: []
-  randomnessFactor: 0.1
-  fallbackBehavior: 3
-  fallbackTargetPreference: 2
+  randomnessFactor: 0.096
+  fallbackBehavior: 0
+  fallbackTargetPreference: 1
