@@ -18,12 +18,22 @@ public class UnitHoverDetector : MonoBehaviour
     void OnMouseEnter()
     {
         outline?.SetHover(true);
-        OnHoverStarted?.Invoke(unit);
+        ForceHover(unit);
     }
 
     void OnMouseExit()
     {
         outline?.SetHover(false);
-        OnHoverEnded?.Invoke(unit);
+        ForceHoverEnd(unit);
+    }
+
+    public static void ForceHover(Unit u)
+    {
+        OnHoverStarted?.Invoke(u);
+    }
+
+    public static void ForceHoverEnd(Unit u)
+    {
+        OnHoverEnded?.Invoke(u);
     }
 }

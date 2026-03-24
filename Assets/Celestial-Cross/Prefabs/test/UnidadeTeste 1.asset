@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb249868a85523b4686441d22073799e, type: 3}
+  m_Name: UnidadeTeste 1
+  m_EditorClassIdentifier: Assembly-CSharp::UnitData
+  displayName: camomila
+  baseStats:
+    health: 30
+    attack: 10
+    defense: 6
+    speed: 12
+    criticalChance: 7
+    effectAccuracy: 1
+  abilities:
+  - {fileID: 11400000, guid: f6d4b84e253516e4690f3c25fae36c9c, type: 2}
+  - {fileID: 11400000, guid: d7778278863c35c4b92e597fad0894bc, type: 2}
+  nativeActions: []
+  references:
+    version: 2
+    RefIds: []

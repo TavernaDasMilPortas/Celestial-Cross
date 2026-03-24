@@ -199,8 +199,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cc69d8253e8c9f4e9dc5343ce18e276, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyUnit
-  unitData: {fileID: 11400000, guid: 0275b794352a43f4099fe2a1957f0816, type: 2}
+  unitData: {fileID: 11400000, guid: b1aeb5d725201a641bc40f21512ddeae, type: 2}
   equippedPet: {fileID: 0}
   activeEffects: []
   GridPosition: {x: 0, y: 0}
-  behaviorProfile: {fileID: 11400000, guid: 40a85c2be71dae44fb8f64a5ad7522b6, type: 2}
+  modifierStats:
+    health: 1
+    attack: 0
+    defense: 0
+    speed: 0
+    criticalChance: 0
+    effectAccuracy: 0
+  behaviorProfile: {fileID: 11400000, guid: 1da039d9adff2d040884ac4725336807, type: 2}

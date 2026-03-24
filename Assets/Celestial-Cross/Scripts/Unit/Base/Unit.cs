@@ -1,6 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
 using CelestialCross.Combat;
+using Celestial_Cross.Scripts.Abilities;
+using Celestial_Cross.Scripts.Units;
 
 [RequireComponent(typeof(Health))]
 [RequireComponent(typeof(Collider))]
@@ -9,9 +11,9 @@ using CelestialCross.Combat;
 public abstract class Unit : MonoBehaviour
 {
     [Header("Base Data")]
-    [SerializeField] private UnitData unitData;
-    [SerializeField] private PetData equippedPet;
-    [SerializeField] private List<ActiveCombatEffect> activeEffects = new();
+    [SerializeField] protected UnitData unitData;
+    [SerializeField] protected PetData equippedPet;
+    [SerializeField] protected List<ActiveCombatEffect> activeEffects = new();
 
     [Header("Runtime")]
     public Vector2Int GridPosition;
@@ -24,6 +26,7 @@ public abstract class Unit : MonoBehaviour
     // =========================
 
     public UnitData Data => unitData;
+    public PetData EquippedPet => equippedPet;
 
     public string DisplayName =>
         unitData != null ? unitData.displayName : name;
@@ -35,219 +38,97 @@ public abstract class Unit : MonoBehaviour
             CombatStats baseStats = unitData != null
                 ? unitData.GetCombinedStats(equippedPet)
                 : new CombatStats(1, 0, 0, 0, 0, 0);
-            
+
             return baseStats + modifierStats;
         }
     }
 
     public int Speed => Stats.speed;
-
     public int MaxHealth => Stats.health;
 
     public Health Health { get; private set; }
     public PassiveManager PassiveManager { get; private set; }
 
-    // =========================
-    // MODIFIERS
-    // =========================
-
-    public void AddStatModifier(CombatStats mods)
-    {
-        modifierStats += mods;
-        // Se HP máximo aumentou, curar a diferença? Geralmente sim.
-        if (mods.health > 0) Health?.Heal(mods.health);
-    }
-
-    // =========================
-    // ACTIONS
-    // =========================
-
     protected List<IUnitAction> actions = new();
     public IReadOnlyList<IUnitAction> Actions => actions;
+    
     protected IUnitAction currentAction;
     public IUnitAction CurrentAction => currentAction;
-    public event System.Action<IUnitAction> OnActionChanged;
-    bool combatStarted;
 
-    // =========================
-    // UNITY
-    // =========================
+    public System.Action<IUnitAction> OnActionChanged;
 
+    // INITIALIZATION
+    // =========================
     protected virtual void Awake()
     {
         Health = GetComponent<Health>();
-
-        if (Health != null)
-            Health.SetMaxHealth(Stats.health);
-        
         PassiveManager = GetComponent<PassiveManager>();
-        if (PassiveManager == null)
-            PassiveManager = gameObject.AddComponent<PassiveManager>();
-
-        RegisterAbilityPassives();
-        SetupActionsFromData();
     }
-
-    private void RegisterAbilityPassives()
+ 
+    protected virtual void Start()
     {
-        if (unitData == null || PassiveManager == null) return;
-
-        Debug.Log($"[Unit] Registrando passivas para {DisplayName}");
-
-        List<AbilityData> allAbilities = new List<AbilityData>(unitData.GetCharacterAbilities());
-        AbilityData petAbility = unitData.GetPetAbility(equippedPet);
-        if (petAbility != null) 
-        {
-            allAbilities.Add(petAbility);
-            Debug.Log($"[Unit] Adicionando habilidade do Pet: {petAbility.abilityName}");
-        }
-
-        foreach (var ability in allAbilities)
-        {
-            if (ability == null) continue;
-            
-            if (ability.weaverPassives.Count > 0)
-            {
-                Debug.Log($"[Unit] Habilidade '{ability.abilityName}' possui {ability.weaverPassives.Count} passivas Weaver.");
-            }
-
-            foreach (var WeaverPassive in ability.weaverPassives)
-            {
-                PassiveManager.AddPassive(WeaverPassive);
+        if (Health != null) Health.SetMaxHealth(MaxHealth);
+        InitializeActions();
+    }
+ 
+    public void InitializeActions()
+    {
+        if (unitData == null) { Debug.LogError($"[Unit] {name} n�o possui UnitData."); return; }
+        actions.Clear();
+        foreach (var action in GetComponents<IUnitAction>()) Destroy(action as Component);
+        var blueprints = unitData.GetAbilities();
+        if (blueprints != null) foreach (var bp in blueprints) if (bp != null) actions.Add(new BlueprintActionWrapper(this, bp));
+        if (equippedPet != null && equippedPet.ability != null) actions.Add(new BlueprintActionWrapper(this, equippedPet.ability));
+        foreach (var definition in unitData.GetExecutableDefinitions(equippedPet)) {
+            if (definition == null) continue;
+            System.Type actionType = definition.GetRuntimeActionType();
+            if (actionType == null) continue;
+            var action = gameObject.AddComponent(actionType) as IUnitAction;
+            if (action != null) {
+                definition.Configure(action);
+                actions.Add(action);
             }
         }
     }
-
+ 
     // =========================
-    // COMBAT
+    // HELPER / UI / AI
     // =========================
-
-    public int GetAttacksAgainst(Unit target)
-    {
-        if (target == null)
-            return 1;
-
+ 
+    public void LogCanConfirm(bool canConfirm) { }
+ 
+    public int GetAttacksAgainst(Unit target) {
+        if (target == null) return 1;
         return DamageModel.GetAttackCountBySpeed(Stats, target.Stats);
     }
 
-    public AttackResult CalculateAttack(Unit target, DamageBonus damageBonus, DamageReduction damageReduction)
+
+
+
+
+
+
+
+
+
+    public int GetAttacksAgainst(Unit target, IUnitAction action) => GetAttacksAgainst(target);
+
+    public AttackResult CalculateAttack(Unit target)
     {
-        if (target == null)
-            return new AttackResult(1, false);
-
-        StartCombat();
-        target.StartCombat();
-
-        DamageBonus finalBonus = DamageBonus.Combine(damageBonus, GetEffectDamageBonus());
-        DamageReduction finalReduction = DamageReduction.Combine(
-            damageReduction,
-            target.GetEffectDamageReduction(isReceivingAttack: true)
-        );
-
-        return DamageModel.ResolveHit(Stats, target.Stats, finalBonus, finalReduction);
+        return CalculateAttack(target, new DamageBonus { flat = 0, percent = 0f }, new DamageReduction { flat = 0, percent = 0f });
     }
 
-    public PetData EquippedPet => equippedPet;
-
-    public void EquipPet(PetData pet)
+    public AttackResult CalculateAttack(Unit target, DamageBonus bonus, DamageReduction reduction)
     {
-        equippedPet = pet;
-
-        if (Health != null)
-            Health.SetMaxHealth(Stats.health);
-
-        SetupActionsFromData();
+        if (target == null) return new AttackResult(Stats.attack + bonus.Evaluate(Stats.attack), false);
+        return DamageModel.ResolveHit(Stats, target.Stats, bonus, reduction);
     }
 
-    public void StartCombat()
+    public AttackResult CalculateAttack(Unit target, out bool isCrit, IUnitAction action)
     {
-        if (combatStarted)
-            return;
-
-        combatStarted = true;
-
-        foreach (var effect in activeEffects)
-        {
-            if (effect == null)
-                continue;
-
-            effect.TriggerCombatStart();
-        }
-    }
-
-    DamageBonus GetEffectDamageBonus()
-    {
-        DamageBonus total = new DamageBonus { flat = 0, percent = 0f };
-
-        foreach (var effect in activeEffects)
-        {
-            if (effect == null)
-                continue;
-
-            total = DamageBonus.Combine(total, effect.GetOutgoingDamageBonus());
-        }
-
-        return total;
-    }
-
-    DamageReduction GetEffectDamageReduction(bool isReceivingAttack)
-    {
-        DamageReduction total = new DamageReduction { flat = 0, percent = 0f };
-
-        foreach (var effect in activeEffects)
-        {
-            if (effect == null)
-                continue;
-
-            total = DamageReduction.Combine(total, effect.GetIncomingReduction(isReceivingAttack));
-        }
-
-        return total;
-    }
-
-    // =========================
-    // ACTION SETUP
-    // =========================
-
-    void SetupActionsFromData()
-    {
-        if (unitData == null)
-        {
-            Debug.LogError($"[Unit] {name} não possui UnitData.");
-            return;
-        }
-
-        actions.Clear();
-
-        foreach (var action in GetComponents<IUnitAction>())
-            Destroy(action as Component);
-
-        Debug.Log($"[Unit] Criando ações para {DisplayName}");
-
-        foreach (var definition in unitData.GetExecutableDefinitions(equippedPet))
-        {
-            if (definition == null)
-                continue;
-
-            System.Type actionType = definition.GetRuntimeActionType();
-            if (actionType == null)
-            {
-                Debug.LogError("[Unit] Definição executável sem RuntimeActionType.");
-                continue;
-            }
-
-            var action = gameObject.AddComponent(actionType) as IUnitAction;
-            if (action == null)
-            {
-                Debug.LogError($"[Unit] Falha ao criar {actionType.Name}");
-                continue;
-            }
-
-            definition.Configure(action);
-            actions.Add(action);
-
-            Debug.Log($"[Unit] Ação/Habilidade adicionada: {actionType.Name}");
-        }
+        AttackResult res = CalculateAttack(target);
+        isCrit = res.isCritical;
+        return res;
     }
 
     // =========================
@@ -256,49 +137,25 @@ public abstract class Unit : MonoBehaviour
 
     public void SelectAction(int index)
     {
-        if (index < 0 || index >= actions.Count)
-            return;
+        if (index < 0 || index >= actions.Count) return;
 
         currentAction?.Cancel();
         GridMap.Instance?.ResetAllTileVisuals();
 
         currentAction = actions[index];
         OnActionChanged?.Invoke(currentAction);
-        
-        // No SelectAction ainda não temos um alvo final, então target é null ou self
-        PassiveManager?.TriggerHook(CombatHook.OnBeforeAction, new CombatContext(this, this, 0, currentAction));
-        
-        currentAction.EnterAction();
 
+        PassiveManager?.TriggerHook(CombatHook.OnBeforeAction, new CombatContext(this, this, 0, currentAction));
+        currentAction.EnterAction();
         CameraController.Instance?.SetActionFocus(currentAction);
     }
 
-    public void UpdateAction()
-    {
-        currentAction?.UpdateAction();
-    }
-
-    public void ConfirmAction()
-    {
-        currentAction?.Confirm();
-    }
-
+    public void UpdateAction() => currentAction?.UpdateAction();
+    public void ConfirmAction() => currentAction?.Confirm();
     public void CancelAction()
     {
         currentAction?.Cancel();
         CameraController.Instance?.ResetFocus();
     }
-
-    // =========================
-    // FEEDBACK
-    // =========================
-
-    public void LogCanConfirm(bool canConfirm)
-    {
-        Debug.Log(
-            canConfirm
-                ? $"[{DisplayName}] Pronto para confirmar (ENTER)"
-                : $"[{DisplayName}] Selecione alvo"
-        );
-    }
 }
+

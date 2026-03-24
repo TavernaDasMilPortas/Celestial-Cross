@@ -1,0 +1,121 @@
+# Unity AI Coding Rules
+
+## Core Architecture
+
+* Always prefer modular architecture.
+* Systems must be separated into small, reusable components.
+* Avoid monolithic classes and "god objects".
+* Favor composition over inheritance whenever possible.
+* Systems should be easy to replace, extend, or disable.
+
+## Code Reuse
+
+* Avoid code duplication.
+* Extract repeated logic into reusable methods, utility classes, or services.
+* Prefer reusable systems rather than copy-pasted behaviors.
+* If similar logic appears more than twice, refactor it into a shared module.
+
+## Event Driven Design
+
+* Prefer event-driven architecture instead of direct references.
+* Use C# events, UnityEvents, or ScriptableObject event channels.
+* Avoid tightly coupled references between gameplay systems.
+* Systems should communicate through events rather than direct calls whenever possible.
+
+## Inspector-Friendly Development
+
+* Design systems so they can be configured directly from the Unity Inspector.
+* Use serialized fields instead of hardcoded values.
+* Avoid requiring manual scene setup in code.
+
+## Custom Editor Tools
+
+* Prefer creating custom PropertyDrawers or CustomEditors when complex configuration is needed.
+* Generate Inspector tools that improve debugging and testing.
+* Editor tools should help designers configure systems without modifying code.
+
+## ScriptableObject Usage
+
+* Use ScriptableObjects for:
+
+  * configuration data
+  * shared data
+  * modular systems
+  * game settings
+* Avoid storing runtime state in ScriptableObjects unless explicitly intended.
+
+## Dependency Management
+
+* Avoid hardcoded references between systems.
+* Prefer dependency injection, interfaces, or event channels.
+* Systems should be loosely coupled.
+
+## Unity Performance Best Practices
+
+* Avoid heavy logic inside Update().
+* Prefer events, coroutines, or timers when possible.
+* Cache component references instead of repeatedly calling GetComponent().
+* Avoid unnecessary allocations during gameplay.
+
+## Clean Code Principles
+
+* Use clear and descriptive names.
+* Keep methods small and focused.
+* Each class should have a single responsibility.
+* Avoid deep nesting and complex conditionals.
+
+## Debugging and Testing
+
+* Add useful debug logs for important systems.
+* Systems should be easy to test independently.
+* Prefer deterministic logic when possible.
+
+## Editor vs Runtime Separation
+
+* Editor tools must always be placed inside Editor folders.
+* Never include editor-only code in runtime builds.
+
+## Data-Oriented Design When Possible
+
+* Separate data from behavior when it improves clarity or flexibility.
+* Prefer data-driven systems for gameplay mechanics.
+
+## Maintainability
+
+* Code must prioritize readability and maintainability over clever solutions.
+* Future developers should easily understand and modify the system.
+
+## Unity-Specific Guidelines
+
+* Use SerializeField instead of public fields unless necessary.
+* Avoid static state unless the system is explicitly global.
+* Avoid FindObjectOfType in gameplay systems.
+* Avoid hardcoded scene references.
+
+## Generated Code Expectations
+
+When generating Unity scripts:
+
+* Always structure code for modularity.
+* Prefer inspector-driven configuration.
+* Provide extensibility points (events, interfaces, or abstract classes).
+* Include comments explaining the purpose of complex logic.
+* Suggest custom inspectors when configuration becomes complex.
+
+## Networking and Persistence
+
+Gameplay systems must never directly communicate with servers or databases.
+
+All external communication must go through service layers such as:
+- SaveService
+- NetworkService
+- PlayerService
+- InventoryService
+
+Gameplay code should remain independent from networking logic.
+
+Use events to trigger persistence or server synchronization when necessary.
+
+Design systems so they can work both offline and online.
+
+Persisted data should be handled by dedicated systems instead of gameplay scripts.

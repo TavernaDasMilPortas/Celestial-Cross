@@ -36,11 +36,8 @@ public class PlayerController : MonoBehaviour
 
         activeUnit.UpdateAction();
 
-        if (Input.GetKeyDown(KeyCode.Return))
-        {
-            Debug.Log("[PlayerController] ENTER detectado");
-            activeUnit.ConfirmAction();
-        }
+        // O 'ConfirmAction()' original pelo Enter foi removido para priorizar toques ou botões de UI
+        // que chamem explicitamente activeUnit.ConfirmAction() ou cliques duplos (OnExecuteRequested)
 
         if (Input.GetKeyDown(KeyCode.Escape))
             activeUnit.CancelAction();

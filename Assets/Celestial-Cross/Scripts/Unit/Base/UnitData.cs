@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using Celestial_Cross.Scripts.Abilities;
 
 [CreateAssetMenu(menuName = "Units/Unit Data")]
 public class UnitData : ScriptableObject
@@ -9,8 +10,9 @@ public class UnitData : ScriptableObject
     [Header("Stats")]
     public CombatStats baseStats = new CombatStats(30, 10, 6, 7, 7, 1);
 
-    [Header("Abilities")]
-    public List<AbilityData> characterAbilities = new();
+    [Header("Abilities (Blueprints)")]
+    [Tooltip("Lista de habilidades e passivas usando o novo sistema de Blueprints.")]
+    public List<AbilityBlueprint> abilities = new();
 
     [Header("Actions (Native)")]
     [SerializeReference]
@@ -19,36 +21,26 @@ public class UnitData : ScriptableObject
     public CombatStats GetCombinedStats(PetData equippedPet = null)
     {
         CombatStats total = baseStats;
-
         if (equippedPet != null)
             total += equippedPet.baseStats;
-
         return total;
     }
 
-    public List<AbilityData> GetCharacterAbilities() => characterAbilities;
+    public List<AbilityBlueprint> GetAbilities() => abilities;
 
-    public AbilityData GetPetAbility(PetData equippedPet = null)
+    public AbilityBlueprint GetPetAbility(PetData equippedPet = null)
     {
         return equippedPet != null ? equippedPet.ability : null;
     }
 
-    public IEnumerable<IExecutableDefinitionData> GetExecutableDefinitions(PetData equippedPet = null)
+    // Adaptado para Unit.cs - UnitActionContext se comunica com UnitActionData
+    public IEnumerable<UnitActionData> GetExecutableDefinitions(PetData equippedPet = null)
     {
         foreach (var action in nativeActions)
         {
             if (action != null)
                 yield return action;
         }
-
-        foreach (var ability in characterAbilities)
-        {
-            if (ability != null && ability.IsActive && ability.GetExecutableDefinition() != null)
-                yield return ability.GetExecutableDefinition();
-        }
-
-        AbilityData petAbility = GetPetAbility(equippedPet);
-        if (petAbility != null && petAbility.IsActive && petAbility.GetExecutableDefinition() != null)
-            yield return petAbility.GetExecutableDefinition();
     }
 }
+

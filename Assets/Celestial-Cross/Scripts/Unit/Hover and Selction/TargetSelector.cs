@@ -209,47 +209,107 @@ public class TargetSelector : MonoBehaviour
             tile.HardClearAllStates();
     }
 
+    GridTile currentHoveredTile;
+    Unit currentHoveredUnit;
+
     void HandleMouseInput()
     {
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit hit))
+        {
+            if (targetingRule.origin == TargetOrigin.Point)
+            {
+                GridTile tile = hit.collider.GetComponent<GridTile>();
+                if (tile == null)
+                {
+                    Unit unitHit = hit.collider.GetComponent<Unit>();
+                    if (unitHit != null && GridMap.Instance != null)
+                        tile = GridMap.Instance.GetTile(unitHit.GridPosition);
+                }
+
+                if (tile != currentHoveredTile)
+                {
+                    currentHoveredTile = tile;
+                    if (tile != null && validTiles.Contains(tile))
+                    {
+                        var previewPoints = new List<Vector2Int>(selectedPoints) { tile.GridPosition };
+                        OnSelectedTargetsChanged?.Invoke(GetResolvedTargets(selectedTargets, previewPoints));
+                    }
+                    else
+                    {
+                        OnSelectedTargetsChanged?.Invoke(GetResolvedTargets(selectedTargets, selectedPoints));
+                    }
+                }
+            }
+            else
+            {
+                Unit unit = hit.collider.GetComponent<Unit>();
+                if (unit != currentHoveredUnit)
+                {
+                    if (currentHoveredUnit != null)
+                        UnitHoverDetector.ForceHoverEnd(currentHoveredUnit);
+
+                    currentHoveredUnit = unit;
+                    OnHoverChanged?.Invoke(unit);
+
+                    if (unit != null)
+                    {
+                        UnitHoverDetector.ForceHover(unit);
+                        if (validTargets.Contains(unit))
+                        {
+                            var previewTargets = new List<Unit>(selectedTargets);
+                            if (!previewTargets.Contains(unit))
+                                previewTargets.Add(unit);
+
+                            OnSelectedTargetsChanged?.Invoke(GetResolvedTargets(previewTargets, selectedPoints));
+                        }
+                    }
+                    else
+                    {
+                        OnSelectedTargetsChanged?.Invoke(GetResolvedTargets(selectedTargets, selectedPoints));
+                    }
+                }
+            }
+        }
+
         if (!Input.GetMouseButtonDown(0))
             return;
 
-        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-        if (!Physics.Raycast(ray, out RaycastHit hit))
+        if (!Physics.Raycast(ray, out hit))
             return;
 
         if (targetingRule.origin == TargetOrigin.Point)
         {
-            GridTile tile = hit.collider.GetComponent<GridTile>();
+            GridTile clickedTile = hit.collider.GetComponent<GridTile>();
 
             // Fallback: se clicou em uma Unit, tentar pegar o Tile embaixo dela
-            if (tile == null)
+            if (clickedTile == null)
             {
                 Unit unitHit = hit.collider.GetComponent<Unit>();
                 if (unitHit != null && GridMap.Instance != null)
                 {
-                    tile = GridMap.Instance.GetTile(unitHit.GridPosition);
+                    clickedTile = GridMap.Instance.GetTile(unitHit.GridPosition);
                 }
             }
 
-            if (tile == null || !validTiles.Contains(tile))
+            if (clickedTile == null || !validTiles.Contains(clickedTile))
                 return;
 
-            ToggleTileSelection(tile);
+            ToggleTileSelection(clickedTile);
             return;
         }
 
-        Unit unit = hit.collider.GetComponent<Unit>();
-        if (unit == null)
+        Unit clickedUnit = hit.collider.GetComponent<Unit>();
+        if (clickedUnit == null)
             return;
 
-        if (!validTargets.Contains(unit))
+        if (!validTargets.Contains(clickedUnit))
         {
             Debug.Log("[TargetSelector] Clique em alvo inválido");
             return;
         }
 
-        ToggleSelection(unit);
+        ToggleSelection(clickedUnit);
     }
 
     void ToggleSelection(Unit unit)
@@ -280,13 +340,52 @@ public class TargetSelector : MonoBehaviour
         outline?.SetSelected(true);
         tileUnderUnit?.Select(); // Garante o feedback amarelo no tile
 
-        OnSelectedTargetsChanged?.Invoke(new List<Unit>(selectedTargets));
+        OnSelectedTargetsChanged?.Invoke(GetResolvedTargets(selectedTargets, selectedPoints));
 
         // Notifica mudança/confirmação parcial
         if (selectedTargets.Count >= targetingRule.minTargets)
         {
             Confirm();
         }
+    }
+
+    List<Unit> GetResolvedTargets(IEnumerable<Unit> baseTargets, IEnumerable<Vector2Int> basePoints)
+    {
+        HashSet<Vector2Int> affectedCells = new();
+
+        if (targetingRule.mode == TargetingMode.Area && areaPattern != null)
+        {
+            if (targetingRule.origin == TargetOrigin.Point)
+            {
+                foreach (var point in basePoints)
+                    foreach (var cell in AreaResolver.ResolveCells(point, areaPattern, areaRotationSteps))
+                        affectedCells.Add(cell);
+            }
+            else
+            {
+                foreach (var target in baseTargets)
+                {
+                    if (target == null) continue;
+                    foreach (var cell in AreaResolver.ResolveCells(target.GridPosition, areaPattern, areaRotationSteps))
+                        affectedCells.Add(cell);
+                }
+            }
+        }
+        else
+        {
+            foreach (var point in basePoints)
+                affectedCells.Add(point);
+        }
+
+        var result = FindObjectsOfType<Unit>()
+            .Where(u => affectedCells.Contains(u.GridPosition))
+            .Where(u => targetingRule.canTargetSelf || u != sourceUnit)
+            .ToList();
+
+        foreach (var t in baseTargets)
+            if (t != null && (!targetingRule.canTargetSelf && t == sourceUnit ? false : true) && !result.Contains(t)) result.Add(t);
+
+        return result.Distinct().ToList();
     }
 
     void ToggleTileSelection(GridTile tile)
@@ -429,9 +528,9 @@ public class TargetSelector : MonoBehaviour
 
     void Confirm()
     {
-        // Notifica mas continua ativo para Swap/Execução. 
+        // Notifica mas continua ativo para Swap/Execução.
         // Range permanece visível até o ExecuteRoutine da Action limpar tudo.
-        OnTargetsConfirmed?.Invoke(new List<Unit>(selectedTargets));
+        OnTargetsConfirmed?.Invoke(GetResolvedTargets(selectedTargets, selectedPoints));
     }
 
     void Cancel()
