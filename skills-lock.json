@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "skills": {
+    "review-implementing": {
+      "source": "mhattingpete/claude-skills-marketplace",
+      "sourceType": "github",
+      "computedHash": "b3ef69870e1edb29f76865bb0ec761a87b13fcb5459ed1d97b22c6625ce0dccc"
+    }
+  }
+}

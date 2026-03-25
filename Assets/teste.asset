@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6e768e6ae8f432d9b040cfea25e7e3f, type: 3}
+  m_Name: teste
+  m_EditorClassIdentifier: Assembly-CSharp::AbilityData
+  id: 
+  abilityName: 
+  description: 
+  icon: {fileID: 0}
+  abilityType: 1
+  passive:
+    trigger: AlwaysOn
+    effectSummary: 
+  active:
+    actionName: Active Ability
+    range: 1
+    actionDefinition:
+      rid: 7428665979104919624
+  references:
+    version: 2
+    RefIds:
+    - rid: 7428665979104919624
+      type: {class: AttackActionData, ns: , asm: Assembly-CSharp}
+      data:
+        actionName: 
+        range: 1
+        damage: 5
+        targeting:
+          mode: 0
+          allowMultiple: 0
+          minTargets: 1
+          maxTargets: 1
+          canTargetSelf: 0
+          targetFaction: 0
+        areaPattern: {fileID: 0}
+        areaRotationSteps: 0

@@ -8,7 +8,14 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Celestial-Cross/Scenes/SceneHall.unity
+    guid: 589ee8b52c987334996a55c9d02cc3ce
+  - enabled: 1
+    path: Assets/Celestial-Cross/Scenes/MainMenu.unity
+    guid: 3a34bb65e0b98494faa8fe5f88d53f86
   m_configObjects:
+    com.unity.adaptivePerformance.basic.provider_settings: {fileID: 11400000, guid: 81c6a135fcad177479fd34a2f6a80d20, type: 2}
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 801f113cbebbf734e9dac349dd5c025d, type: 2}
     com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: efd5e2bb771de41428adc58fed2010d9, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}

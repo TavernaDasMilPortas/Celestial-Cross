@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5693a799b54d9b347bb842750b70f286, type: 3}
+  m_Name: distante e perigoso
+  m_EditorClassIdentifier: Assembly-CSharp::CelestialCross.Abilities.PassiveAbilityBlueprint
+  abilityName: New Ability
+  abilityIcon: {fileID: 0}
+  abilityDescription: 
+  displayRange: 1
+  effectSteps: []
+  passiveEffects:
+  - rid: 4999357881437126743
+  references:
+    version: 2
+    RefIds:
+    - rid: 4999357881437126743
+      type: {class: PassiveEffect_ScalingDistanceBonus, ns: CelestialCross.Abilities, asm: Assembly-CSharp}
+      data:
+        triggerHook: 9
+        bonusPerUnit:
+          health: 0
+          attack: 0
+          defense: 0
+          speed: 0
+          criticalChance: 10
+          effectAccuracy: 0

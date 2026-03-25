@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d40ee282d0c8984b934ffbbbb9c91f1, type: 3}
+  m_Name: Cura
+  m_EditorClassIdentifier: Assembly-CSharp::Celestial_Cross.Scripts.Abilities.AbilityBlueprint
+  abilityName: Cura
+  abilityIcon: {fileID: 21300000, guid: eaf0aeb3beba45c4598425c16100a8aa, type: 3}
+  abilityDescription: 
+  displayRange: 1
+  effectSteps:
+  - trigger: 0
+    targetingStrategy:
+      rid: 4999357863632306271
+    effects:
+    - rid: 4999357863632306270
+  references:
+    version: 2
+    RefIds:
+    - rid: 4999357863632306270
+      type: {class: HealEffectData, ns: Celestial_Cross.Scripts.Abilities, asm: Assembly-CSharp}
+      data:
+        healAmount: 10
+    - rid: 4999357863632306271
+      type: {class: SelfTargetingStrategy, ns: Celestial_Cross.Scripts.Abilities.Targeting, asm: Assembly-CSharp}
+      data:
+        RequiresManualSelection: 0
+        ManualRule:
+          mode: 0
+          origin: 0
+          allowMultiple: 0
+          minTargets: 1
+          maxTargets: 1
+          canTargetSelf: 0
+          targetFaction: 0
+        AreaPattern: {fileID: 0}
+        AreaRotationSteps: 0
+        ManualRange: 1
