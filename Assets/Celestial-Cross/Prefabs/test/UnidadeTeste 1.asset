@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb249868a85523b4686441d22073799e, type: 3}
   m_Name: UnidadeTeste 1
   m_EditorClassIdentifier: Assembly-CSharp::UnitData
-  displayName: camomila
+  displayName: inimigo
   baseStats:
-    health: 30
+    health: 66
     attack: 10
     defense: 6
     speed: 12

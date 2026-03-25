@@ -1,12 +1,13 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using Celestial_Cross.Scripts.Combat.Execution;
 
 public class AttackAction : UnitActionBase
 {
     public override int Range { get; set; }
     public int Damage { get; set; }
-    public override string GetDetailStats() => $"Dano: {Damage}";
+    public override string GetDetailStats() => "Dano: {Damage}";
     public TargetingRuleData TargetingRule { get; set; } = new TargetingRuleData();
     public AreaPatternData AreaPattern { get; set; }
     public int AreaRotationSteps { get; set; }
@@ -22,17 +23,15 @@ public class AttackAction : UnitActionBase
         Debug.Log($"[AttackAction] {unit.DisplayName} | Range {Range} | Flat Bonus {Damage} | Mode {TargetingRule.mode}");
 
         StartTargetSelection(Range, TargetingRule);
-        
-        // Configuração adicional do seletor (Área)
+
         targetSelector.OnSelectedTargetsChanged += OnSelectionChanged;
-        targetSelector.UpdateAreaConfig(AreaPattern, AreaRotationSteps);
+        targetSelector.UpdateAreaConfig(AreaPattern, AreaRotationSteps);        
 
         unit.LogCanConfirm(false);
     }
 
     protected override void OnUpdate()
     {
-        // input é tratado pelo TargetSelector
     }
 
     protected override void Resolve()
@@ -43,28 +42,17 @@ public class AttackAction : UnitActionBase
                 continue;
 
             int hits = unit.GetAttacksAgainst(target);
-            int totalDamage = 0;
 
-            bool anyCrit = false;
             for (int i = 0; i < hits; i++)
             {
-                AttackResult result = unit.CalculateAttack(
-                    target,
-                    new DamageBonus { flat = Damage, percent = 0f },
-                    new DamageReduction { flat = 0, percent = 0f }
-                );
-
-                totalDamage += result.damage;
-                if (result.isCritical) anyCrit = true;
+                var combatContext = new CelestialCross.Combat.CombatContext(unit, target, unit.Stats.attack + Damage);
+                DamageProcessor.ProcessAndApplyDamage(combatContext, applyDefense: true);
             }
-
-            target.Health.TakeDamage(totalDamage, anyCrit);
         }
     }
 
     protected override void OnCancel()
     {
-        // Limpeza básica via UnitActionBase
     }
 
 
@@ -79,20 +67,16 @@ public class AttackAction : UnitActionBase
         Unit lastTarget = targets.Last();
         if (lastTarget == null) return;
 
-        AttackResult sample = unit.CalculateAttack(
-            lastTarget,
-            new DamageBonus { flat = Damage, percent = 0f },
-            new DamageReduction { flat = 0, percent = 0f }
-        );
+        AttackResult sample = unit.CalculateAttack(lastTarget);
 
         ActionForecast forecast = new ActionForecast
         {
             Source = unit,
             Target = lastTarget,
-            Damage = sample.damage,
+            Damage = sample.damage + Damage,
             IsCritical = sample.isCritical,
             AttackCount = unit.GetAttacksAgainst(lastTarget),
-            CriticalChance = unit.Stats.criticalChance // Simple display
+            CriticalChance = unit.Stats.criticalChance
         };
 
         InvokeForecastUpdated(forecast);
@@ -113,7 +97,7 @@ public class AttackAction : UnitActionBase
         if ((targets == null || targets.Count == 0) && (selectedPoints == null || selectedPoints.Count == 0))
             return new List<Unit>();
 
-        if (TargetingRule.mode != TargetingMode.Area || AreaPattern == null)
+        if (TargetingRule.mode != TargetingMode.Area || AreaPattern == null)    
             return targets;
 
         HashSet<Vector2Int> affectedCells = new();
@@ -137,8 +121,8 @@ public class AttackAction : UnitActionBase
         }
 
         context.affectedAreaCells.AddRange(affectedCells);
-        
-        List<Unit> affectedUnits = FindObjectsOfType<Unit>()
+
+        List<Unit> affectedUnits = new List<Unit>(Object.FindObjectsByType<Unit>(FindObjectsSortMode.None))
             .Where(u => affectedCells.Contains(u.GridPosition))
             .Where(u => TargetingRule.canTargetSelf || u != unit)
             .Distinct()

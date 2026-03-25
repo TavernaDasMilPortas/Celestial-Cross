@@ -8,12 +8,12 @@ using Celestial_Cross.Scripts.Units;
 [RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(UnitHoverDetector))]
 [RequireComponent(typeof(UnitOutlineController))]
+[RequireComponent(typeof(PassiveManager))]
 public abstract class Unit : MonoBehaviour
 {
     [Header("Base Data")]
     [SerializeField] protected UnitData unitData;
     [SerializeField] protected PetData equippedPet;
-    [SerializeField] protected List<ActiveCombatEffect> activeEffects = new();
 
     [Header("Runtime")]
     public Vector2Int GridPosition;
@@ -63,6 +63,13 @@ public abstract class Unit : MonoBehaviour
     {
         Health = GetComponent<Health>();
         PassiveManager = GetComponent<PassiveManager>();
+        
+        // Garante que o PassiveManager exista em todos os Units!
+        if (PassiveManager == null) 
+        {
+            PassiveManager = gameObject.AddComponent<PassiveManager>();
+            Debug.Log($"<color=yellow>[Unit]</color> PassiveManager adicionado dinamicamente a {gameObject.name}");
+        }
     }
  
     protected virtual void Start()
@@ -73,7 +80,7 @@ public abstract class Unit : MonoBehaviour
  
     public void InitializeActions()
     {
-        if (unitData == null) { Debug.LogError($"[Unit] {name} não possui UnitData."); return; }
+        if (unitData == null) { Debug.LogError($"[Unit] {name} nï¿½o possui UnitData."); return; }
         actions.Clear();
         foreach (var action in GetComponents<IUnitAction>()) Destroy(action as Component);
         var blueprints = unitData.GetAbilities();
@@ -98,8 +105,7 @@ public abstract class Unit : MonoBehaviour
     public void LogCanConfirm(bool canConfirm) { }
  
     public int GetAttacksAgainst(Unit target) {
-        if (target == null) return 1;
-        return DamageModel.GetAttackCountBySpeed(Stats, target.Stats);
+        return 1;
     }
 
 
@@ -115,13 +121,8 @@ public abstract class Unit : MonoBehaviour
 
     public AttackResult CalculateAttack(Unit target)
     {
-        return CalculateAttack(target, new DamageBonus { flat = 0, percent = 0f }, new DamageReduction { flat = 0, percent = 0f });
-    }
-
-    public AttackResult CalculateAttack(Unit target, DamageBonus bonus, DamageReduction reduction)
-    {
-        if (target == null) return new AttackResult(Stats.attack + bonus.Evaluate(Stats.attack), false);
-        return DamageModel.ResolveHit(Stats, target.Stats, bonus, reduction);
+        if (target == null) return new AttackResult(Stats.attack, false);
+        return DamageModel.ResolveHit(Stats, target.Stats);
     }
 
     public AttackResult CalculateAttack(Unit target, out bool isCrit, IUnitAction action)
@@ -156,6 +157,11 @@ public abstract class Unit : MonoBehaviour
     {
         currentAction?.Cancel();
         CameraController.Instance?.ResetFocus();
+    }
+
+    public void TriggerPassives(CombatHook hook, CombatContext context)
+    {
+        PassiveManager?.TriggerHook(hook, context);
     }
 }
 

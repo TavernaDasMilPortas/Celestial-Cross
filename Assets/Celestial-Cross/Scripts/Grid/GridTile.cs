@@ -5,6 +5,7 @@ public class GridTile : MonoBehaviour
 {
     public Vector2Int GridPosition { get; private set; }
     public bool IsOccupied;
+    public Unit OccupyingUnit;
 
     [SerializeField] private Renderer tileRenderer;
 
@@ -15,10 +16,6 @@ public class GridTile : MonoBehaviour
     [SerializeField] private Color selectedColor = Color.yellow;
     [SerializeField] private Color areaPreviewColor = new Color(1f, 0.5f, 0f, 1f);
     [SerializeField] private Color areaCenterColor = new Color(0.8f, 0.2f, 0f, 1f);
-
-    public event Action OnHighlight;
-    public event Action OnClearHighlight;
-    public event Action OnSelect;
 
     private MaterialPropertyBlock propertyBlock;
 
@@ -43,14 +40,6 @@ public class GridTile : MonoBehaviour
         EnsureRenderer();
         EnsurePropertyBlock();
         DetectColorProperty();
-
-        OnHighlight = null;
-        OnClearHighlight = null;
-        OnSelect = null;
-
-        OnHighlight += ApplyHighlight;
-        OnClearHighlight += ClearHighlight;
-        OnSelect += ApplySelected;
 
         HardClearAllStates();
     }

@@ -69,7 +69,6 @@ public abstract class UnitActionBase : MonoBehaviour, IUnitAction
         targetSelector = gameObject.AddComponent<TargetSelector>();
         targetSelector.OnTargetsConfirmed += OnTargetsConfirmed;
         targetSelector.OnCanceled += OnSelectionCanceled;
-        targetSelector.OnExecuteRequested += PerformFinalExecution;
         targetSelector.Begin(unit, range, rule);
     }
 
@@ -78,6 +77,7 @@ public abstract class UnitActionBase : MonoBehaviour, IUnitAction
         context.targets = targets;
         state = ActionState.ReadyToConfirm;
         unit.LogCanConfirm(true);
+        PerformFinalExecution();
     }
 
     protected virtual void OnSelectionCanceled()
@@ -129,6 +129,15 @@ public abstract class UnitActionBase : MonoBehaviour, IUnitAction
     {
         Resolve();
         state = ActionState.Finished;
+
+        // Dispara o hook OnAfterAction no PassiveManager da unidade
+        var passiveManager = unit.GetComponent<PassiveManager>();
+        if (passiveManager != null)
+        {
+            var combatContext = new CelestialCross.Combat.CombatContext(unit, unit, 0, this);
+            passiveManager.TriggerHook(CelestialCross.Combat.CombatHook.OnAfterAction, combatContext);
+        }
+
         OnActionFinished();
     }
 

@@ -18,6 +18,7 @@ MonoBehaviour:
   displayRange: 1
   effectSteps:
   - trigger: 0
+    reusePreviousTargets: 0
     targetingStrategy:
       rid: 4999357863632306252
     effects:
@@ -30,17 +31,20 @@ MonoBehaviour:
       data:
         RequiresManualSelection: 1
         ManualRule:
-          mode: 0
-          origin: 1
+          mode: 1
+          origin: 0
           allowMultiple: 0
           minTargets: 1
           maxTargets: 1
           canTargetSelf: 0
-          targetFaction: 0
+          targetFaction: 2
+        AreaPattern: {fileID: 11400000, guid: 3e1fdefc3cb287e4f852a70591eacd3f, type: 2}
+        AreaRotationSteps: 0
         ManualRange: 5
     - rid: 4999357863632306253
       type: {class: DamageEffectData, ns: Celestial_Cross.Scripts.Abilities, asm: Assembly-CSharp}
       data:
-        useDynamicVariable: 0
-        variableName: UltimoDano
-        amount: 5
+        requireAllConditions: 1
+        valueType: 0
+        amount: 10
+        baseAttribute: 1

@@ -9,9 +9,8 @@ public class PassiveManager : MonoBehaviour
 {
     private Unit unit;
     
-    // Lista de condiÁıes tempor·rias ( runtime )
-    // TODO: Refatorar WeaverConditionInstance para a nova arquitetura se necess·rio
-    // private List<WeaverConditionInstance> activeConditions = new();
+    // Lista de condi√ß√µes tempor√°rias durante a batalha
+    private List<AbilityBlueprint> activeRuntimeConditions = new();
 
     void Awake()
     {
@@ -21,12 +20,14 @@ public class PassiveManager : MonoBehaviour
     void OnEnable()
     {
         TurnManager.OnTurnStarted += HandleTurnStarted;
+        TurnManager.OnTurnEnded += HandleTurnEnded;
         TurnManager.OnRoundStarted += HandleRoundStarted;
     }
 
     void OnDisable()
     {
         TurnManager.OnTurnStarted -= HandleTurnStarted;
+        TurnManager.OnTurnEnded -= HandleTurnEnded;
         TurnManager.OnRoundStarted -= HandleRoundStarted;
     }
 
@@ -36,6 +37,14 @@ public class PassiveManager : MonoBehaviour
         TriggerHook(CombatHook.OnTurnStart, new CombatContext(unit, unit));
     }
 
+    void HandleTurnEnded()
+    {
+        if (TurnManager.Instance != null && TurnManager.Instance.CurrentUnit == unit)
+        {
+            TriggerHook(CombatHook.OnTurnEnd, new CombatContext(unit, unit));
+        }
+    }
+
     void HandleRoundStarted(int round)
     {
         TriggerHook(CombatHook.OnRoundStart, new CombatContext(unit, unit));
@@ -43,29 +52,131 @@ public class PassiveManager : MonoBehaviour
 
     public void TriggerHook(CombatHook hook, CombatContext context)
     {
-        if (unit.Data == null) return;
+        // Force finding the Unit component if it's not set
+        if (unit == null) unit = GetComponent<Unit>();
+        if (unit == null) return;
 
-        // 1. Processar Passivas da Unidade (Blueprints)
-        foreach (var blueprint in unit.Data.GetAbilities())
+        // CRITICAL DEBUGS
+        Debug.Log($"<color=cyan>[PassiveManager]</color> {gameObject.name} disparando hook: <b>{hook}</b>");
+
+        if (unit.Data == null) 
         {
-            if (blueprint != null)
+            Debug.LogError($"<color=red>[PassiveManager]</color> {gameObject.name} N√ÉO TEM UnitData associado!");
+            return;
+        }
+
+        var abilities = new List<AbilityBlueprint>();
+        if (unit.Data != null && unit.Data.GetAbilities() != null)
+            abilities.AddRange(unit.Data.GetAbilities());
+        
+        abilities.AddRange(activeRuntimeConditions);
+
+        if (abilities.Count == 0)
+        {
+            Debug.LogWarning($"<color=yellow>[PassiveManager]</color> {gameObject.name} n√£o tem habilidades inatas nem condi√ß√µes em runtime.");
+            return;
+        }
+
+        Debug.Log($"<color=cyan>[PassiveManager]</color> {gameObject.name} analisando {abilities.Count} habilidades...");
+
+        foreach (var blueprint in abilities)
+        {
+            if (blueprint == null) 
             {
-                AbilityExecutor.Instance?.ExecuteAbility(unit, blueprint, hook);
+                Debug.LogWarning($"<color=yellow>[PassiveManager]</color> Encontrado um slot NULO na lista de habilidades de {gameObject.name}");
+                continue;
+            }
+
+            // Log entry for EVERY blueprint found
+            Debug.Log($"<color=white>[PassiveManager]</color> Asset na lista: <b>{blueprint.name}</b> | Tipo: <b>{blueprint.GetType().Namespace}.{blueprint.GetType().Name}</b>");
+
+            if (blueprint is PassiveAbilityBlueprint passiveBlueprint)
+            {
+                Debug.Log($"<color=green>[PassiveManager]</color> PASSIVA IDENTIFICADA: {blueprint.name}. Efeitos: {passiveBlueprint.passiveEffects?.Count ?? 0}");
+                if (passiveBlueprint.passiveEffects == null) continue;
+
+                foreach (var effect in passiveBlueprint.passiveEffects)
+                {
+                    if (effect == null) 
+                    {
+                        Debug.LogWarning($"<color=yellow>[PassiveManager]</color> Efeito nulo dentro de {blueprint.name}");
+                        continue;
+                    }
+                    
+                    bool matches = (effect.triggerHook == hook);
+                    Debug.Log($"<color=white>[PassiveManager]</color> - Efeito {effect.GetType().Name} | Hook: {effect.triggerHook} | Match: {matches}");
+                    
+                    if (matches)
+                    {
+                        Debug.Log($"<color=green>[PassiveManager]</color> -> EXECUTANDO {effect.GetType().Name}!");
+                        effect.Execute(context);
+                    }
+                }
             }
         }
 
         // 2. Processar Passiva do Pet
-        // Nota: Assumindo que o Pet est· acessÌvel via Unit ou passado no contexto
-        // No momento vamos focar nas habilidades da UnitData.
+        if (unit.EquippedPet != null && unit.EquippedPet.ability != null)
+        {
+            var petAbility = unit.EquippedPet.ability;
+            if (petAbility is PassiveAbilityBlueprint petPassive)
+            {
+                foreach (var effect in petPassive.passiveEffects)
+                {
+                    if (effect.triggerHook == hook)
+                    {
+                        effect.Execute(context);
+                    }
+                }
+            }
+        }
     }
 
     public void ApplyCondition(AbilityBlueprint conditionBlueprint, Unit source)
     {
-        // No novo sistema, uma "CondiÁ„o" pode ser simplesmente uma AbilityBlueprint 
-        // sendo executada em hooks especÌficos (OnTurnStart, etc).
+        var context = new CombatContext(source, unit);
+
+        // Hooks ANTES de aplicar a condio
+        TriggerHook(CombatHook.OnBeforeApplyCondition, context);
+        if (source != null)
+        {
+            var sourcePassive = source.GetComponent<PassiveManager>();
+            sourcePassive?.TriggerHook(CombatHook.OnBeforeApplyCondition, context);
+        }
+
+        // Adiciona a condi√ß√£o na lista de runtime
+        if (!activeRuntimeConditions.Contains(conditionBlueprint))
+        {
+            activeRuntimeConditions.Add(conditionBlueprint);
+        }
+
+        // No novo sistema, uma "Condio" pode ser simplesmente uma AbilityBlueprint 
+        // sendo executada em hooks especficos (OnTurnStart, etc).
         // Por enquanto, vamos apenas registrar que a unidade tem essa habilidade extra.
-        Debug.Log($"[PassiveManager] Aplicando condiÁ„o (Blueprint): {conditionBlueprint.name}");
+        Debug.Log($"[PassiveManager] Aplicando condio (Blueprint): {conditionBlueprint.name}");
         AbilityExecutor.Instance?.ExecuteAbility(source, conditionBlueprint, CombatHook.OnAfterApplyCondition);
+
+        // Hooks DEPOS de aplicar a condio
+        TriggerHook(CombatHook.OnAfterApplyCondition, context);
+        if (source != null)
+        {
+            var sourcePassive = source.GetComponent<PassiveManager>();
+            sourcePassive?.TriggerHook(CombatHook.OnAfterApplyCondition, context);
+        }
+    }
+
+    public void RemoveCondition(AbilityBlueprint conditionBlueprint)
+    {
+        if (activeRuntimeConditions.Contains(conditionBlueprint))
+        {
+            var context = new CombatContext(unit, unit);
+            TriggerHook(CombatHook.OnBeforeRemoveCondition, context);
+            
+            activeRuntimeConditions.Remove(conditionBlueprint);
+            Debug.Log($"[PassiveManager] Removendo condi√ß√£o (Blueprint): {conditionBlueprint.name}");
+            
+            TriggerHook(CombatHook.OnAfterRemoveCondition, context);
+        }
     }
 }
 

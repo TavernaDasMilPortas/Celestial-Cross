@@ -4,7 +4,6 @@ using Celestial_Cross.Scripts.Abilities;
 using System;
 
 [Serializable]
-[CreateAssetMenu(menuName = "Effects/Heal")]
 public class HealEffectData : EffectData
 {
     public int healAmount;

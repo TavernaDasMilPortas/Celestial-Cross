@@ -74,7 +74,7 @@ public class GridMap : MonoBehaviour
 
     void SyncCameraBounds()
     {
-        CameraBounds bounds = FindObjectOfType<CameraBounds>();
+        CameraBounds bounds = Object.FindFirstObjectByType<CameraBounds>();
         if (bounds == null || tiles.Count == 0) return;
 
         var first = tiles.Keys.First();
@@ -153,6 +153,7 @@ public class GridMap : MonoBehaviour
             {
                 u.GridPosition = spawn.gridPosition;
                 tiles[spawn.gridPosition].IsOccupied = true;
+                tiles[spawn.gridPosition].OccupyingUnit = u;
             }
         }
     }

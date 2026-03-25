@@ -12,13 +12,14 @@ O **Celestial Cross** é um RPG tático construído de forma modular em Unity. E
 - `Unit`: Base para unidades (Pet, Enemy, UnitData).
 
 ## 2. Padrões de Design
-- **Data-Driven**: Quase tudo (unidades, habilidades, ações) é definido via `ScriptableObject`. Isso permite criar conteúdo novo sem mexer no código core.
-- **Hooks e Eventos**: O jogo utiliza eventos estáticos (ex: `TurnManager.OnTurnStarted`) para que sistemas UI e feedback reajam a mudanças de estado.
-- **Efeitos Modulares**: Habilidades são compostas por `IAbilityEffect` reutilizáveis.
+- **Data-Driven (Blueprints)**: Unidades, habilidades e passivas são definidas via `ScriptableObject`. As `PassiveAbilityBlueprint` definem o comportamento reativo.
+- **Hook Registry**: O `PassiveManager` serve como o hub de eventos reativos para cada unidade.
+- **Pipelines de Mutação**: Em vez de passar muitos parâmetros, o sistema usa o `CombatContext` que é passado e mutado por múltiplos sistemas antes da execução final.
 
 ## 3. Fluxo de Execução
-1.  `TurnManager` decide quem é a próxima unidade.
-2.  `PlayerController` (ou IA) seleciona uma ação.
-3.  A ação seleciona alvos no `GridMap`.
-4.  Ao confirmar, a ação executa seus `Effects`.
-5.  O **Weaver System** intercepta esses efeitos e dispara reações (Passivas).
+1.  `TurnManager` inicia o turno de uma unidade. O `PassiveManager` dispara o hook `OnTurnStart` para a unidade.
+2.  Um comando (Jogador ou IA) seleciona uma ação.
+3.  A ação é enviada para o `AbilityExecutor`.
+4.  O executor percorre os efeitos e, para cada um, dispara os hooks relevantes (ex: `OnBeforeApplyCondition`, `OnBeforeTakeDamage`).
+5.  O `PassiveManager` intercepta estes hooks e executa as passivas/condições, mutando o `CombatContext`.
+6.  O dano é aplicado e se a habilidade termina, o hook `OnAfterAction` é disparado.

@@ -129,10 +129,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a40a08f0acafdea4992493b3bb42f393, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitData: {fileID: 11400000, guid: e826e4ac2548473498be53bd46bc5793, type: 2}
-  equippedPet: {fileID: 0}
-  activeEffects: []
+  unitData: {fileID: 11400000, guid: 642b786367762f940aded926f739f0ba, type: 2}
+  equippedPet: {fileID: 11400000, guid: 9f42cee8184cdaa4b8cd4ad07df68288, type: 2}
   GridPosition: {x: 0, y: 0}
+  modifierStats:
+    health: 1
+    attack: 0
+    defense: 0
+    speed: 0
+    criticalChance: 0
+    effectAccuracy: 0
 --- !u!114 &2285687602826378805
 MonoBehaviour:
   m_ObjectHideFlags: 0

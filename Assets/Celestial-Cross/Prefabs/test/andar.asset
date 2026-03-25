@@ -12,15 +12,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d40ee282d0c8984b934ffbbbb9c91f1, type: 3}
   m_Name: andar
   m_EditorClassIdentifier: Assembly-CSharp::Celestial_Cross.Scripts.Abilities.AbilityBlueprint
+  abilityName: New Ability
+  abilityIcon: {fileID: 0}
+  abilityDescription: 
+  displayRange: 1
   effectSteps:
   - trigger: 0
+    reusePreviousTargets: 0
     targetingStrategy:
-      rid: 4999357863632306260
-    effects: []
+      rid: 4999357881437126734
+    effects:
+    - rid: 4999357881437126733
   references:
     version: 2
     RefIds:
-    - rid: 4999357863632306260
+    - rid: 4999357881437126733
+      type: {class: MoveEffectData, ns: Celestial_Cross.Scripts.Abilities.Effects, asm: Assembly-CSharp}
+      data:
+        requireAllConditions: 1
+        moveTarget: 0
+        range: 3
+        manualDestination: 1
+        allowOccupiedTiles: 0
+    - rid: 4999357881437126734
       type: {class: SelfTargetingStrategy, ns: Celestial_Cross.Scripts.Abilities.Targeting, asm: Assembly-CSharp}
       data:
         RequiresManualSelection: 0
@@ -32,4 +46,6 @@ MonoBehaviour:
           maxTargets: 1
           canTargetSelf: 0
           targetFaction: 0
+        AreaPattern: {fileID: 0}
+        AreaRotationSteps: 0
         ManualRange: 1

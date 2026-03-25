@@ -48,10 +48,8 @@ namespace Celestial_Cross.Scripts.Units
                 {
                     if (fx is DamageEffectData dmg)
                     {
-                        if (!dmg.useDynamicVariable)
-                            simulatedBaseDamage += dmg.amount;
-                        else
-                            simulatedBaseDamage += dmg.amount; // Fallback
+                        // Use the correctly qualified type if needed, but here we assume the correct one is in scope
+                        simulatedBaseDamage += dmg.amount;
                     }
                 }
             }
@@ -59,17 +57,13 @@ namespace Celestial_Cross.Scripts.Units
             Debug.Log($"[BlueprintActionWrapper] Dano base simulado calculado: {simulatedBaseDamage}");
 
             // Reuse familiar combat calculation to preserve Crit / Defense modifiers UI simulation
-            AttackResult sample = caster.CalculateAttack(
-                lastTarget,
-                new DamageBonus { flat = simulatedBaseDamage, percent = 0f },
-                new DamageReduction { flat = 0, percent = 0f }
-            );
+            AttackResult sample = caster.CalculateAttack(lastTarget);
 
             ActionForecast forecast = new ActionForecast
             {
                 Source = caster,
                 Target = lastTarget,
-                Damage = sample.damage,
+                Damage = sample.damage + simulatedBaseDamage, // Add explicit additional logic
                 IsCritical = sample.isCritical,
                 AttackCount = caster.GetAttacksAgainst(lastTarget),
                 CriticalChance = caster.Stats.criticalChance
@@ -103,8 +97,10 @@ namespace Celestial_Cross.Scripts.Units
 
         public void Cancel()
         {
-            // O executor deverá cuidar do cancelamento via TargetSelector,
-            // mas podemos adicionar uma requisição de aborto depois.
+            if (AbilityExecutor.Instance != null)
+            {
+                AbilityExecutor.Instance.AbortCurrentAbility();
+            }
         }
 
         public string GetDetailStats()

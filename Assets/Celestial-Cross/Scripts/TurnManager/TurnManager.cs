@@ -15,6 +15,7 @@ public class TurnManager : MonoBehaviour
 
     public int RoundCounter { get; private set; } = 1;
     private Unit roundStartUnit;
+    public Unit RoundStartUnit => roundStartUnit;
 
     Queue<Unit> turnQueue = new();
     bool combatStarted;

@@ -18,24 +18,42 @@ MonoBehaviour:
   displayRange: 1
   effectSteps:
   - trigger: 0
+    reusePreviousTargets: 0
     targetingStrategy:
       rid: 4999357863632306261
     effects:
-    - rid: 4999357863632306262
-    - rid: 4999357863632306256
+    - rid: 4999357863632306287
+    - rid: 4999357881437126726
+    - rid: 4999357881437126727
+  - trigger: 0
+    reusePreviousTargets: 0
+    targetingStrategy:
+      rid: 4999357863632306276
+    effects:
+    - rid: 4999357863632306288
+    - rid: 4999357863632306285
   references:
     version: 2
     RefIds:
-    - rid: 4999357863632306256
-      type: {class: HealEffectData, ns: Celestial_Cross.Scripts.Abilities, asm: Assembly-CSharp}
-      data:
-        useDynamicVariable: 1
-        variableName: DanoCausado
-        amount: 5
     - rid: 4999357863632306261
       type: {class: ManualTargetingStrategy, ns: Celestial_Cross.Scripts.Abilities.Targeting, asm: Assembly-CSharp}
       data:
         RequiresManualSelection: 1
+        ManualRule:
+          mode: 0
+          origin: 1
+          allowMultiple: 0
+          minTargets: 1
+          maxTargets: 1
+          canTargetSelf: 0
+          targetFaction: 0
+        AreaPattern: {fileID: 0}
+        AreaRotationSteps: 0
+        ManualRange: 5
+    - rid: 4999357863632306276
+      type: {class: SelfTargetingStrategy, ns: Celestial_Cross.Scripts.Abilities.Targeting, asm: Assembly-CSharp}
+      data:
+        RequiresManualSelection: 0
         ManualRule:
           mode: 0
           origin: 0
@@ -44,10 +62,39 @@ MonoBehaviour:
           maxTargets: 1
           canTargetSelf: 0
           targetFaction: 0
+        AreaPattern: {fileID: 0}
+        AreaRotationSteps: 0
         ManualRange: 1
-    - rid: 4999357863632306262
+    - rid: 4999357863632306285
+      type: {class: HealEffectData, ns: , asm: Assembly-CSharp}
+      data:
+        requireAllConditions: 1
+        healAmount: 3
+    - rid: 4999357863632306287
+      type: {class: DamageEffectData, ns: , asm: Assembly-CSharp}
+      data:
+        requireAllConditions: 1
+        amount: 3
+        useDynamicVariable: 0
+        dynamicVariableName: 
+    - rid: 4999357863632306288
+      type: {class: DamageEffectData, ns: , asm: Assembly-CSharp}
+      data:
+        requireAllConditions: 1
+        amount: 5
+        useDynamicVariable: 0
+        dynamicVariableName: 
+    - rid: 4999357881437126726
       type: {class: DamageEffectData, ns: Celestial_Cross.Scripts.Abilities, asm: Assembly-CSharp}
       data:
-        useDynamicVariable: 0
-        variableName: UltimoDano
-        amount: 5
+        requireAllConditions: 1
+        valueType: 0
+        amount: 10
+        baseAttribute: 1
+    - rid: 4999357881437126727
+      type: {class: DamageEffectData, ns: Celestial_Cross.Scripts.Abilities, asm: Assembly-CSharp}
+      data:
+        requireAllConditions: 1
+        valueType: 0
+        amount: 10
+        baseAttribute: 1

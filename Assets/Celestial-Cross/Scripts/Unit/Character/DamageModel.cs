@@ -58,23 +58,21 @@ public static class DamageModel
 {
     public static AttackResult ResolveHit(
         CombatStats attacker,
-        CombatStats defender,
-        DamageBonus bonus,
-        DamageReduction reduction
+        CombatStats defender
     )
     {
-        int raw = attacker.attack + bonus.Evaluate(attacker.attack) - defender.defense;
-        int mitigated = raw - reduction.Evaluate(Mathf.Max(1, raw));
+        int raw = attacker.attack - defender.defense;
         bool isCritical = Random.Range(0, 100) < Mathf.Clamp(attacker.criticalChance, 0, 100);
 
+        int damage = Mathf.Max(1, raw);
         if (isCritical)
-            mitigated *= 2;
+            damage *= 2;
 
-        return new AttackResult(Mathf.Max(1, mitigated), isCritical);
+        return new AttackResult(damage, isCritical);
     }
 
     public static int GetAttackCountBySpeed(CombatStats attacker, CombatStats defender)
     {
-        return attacker.speed >= defender.speed + 10 ? 2 : 1;
+        return 1;
     }
 }

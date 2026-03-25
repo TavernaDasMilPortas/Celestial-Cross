@@ -26,4 +26,7 @@ O asset `UnitData` centraliza:
 - Nome e status base.
 - Lista de **Abilities** (Habilidades de personagem).
 - Lista de **Native Actions** (Comandos fixos como "Atacar", "Defender").
-- Lista de **Passives** (Inseridas via Weaver System).
+- Lista de **PassiveAbilityBlueprints**: Passivas pré-configuradas para a unidade que são injetadas no `PassiveManager` ao iniciar o combate.
+
+## 5. Reatividade de Unidade
+Cada unidade é uma entidade reativa. Ao receber dano ou aplicar condições, a unidade não apenas subtrai valores, mas processa uma pipeline de **Hooks** através de seu `PassiveManager`, permitindo que o estado da unidade (vida, buffs, debuffs) seja dinamicamente alterado por suas passivas equipadas.

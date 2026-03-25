@@ -35,35 +35,33 @@ public class Health : MonoBehaviour
         OnHealthChanged?.Invoke(CurrentHealth, maxHealth);
     }
 
-    public void TakeDamage(int amount, bool isCritical = false)
+    public void TakeDamage(int amount, bool isCritical = false, Unit source = null)
     {
         if (amount <= 0)
             return;
 
-        // Hook: Antes de Tomar Dano
-        var context = new CelestialCross.Combat.CombatContext(null, GetComponent<Unit>(), amount);
-        passiveManager?.TriggerHook(CelestialCross.Combat.CombatHook.OnBeforeTakeDamage, context);
-        
-        // Se alguma passiva alterou o amount no contexto (futuro), usaríamos context.amount.
-        // Por agora, apenas notificamos.
-        
         CurrentHealth = Mathf.Clamp(CurrentHealth - amount, 0, maxHealth);
         OnHealthChanged?.Invoke(CurrentHealth, maxHealth);
         OnDamageTaken?.Invoke(amount, isCritical);
-
-        // Hook: Após Tomar Dano
-        passiveManager?.TriggerHook(CelestialCross.Combat.CombatHook.OnAfterTakeDamage, context);
 
         if (CurrentHealth <= 0)
             Die();
     }
 
-    public void Heal(int amount)
+public void Heal(int amount, bool allowOverheal = false)
     {
         if (amount <= 0)
             return;
 
-        CurrentHealth = Mathf.Clamp(CurrentHealth + amount, 0, maxHealth);
+        if (allowOverheal)
+        {
+            CurrentHealth += amount;
+        }
+        else
+        {
+            CurrentHealth = Mathf.Clamp(CurrentHealth + amount, 0, maxHealth);  
+        }
+            
         OnHealthChanged?.Invoke(CurrentHealth, maxHealth);
         OnHealed?.Invoke(amount);
     }

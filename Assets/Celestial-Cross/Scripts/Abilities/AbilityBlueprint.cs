@@ -4,7 +4,7 @@ using Sirenix.OdinInspector;
 
 namespace Celestial_Cross.Scripts.Abilities
 {
-    [CreateAssetMenu(fileName = "NewAbilityBlueprint", menuName = "Abilities/Ability Blueprint")]
+    [CreateAssetMenu(fileName = "NewAbilityBlueprint", menuName = "Celestial-Cross/Abilities/Ability Blueprint")]
     public class AbilityBlueprint : ScriptableObject
     {
         [Header("UI & Identity")]
@@ -14,7 +14,7 @@ namespace Celestial_Cross.Scripts.Abilities
         public int displayRange = 1;
 
         [Header("Effects Sequence")]
-        [ListDrawerSettings(ShowPaging = false, ShowItemCount = false, Expanded = true)]
+        [ListDrawerSettings(ShowPaging = false, ShowItemCount = false, ShowFoldout = true)]
         public List<EffectStep> effectSteps = new List<EffectStep>();
     }
 }

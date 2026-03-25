@@ -1,10 +1,12 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using CelestialCross.Combat;
+using Celestial_Cross.Scripts.Combat.Execution;
 
 /// <summary>
-/// Motor de decisão da IA. Avalia ações disponíveis, aplica scoring
-/// baseado no AIBehaviorProfile e executa a melhor ação.
+/// Motor de decisÃ£o da IA. Avalia aÃ§Ãµes disponÃ­veis, aplica scoring
+/// baseado no AIBehaviorProfile e executa a melhor aÃ§Ã£o.
 /// </summary>
 public class AIBrain : MonoBehaviour
 {
@@ -26,7 +28,7 @@ public class AIBrain : MonoBehaviour
     // =============================
 
     /// <summary>
-    /// Executa o turno da IA: avalia ações, escolhe a melhor, executa.
+    /// Executa o turno da IA: avalia aÃ§Ãµes, escolhe a melhor, executa.
     /// </summary>
     public void ExecuteTurn()
     {
@@ -69,7 +71,7 @@ public class AIBrain : MonoBehaviour
             Debug.Log($"[AIBrain] Nenhuma regra ativa. Usando fallback: {behavior}");
         }
 
-        // 3) Coletar alvos possíveis (units do player)
+        // 3) Coletar alvos possÃ­veis (units do player)
         List<Unit> playerUnits = FindAlivePlayerUnits();
 
         if (playerUnits.Count == 0)
@@ -79,7 +81,7 @@ public class AIBrain : MonoBehaviour
             return;
         }
 
-        // 4) Avaliar todas as ações
+        // 4) Avaliar todas as aÃ§Ãµes
         List<AIActionScore> scores = EvaluateAllActions(
             playerUnits, behavior, targetPref,
             attackWeight, moveWeight, profile.randomnessFactor
@@ -87,18 +89,18 @@ public class AIBrain : MonoBehaviour
 
         if (scores.Count == 0)
         {
-            Debug.Log("[AIBrain] Nenhuma ação viável. Passando turno.");
+            Debug.Log("[AIBrain] Nenhuma aÃ§Ã£o viÃ¡vel. Passando turno.");
             TurnManager.Instance.EndTurn();
             return;
         }
 
-        // 5) Executar a ação com maior score
+        // 5) Executar a aÃ§Ã£o com maior score
         AIActionScore best = scores.OrderByDescending(s => s.score).First();
         ExecuteAction(best);
     }
 
     // =============================
-    // AVALIAÇÃO DE AÇÕES
+    // AVALIAÃ‡ÃƒO DE AÃ‡Ã•ES
     // =============================
 
     List<AIActionScore> EvaluateAllActions(
@@ -111,7 +113,7 @@ public class AIBrain : MonoBehaviour
     {
         List<AIActionScore> scores = new();
 
-        // Iterar sobre as ações da unit usando reflexão do pipeline existente
+        // Iterar sobre as aÃ§Ãµes da unit usando reflexÃ£o do pipeline existente
         var actionComponents = GetComponents<UnitActionBase>();
 
         for (int i = 0; i < actionComponents.Length; i++)
@@ -159,17 +161,17 @@ public class AIBrain : MonoBehaviour
         {
             int dist = ManhattanDistance(enemy.GridPosition, target.GridPosition);
 
-            // Só avalia se está no alcance
+            // SÃ³ avalia se estÃ¡ no alcance
             if (dist > range)
                 continue;
 
             float baseScore = CalculateTargetScore(target, targetPref, behavior);
 
-            // Bônus por dano estimado
+            // BÃ´nus por dano estimado
             float damageEstimate = Mathf.Max(1, enemy.Stats.attack + attackAction.Damage - target.Stats.defense);
             baseScore += damageEstimate * 0.5f;
 
-            // Bônus se pode matar
+            // BÃ´nus se pode matar
             if (target.Health != null && damageEstimate >= target.Health.CurrentHealth)
                 baseScore += 50f;
 
@@ -204,7 +206,7 @@ public class AIBrain : MonoBehaviour
         List<AIActionScore> scores = new();
         int range = moveAction.Range;
 
-        // Encontrar tiles alcançáveis via BFS (replicando a lógica de MoveAction)
+        // Encontrar tiles alcanÃ§Ã¡veis via BFS (replicando a lÃ³gica de MoveAction)
         HashSet<Vector2Int> reachable = GetReachableTiles(enemy.GridPosition, range);
 
         if (reachable.Count == 0)
@@ -237,7 +239,7 @@ public class AIBrain : MonoBehaviour
                         break;
 
                     case BehaviorType.Support:
-                        // Move em direção de aliados (futuro)
+                        // Move em direÃ§Ã£o de aliados (futuro)
                         baseScore = 0f;
                         break;
                 }
@@ -317,7 +319,7 @@ public class AIBrain : MonoBehaviour
     }
 
     // =============================
-    // EXECUÇÃO DA AÇÃO
+    // EXECUÃ‡ÃƒO DA AÃ‡ÃƒO
     // =============================
 
     void ExecuteAction(AIActionScore best)
@@ -326,7 +328,7 @@ public class AIBrain : MonoBehaviour
 
         if (best.actionIndex < 0 || best.actionIndex >= actionComponents.Length)
         {
-            Debug.LogError($"[AIBrain] actionIndex inválido: {best.actionIndex}");
+            Debug.LogError($"[AIBrain] actionIndex invÃ¡lido: {best.actionIndex}");
             TurnManager.Instance.EndTurn();
             return;
         }
@@ -345,14 +347,14 @@ public class AIBrain : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning($"[AIBrain] Tipo de ação desconhecido no index {best.actionIndex}");
+            Debug.LogWarning($"[AIBrain] Tipo de aÃ§Ã£o desconhecido no index {best.actionIndex}");
             TurnManager.Instance.EndTurn();
         }
     }
 
     /// <summary>
     /// Executa ataque diretamente sem input do jogador.
-    /// Replica o fluxo de AttackAction.Resolve() de forma programática.
+    /// Replica o fluxo de AttackAction.Resolve() de forma programÃ¡tica.
     /// </summary>
     void ExecuteAttackDirect(AttackAction attackAction, Unit target)
     {
@@ -362,28 +364,20 @@ public class AIBrain : MonoBehaviour
             return;
         }
 
-        int hits = enemy.GetAttacksAgainst(target);
-        int totalDamage = 0;
+                int hits = enemy.GetAttacksAgainst(target);
+        int flatBonus = attackAction != null ? attackAction.Damage : 0;
 
         for (int i = 0; i < hits; i++)
         {
-            AttackResult result = enemy.CalculateAttack(
-                target,
-                new DamageBonus { flat = attackAction.Damage, percent = 0f },
-                new DamageReduction { flat = 0, percent = 0f }
-            );
-
-            totalDamage += result.damage;
-            Debug.Log($"[AIBrain] Hit {i + 1}/{hits} | {enemy.DisplayName} -> {target.DisplayName} | Damage: {result.damage} | Critical: {result.isCritical}");
+            var ctx = new CombatContext(enemy, target, enemy.Stats.attack + flatBonus);
+            Celestial_Cross.Scripts.Combat.Execution.DamageProcessor.ProcessAndApplyDamage(ctx, applyDefense: true);
         }
-
-        target.Health.TakeDamage(totalDamage);
         TurnManager.Instance.EndTurn();
     }
 
     /// <summary>
     /// Executa movimento diretamente, sem input do jogador.
-    /// Replica a lógica de MoveAction.MoveUnit().
+    /// Replica a lÃ³gica de MoveAction.MoveUnit().
     /// </summary>
     void ExecuteMoveDirect(Vector2Int targetPos)
     {
@@ -397,7 +391,7 @@ public class AIBrain : MonoBehaviour
         GridTile destTile = gridMap.GetTile(targetPos);
         if (destTile == null)
         {
-            Debug.LogError($"[AIBrain] Tile destino {targetPos} não existe!");
+            Debug.LogError($"[AIBrain] Tile destino {targetPos} nÃ£o existe!");
             TurnManager.Instance.EndTurn();
             return;
         }
@@ -411,7 +405,7 @@ public class AIBrain : MonoBehaviour
     }
 
     // =============================
-    // UTILITÁRIOS
+    // UTILITÃRIOS
     // =============================
 
     float GetHpPercent()
@@ -426,7 +420,7 @@ public class AIBrain : MonoBehaviour
     {
         int count = 0;
 
-        foreach (var unit in FindObjectsOfType<EnemyUnit>())
+        foreach (var unit in Object.FindObjectsByType<EnemyUnit>(FindObjectsSortMode.None))
         {
             if (unit == enemy)
                 continue;
@@ -442,7 +436,7 @@ public class AIBrain : MonoBehaviour
     {
         List<Unit> result = new();
 
-        foreach (var unit in FindObjectsOfType<Unit>())
+        foreach (var unit in Object.FindObjectsByType<Unit>(FindObjectsSortMode.None))
         {
             // Pula inimigos
             if (unit is EnemyUnit)
@@ -520,3 +514,4 @@ public class AIBrain : MonoBehaviour
         return weighted;
     }
 }
+

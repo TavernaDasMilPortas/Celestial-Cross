@@ -8,7 +8,6 @@ public class TargetSelector : MonoBehaviour
     public event Action<List<Unit>> OnTargetsConfirmed;
     public event Action<List<Unit>> OnSelectedTargetsChanged;
     public event Action<Unit> OnHoverChanged;
-    public event Action OnExecuteRequested;
     public event Action OnCanceled;
 
     public IReadOnlyList<Vector2Int> SelectedPoints => selectedPoints;
@@ -126,7 +125,7 @@ public class TargetSelector : MonoBehaviour
     void FindValidTargets()
     {
         validTargets.Clear();
-        foreach (var unit in FindObjectsOfType<Unit>())
+        foreach (var unit in UnityEngine.Object.FindObjectsByType<Unit>(FindObjectsSortMode.None))
         {
             if (unit == sourceUnit && !targetingRule.canTargetSelf)
                 continue;
@@ -230,6 +229,8 @@ public class TargetSelector : MonoBehaviour
                 if (tile != currentHoveredTile)
                 {
                     currentHoveredTile = tile;
+                    RefreshAreaPreview(); // Garante atualização contínua do preview no hover
+                    
                     if (tile != null && validTiles.Contains(tile))
                     {
                         var previewPoints = new List<Vector2Int>(selectedPoints) { tile.GridPosition };
@@ -241,6 +242,7 @@ public class TargetSelector : MonoBehaviour
                     }
                 }
             }
+            // ... restante removido para aplicar o patch localmente
             else
             {
                 Unit unit = hit.collider.GetComponent<Unit>();
@@ -319,15 +321,23 @@ public class TargetSelector : MonoBehaviour
 
         if (selectedTargets.Contains(unit))
         {
-            if (selectedTargets.Count >= targetingRule.minTargets)
-            {
-                OnExecuteRequested?.Invoke();
-            }
+            // Se já está selecionado e clicamos de novo, confirmamos a execução
+            Confirm(); // Corrigido para chamar Confirm() de forma consistente
             return;
         }
 
-        // FIFO Swap
-        if (targetingRule.maxTargets > 0 && selectedTargets.Count >= targetingRule.maxTargets)
+        // Se for seleção única (maxTargets == 1) e clicarmos em OUTRO alvo válido
+        if (targetingRule.maxTargets == 1 && selectedTargets.Count > 0)
+        {
+            // Limpa o anterior antes de selecionar o novo
+            Unit previous = selectedTargets[0];
+            previous.GetComponent<UnitOutlineController>()?.SetSelected(false);
+            GridMap.Instance?.GetTile(previous.GridPosition)?.ClearSelect();
+            selectedTargets.Clear();
+        }
+
+        // FIFO Swap para seleções múltiplas
+        if (targetingRule.maxTargets > 1 && selectedTargets.Count >= targetingRule.maxTargets)
         {
             Unit first = selectedTargets[0];
             selectedTargets.RemoveAt(0);
@@ -338,15 +348,42 @@ public class TargetSelector : MonoBehaviour
 
         selectedTargets.Add(unit);
         outline?.SetSelected(true);
-        tileUnderUnit?.Select(); // Garante o feedback amarelo no tile
+        tileUnderUnit?.Select();
 
+        RefreshAreaPreview(); // Adicionado para atualizar preview de área centrada em Unit
         OnSelectedTargetsChanged?.Invoke(GetResolvedTargets(selectedTargets, selectedPoints));
+    }
 
-        // Notifica mudança/confirmação parcial
-        if (selectedTargets.Count >= targetingRule.minTargets)
+    void ToggleTileSelection(GridTile tile)
+    {
+        if (selectedPoints.Contains(tile.GridPosition))
         {
-            Confirm();
+            // Se já está selecionado e clicamos de novo, confirmamos a execução
+            Confirm(); // Usar o método Confirm() que já limpa o estado
+            return;
         }
+
+        // Seleção única de Tile
+        if (targetingRule.maxTargets == 1 && selectedPoints.Count > 0)
+        {
+            Vector2Int previousPos = selectedPoints[0];
+            GridMap.Instance?.GetTile(previousPos)?.ClearSelect();
+            selectedPoints.Clear();
+        }
+
+        // FIFO para múltiplos Tiles
+        if (targetingRule.maxTargets > 1 && selectedPoints.Count >= targetingRule.maxTargets)
+        {
+            Vector2Int firstPos = selectedPoints[0];
+            selectedPoints.RemoveAt(0);
+            GridMap.Instance?.GetTile(firstPos)?.ClearSelect();
+        }
+
+        selectedPoints.Add(tile.GridPosition);
+        tile.Select();
+
+        RefreshAreaPreview(); // Adicionado para atualizar preview de área centrada em Point
+        OnSelectedTargetsChanged?.Invoke(GetResolvedTargets(selectedTargets, selectedPoints));
     }
 
     List<Unit> GetResolvedTargets(IEnumerable<Unit> baseTargets, IEnumerable<Vector2Int> basePoints)
@@ -377,7 +414,7 @@ public class TargetSelector : MonoBehaviour
                 affectedCells.Add(point);
         }
 
-        var result = FindObjectsOfType<Unit>()
+        var result = UnityEngine.Object.FindObjectsByType<Unit>(FindObjectsSortMode.None)
             .Where(u => affectedCells.Contains(u.GridPosition))
             .Where(u => targetingRule.canTargetSelf || u != sourceUnit)
             .ToList();
@@ -388,42 +425,21 @@ public class TargetSelector : MonoBehaviour
         return result.Distinct().ToList();
     }
 
-    void ToggleTileSelection(GridTile tile)
+    void Confirm()
     {
-        if (tileWhitelist != null && !tileWhitelist.Contains(tile))
-        {
-            Debug.Log("[TargetSelector] Tile fora da whitelist");
-            return;
-        }
+        OnTargetsConfirmed?.Invoke(GetResolvedTargets(selectedTargets, selectedPoints));
+        isActive = false;
+        ClearAllHighlights();
+    }
 
-        if (selectedTiles.Contains(tile))
-        {
-            if (selectedTiles.Count >= targetingRule.minTargets)
-            {
-                OnExecuteRequested?.Invoke();
-            }
-            return;
-        }
-
-        // FIFO Swap
-        if (targetingRule.maxTargets > 0 && selectedTiles.Count >= targetingRule.maxTargets)
-        {
-            GridTile first = selectedTiles[0];
-            selectedTiles.RemoveAt(0);
-            selectedPoints.Remove(first.GridPosition);
-            first.ClearSelect();
-        }
-
-        selectedTiles.Add(tile);
-        selectedPoints.Add(tile.GridPosition);
-        tile.Select();
-        RefreshAreaPreview();
-
-        // Notifica mudança/confirmação parcial
-        if (selectedTiles.Count >= targetingRule.minTargets)
-        {
-            Confirm();
-        }
+    void Cancel()
+    {
+        isActive = false;
+        ClearAllHighlights();
+        selectedTargets.Clear();
+        selectedTiles.Clear();
+        selectedPoints.Clear();
+        OnCanceled?.Invoke();
     }
 
     IEnumerable<Vector2Int> GetPreviewOrigins()
@@ -525,27 +541,6 @@ public class TargetSelector : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
             Cancel();
     }
-
-    void Confirm()
-    {
-        // Notifica mas continua ativo para Swap/Execução.
-        // Range permanece visível até o ExecuteRoutine da Action limpar tudo.
-        OnTargetsConfirmed?.Invoke(GetResolvedTargets(selectedTargets, selectedPoints));
-    }
-
-    void Cancel()
-    {
-        isActive = false;
-
-        ClearAllHighlights();
-        selectedTargets.Clear();
-        selectedTiles.Clear();
-        selectedPoints.Clear();
-
-        OnCanceled?.Invoke();
-        Destroy(this);
-    }
-
 
     int GridDistance(Vector2Int a, Vector2Int b)
     {

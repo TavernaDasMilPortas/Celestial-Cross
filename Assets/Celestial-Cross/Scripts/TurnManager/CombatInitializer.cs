@@ -7,7 +7,7 @@ public class CombatInitializer : MonoBehaviour
     [Tooltip("Inicia o combate automaticamente no Start")]
     public bool autoStart = true;
 
-    [Tooltip("Units que participarão do combate (opcional)")]
+    [Tooltip("Units que participarï¿½o do combate (opcional)")]
     public List<Unit> predefinedUnits = new();
 
     void Start()
@@ -41,15 +41,15 @@ public class CombatInitializer : MonoBehaviour
 
     List<Unit> CollectUnits()
     {
-        // Se houver units pré-definidas, use elas
+        // Se houver units prï¿½-definidas, use elas
         if (predefinedUnits != null && predefinedUnits.Count > 0)
         {
-            // remove nulls por segurança
+            // remove nulls por seguranï¿½a
             predefinedUnits.RemoveAll(u => u == null);
             return new List<Unit>(predefinedUnits);
         }
 
-        // Caso contrário, encontra todas as Units na cena
-        return new List<Unit>(FindObjectsOfType<Unit>());
+        // Caso contrï¿½rio, encontra todas as Units na cena
+        return new List<Unit>(Object.FindObjectsByType<Unit>(FindObjectsSortMode.None));
     }
 }
