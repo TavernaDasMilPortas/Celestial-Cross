@@ -10,7 +10,8 @@ public class AttackAction : UnitActionBase
     public override string GetDetailStats() => "Dano: {Damage}";
     public TargetingRuleData TargetingRule { get; set; } = new TargetingRuleData();
     public AreaPatternData AreaPattern { get; set; }
-    public int AreaRotationSteps { get; set; }
+    public override AreaPatternData GetAreaPattern() => AreaPattern;
+    public Direction PreferredDirection { get; set; }
 
 
     protected override ActionContext CreateContext()
@@ -25,7 +26,7 @@ public class AttackAction : UnitActionBase
         StartTargetSelection(Range, TargetingRule);
 
         targetSelector.OnSelectedTargetsChanged += OnSelectionChanged;
-        targetSelector.UpdateAreaConfig(AreaPattern, AreaRotationSteps);        
+        targetSelector.UpdateAreaConfig(AreaPattern, PreferredDirection);        
 
         unit.LogCanConfirm(false);
     }
@@ -107,7 +108,7 @@ public class AttackAction : UnitActionBase
         {
             foreach (var point in selectedPoints)
             {
-                foreach (var cell in AreaResolver.ResolveCells(point, AreaPattern, AreaRotationSteps))
+                foreach (var cell in AreaResolver.ResolveCells(point, AreaPattern, PreferredDirection))
                     affectedCells.Add(cell);
             }
         }
@@ -115,7 +116,7 @@ public class AttackAction : UnitActionBase
         {
             foreach (var target in targets)
             {
-                foreach (var cell in AreaResolver.ResolveCells(target.GridPosition, AreaPattern, AreaRotationSteps))
+                foreach (var cell in AreaResolver.ResolveCells(target.GridPosition, AreaPattern, PreferredDirection))
                     affectedCells.Add(cell);
             }
         }

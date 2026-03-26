@@ -9,6 +9,7 @@ using Celestial_Cross.Scripts.Units;
 [RequireComponent(typeof(UnitHoverDetector))]
 [RequireComponent(typeof(UnitOutlineController))]
 [RequireComponent(typeof(PassiveManager))]
+[RequireComponent(typeof(CombatLogger))]
 public abstract class Unit : MonoBehaviour
 {
     [Header("Base Data")]

@@ -1,52 +1,72 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+
+public enum Direction { N, NE, E, SE, S, SW, W, NW }
 
 public static class AreaResolver
 {
-    public static List<Vector2Int> ResolveCells(Vector2Int origin, AreaPatternData pattern, int rotationSteps = 0)
+    public static List<Vector2Int> ResolveCells(Vector2Int origin, AreaPatternData pattern, Direction direction = Direction.N)
     {
-        List<Vector2Int> cells = new();
+        if (pattern == null) return new List<Vector2Int>();
 
-        if (pattern == null)
-            return cells;
+        var patternToUse = pattern.Rows.Select(r => r.cells).ToList();
+        var center = new Vector2Int(pattern.originX, pattern.originY);
 
-        pattern.EnsureShape();
-
-        int normalizedRotation = pattern.allowRotation ? NormalizeRotation(rotationSteps) : 0;
-
-        for (int y = 0; y < pattern.height; y++)
+        if (pattern.canRotate && pattern.rotationType == RotationType.EightDirections)
         {
-            for (int x = 0; x < pattern.width; x++)
+            if (IsDiagonal(direction))
             {
-                if (!pattern.IsActive(x, y))
-                    continue;
-
-                Vector2Int local = new Vector2Int(x - pattern.originX, -(y - pattern.originY));
-                Vector2Int rotated = Rotate(local, normalizedRotation);
-                cells.Add(origin + rotated);
+                patternToUse = pattern.diagonalPattern.Select(r => r.cells).ToList();
+                center = pattern.diagonalCenter;
             }
         }
 
-        return cells;
+        var offsets = GetOffsetsFromPattern(patternToUse, center);
+        var rotatedOffsets = RotateOffsets(offsets, direction);
+
+        return rotatedOffsets.Select(offset => origin + offset).ToList();
     }
 
-    static int NormalizeRotation(int steps)
+    private static List<Vector2Int> GetOffsetsFromPattern(List<List<bool>> patternMatrix, Vector2Int center)
     {
-        int value = steps % 4;
-        if (value < 0)
-            value += 4;
-
-        return value;
-    }
-
-    static Vector2Int Rotate(Vector2Int point, int steps)
-    {
-        return steps switch
+        var offsets = new List<Vector2Int>();
+        for (int y = 0; y < patternMatrix.Count; y++)
         {
-            1 => new Vector2Int(-point.y, point.x),
-            2 => new Vector2Int(-point.x, -point.y),
-            3 => new Vector2Int(point.y, -point.x),
-            _ => point,
-        };
+            for (int x = 0; x < patternMatrix[y].Count; x++)
+            {
+                if (patternMatrix[y][x])
+                {
+                    offsets.Add(new Vector2Int(x - center.x, -(y - center.y)));
+                }
+            }
+        }
+        return offsets;
+    }
+
+    private static List<Vector2Int> RotateOffsets(List<Vector2Int> offsets, Direction direction)
+    {
+        return offsets.Select(p => Rotate(p, direction)).ToList();
+    }
+
+    private static Vector2Int Rotate(Vector2Int point, Direction direction)
+    {
+        switch (direction)
+        {
+            case Direction.N:  return new Vector2Int(point.x, point.y);
+            case Direction.NE: return new Vector2Int(point.x - point.y, point.x + point.y); // Simplificado, pode precisar de ajuste
+            case Direction.E:  return new Vector2Int(-point.y, point.x);
+            case Direction.SE: return new Vector2Int(-point.x - point.y, point.x - point.y); // Simplificado
+            case Direction.S:  return new Vector2Int(-point.x, -point.y);
+            case Direction.SW: return new Vector2Int(-point.x + point.y, -point.x - point.y); // Simplificado
+            case Direction.W:  return new Vector2Int(point.y, -point.x);
+            case Direction.NW: return new Vector2Int(point.x + point.y, -point.x + point.y); // Simplificado
+            default:           return point;
+        }
+    }
+
+    private static bool IsDiagonal(Direction direction)
+    {
+        return direction == Direction.NE || direction == Direction.SE || direction == Direction.SW || direction == Direction.NW;
     }
 }

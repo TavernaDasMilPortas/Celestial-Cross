@@ -6,6 +6,8 @@ public interface IUnitAction
     Sprite ActionIcon { get; }
     string ActionDescription { get; }
     int Range { get; }
+    Vector2Int Target { get; set; }
+    AreaPatternData GetAreaPattern();
     event System.Action<ActionForecast> OnForecastUpdated;
     void EnterAction();
     void UpdateAction();

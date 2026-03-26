@@ -11,7 +11,7 @@ public class AttackActionData : UnitActionData
 
     [Header("Area")]
     public AreaPatternData areaPattern;
-    [Range(0, 3)] public int areaRotationSteps;
+    public Direction preferredDirection;
 
     public override System.Type GetRuntimeActionType()
     {
@@ -32,7 +32,7 @@ public class AttackActionData : UnitActionData
         attack.Damage = damage;
         attack.TargetingRule = targeting != null ? targeting.Clone() : new TargetingRuleData();
         attack.AreaPattern = areaPattern;
-        attack.AreaRotationSteps = areaRotationSteps;
+        attack.PreferredDirection = preferredDirection;
 
         attack.MarkConfigured();
 
