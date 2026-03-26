@@ -18,14 +18,50 @@ public static class AreaResolver
             if (IsDiagonal(direction))
             {
                 patternToUse = pattern.diagonalPattern.Select(r => r.cells).ToList();
-                center = pattern.diagonalCenter;
+                // Usa a origem específica do padrão diagonal
+                center = new Vector2Int(pattern.diagOriginX, pattern.diagOriginY);
+                
+                int stepsNeeded = GetDiagonalRotationSteps(pattern.referenceDiagonal, direction);
+                return RotateOffsets(GetOffsetsFromPattern(patternToUse, center), stepsNeeded)
+                    .Select(offset => origin + offset).ToList();
             }
         }
 
         var offsets = GetOffsetsFromPattern(patternToUse, center);
-        var rotatedOffsets = RotateOffsets(offsets, direction);
+        int axialSteps = GetAxialRotationSteps(direction);
+        return RotateOffsets(offsets, axialSteps)
+            .Select(offset => origin + offset).ToList();
+    }
 
-        return rotatedOffsets.Select(offset => origin + offset).ToList();
+    private static int GetAxialRotationSteps(Direction direction)
+    {
+        switch (direction)
+        {
+            case Direction.N: return 0;
+            case Direction.E: return 1;
+            case Direction.S: return 2;
+            case Direction.W: return 3;
+            default: return 0;
+        }
+    }
+
+    private static int GetDiagonalRotationSteps(Direction reference, Direction target)
+    {
+        int refIdx = GetDiagonalIndex(reference);
+        int targetIdx = GetDiagonalIndex(target);
+        return (targetIdx - refIdx + 4) % 4;
+    }
+
+    private static int GetDiagonalIndex(Direction d)
+    {
+        switch (d)
+        {
+            case Direction.NE: return 0;
+            case Direction.SE: return 1;
+            case Direction.SW: return 2;
+            case Direction.NW: return 3;
+            default: return 0;
+        }
     }
 
     private static List<Vector2Int> GetOffsetsFromPattern(List<List<bool>> patternMatrix, Vector2Int center)
@@ -37,32 +73,29 @@ public static class AreaResolver
             {
                 if (patternMatrix[y][x])
                 {
-                    offsets.Add(new Vector2Int(x - center.x, -(y - center.y)));
+                    // No editor, y cresce para baixo. No grid, y cresce para cima.
+                    // Invertemos o sinal para que y=0 no editor seja Norte relativo ao centro.
+                    offsets.Add(new Vector2Int(x - center.x, -(y - center.y))); 
                 }
             }
         }
         return offsets;
     }
 
-    private static List<Vector2Int> RotateOffsets(List<Vector2Int> offsets, Direction direction)
+    private static List<Vector2Int> RotateOffsets(List<Vector2Int> offsets, int steps90Deg)
     {
-        return offsets.Select(p => Rotate(p, direction)).ToList();
+        if (steps90Deg == 0) return offsets;
+        return offsets.Select(p => Rotate90(p, steps90Deg)).ToList();
     }
 
-    private static Vector2Int Rotate(Vector2Int point, Direction direction)
+    private static Vector2Int Rotate90(Vector2Int p, int steps)
     {
-        switch (direction)
+        Vector2Int res = p;
+        for (int i = 0; i < steps; i++)
         {
-            case Direction.N:  return new Vector2Int(point.x, point.y);
-            case Direction.NE: return new Vector2Int(point.x - point.y, point.x + point.y); // Simplificado, pode precisar de ajuste
-            case Direction.E:  return new Vector2Int(-point.y, point.x);
-            case Direction.SE: return new Vector2Int(-point.x - point.y, point.x - point.y); // Simplificado
-            case Direction.S:  return new Vector2Int(-point.x, -point.y);
-            case Direction.SW: return new Vector2Int(-point.x + point.y, -point.x - point.y); // Simplificado
-            case Direction.W:  return new Vector2Int(point.y, -point.x);
-            case Direction.NW: return new Vector2Int(point.x + point.y, -point.x + point.y); // Simplificado
-            default:           return point;
+            res = new Vector2Int(res.y, -res.x);
         }
+        return res;
     }
 
     private static bool IsDiagonal(Direction direction)

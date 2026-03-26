@@ -18,11 +18,16 @@ public class AreaPatternData : ScriptableObject
     public RotationType rotationType;
 
     [ShowIf(nameof(ShouldShowDiagonalPattern))]
-    [InfoBox("Desenhe o padrão para a diagonal NORDESTE. O sistema rotacionará para as outras 3 diagonais.")]
+    [InfoBox("Desenhe o padrão para a diagonal selecionada. O sistema rotacionará para as outras 3 diagonais.")]
     public List<AreaPatternRow> diagonalPattern = new();
     
     [ShowIf(nameof(ShouldShowDiagonalPattern))]
-    public Vector2Int diagonalCenter;
+    public Direction referenceDiagonal = Direction.NE;
+
+    [ShowIf(nameof(ShouldShowDiagonalPattern))]
+    public int diagOriginX = 1;
+    [ShowIf(nameof(ShouldShowDiagonalPattern))]
+    public int diagOriginY = 1;
 
     [SerializeField] private List<AreaPatternRow> rows = new();
 
@@ -89,6 +94,9 @@ public class AreaPatternData : ScriptableObject
 
         foreach (var row in diagonalPattern)
             row.Resize(width);
+
+        diagOriginX = Mathf.Clamp(diagOriginX, 0, width - 1);
+        diagOriginY = Mathf.Clamp(diagOriginY, 0, height - 1);
     }
 }
 

@@ -39,10 +39,20 @@ public class AreaPatternDataEditor : Editor
             {
                 pattern.EnsureDiagonalShape();
                 serializedObject.Update();
+
                 var diagRowsProp = serializedObject.FindProperty("diagonalPattern");
+                var refDiagProp = serializedObject.FindProperty("referenceDiagonal");
+                var diagOriginXProp = serializedObject.FindProperty("diagOriginX");
+                var diagOriginYProp = serializedObject.FindProperty("diagOriginY");
 
                 EditorGUILayout.Space();
-                EditorGUILayout.LabelField("Diagonal Pattern Matrix (NE)", EditorStyles.boldLabel);
+                EditorGUILayout.LabelField("Diagonal Settings", EditorStyles.boldLabel);
+                if (refDiagProp != null) EditorGUILayout.PropertyField(refDiagProp);
+                if (diagOriginXProp != null) EditorGUILayout.PropertyField(diagOriginXProp);
+                if (diagOriginYProp != null) EditorGUILayout.PropertyField(diagOriginYProp);
+
+                EditorGUILayout.Space();
+                EditorGUILayout.LabelField($"Diagonal Pattern Matrix ({pattern.referenceDiagonal})", EditorStyles.boldLabel);
 
                 if (diagRowsProp != null && diagRowsProp.arraySize == pattern.height)
                 {
@@ -57,7 +67,7 @@ public class AreaPatternDataEditor : Editor
                             for (int x = 0; x < pattern.width; x++)
                             {
                                 var cell = cellsProp.GetArrayElementAtIndex(x);
-                                bool isOrigin = (x == pattern.originX && y == pattern.originY);
+                                bool isOrigin = (x == pattern.diagOriginX && y == pattern.diagOriginY);
                                 Color oldColor = GUI.backgroundColor;
                                 if (isOrigin) GUI.backgroundColor = Color.cyan;
                                 cell.boolValue = EditorGUILayout.Toggle(cell.boolValue, GUILayout.Width(20));
