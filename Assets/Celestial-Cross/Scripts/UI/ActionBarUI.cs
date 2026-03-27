@@ -22,19 +22,32 @@ public class ActionBarUI : MonoBehaviour
         var actions = unit.Actions;
         for (int i = 0; i < actions.Count; i++)
         {
-            GameObject btnObj = Instantiate(buttonPrefab, container);
-            ActionButtonUI btnUI = btnObj.GetComponent<ActionButtonUI>();
-            
-            if (btnUI != null)
+            var action = actions[i];
+            bool isClickable = true;
+
+            if (action is Celestial_Cross.Scripts.Units.BlueprintActionWrapper wrapper)
             {
-                btnUI.Setup(actions[i], i);
-                spawnedButtons.Add(btnUI);
+                isClickable = !wrapper.Blueprint.isPassive;
             }
+
+            CreateButtonForAction(action, i, isClickable);
         }
 
         // Highlight initial action if it exists
         if (unit.CurrentAction != null)
             HandleActionChanged(unit.CurrentAction);
+    }
+
+    private void CreateButtonForAction(IUnitAction action, int index, bool isClickable)
+    {
+        GameObject btnObj = Instantiate(buttonPrefab, container);
+        ActionButtonUI btnUI = btnObj.GetComponent<ActionButtonUI>();
+        
+        if (btnUI != null)
+        {
+            btnUI.Setup(action, index, isClickable);
+            spawnedButtons.Add(btnUI);
+        }
     }
 
     private void HandleActionChanged(IUnitAction action)

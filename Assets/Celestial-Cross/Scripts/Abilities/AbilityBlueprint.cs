@@ -12,9 +12,25 @@ namespace Celestial_Cross.Scripts.Abilities
         public Sprite abilityIcon;
         [TextArea] public string abilityDescription;
         public int displayRange = 1;
+        [Tooltip("Is this a passive ability? Passive abilities are not shown in the action bar.")]
+        public bool isPassive = false;
 
-        [Header("Effects Sequence")]
+        [Header("Effects & Modifiers")]
+        [Title("Active Effects", "Executed when the ability is manually cast.")]
         [ListDrawerSettings(ShowPaging = false, ShowItemCount = false, ShowFoldout = true)]
+        [SerializeReference]
         public List<EffectStep> effectSteps = new List<EffectStep>();
+
+        [Title("Passive Modifiers", "Triggered by game events (hooks).")]
+        [ListDrawerSettings(ShowPaging = false, ShowItemCount = false, ShowFoldout = true)]
+        [SerializeReference]
+        public List<EffectStep> modifierSteps = new List<EffectStep>();
+
+        [Header("Passive Modifiers")]
+        [Tooltip("List of synchronous modifiers listening to hooks.")]
+        [SerializeReference]
+        public List<Celestial_Cross.Scripts.Abilities.Modifiers.ModifierData> modifiers = new List<Celestial_Cross.Scripts.Abilities.Modifiers.ModifierData>();
+
+        public bool IsPassiveOnly => effectSteps.Count == 0 && modifiers.Count > 0;
     }
 }

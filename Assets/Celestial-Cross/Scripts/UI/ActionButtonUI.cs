@@ -12,16 +12,18 @@ public class ActionButtonUI : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     public IUnitAction Action => action;
     private IUnitAction action;
     private int actionIndex;
+    private bool isClickable = true;
 
     private float holdTime = 0.4f;
     private float timer;
     private bool isHolding;
     private bool modalShown;
 
-    public void Setup(IUnitAction action, int index)
+    public void Setup(IUnitAction action, int index, bool clickable = true)
     {
         this.action = action;
         this.actionIndex = index;
+        this.isClickable = clickable;
         
         if (iconImage != null && action.ActionIcon != null)
         {
@@ -34,6 +36,7 @@ public class ActionButtonUI : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         {
             button.onClick.RemoveAllListeners();
             button.onClick.AddListener(OnClick);
+            button.interactable = isClickable; // Disable button component for non-clickable
 
             // Injeta EventTrigger para garantir detecção do Hold (contornando o Button)
             EventTrigger trigger = button.gameObject.GetComponent<EventTrigger>();
@@ -115,7 +118,8 @@ public class ActionButtonUI : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
     private void OnClick()
     {
-        if (modalShown) return;
+        if (modalShown || !isClickable) return;
+
         PlayerController.Instance.SelectAction(actionIndex);
     }
 }

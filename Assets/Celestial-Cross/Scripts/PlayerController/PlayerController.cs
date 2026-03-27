@@ -17,9 +17,15 @@ public class PlayerController : MonoBehaviour
 
     public void StartTurn(Unit unit)
     {
+        if (unit == null)
+        {
+            Debug.LogWarning("[PlayerController] StartTurn called with null unit.");
+            return;
+        }
+
         activeUnit = unit;
      
-        Debug.Log($"Turno de {unit.name}");
+        Debug.Log($"Turno de {unit.DisplayName}");
     }
 
     public void SelectAction(int index)
@@ -38,7 +44,11 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha1)) activeUnit.SelectAction(1);
         if (Input.GetKeyDown(KeyCode.Alpha2)) activeUnit.SelectAction(2);
 
-        UpdateTargeting();
+        // Em dispositivos mobile, só atualizamos o alvo ao ocorrer um toque/clique
+        if (Input.GetMouseButtonDown(0) || Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
+        {
+            UpdateTargeting();
+        }
 
         // O 'ConfirmAction()' original pelo Enter foi removido para priorizar toques ou botões de UI
         // que chamem explicitamente activeUnit.ConfirmAction() ou cliques duplos (OnExecuteRequested)
@@ -50,9 +60,23 @@ public class PlayerController : MonoBehaviour
     private void UpdateTargeting()
     {
         if (activeUnit == null || activeUnit.CurrentAction == null) return;
+        
+        // Proteção contra objeto destruído guardado como interface
+        if (activeUnit.CurrentAction is UnityEngine.Object obj && obj == null) return;
+
+        if (GridManager.Instance == null) return;
 
         var targetPos = GridManager.Instance.GetMouseGridPosition();
-        if (targetPos == activeUnit.CurrentAction.Target) return;
+        
+        // Se estamos clicando fora da grid, podemos simplesmente ignorar
+        if (targetPos.x == -1 && targetPos.y == -1) return;
+
+        if (targetPos == activeUnit.CurrentAction.Target)
+        {
+            // Even if the target hasn't changed, we might want to ensure the highlight is still visible
+            // GridManager.Instance.HighlightArea(_currentArea);
+            return;
+        }
 
         activeUnit.CurrentAction.Target = targetPos;
         
@@ -67,7 +91,10 @@ public class PlayerController : MonoBehaviour
             _currentArea = AreaResolver.ResolveCells(targetPos, pattern);
         }
         
-        GridManager.Instance.HighlightArea(_currentArea);
+        if (GridManager.Instance != null)
+        {
+            GridManager.Instance.HighlightArea(_currentArea);
+        }
     }
 
     private Direction GetDirection(Vector2Int origin, Vector2Int target)

@@ -39,6 +39,7 @@ namespace CelestialCross.Combat
         public IUnitAction action; 
 
         public System.Collections.Generic.Dictionary<string, float> Variables;
+        public System.Collections.Generic.List<Celestial_Cross.Scripts.Abilities.Conditions.AbilityConditionData> conditionPool;
 
         public CombatContext(Unit source, Unit target = null, int amount = 0, IUnitAction action = null)
         {
@@ -47,6 +48,7 @@ namespace CelestialCross.Combat
             this.amount = amount;
             this.action = action;
             this.Variables = new System.Collections.Generic.Dictionary<string, float>();
+            this.conditionPool = new System.Collections.Generic.List<Celestial_Cross.Scripts.Abilities.Conditions.AbilityConditionData>();
         }
     }
 }

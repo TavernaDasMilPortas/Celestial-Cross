@@ -8,12 +8,12 @@ namespace Celestial_Cross.Scripts.Units
     public class BlueprintActionWrapper : IUnitAction
     {
         private readonly global::Unit caster;
-        private readonly AbilityBlueprint blueprint;
+        public readonly AbilityBlueprint Blueprint;
 
-        public string ActionName => blueprint.abilityName;
-        public Sprite ActionIcon => blueprint.abilityIcon;
-        public string ActionDescription => blueprint.abilityDescription;
-        public int Range => blueprint.displayRange;
+        public string ActionName => Blueprint.abilityName;
+        public Sprite ActionIcon => Blueprint.abilityIcon;
+        public string ActionDescription => Blueprint.abilityDescription;
+        public int Range => Blueprint.displayRange;
 
         public Vector2Int Target { get; set; }
 
@@ -22,14 +22,13 @@ namespace Celestial_Cross.Scripts.Units
         public BlueprintActionWrapper(global::Unit caster, AbilityBlueprint blueprint)
         {
             this.caster = caster;
-            this.blueprint = blueprint;
+            this.Blueprint = blueprint;
             AbilityExecutor.OnTargetPreviewChanged += HandleTargetPreview;
         }
 
         public AreaPatternData GetAreaPattern()
         {
-            // Tenta encontrar o primeiro passo que tenha uma estratégia de targeting com padrão de área
-            foreach (var step in blueprint.effectSteps)
+            foreach (var step in Blueprint.effectSteps)
             {
                 if (step.targetingStrategy != null && step.targetingStrategy.AreaPattern != null)
                 {
@@ -41,7 +40,7 @@ namespace Celestial_Cross.Scripts.Units
 
         private void HandleTargetPreview(AbilityBlueprint runningBlueprint, System.Collections.Generic.List<global::Unit> targets)
         {
-            if (blueprint != runningBlueprint) return;
+            if (Blueprint != runningBlueprint) return;
 
             if (targets == null || targets.Count == 0)
             {
@@ -55,7 +54,7 @@ namespace Celestial_Cross.Scripts.Units
             Debug.Log($"[BlueprintActionWrapper] Gerando forecast para: {lastTarget.name}");
 
             int simulatedBaseDamage = 0;
-            foreach (var step in blueprint.effectSteps)
+            foreach (var step in Blueprint.effectSteps)
             {
                 if (step.effects == null) continue;
 
@@ -89,10 +88,15 @@ namespace Celestial_Cross.Scripts.Units
 
         public void EnterAction()
         {
-            // O AbilityExecutor cuida das fases da habilidade (visualização e execução)
             if (AbilityExecutor.Instance != null)
             {
-                AbilityExecutor.Instance.ExecuteAbility(caster, blueprint);
+                AbilityExecutor.Instance.ExecuteAbility(caster, Blueprint, CelestialCross.Combat.CombatHook.OnManualCast, () => {
+                    CameraController.Instance?.ResetFocus();
+                    if (caster is global::EnemyUnit)
+                        TurnManager.Instance.EndTurn();
+                    else    
+                        PlayerController.Instance.EndTurn();
+                });
             }
             else
             {

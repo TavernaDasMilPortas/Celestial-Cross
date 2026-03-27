@@ -15,12 +15,17 @@ MonoBehaviour:
   width: 3
   height: 3
   originX: 1
-  originY: 1
-  canRotate: 0
-  rotationType: 0
-  diagonalPattern: []
-  diagonalCenter: {x: 0, y: 0}
+  originY: 2
+  canRotate: 1
+  rotationType: 1
+  diagonalPattern:
+  - cells: 000100
+  - cells: 010100
+  - cells: 000000
+  referenceDiagonal: 1
+  diagOriginX: 1
+  diagOriginY: 1
   rows:
   - cells: 000000
-  - cells: 000000
-  - cells: 000000
+  - cells: 010001
+  - cells: 000100

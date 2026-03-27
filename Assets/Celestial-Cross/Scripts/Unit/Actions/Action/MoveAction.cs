@@ -80,6 +80,7 @@ public class MoveAction : UnitActionBase
         context.targetPoints = targetSelector.SelectedPoints.ToList();
         state = ActionState.ReadyToConfirm;
         unit.LogCanConfirm(true);
+        PerformFinalExecution();
     }
 
 

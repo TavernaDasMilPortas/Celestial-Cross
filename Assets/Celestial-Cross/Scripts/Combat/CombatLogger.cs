@@ -47,8 +47,14 @@ namespace CelestialCross.Combat
 
         private void Awake()
         {
-            if (Instance == null) Instance = this;
-            else Destroy(gameObject);
+            if (Instance == null) 
+            {
+                Instance = this;
+            }
+            else if (Instance != this)
+            {
+                Destroy(gameObject);
+            }
         }
 
         public static void Log(string message, LogCategory category = LogCategory.System)

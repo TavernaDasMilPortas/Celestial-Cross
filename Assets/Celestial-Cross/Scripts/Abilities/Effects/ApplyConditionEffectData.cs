@@ -1,10 +1,12 @@
-using System;
+﻿using System;
 using UnityEngine;
 using CelestialCross.Combat;
+using Celestial_Cross.Scripts.Abilities.Modifiers;
 
 namespace Celestial_Cross.Scripts.Abilities
 {
     [Serializable]
+    [Obsolete("Use ApplyModifierEffectData instead.")]
     public class ApplyConditionEffectData : EffectData
     {
         public AbilityBlueprint condition;
@@ -13,14 +15,8 @@ namespace Celestial_Cross.Scripts.Abilities
         {
             if (context.target != null && condition != null)
             {
-                var passiveManager = context.target.GetComponent<PassiveManager>();
-                if (passiveManager != null)
-                {
-                    Debug.Log($"ApplyConditionEffect: {condition.name} em {context.target.name}");
-                    passiveManager.ApplyCondition(condition, context.source);
-                }
+                Debug.LogWarning("ApplyConditionEffectData is obsolete. Please migrate this ability to use ApplyModifierEffectData.");
             }
         }
     }
 }
-

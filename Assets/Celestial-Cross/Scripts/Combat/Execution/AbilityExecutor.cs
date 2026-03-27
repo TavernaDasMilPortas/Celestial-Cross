@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -52,13 +52,13 @@ namespace Celestial_Cross.Scripts.Combat.Execution
                 
                 GridMap.Instance?.ResetAllTileVisuals();
                 OnTargetPreviewChanged?.Invoke(null, new List<Unit>());
-                CombatLogger.Log("Habilidade anterior abortada para iniciar nova ação.", LogCategory.System);
+                CombatLogger.Log("Habilidade anterior abortada para iniciar nova a��o.", LogCategory.System);
             }
         }
 
         public void ExecuteAbility(Unit caster, AbilityBlueprint blueprint, CombatHook currentHook = CombatHook.OnManualCast, Action onComplete = null)
         {
-            // Se for OnManualCast (clique do jogador), abortamos qualquer execução pendente
+            // Se for OnManualCast (clique do jogador), abortamos qualquer execu��o pendente
             if (currentHook == CombatHook.OnManualCast)
             {
                 AbortCurrentAbility();
@@ -69,26 +69,23 @@ namespace Celestial_Cross.Scripts.Combat.Execution
 
         private IEnumerator ExecuteBlueprintCoroutine(Unit caster, AbilityBlueprint blueprint, CombatHook currentHook, Action onComplete)
         {
-            // NEW: Handle PassiveAbilityBlueprint
-            if (blueprint is PassiveAbilityBlueprint passiveBlueprint)
-            {
-                var combatContext = new CombatContext(caster, caster); // Contexto gen??rico para passivas
-                foreach (var passiveEffect in passiveBlueprint.passiveEffects)
-                {
-                    if (passiveEffect.triggerHook == currentHook)
-                    {
-                        CombatLogger.Log($"<color=magenta>[AbilityExecutor]</color> Executando Passiva: {passiveEffect.GetType().Name} para o hook {currentHook}");
-                        passiveEffect.Execute(combatContext);
-                    }
-                }
-                onComplete?.Invoke();
-                yield break; // Finaliza a corrotina para passivas
-            }
-
-            CombatLogger.Log($"<color=white>[AbilityExecutor]</color> Iniciando habilidade: <b>{blueprint.name}</b> (Hook: {currentHook})");
+            CombatLogger.Log($"<color=white>[AbilityExecutor]</color> Iniciando habilidade: <b>{blueprint.name}</b> (Hook: {currentHook})", LogCategory.Ability);
             var context = new AbilityExecutionContext(caster, blueprint);
 
-            foreach (var step in blueprint.effectSteps)
+            // Determine which steps to execute based on the hook
+            var stepsToExecute = new List<EffectStep>();
+            if (currentHook == CombatHook.OnManualCast)
+            {
+                if (blueprint.effectSteps != null)
+                    stepsToExecute.AddRange(blueprint.effectSteps);
+            }
+            else
+            {
+                if (blueprint.modifierSteps != null)
+                    stepsToExecute.AddRange(blueprint.modifierSteps);
+            }
+
+            foreach (var step in stepsToExecute)
             {
                 // Ignora passos que n???o pertencem ao momento (hook) que estamos disparando
                 if (step.trigger != currentHook) continue;
@@ -102,9 +99,9 @@ namespace Celestial_Cross.Scripts.Combat.Execution
                 }
                 else if (step.targetingStrategy != null)
                 {
-                    if (step.targetingStrategy.RequiresManualSelection && !(step.targetingStrategy is Celestial_Cross.Scripts.Abilities.Targeting.SelfTargetingStrategy))
+                    if (step.targetingStrategy.RequiresManualSelection && currentHook == CombatHook.OnManualCast)
                     {
-                        Debug.Log("[AbilityExecutor] Pausando execu??????o para sele??????o manual de alvos...");
+                        Debug.Log("[AbilityExecutor] Pausando execução para seleção manual de alvos...");
 
                         TargetSelector selector = caster.gameObject.AddComponent<TargetSelector>();
                         selector.Begin(caster, step.targetingStrategy.ManualRange, step.targetingStrategy.ManualRule, step.targetingStrategy.AreaPattern, step.targetingStrategy.PreferredDirection);
@@ -160,12 +157,12 @@ namespace Celestial_Cross.Scripts.Combat.Execution
                             GridMap.Instance?.GetTile(p)?.Darken();
                             
                         yield return new WaitForSeconds(0.4f);
-                        UnityEngine.Object.Destroy(selector); // Cleanup selector properly
-                        Debug.Log($"[AbilityExecutor] SeleÃ§Ã£o manual confirmada. {currentTargets.Count} alvo(s) escolhidos.");
+                        Destroy(selector); // Cleanup selector properly
+                        Debug.Log($"[AbilityExecutor] Seleção manual confirmada. {currentTargets.Count} alvo(s) escolhidos.");
                     }
                     else
                     {
-                        var cbContext = new CombatContext(caster); 
+                        var cbContext = new CombatContext(caster);
                         if (step.targetingStrategy != null)
                         {
                             currentTargets = step.targetingStrategy.GetTargets(cbContext);
@@ -175,71 +172,48 @@ namespace Celestial_Cross.Scripts.Combat.Execution
 
                 context.LastTargets = currentTargets;
 
-                // Create a CombatContext to store persistent variables for this step
-                // This context will be shared between passive triggers and the active effects
                 var stepContext = new CombatContext(caster);
-                stepContext.Variables = context.Variables; // Share variables blueprint-wide if needed
-
-                // --- NEW: SPEED STEP CALCULATION ---
-                // If the caster is much faster than the target, some steps might repeat.
-                // We calculate if there's an advantage relative to each target.
-                // ------------------------------------
+                stepContext.Variables = context.Variables;
 
                 Debug.Log($"[AbilityExecutor] Aplicando {step.effects.Count} efeitos em {currentTargets.Count} alvos.");
                 foreach (var target in currentTargets)
                 {
-                    int repeats = 1;
-                    
-                    // Logical expansion: Handle speed-based double hits for steps that allow it.
-                    // This is only for Offensive/Active steps usually.
-                    if (currentHook == CombatHook.OnManualCast)
+                    foreach (var effect in step.effects)
                     {
-                        // Check if caster SPD > target SPD * 2 (or other logic).
-                        // Let's stick to the SpeedAdvantageCondition if present on effects or a generic rule.
-                        // For now, we allow the effect themselves to handle repeats via Conditions if they want,
-                        // or we can force a repeat here if the step defines it.
-                    }
-
-                    for (int i = 0; i < repeats; i++)
-                    {
-                        foreach (var effect in step.effects)
+                        if (effect != null)
                         {
-                            if (effect != null)
+                            var combatContext = new CombatContext(caster, target);
+                            combatContext.Variables = context.Variables;
+
+                            if (effect is Celestial_Cross.Scripts.Abilities.DamageEffectData dmg)
+                                combatContext.amount = dmg.GetBaseAmount(combatContext);
+                            else if (effect is Celestial_Cross.Scripts.Abilities.HealEffectData heal)
+                                combatContext.amount = heal.GetBaseAmount(combatContext);
+
+                            if (effect.scaleWithDistance)
                             {
-                                // IMPORTANT: Create the context ONCE per effect instance
-                                var combatContext = new CombatContext(caster, target);
-                                combatContext.Variables = context.Variables;
-
-                                // INJECT BASE VALUES FROM EFFECT TO CONTEXT
-                                if (effect is Celestial_Cross.Scripts.Abilities.DamageEffectData dmg)
-                                    combatContext.amount = dmg.GetBaseAmount(combatContext);
-                                else if (effect is Celestial_Cross.Scripts.Abilities.HealEffectData heal)
-                                    combatContext.amount = heal.GetBaseAmount(combatContext);
-
-                                Debug.Log($"[AbilityExecutor] Preparando efeito {effect.GetType().Name}. Amount inicial (Base do Asset): {combatContext.amount}");
-
-                                yield return StartCoroutine(effect.ExecuteCoroutine(combatContext));
-                                target.TriggerPassives(CombatHook.OnAfterTakeDamage, combatContext);
+                                float distance = Vector2Int.Distance(caster.GridPosition, target.GridPosition);
+                                combatContext.amount = (int)(combatContext.amount * (1 + distance * effect.distanceScaleFactor));
                             }
+
+                            Debug.Log($"[AbilityExecutor] Preparando efeito {effect.GetType().Name}. Amount inicial: {combatContext.amount}");
+
+                            yield return StartCoroutine(effect.ExecuteCoroutine(combatContext));
+                            target.GetComponent<PassiveManager>()?.TriggerHook(CombatHook.OnAfterTakeDamage, combatContext);
                         }
                     }
                 }
 
-                yield return new WaitForSeconds(0.1f); 
-                GridMap.Instance?.ResetAllTileVisuals();
+                yield return new WaitForSeconds(0.1f);
             }
 
-            Debug.Log($"[AbilityExecutor] ExecuÃ§Ã£o de {blueprint.name} finalizada.");
-            
-            // --- FINALIZAÃ‡ÃƒO DO TURNO ---
-            if (currentHook == CombatHook.OnManualCast)
-            {
-                PlayerController.Instance?.EndTurn();
-            }
-
+            GridMap.Instance?.ResetAllTileVisuals();
             onComplete?.Invoke();
         }
     }
 }
+
+
+
 
 

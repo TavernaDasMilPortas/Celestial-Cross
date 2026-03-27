@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2d40ee282d0c8984b934ffbbbb9c91f1, type: 3}
-  m_Name: "Tir\xE3o"
+  m_Name: Tiro Preciso
   m_EditorClassIdentifier: Assembly-CSharp::Celestial_Cross.Scripts.Abilities.AbilityBlueprint
   abilityName: "Tir\xE3o"
   abilityIcon: {fileID: 0}
@@ -39,12 +39,12 @@ MonoBehaviour:
           canTargetSelf: 0
           targetFaction: 2
         AreaPattern: {fileID: 0}
-        AreaRotationSteps: 0
+        PreferredDirection: 0
         ManualRange: 5
     - rid: 4999357881437126745
       type: {class: DamageEffectData, ns: Celestial_Cross.Scripts.Abilities, asm: Assembly-CSharp}
       data:
         requireAllConditions: 1
-        valueType: 0
-        amount: 10
+        valueType: 1
+        amount: 100
         baseAttribute: 1

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections.Generic;
 using CelestialCross.Combat;
 using Celestial_Cross.Scripts.Abilities;
@@ -9,7 +9,6 @@ using Celestial_Cross.Scripts.Units;
 [RequireComponent(typeof(UnitHoverDetector))]
 [RequireComponent(typeof(UnitOutlineController))]
 [RequireComponent(typeof(PassiveManager))]
-[RequireComponent(typeof(CombatLogger))]
 public abstract class Unit : MonoBehaviour
 {
     [Header("Base Data")]
@@ -85,8 +84,8 @@ public abstract class Unit : MonoBehaviour
         actions.Clear();
         foreach (var action in GetComponents<IUnitAction>()) Destroy(action as Component);
         var blueprints = unitData.GetAbilities();
-        if (blueprints != null) foreach (var bp in blueprints) if (bp != null) actions.Add(new BlueprintActionWrapper(this, bp));
-        if (equippedPet != null && equippedPet.ability != null) actions.Add(new BlueprintActionWrapper(this, equippedPet.ability));
+        if (blueprints != null) foreach (var bp in blueprints) if (bp != null ) actions.Add(new BlueprintActionWrapper(this, bp));
+        if (equippedPet != null && equippedPet.ability != null ) actions.Add(new BlueprintActionWrapper(this, equippedPet.ability));
         foreach (var definition in unitData.GetExecutableDefinitions(equippedPet)) {
             if (definition == null) continue;
             System.Type actionType = definition.GetRuntimeActionType();

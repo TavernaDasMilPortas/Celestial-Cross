@@ -56,6 +56,18 @@ public class TurnManager : MonoBehaviour
         if (turnQueue.Count == 0)
             return;
 
+        // Skip destroyed units
+        while (turnQueue.Count > 0 && turnQueue.Peek() == null)
+        {
+            turnQueue.Dequeue();
+        }
+
+        if (turnQueue.Count == 0)
+        {
+            Debug.Log("[TurnManager] No units left in turn queue.");
+            return;
+        }
+
         Unit current = turnQueue.Dequeue();
         turnQueue.Enqueue(current);
         CurrentUnit = current;

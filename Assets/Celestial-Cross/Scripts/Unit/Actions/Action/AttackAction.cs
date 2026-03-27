@@ -91,6 +91,7 @@ public class AttackAction : UnitActionBase
         Debug.Log($"[AttackAction] Alvos confirmados: {context.targets.Count}");
 
         unit.LogCanConfirm(true);
+        PerformFinalExecution();
     }
 
     List<Unit> ExpandAreaTargetsIfNeeded(List<Unit> targets, IReadOnlyList<Vector2Int> selectedPoints)
