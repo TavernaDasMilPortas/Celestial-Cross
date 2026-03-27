@@ -68,8 +68,48 @@ public class PassiveManager : MonoBehaviour
         {
             if (blueprint != null)
             {
-                // O AbilityExecutor é agora responsável por lidar com quais etapas são executadas em quais ganchos.
-                AbilityExecutor.Instance?.ExecuteAbility(unit, blueprint, hook);
+                // 1. Processamos as Modifiers síncronas (como buffs de atributos/danos que modificam o context flat)
+                if (blueprint.modifiers != null)
+                {
+                    foreach (var mod in blueprint.modifiers)
+                    {
+                        if (mod != null && mod.triggerHook == hook && mod.EvaluateConditions(context))
+                        {
+                            mod.ApplyModifier(context);
+                        }
+                    }
+                }
+
+                // 2. Processamos os EffectSteps vinculados a este hook sem invocar a Coroutine do Executor,
+                // de forma síncrona, usando o mesmo CombatContext passado para o PassiveManager!
+                if (blueprint.modifierSteps != null)
+                {
+                    foreach (var step in blueprint.modifierSteps)
+                    {
+                        if (step == null || step.trigger != hook) continue;
+
+                        List<Unit> targets = new List<Unit>();
+                        if (step.targetingStrategy != null)
+                            targets = step.targetingStrategy.GetTargets(context);
+                        else
+                            targets.Add(context.target ?? unit); // Default target ou self
+
+                        foreach (var target in targets)
+                        {
+                            foreach (var effect in step.effects)
+                            {
+                                if (effect == null) continue;
+                                
+                                var originalTarget = context.target;
+                                context.target = target;
+                                
+                                effect.Execute(context);
+                                
+                                context.target = originalTarget;
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -93,7 +133,7 @@ public class PassiveManager : MonoBehaviour
         }
         
         Debug.Log($"[PassiveManager] Aplicando condição (Blueprint): {conditionBlueprint.name}");
-        AbilityExecutor.Instance?.ExecuteAbility(source, conditionBlueprint, CombatHook.OnAfterApplyCondition);
+
 
         // Hooks DEPOIS de aplicar a condição
         TriggerHook(CombatHook.OnAfterApplyCondition, context);

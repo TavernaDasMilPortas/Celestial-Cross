@@ -176,7 +176,7 @@ public class GridTile : MonoBehaviour
         if (mat.HasProperty(BaseColorId))
         {
             activeColorProperty = BaseColorId;
-            Debug.Log($"[GridTile] Usando _BaseColor em {name}");
+           // Debug.Log($"[GridTile] Usando _BaseColor em {name}");
         }
         else if (mat.HasProperty(ColorId))
         {

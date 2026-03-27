@@ -87,6 +87,8 @@ namespace Celestial_Cross.Scripts.Combat.Execution
 
             foreach (var step in stepsToExecute)
             {
+                if (step == null) continue;
+
                 // Ignora passos que n???o pertencem ao momento (hook) que estamos disparando
                 if (step.trigger != currentHook) continue;
 
