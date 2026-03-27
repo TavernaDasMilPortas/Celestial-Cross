@@ -20,7 +20,7 @@ namespace Celestial_Cross.Scripts.Abilities
         public AreaPatternData AreaPattern;
 
         [ShowIf("RequiresManualSelection")]
-        public int AreaRotationSteps = 0;
+        public Direction PreferredDirection = Direction.N;
         
         [ShowIf("RequiresManualSelection")]
         public int ManualRange = 1;

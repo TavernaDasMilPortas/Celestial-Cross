@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Sirenix.OdinInspector;
 
 [CreateAssetMenu(menuName = "Units/Area Pattern Data")]
 public class AreaPatternData : ScriptableObject
@@ -9,11 +10,33 @@ public class AreaPatternData : ScriptableObject
     [Min(1)] public int height = 3;
     [Min(0)] public int originX = 1;
     [Min(0)] public int originY = 1;
-    public bool allowRotation = true;
+    
+    [Header("Rotation")]
+    public bool canRotate;
+
+    [ShowIf(nameof(canRotate))]
+    public RotationType rotationType;
+
+    [ShowIf(nameof(ShouldShowDiagonalPattern))]
+    [InfoBox("Desenhe o padrão para a diagonal selecionada. O sistema rotacionará para as outras 3 diagonais.")]
+    public List<AreaPatternRow> diagonalPattern = new();
+    
+    [ShowIf(nameof(ShouldShowDiagonalPattern))]
+    public Direction referenceDiagonal = Direction.NE;
+
+    [ShowIf(nameof(ShouldShowDiagonalPattern))]
+    public int diagOriginX = 1;
+    [ShowIf(nameof(ShouldShowDiagonalPattern))]
+    public int diagOriginY = 1;
 
     [SerializeField] private List<AreaPatternRow> rows = new();
 
     public IReadOnlyList<AreaPatternRow> Rows => rows;
+
+    private bool ShouldShowDiagonalPattern()
+    {
+        return canRotate && rotationType == RotationType.EightDirections;
+    }
 
     public bool IsActive(int x, int y)
     {
@@ -37,6 +60,18 @@ public class AreaPatternData : ScriptableObject
         foreach (var row in rows)
             row.Resize(width);
 
+        if (ShouldShowDiagonalPattern())
+        {
+            while (diagonalPattern.Count < height)
+                diagonalPattern.Add(new AreaPatternRow(width));
+
+            while (diagonalPattern.Count > height)
+                diagonalPattern.RemoveAt(diagonalPattern.Count - 1);
+
+            foreach (var row in diagonalPattern)
+                row.Resize(width);
+        }
+
         originX = Mathf.Clamp(originX, 0, width - 1);
         originY = Mathf.Clamp(originY, 0, height - 1);
     }
@@ -44,8 +79,28 @@ public class AreaPatternData : ScriptableObject
     void OnValidate()
     {
         EnsureShape();
+        EnsureDiagonalShape();
+    }
+
+    public void EnsureDiagonalShape()
+    {
+        if (diagonalPattern == null) diagonalPattern = new List<AreaPatternRow>();
+
+        while (diagonalPattern.Count < height)
+            diagonalPattern.Add(new AreaPatternRow(width));
+
+        while (diagonalPattern.Count > height)
+            diagonalPattern.RemoveAt(diagonalPattern.Count - 1);
+
+        foreach (var row in diagonalPattern)
+            row.Resize(width);
+
+        diagOriginX = Mathf.Clamp(diagOriginX, 0, width - 1);
+        diagOriginY = Mathf.Clamp(diagOriginY, 0, height - 1);
     }
 }
+
+public enum RotationType { FourDirections, EightDirections }
 
 [Serializable]
 public class AreaPatternRow

@@ -51,6 +51,45 @@ public class GridManager : MonoBehaviour
         }
     }
 
+    public Vector2Int GetMouseGridPosition()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit hit))
+        {
+            GridTile tile = hit.collider.GetComponent<GridTile>();
+            if (tile == null)
+            {
+                Unit unit = hit.collider.GetComponent<Unit>();
+                if (unit != null)
+                {
+                    return unit.GridPosition;
+                }
+            }
+            if (tile != null) return tile.GridPosition;
+        }
+        return new Vector2Int(-1, -1);
+    }
+
+    public void HighlightArea(List<Vector2Int> area)
+    {
+        ResetAllTileVisuals();
+        foreach (var pos in area)
+        {
+            var tile = GetTile(pos);
+            if (tile != null) tile.Highlight();
+        }
+    }
+
+    public void ResetAllTileVisuals()
+    {
+        foreach (var tile in tiles.Values)
+        {
+            tile.Clear();
+            tile.ClearAreaPreview();
+            tile.SetAreaCenter(false);
+        }
+    }
+
     public Vector3 GridToWorld(Vector2Int gridPos)
     {
         return new Vector3(

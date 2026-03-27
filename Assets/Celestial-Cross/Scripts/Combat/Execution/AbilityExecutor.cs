@@ -107,7 +107,7 @@ namespace Celestial_Cross.Scripts.Combat.Execution
                         Debug.Log("[AbilityExecutor] Pausando execu??????o para sele??????o manual de alvos...");
 
                         TargetSelector selector = caster.gameObject.AddComponent<TargetSelector>();
-                        selector.Begin(caster, step.targetingStrategy.ManualRange, step.targetingStrategy.ManualRule, step.targetingStrategy.AreaPattern, step.targetingStrategy.AreaRotationSteps);
+                        selector.Begin(caster, step.targetingStrategy.ManualRange, step.targetingStrategy.ManualRule, step.targetingStrategy.AreaPattern, step.targetingStrategy.PreferredDirection);
 
                         bool selectionConfirmed = false;
                         List<Unit> selected = new List<Unit>();
@@ -135,7 +135,8 @@ namespace Celestial_Cross.Scripts.Combat.Execution
                         {
                             foreach(var origin in selector.SelectedPoints)
                             {
-                                foreach(var cell in AreaResolver.ResolveCells(origin, step.targetingStrategy.AreaPattern, step.targetingStrategy.AreaRotationSteps))
+                                Direction dir = step.targetingStrategy.PreferredDirection;
+                                foreach(var cell in AreaResolver.ResolveCells(origin, step.targetingStrategy.AreaPattern, dir))
                                     if (!execPoints.Contains(cell)) execPoints.Add(cell);
                             }
                         }
@@ -143,7 +144,8 @@ namespace Celestial_Cross.Scripts.Combat.Execution
                         {
                             foreach(var u in currentTargets) 
                             {
-                                foreach(var cell in AreaResolver.ResolveCells(u.GridPosition, step.targetingStrategy.AreaPattern, step.targetingStrategy.AreaRotationSteps))
+                                Direction dir = step.targetingStrategy.PreferredDirection;
+                                foreach(var cell in AreaResolver.ResolveCells(u.GridPosition, step.targetingStrategy.AreaPattern, dir))
                                     if (!execPoints.Contains(cell)) execPoints.Add(cell);
                             }
                         }

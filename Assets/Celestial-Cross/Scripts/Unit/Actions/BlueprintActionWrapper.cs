@@ -15,6 +15,8 @@ namespace Celestial_Cross.Scripts.Units
         public string ActionDescription => blueprint.abilityDescription;
         public int Range => blueprint.displayRange;
 
+        public Vector2Int Target { get; set; }
+
         public event Action<ActionForecast> OnForecastUpdated;
 
         public BlueprintActionWrapper(global::Unit caster, AbilityBlueprint blueprint)
@@ -22,6 +24,19 @@ namespace Celestial_Cross.Scripts.Units
             this.caster = caster;
             this.blueprint = blueprint;
             AbilityExecutor.OnTargetPreviewChanged += HandleTargetPreview;
+        }
+
+        public AreaPatternData GetAreaPattern()
+        {
+            // Tenta encontrar o primeiro passo que tenha uma estratégia de targeting com padrão de área
+            foreach (var step in blueprint.effectSteps)
+            {
+                if (step.targetingStrategy != null && step.targetingStrategy.AreaPattern != null)
+                {
+                    return step.targetingStrategy.AreaPattern;
+                }
+            }
+            return null;
         }
 
         private void HandleTargetPreview(AbilityBlueprint runningBlueprint, System.Collections.Generic.List<global::Unit> targets)

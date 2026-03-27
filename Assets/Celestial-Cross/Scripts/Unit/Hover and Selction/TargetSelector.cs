@@ -16,7 +16,7 @@ public class TargetSelector : MonoBehaviour
     int selectionRange;
     TargetingRuleData targetingRule;
     AreaPatternData areaPattern;
-    int areaRotationSteps;
+    Direction currentRotation = Direction.N;
     IEnumerable<GridTile> tileWhitelist;
 
     HashSet<Unit> validTargets = new();
@@ -49,7 +49,7 @@ public class TargetSelector : MonoBehaviour
         int selectionRange,
         TargetingRuleData rule = null,
         AreaPatternData selectedAreaPattern = null,
-        int selectedAreaRotationSteps = 0,
+        Direction startingDirection = Direction.N,
         IEnumerable<GridTile> tileWhitelist = null
     )
     {
@@ -57,7 +57,7 @@ public class TargetSelector : MonoBehaviour
         this.selectionRange = selectionRange;
         targetingRule = rule != null ? rule.Clone() : new TargetingRuleData();
         areaPattern = selectedAreaPattern;
-        this.areaRotationSteps = selectedAreaRotationSteps;
+        this.currentRotation = startingDirection;
         this.tileWhitelist = tileWhitelist;
 
         selectedTargets.Clear();
@@ -79,10 +79,10 @@ public class TargetSelector : MonoBehaviour
         Debug.Log($"[TargetSelector] Iniciado | Range: {selectionRange} | Type: {targetingRule.mode} | Origin: {targetingRule.origin}");
     }
 
-    public void UpdateAreaConfig(AreaPatternData pattern, int rotationSteps)
+    public void UpdateAreaConfig(AreaPatternData pattern, Direction rotation)
     {
         this.areaPattern = pattern;
-        this.areaRotationSteps = rotationSteps;
+        this.currentRotation = rotation;
         if (isActive) RefreshAreaPreview();
     }
 
@@ -395,15 +395,17 @@ public class TargetSelector : MonoBehaviour
             if (targetingRule.origin == TargetOrigin.Point)
             {
                 foreach (var point in basePoints)
-                    foreach (var cell in AreaResolver.ResolveCells(point, areaPattern, areaRotationSteps))
+                {
+                    foreach (var cell in AreaResolver.ResolveCells(point, areaPattern, currentRotation))
                         affectedCells.Add(cell);
+                }
             }
             else
             {
                 foreach (var target in baseTargets)
                 {
                     if (target == null) continue;
-                    foreach (var cell in AreaResolver.ResolveCells(target.GridPosition, areaPattern, areaRotationSteps))
+                    foreach (var cell in AreaResolver.ResolveCells(target.GridPosition, areaPattern, currentRotation))
                         affectedCells.Add(cell);
                 }
             }
@@ -487,7 +489,7 @@ public class TargetSelector : MonoBehaviour
 
         foreach (var origin in GetPreviewOrigins())
         {
-            foreach (var cell in AreaResolver.ResolveCells(origin, areaPattern, areaRotationSteps))
+            foreach (var cell in AreaResolver.ResolveCells(origin, areaPattern, currentRotation))
             {
                 var previewTile = GridMap.Instance.GetTile(cell);
                 if (previewTile == null || areaPreviewTiles.Contains(previewTile))
