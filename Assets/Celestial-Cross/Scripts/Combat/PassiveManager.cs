@@ -56,8 +56,6 @@ public class PassiveManager : MonoBehaviour
         if (unit == null) unit = GetComponent<Unit>();
         if (unit == null || unit.Data == null) return;
 
-        CombatLogger.Log($"<color=cyan>[PassiveManager]</color> {gameObject.name} disparando hook: <b>{hook}</b>", LogCategory.Passive);
-
         var abilities = new List<AbilityBlueprint>();
         if (unit.Data.GetAbilities() != null)
         {
@@ -80,6 +78,7 @@ public class PassiveManager : MonoBehaviour
                     {
                         if (mod != null && mod.triggerHook == hook && mod.EvaluateConditions(context))
                         {
+                            CombatLogger.Log("$<color=cyan>[PassiveManager]</color> {gameObject.name}: Passiva <b>{blueprint.name}</b> ativada no hook {hook} (Modifier)", LogCategory.Passive);
                             mod.ApplyModifier(context);
                         }
                     }
@@ -105,6 +104,8 @@ public class PassiveManager : MonoBehaviour
                             {
                                 if (effect == null) continue;
                                 
+                                CombatLogger.Log("$<color=cyan>[PassiveManager]</color> {gameObject.name}: Passiva <b>{blueprint.name}</b> ativada no hook {hook} (Effect: {effect.GetType().Name})", LogCategory.Passive);
+
                                 var originalTarget = context.target;
                                 context.target = target;
                                 
@@ -162,6 +163,12 @@ public class PassiveManager : MonoBehaviour
         }
     }
 }
+
+
+
+
+
+
 
 
 
