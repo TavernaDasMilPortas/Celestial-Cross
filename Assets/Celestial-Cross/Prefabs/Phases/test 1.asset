@@ -25,3 +25,5 @@ MonoBehaviour:
     gridPosition: {x: 0, y: 4}
   - unitPrefab: {fileID: 4461724650246820294, guid: 9bd781df8d37e8d4d9feaabd4af585e3, type: 3}
     gridPosition: {x: 4, y: 4}
+  - unitPrefab: {fileID: 4461724650246820294, guid: 9bd781df8d37e8d4d9feaabd4af585e3, type: 3}
+    gridPosition: {x: 4, y: 3}

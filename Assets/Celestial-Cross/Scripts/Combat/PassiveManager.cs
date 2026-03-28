@@ -11,6 +11,7 @@ public class PassiveManager : MonoBehaviour
     
     // Lista de condições temporárias durante a batalha
     private List<AbilityBlueprint> activeRuntimeConditions = new();
+    private HashSet<AbilityBlueprint> executingAbilities = new();
 
     void Awake()
     {
@@ -68,6 +69,10 @@ public class PassiveManager : MonoBehaviour
         {
             if (blueprint != null)
             {
+                if (executingAbilities.Contains(blueprint)) continue;
+                executingAbilities.Add(blueprint);
+                try
+                {
                 // 1. Processamos as Modifiers síncronas (como buffs de atributos/danos que modificam o context flat)
                 if (blueprint.modifiers != null)
                 {
@@ -109,6 +114,11 @@ public class PassiveManager : MonoBehaviour
                             }
                         }
                     }
+                }
+                }
+                finally
+                {
+                    executingAbilities.Remove(blueprint);
                 }
             }
         }
@@ -152,4 +162,7 @@ public class PassiveManager : MonoBehaviour
         }
     }
 }
+
+
+
 

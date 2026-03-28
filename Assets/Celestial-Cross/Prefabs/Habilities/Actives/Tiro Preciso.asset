@@ -12,27 +12,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d40ee282d0c8984b934ffbbbb9c91f1, type: 3}
   m_Name: Tiro Preciso
   m_EditorClassIdentifier: Assembly-CSharp::Celestial_Cross.Scripts.Abilities.AbilityBlueprint
-  abilityName: "Tir\xE3o"
-  abilityIcon: {fileID: 0}
+  abilityName: Tiro Preciso
+  abilityIcon: {fileID: 21300000, guid: 20e26a81160725c4a92cc84b4bf14192, type: 3}
   abilityDescription: 
   displayRange: 5
+  isPassive: 0
   effectSteps:
-  - trigger: 0
-    reusePreviousTargets: 0
-    targetingStrategy:
-      rid: 4999357881437126744
-    effects:
-    - rid: 4999357881437126745
+  - rid: 4999357954011168832
+  modifierSteps: []
+  modifiers: []
   references:
     version: 2
     RefIds:
-    - rid: 4999357881437126744
-      type: {class: SingleTargetingStrategy, ns: Celestial_Cross.Scripts.Abilities.Strategies, asm: Assembly-CSharp}
+    - rid: 4999357954011168832
+      type: {class: EffectStep, ns: Celestial_Cross.Scripts.Abilities, asm: Assembly-CSharp}
+      data:
+        trigger: 0
+        reusePreviousTargets: 0
+        targetingStrategy:
+          rid: 4999357954011168833
+        effects:
+        - rid: 4999357954011168834
+    - rid: 4999357954011168833
+      type: {class: ManualTargetingStrategy, ns: Celestial_Cross.Scripts.Abilities.Targeting, asm: Assembly-CSharp}
       data:
         RequiresManualSelection: 1
         ManualRule:
           mode: 0
-          origin: 0
+          origin: 1
           allowMultiple: 0
           minTargets: 1
           maxTargets: 1
@@ -41,10 +48,13 @@ MonoBehaviour:
         AreaPattern: {fileID: 0}
         PreferredDirection: 0
         ManualRange: 5
-    - rid: 4999357881437126745
+    - rid: 4999357954011168834
       type: {class: DamageEffectData, ns: Celestial_Cross.Scripts.Abilities, asm: Assembly-CSharp}
       data:
+        conditions: []
         requireAllConditions: 1
+        scaleWithDistance: 0
+        distanceScaleFactor: 0.1
         valueType: 1
         amount: 100
         baseAttribute: 1

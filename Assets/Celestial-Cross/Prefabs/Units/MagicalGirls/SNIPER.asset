@@ -14,16 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UnitData
   displayName: sniper
   baseStats:
-    health: 25
-    attack: 10
-    defense: 6
-    speed: 7
+    health: 10
+    attack: 15
+    defense: 5
+    speed: 3
     criticalChance: 10
     effectAccuracy: 1
   abilities:
   - {fileID: 11400000, guid: 9886e0c37475c314fb3a4c2f6f3e9d23, type: 2}
+  - {fileID: 11400000, guid: c8f7cb11c924edc4caa09636660fec77, type: 2}
   - {fileID: 11400000, guid: 30c35df7a6ad23e40af5183e3aa01ff8, type: 2}
-  - {fileID: 11400000, guid: 35a4a085f89ac884c806bae7f9d9bf18, type: 2}
   nativeActions: []
   references:
     version: 2
