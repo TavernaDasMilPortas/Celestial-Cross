@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 587de4382aa8437797ae2f035445533d, type: 3}
-  m_Name: New Area Pattern Data 1
+  m_Name: Cone
   m_EditorClassIdentifier: Assembly-CSharp::AreaPatternData
   width: 3
   height: 3

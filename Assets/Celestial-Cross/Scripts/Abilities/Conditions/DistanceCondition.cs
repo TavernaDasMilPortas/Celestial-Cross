@@ -19,7 +19,7 @@ namespace Celestial_Cross.Scripts.Abilities.Conditions
         {
             if (context.source == null || context.target == null) return false;
 
-            int dist = GetManhattanDistance(context.source.GridPosition, context.target.GridPosition);
+            int dist = GetChebyshevDistance(context.source.GridPosition, context.target.GridPosition);
 
             return checkType switch
             {
@@ -30,9 +30,9 @@ namespace Celestial_Cross.Scripts.Abilities.Conditions
             };
         }
 
-        private int GetManhattanDistance(Vector2Int a, Vector2Int b)
+        private int GetChebyshevDistance(Vector2Int a, Vector2Int b)
         {
-            return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
+            return Mathf.Max(Mathf.Abs(a.x - b.x), Mathf.Abs(a.y - b.y));
         }
     }
 }

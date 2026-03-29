@@ -1,12 +1,12 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 using CelestialCross.Combat;
 using Celestial_Cross.Scripts.Combat.Execution;
 
 /// <summary>
-/// Motor de decisÃ£o da IA. Avalia aÃ§Ãµes disponÃ­veis, aplica scoring
-/// baseado no AIBehaviorProfile e executa a melhor aÃ§Ã£o.
+/// Motor de decisão da IA. Avalia ações disponíveis, aplica scoring
+/// baseado no AIBehaviorProfile e executa a melhor ação.
 /// </summary>
 public class AIBrain : MonoBehaviour
 {
@@ -28,7 +28,7 @@ public class AIBrain : MonoBehaviour
     // =============================
 
     /// <summary>
-    /// Executa o turno da IA: avalia aÃ§Ãµes, escolhe a melhor, executa.
+    /// Executa o turno da IA: avalia ações, escolhe a melhor, executa.
     /// </summary>
     public void ExecuteTurn()
     {
@@ -71,7 +71,7 @@ public class AIBrain : MonoBehaviour
             Debug.Log($"[AIBrain] Nenhuma regra ativa. Usando fallback: {behavior}");
         }
 
-        // 3) Coletar alvos possÃ­veis (units do player)
+        // 3) Coletar alvos possíveis (units do player)
         List<Unit> playerUnits = FindAlivePlayerUnits();
 
         if (playerUnits.Count == 0)
@@ -81,7 +81,7 @@ public class AIBrain : MonoBehaviour
             return;
         }
 
-        // 4) Avaliar todas as aÃ§Ãµes
+        // 4) Avaliar todas as ações
         List<AIActionScore> scores = EvaluateAllActions(
             playerUnits, behavior, targetPref,
             attackWeight, moveWeight, profile.randomnessFactor
@@ -89,18 +89,18 @@ public class AIBrain : MonoBehaviour
 
         if (scores.Count == 0)
         {
-            Debug.Log("[AIBrain] Nenhuma aÃ§Ã£o viÃ¡vel. Passando turno.");
+            Debug.Log("[AIBrain] Nenhuma ação viável. Passando turno.");
             TurnManager.Instance.EndTurn();
             return;
         }
 
-        // 5) Executar a aÃ§Ã£o com maior score
+        // 5) Executar a ação com maior score
         AIActionScore best = scores.OrderByDescending(s => s.score).First();
         ExecuteAction(best);
     }
 
     // =============================
-    // AVALIAÃ‡ÃƒO DE AÃ‡Ã•ES
+    // AVALIAÇÃO DE AÇÕES
     // =============================
 
     List<AIActionScore> EvaluateAllActions(
@@ -113,7 +113,7 @@ public class AIBrain : MonoBehaviour
     {
         List<AIActionScore> scores = new();
 
-        // Iterar sobre as aÃ§Ãµes da unit usando reflexÃ£o do pipeline existente
+        // Iterar sobre as ações da unit usando reflexão do pipeline existente
         var actionComponents = GetComponents<UnitActionBase>();
 
         for (int i = 0; i < actionComponents.Length; i++)
@@ -159,19 +159,19 @@ public class AIBrain : MonoBehaviour
 
         foreach (var target in playerUnits)
         {
-            int dist = ManhattanDistance(enemy.GridPosition, target.GridPosition);
+            int dist = ChebyshevDistance(enemy.GridPosition, target.GridPosition);
 
-            // SÃ³ avalia se estÃ¡ no alcance
+            // Só avalia se está no alcance
             if (dist > range)
                 continue;
 
             float baseScore = CalculateTargetScore(target, targetPref, behavior);
 
-            // BÃ´nus por dano estimado
+            // Bônus por dano estimado
             float damageEstimate = Mathf.Max(1, enemy.Stats.attack + attackAction.Damage - target.Stats.defense);
             baseScore += damageEstimate * 0.5f;
 
-            // BÃ´nus se pode matar
+            // Bônus se pode matar
             if (target.Health != null && damageEstimate >= target.Health.CurrentHealth)
                 baseScore += 50f;
 
@@ -206,7 +206,7 @@ public class AIBrain : MonoBehaviour
         List<AIActionScore> scores = new();
         int range = moveAction.Range;
 
-        // Encontrar tiles alcanÃ§Ã¡veis via BFS (replicando a lÃ³gica de MoveAction)
+        // Encontrar tiles alcançáveis via BFS (replicando a lógica de MoveAction)
         HashSet<Vector2Int> reachable = GetReachableTiles(enemy.GridPosition, range);
 
         if (reachable.Count == 0)
@@ -221,8 +221,8 @@ public class AIBrain : MonoBehaviour
 
             if (preferredTarget != null)
             {
-                int currentDist = ManhattanDistance(enemy.GridPosition, preferredTarget.GridPosition);
-                int newDist = ManhattanDistance(tilePos, preferredTarget.GridPosition);
+                int currentDist = ChebyshevDistance(enemy.GridPosition, preferredTarget.GridPosition);
+                int newDist = ChebyshevDistance(tilePos, preferredTarget.GridPosition);
 
                 switch (behavior)
                 {
@@ -239,7 +239,7 @@ public class AIBrain : MonoBehaviour
                         break;
 
                     case BehaviorType.Support:
-                        // Move em direÃ§Ã£o de aliados (futuro)
+                        // Move em direção de aliados (futuro)
                         baseScore = 0f;
                         break;
                 }
@@ -278,11 +278,11 @@ public class AIBrain : MonoBehaviour
                 break;
 
             case AITargetPreference.Closest:
-                score = 100f - ManhattanDistance(enemy.GridPosition, target.GridPosition);
+                score = 100f - ChebyshevDistance(enemy.GridPosition, target.GridPosition);
                 break;
 
             case AITargetPreference.Farthest:
-                score = ManhattanDistance(enemy.GridPosition, target.GridPosition);
+                score = ChebyshevDistance(enemy.GridPosition, target.GridPosition);
                 break;
 
             case AITargetPreference.HighestAttack:
@@ -309,9 +309,9 @@ public class AIBrain : MonoBehaviour
             AITargetPreference.LowestHealth =>
                 playerUnits.OrderBy(u => u.Health != null ? u.Health.CurrentHealth : int.MaxValue).First(),
             AITargetPreference.Closest =>
-                playerUnits.OrderBy(u => ManhattanDistance(enemy.GridPosition, u.GridPosition)).First(),
+                playerUnits.OrderBy(u => ChebyshevDistance(enemy.GridPosition, u.GridPosition)).First(),
             AITargetPreference.Farthest =>
-                playerUnits.OrderByDescending(u => ManhattanDistance(enemy.GridPosition, u.GridPosition)).First(),
+                playerUnits.OrderByDescending(u => ChebyshevDistance(enemy.GridPosition, u.GridPosition)).First(),
             AITargetPreference.HighestAttack =>
                 playerUnits.OrderByDescending(u => u.Stats.attack).First(),
             _ => playerUnits[Random.Range(0, playerUnits.Count)]
@@ -319,7 +319,7 @@ public class AIBrain : MonoBehaviour
     }
 
     // =============================
-    // EXECUÃ‡ÃƒO DA AÃ‡ÃƒO
+    // EXECUÇÃO DA AÇÃO
     // =============================
 
     void ExecuteAction(AIActionScore best)
@@ -328,7 +328,7 @@ public class AIBrain : MonoBehaviour
 
         if (best.actionIndex < 0 || best.actionIndex >= actionComponents.Length)
         {
-            Debug.LogError($"[AIBrain] actionIndex invÃ¡lido: {best.actionIndex}");
+            Debug.LogError($"[AIBrain] actionIndex inválido: {best.actionIndex}");
             TurnManager.Instance.EndTurn();
             return;
         }
@@ -347,14 +347,14 @@ public class AIBrain : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning($"[AIBrain] Tipo de aÃ§Ã£o desconhecido no index {best.actionIndex}");
+            Debug.LogWarning($"[AIBrain] Tipo de ação desconhecido no index {best.actionIndex}");
             TurnManager.Instance.EndTurn();
         }
     }
 
     /// <summary>
     /// Executa ataque diretamente sem input do jogador.
-    /// Replica o fluxo de AttackAction.Resolve() de forma programÃ¡tica.
+    /// Replica o fluxo de AttackAction.Resolve() de forma programática.
     /// </summary>
     void ExecuteAttackDirect(AttackAction attackAction, Unit target)
     {
@@ -377,7 +377,7 @@ public class AIBrain : MonoBehaviour
 
     /// <summary>
     /// Executa movimento diretamente, sem input do jogador.
-    /// Replica a lÃ³gica de MoveAction.MoveUnit().
+    /// Replica a lógica de MoveAction.MoveUnit().
     /// </summary>
     void ExecuteMoveDirect(Vector2Int targetPos)
     {
@@ -391,7 +391,7 @@ public class AIBrain : MonoBehaviour
         GridTile destTile = gridMap.GetTile(targetPos);
         if (destTile == null)
         {
-            Debug.LogError($"[AIBrain] Tile destino {targetPos} nÃ£o existe!");
+            Debug.LogError($"[AIBrain] Tile destino {targetPos} não existe!");
             TurnManager.Instance.EndTurn();
             return;
         }
@@ -405,7 +405,7 @@ public class AIBrain : MonoBehaviour
     }
 
     // =============================
-    // UTILITÃRIOS
+    // UTILITÁRIOS
     // =============================
 
     float GetHpPercent()
@@ -496,9 +496,9 @@ public class AIBrain : MonoBehaviour
         return reachable;
     }
 
-    int ManhattanDistance(Vector2Int a, Vector2Int b)
+    int ChebyshevDistance(Vector2Int a, Vector2Int b)
     {
-        return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
+        return Mathf.Max(Mathf.Abs(a.x - b.x), Mathf.Abs(a.y - b.y));
     }
 
     float ApplyWeightAndRandomness(float baseScore, float weight, float randomness)

@@ -21,6 +21,10 @@ namespace Celestial_Cross.Scripts.Abilities
 
         [ShowIf("RequiresManualSelection")]
         public Direction PreferredDirection = Direction.N;
+
+        [ShowIf("RequiresManualSelection")]
+        [Tooltip("Ative para que a área de ataque gire automaticamente na direção do alvo selecionado.")]
+        public bool AutoRotateArea = false;
         
         [ShowIf("RequiresManualSelection")]
         public int ManualRange = 1;

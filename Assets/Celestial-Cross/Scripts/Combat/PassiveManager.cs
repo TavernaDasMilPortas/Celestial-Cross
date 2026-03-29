@@ -61,6 +61,12 @@ public class PassiveManager : MonoBehaviour
         {
             abilities.AddRange(unit.Data.GetAbilities());
         }
+        
+        if (unit.EquippedPet != null && unit.Data.GetPetAbility(unit.EquippedPet) != null)
+        {
+            abilities.Add(unit.Data.GetPetAbility(unit.EquippedPet));
+        }
+        
         abilities.AddRange(activeRuntimeConditions);
 
         foreach (var blueprint in abilities)
@@ -78,7 +84,7 @@ public class PassiveManager : MonoBehaviour
                     {
                         if (mod != null && mod.triggerHook == hook && mod.EvaluateConditions(context))
                         {
-                            CombatLogger.Log("$<color=cyan>[PassiveManager]</color> {gameObject.name}: Passiva <b>{blueprint.name}</b> ativada no hook {hook} (Modifier)", LogCategory.Passive);
+                            CombatLogger.Log($"<color=cyan>[PassiveManager]</color> {gameObject.name}: Passiva <b>{blueprint.name}</b> ativada no hook {hook} (Modifier)", LogCategory.Passive);
                             mod.ApplyModifier(context);
                         }
                     }
@@ -104,7 +110,7 @@ public class PassiveManager : MonoBehaviour
                             {
                                 if (effect == null) continue;
                                 
-                                CombatLogger.Log("$<color=cyan>[PassiveManager]</color> {gameObject.name}: Passiva <b>{blueprint.name}</b> ativada no hook {hook} (Effect: {effect.GetType().Name})", LogCategory.Passive);
+                                CombatLogger.Log($"<color=cyan>[PassiveManager]</color> {gameObject.name}: Passiva <b>{blueprint.name}</b> ativada no hook {hook} (Effect: {effect.GetType().Name})", LogCategory.Passive);
 
                                 var originalTarget = context.target;
                                 context.target = target;
@@ -163,6 +169,7 @@ public class PassiveManager : MonoBehaviour
         }
     }
 }
+
 
 
 

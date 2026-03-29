@@ -18,6 +18,9 @@ public class TargetSelector : MonoBehaviour
     AreaPatternData areaPattern;
     Direction currentRotation = Direction.N;
     IEnumerable<GridTile> tileWhitelist;
+    bool autoRotateArea;
+
+    public Direction CurrentRotation => currentRotation;
 
     HashSet<Unit> validTargets = new();
     List<Unit> selectedTargets = new();
@@ -50,7 +53,8 @@ public class TargetSelector : MonoBehaviour
         TargetingRuleData rule = null,
         AreaPatternData selectedAreaPattern = null,
         Direction startingDirection = Direction.N,
-        IEnumerable<GridTile> tileWhitelist = null
+        IEnumerable<GridTile> tileWhitelist = null,
+        bool autoRotate = false
     )
     {
         this.sourceUnit = sourceUnit;
@@ -59,6 +63,7 @@ public class TargetSelector : MonoBehaviour
         areaPattern = selectedAreaPattern;
         this.currentRotation = startingDirection;
         this.tileWhitelist = tileWhitelist;
+        this.autoRotateArea = autoRotate;
 
         selectedTargets.Clear();
         validTargets.Clear();
@@ -79,10 +84,11 @@ public class TargetSelector : MonoBehaviour
         Debug.Log($"[TargetSelector] Iniciado | Range: {selectionRange} | Type: {targetingRule.mode} | Origin: {targetingRule.origin}");
     }
 
-    public void UpdateAreaConfig(AreaPatternData pattern, Direction rotation)
+    public void UpdateAreaConfig(AreaPatternData pattern, Direction rotation, bool autoRotate = false)
     {
         this.areaPattern = pattern;
         this.currentRotation = rotation;
+        this.autoRotateArea = autoRotate;
         if (isActive) RefreshAreaPreview();
     }
 
@@ -111,14 +117,14 @@ public class TargetSelector : MonoBehaviour
     void PrepareUnitSelection()
     {
         FindValidTargets();
-        HighlightValidTargets();
+        HighlightValidTargets(); 
         Debug.Log($"[TargetSelector] Alvos válidos: {validTargets.Count}");
     }
 
     void PrepareTileSelection()
     {
         FindValidTiles();
-        HighlightValidTiles();
+        HighlightValidTiles(); 
         Debug.Log($"[TargetSelector] Tiles válidos: {validTiles.Count}");
     }
 
@@ -213,71 +219,11 @@ public class TargetSelector : MonoBehaviour
 
     void HandleMouseInput()
     {
-        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hit))
-        {
-            if (targetingRule.origin == TargetOrigin.Point)
-            {
-                GridTile tile = hit.collider.GetComponent<GridTile>();
-                if (tile == null)
-                {
-                    Unit unitHit = hit.collider.GetComponent<Unit>();
-                    if (unitHit != null && GridMap.Instance != null)
-                        tile = GridMap.Instance.GetTile(unitHit.GridPosition);
-                }
-
-                if (tile != currentHoveredTile)
-                {
-                    currentHoveredTile = tile;
-                    RefreshAreaPreview(); // Garante atualização contínua do preview no hover
-                    
-                    if (tile != null && validTiles.Contains(tile))
-                    {
-                        var previewPoints = new List<Vector2Int>(selectedPoints) { tile.GridPosition };
-                        OnSelectedTargetsChanged?.Invoke(GetResolvedTargets(selectedTargets, previewPoints));
-                    }
-                    else
-                    {
-                        OnSelectedTargetsChanged?.Invoke(GetResolvedTargets(selectedTargets, selectedPoints));
-                    }
-                }
-            }
-            // ... restante removido para aplicar o patch localmente
-            else
-            {
-                Unit unit = hit.collider.GetComponent<Unit>();
-                if (unit != currentHoveredUnit)
-                {
-                    if (currentHoveredUnit != null)
-                        UnitHoverDetector.ForceHoverEnd(currentHoveredUnit);
-
-                    currentHoveredUnit = unit;
-                    OnHoverChanged?.Invoke(unit);
-
-                    if (unit != null)
-                    {
-                        UnitHoverDetector.ForceHover(unit);
-                        if (validTargets.Contains(unit))
-                        {
-                            var previewTargets = new List<Unit>(selectedTargets);
-                            if (!previewTargets.Contains(unit))
-                                previewTargets.Add(unit);
-
-                            OnSelectedTargetsChanged?.Invoke(GetResolvedTargets(previewTargets, selectedPoints));
-                        }
-                    }
-                    else
-                    {
-                        OnSelectedTargetsChanged?.Invoke(GetResolvedTargets(selectedTargets, selectedPoints));
-                    }
-                }
-            }
-        }
-
         if (!Input.GetMouseButtonDown(0))
             return;
 
-        if (!Physics.Raycast(ray, out hit))
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        if (!Physics.Raycast(ray, out RaycastHit hit))
             return;
 
         if (targetingRule.origin == TargetOrigin.Point)
@@ -297,6 +243,7 @@ public class TargetSelector : MonoBehaviour
             if (clickedTile == null || !validTiles.Contains(clickedTile))
                 return;
 
+            currentHoveredTile = clickedTile; // Define como hover para cálculo de rotação
             ToggleTileSelection(clickedTile);
             return;
         }
@@ -311,6 +258,7 @@ public class TargetSelector : MonoBehaviour
             return;
         }
 
+        currentHoveredUnit = clickedUnit; // Define como hover para cálculo de rotação
         ToggleSelection(clickedUnit);
     }
 
@@ -458,6 +406,17 @@ public class TargetSelector : MonoBehaviour
             yield return target.GridPosition;
     }
 
+    void OnDestroy()
+    {
+        ClearAllHighlights();
+        
+        if (currentHoveredUnit != null)
+            UnitHoverDetector.ForceHoverEnd(currentHoveredUnit);
+            
+        currentHoveredTile = null;
+        currentHoveredUnit = null;
+    }
+
     void ClearAreaPreview()
     {
         foreach (var tile in areaPreviewTiles)
@@ -486,6 +445,28 @@ public class TargetSelector : MonoBehaviour
 
         if (GridMap.Instance == null)
             return;
+
+        if (autoRotateArea && areaPattern.canRotate && sourceUnit != null)
+        {
+            Vector2Int targetPos = sourceUnit.GridPosition;
+            
+            if (targetingRule.origin == TargetOrigin.Point)
+            {
+                if (selectedPoints.Count > 0)
+                    targetPos = selectedPoints.Last();
+                else if (currentHoveredTile != null)
+                    targetPos = currentHoveredTile.GridPosition;
+            }
+            else if (targetingRule.origin == TargetOrigin.Unit)
+            {
+                if (selectedTargets.Count > 0)
+                    targetPos = selectedTargets.Last().GridPosition;
+                else if (currentHoveredUnit != null)
+                    targetPos = currentHoveredUnit.GridPosition;
+            }
+            
+            currentRotation = CalculateDirectionTowards(sourceUnit.GridPosition, targetPos);
+        }
 
         foreach (var origin in GetPreviewOrigins())
         {
@@ -546,6 +527,26 @@ public class TargetSelector : MonoBehaviour
 
     int GridDistance(Vector2Int a, Vector2Int b)
     {
-        return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
+        return Mathf.Max(Mathf.Abs(a.x - b.x), Mathf.Abs(a.y - b.y));
+    }
+
+    Direction CalculateDirectionTowards(Vector2Int from, Vector2Int to)
+    {
+        int dx = to.x - from.x;
+        int dy = to.y - from.y;
+        
+        if (dx == 0 && dy == 0) return currentRotation; 
+        
+        if (Mathf.Abs(dx) > Mathf.Abs(dy)) {
+            return dx > 0 ? Direction.E : Direction.W;
+        } else if (Mathf.Abs(dy) > Mathf.Abs(dx)) {
+            return dy > 0 ? Direction.N : Direction.S;
+        } else {
+            if (dx > 0 && dy > 0) return Direction.NE;
+            if (dx > 0 && dy < 0) return Direction.SE;
+            if (dx < 0 && dy < 0) return Direction.SW;
+            if (dx < 0 && dy > 0) return Direction.NW;
+        }
+        return Direction.N;
     }
 }

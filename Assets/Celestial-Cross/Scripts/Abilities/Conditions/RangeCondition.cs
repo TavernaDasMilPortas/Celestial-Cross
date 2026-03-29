@@ -47,7 +47,7 @@ namespace Celestial_Cross.Scripts.Abilities.Conditions
             {
                 if (u == null || u == originUnit) continue;
 
-                int dist = Mathf.Abs(originUnit.GridPosition.x - u.GridPosition.x) + Mathf.Abs(originUnit.GridPosition.y - u.GridPosition.y);
+                int dist = Mathf.Max(Mathf.Abs(originUnit.GridPosition.x - u.GridPosition.x), Mathf.Abs(originUnit.GridPosition.y - u.GridPosition.y));
                 if (dist > range) continue;
 
                 // Relationship Filter

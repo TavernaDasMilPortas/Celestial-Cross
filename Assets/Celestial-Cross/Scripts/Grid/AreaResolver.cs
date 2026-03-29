@@ -73,9 +73,10 @@ public static class AreaResolver
             {
                 if (patternMatrix[y][x])
                 {
-                    // No editor, y cresce para baixo. No grid, y cresce para cima.
-                    // Invertemos o sinal para que y=0 no editor seja Norte relativo ao centro.
-                    offsets.Add(new Vector2Int(x - center.x, -(y - center.y))); 
+                    // Remover o sinal negativo faz com que desenhar "para baixo" no editor (y aumenta)
+                    // seja equivalente a afastar do personagem (avança no grid). 
+                    // Isso inverte espelhando o eixo Y visualmente para o padrão que estava virando as costas.
+                    offsets.Add(new Vector2Int(x - center.x, (y - center.y))); 
                 }
             }
         }

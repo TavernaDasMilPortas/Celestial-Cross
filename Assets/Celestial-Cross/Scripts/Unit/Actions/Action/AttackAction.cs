@@ -12,6 +12,7 @@ public class AttackAction : UnitActionBase
     public AreaPatternData AreaPattern { get; set; }
     public override AreaPatternData GetAreaPattern() => AreaPattern;
     public Direction PreferredDirection { get; set; }
+    public bool AutoRotateArea { get; set; }
 
 
     protected override ActionContext CreateContext()
@@ -26,7 +27,7 @@ public class AttackAction : UnitActionBase
         StartTargetSelection(Range, TargetingRule);
 
         targetSelector.OnSelectedTargetsChanged += OnSelectionChanged;
-        targetSelector.UpdateAreaConfig(AreaPattern, PreferredDirection);        
+        targetSelector.UpdateAreaConfig(AreaPattern, PreferredDirection, AutoRotateArea);
 
         unit.LogCanConfirm(false);
     }
@@ -105,11 +106,13 @@ public class AttackAction : UnitActionBase
         HashSet<Vector2Int> affectedCells = new();
         context.affectedAreaCells.Clear();
 
+        Direction rotationToUse = targetSelector != null ? targetSelector.CurrentRotation : PreferredDirection;
+
         if (TargetingRule.origin == TargetOrigin.Point && selectedPoints != null && selectedPoints.Count > 0)
         {
             foreach (var point in selectedPoints)
             {
-                foreach (var cell in AreaResolver.ResolveCells(point, AreaPattern, PreferredDirection))
+                foreach (var cell in AreaResolver.ResolveCells(point, AreaPattern, rotationToUse))
                     affectedCells.Add(cell);
             }
         }
@@ -117,7 +120,7 @@ public class AttackAction : UnitActionBase
         {
             foreach (var target in targets)
             {
-                foreach (var cell in AreaResolver.ResolveCells(target.GridPosition, AreaPattern, PreferredDirection))
+                foreach (var cell in AreaResolver.ResolveCells(target.GridPosition, AreaPattern, rotationToUse))
                     affectedCells.Add(cell);
             }
         }

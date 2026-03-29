@@ -106,7 +106,7 @@ namespace Celestial_Cross.Scripts.Combat.Execution
                         Debug.Log("[AbilityExecutor] Pausando execução para seleção manual de alvos...");
 
                         TargetSelector selector = caster.gameObject.AddComponent<TargetSelector>();
-                        selector.Begin(caster, step.targetingStrategy.ManualRange, step.targetingStrategy.ManualRule, step.targetingStrategy.AreaPattern, step.targetingStrategy.PreferredDirection);
+                        selector.Begin(caster, step.targetingStrategy.ManualRange, step.targetingStrategy.ManualRule, step.targetingStrategy.AreaPattern, step.targetingStrategy.PreferredDirection, null, step.targetingStrategy.AutoRotateArea);
 
                         bool selectionConfirmed = false;
                         List<Unit> selected = new List<Unit>();
@@ -122,9 +122,11 @@ namespace Celestial_Cross.Scripts.Combat.Execution
 
                         yield return new WaitUntil(() => selectionConfirmed);
 
+                        Direction finalRotation = selector.CurrentRotation;
+
                         selector.OnTargetsConfirmed -= onTargets;
                         selector.OnSelectedTargetsChanged -= onPreview;
-                        
+
                         OnTargetPreviewChanged?.Invoke(blueprint, new List<Unit>());
 
                         currentTargets = selected;
@@ -134,16 +136,16 @@ namespace Celestial_Cross.Scripts.Combat.Execution
                         {
                             foreach(var origin in selector.SelectedPoints)
                             {
-                                Direction dir = step.targetingStrategy.PreferredDirection;
+                                Direction dir = finalRotation;
                                 foreach(var cell in AreaResolver.ResolveCells(origin, step.targetingStrategy.AreaPattern, dir))
                                     if (!execPoints.Contains(cell)) execPoints.Add(cell);
                             }
                         }
                         else if (step.targetingStrategy.AreaPattern != null)
                         {
-                            foreach(var u in currentTargets) 
+                            foreach(var u in currentTargets)
                             {
-                                Direction dir = step.targetingStrategy.PreferredDirection;
+                                Direction dir = finalRotation;
                                 foreach(var cell in AreaResolver.ResolveCells(u.GridPosition, step.targetingStrategy.AreaPattern, dir))
                                     if (!execPoints.Contains(cell)) execPoints.Add(cell);
                             }

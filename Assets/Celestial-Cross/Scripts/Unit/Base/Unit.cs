@@ -76,6 +76,11 @@ public abstract class Unit : MonoBehaviour
     {
         if (Health != null) Health.SetMaxHealth(MaxHealth);
         InitializeActions();
+
+        if (equippedPet != null)
+        {
+            Debug.Log($"<color=green>[Unit Stats]</color> {DisplayName} combinou status com o pet <b>{equippedPet.name}</b>. Total -> HP: {MaxHealth} | Atk: {Stats.attack} | Def: {Stats.defense} | Spd: {Stats.speed} | Crit: {Stats.criticalChance}%");
+        }
     }
  
     public void InitializeActions()
