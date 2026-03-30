@@ -70,5 +70,6 @@ public void Heal(int amount, bool allowOverheal = false)
     {
         Debug.Log($"[Health] {gameObject.name} morreu");
         OnDeath?.Invoke();
+        GetComponent<Unit>()?.Die();
     }
 }

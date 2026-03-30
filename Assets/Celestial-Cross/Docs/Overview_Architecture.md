@@ -23,3 +23,13 @@ O **Celestial Cross** é um RPG tático construído de forma modular em Unity. E
 4.  O executor percorre os efeitos e, para cada um, dispara os hooks relevantes (ex: `OnBeforeApplyCondition`, `OnBeforeTakeDamage`).
 5.  O `PassiveManager` intercepta estes hooks e executa as passivas/condições, mutando o `CombatContext`.
 6.  O dano é aplicado e se a habilidade termina, o hook `OnAfterAction` é disparado.
+
+## 4. Fluxo de Cenas (Hub → Preparação → Batalha)
+O jogo utiliza gerenciadores persistentes (`DontDestroyOnLoad`) para manter dados entre cenas:
+
+- `AccountManager`: dados persistentes do jogador (dinheiro/energia/posses).
+- `GameFlowManager`: dados da sessão atual (fase escolhida + formação).
+
+Guia de configuração no Editor (passo-a-passo):
+
+- [Scene_Flow_Setup.md](Scene_Flow_Setup.md)

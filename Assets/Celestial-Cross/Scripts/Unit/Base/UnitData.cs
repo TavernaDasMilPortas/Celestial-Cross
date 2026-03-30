@@ -5,7 +5,12 @@ using Celestial_Cross.Scripts.Abilities;
 [CreateAssetMenu(menuName = "Units/Unit Data")]
 public class UnitData : ScriptableObject
 {
+    [Tooltip("ID único para esta unidade. Pode ser o mesmo que o nome do asset.")]
+    public string UnitID;
     public string displayName;
+
+    [Header("UI")]
+    public Sprite icon;
 
     [Header("Stats")]
     public CombatStats baseStats = new CombatStats(30, 10, 6, 7, 7, 1);

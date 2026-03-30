@@ -14,6 +14,7 @@ public abstract class Unit : MonoBehaviour
     [Header("Base Data")]
     [SerializeField] protected UnitData unitData;
     [SerializeField] protected PetData equippedPet;
+    public Team Team;
 
     [Header("Runtime")]
     public Vector2Int GridPosition;
@@ -27,6 +28,7 @@ public abstract class Unit : MonoBehaviour
 
     public UnitData Data => unitData;
     public PetData EquippedPet => equippedPet;
+    public UnitData UnitData => unitData;
 
     public string DisplayName =>
         unitData != null ? unitData.displayName : name;
@@ -74,6 +76,10 @@ public abstract class Unit : MonoBehaviour
  
     protected virtual void Start()
     {
+        if (PhaseManager.Instance != null)
+        {
+            PhaseManager.Instance.RegisterUnit(this);
+        }
         if (Health != null) Health.SetMaxHealth(MaxHealth);
         InitializeActions();
 
@@ -112,15 +118,6 @@ public abstract class Unit : MonoBehaviour
     public int GetAttacksAgainst(Unit target) {
         return 1;
     }
-
-
-
-
-
-
-
-
-
 
     public int GetAttacksAgainst(Unit target, IUnitAction action) => GetAttacksAgainst(target);
 
@@ -167,6 +164,33 @@ public abstract class Unit : MonoBehaviour
     public void TriggerPassives(CombatHook hook, CombatContext context)
     {
         PassiveManager?.TriggerHook(hook, context);
+    }
+
+    public void Die()
+    {
+        // 1. Desativar componentes
+        GetComponent<Collider>().enabled = false;
+        // Adicione aqui outros componentes a serem desativados, como IA, scripts de movimento, etc.
+
+        // 2. Ativar animação/efeito de morte
+        // Ex: GetComponent<Animator>().SetTrigger("Die");
+        Debug.Log($"{DisplayName} foi derrotado(a).");
+
+        // 3. Adicionar ao cemitério
+        if (GraveyardManager.Instance != null)
+        {
+            GraveyardManager.Instance.AddDeadUnit(this);
+        }
+
+        // 4. Notificar o PhaseManager
+        if (PhaseManager.Instance != null)
+        {
+            PhaseManager.Instance.UnregisterUnit(this);
+        }
+
+        // 5. Desativar o GameObject após um tempo para a animação tocar
+        // Destroy(gameObject, 2f); // Exemplo: Destruir após 2 segundos
+        gameObject.SetActive(false); // Ou simplesmente desativar
     }
 }
 

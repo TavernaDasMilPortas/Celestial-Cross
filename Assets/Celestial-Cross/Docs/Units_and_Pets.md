@@ -24,6 +24,8 @@ Todos os status são encapsulados em `CombatStats`:
 ## 4. Gerenciamento de Dados (UnitData)
 O asset `UnitData` centraliza:
 - Nome e status base.
+- `UnitID` (identificador estável para salvar/selecionar/spawnar unidades).
+- `icon` (Sprite usado na UI de seleção/formação).
 - Lista de **Abilities** (Habilidades de personagem).
 - Lista de **Native Actions** (Comandos fixos como "Atacar", "Defender").
 - Lista de **PassiveAbilityBlueprints**: Passivas pré-configuradas para a unidade que são injetadas no `PassiveManager` ao iniciar o combate.

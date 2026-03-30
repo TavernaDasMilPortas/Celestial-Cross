@@ -130,8 +130,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a40a08f0acafdea4992493b3bb42f393, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitData: {fileID: 11400000, guid: 67628d77266bab446ba0b5274c2a9397, type: 2}
-  equippedPet: {fileID: 0}
+  unitData: {fileID: 11400000, guid: 642b786367762f940aded926f739f0ba, type: 2}
+  equippedPet: {fileID: 11400000, guid: 9f42cee8184cdaa4b8cd4ad07df68288, type: 2}
+  Team: 0
   GridPosition: {x: 0, y: 0}
   modifierStats:
     health: 1

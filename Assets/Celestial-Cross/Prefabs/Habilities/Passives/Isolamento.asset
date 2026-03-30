@@ -32,7 +32,7 @@ MonoBehaviour:
         targetingStrategy:
           rid: 4999357954011168839
         effects:
-        - rid: 4999357954011168840
+        - rid: 7428666270189355076
     - rid: 4999357954011168839
       type: {class: AutoTargetingStrategy, ns: Celestial_Cross.Scripts.Abilities.Targeting, asm: Assembly-CSharp}
       data:
@@ -47,21 +47,26 @@ MonoBehaviour:
           targetFaction: 0
         AreaPattern: {fileID: 0}
         PreferredDirection: 0
+        AutoRotateArea: 0
         ManualRange: 1
         targetType: 6
         maxTargetCount: 1
-    - rid: 4999357954011168840
-      type: {class: DamageEffectData, ns: Celestial_Cross.Scripts.Abilities, asm: Assembly-CSharp}
+    - rid: 7428666270189355076
+      type: {class: StatModifierEffectData, ns: Celestial_Cross.Scripts.Abilities, asm: Assembly-CSharp}
       data:
         conditions:
-        - rid: 4999357954011168841
+        - rid: 7428666270189355077
         requireAllConditions: 1
         scaleWithDistance: 0
         distanceScaleFactor: 0.1
-        valueType: 0
-        amount: 4
-        baseAttribute: 1
-    - rid: 4999357954011168841
+        modifiers:
+          health: 0
+          attack: 4
+          defense: 0
+          speed: 0
+          criticalChance: 0
+          effectAccuracy: 0
+    - rid: 7428666270189355077
       type: {class: RangeCondition, ns: Celestial_Cross.Scripts.Abilities.Conditions, asm: Assembly-CSharp}
       data:
         invert: 0
