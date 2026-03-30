@@ -8,6 +8,9 @@ public class LevelData : ScriptableObject
     public string LevelName;
     public string SceneName; // Nome da cena a ser carregada
 
+    [Header("Grid")]
+    public PhaseMap PhaseMap;
+
     [Header("Enemies")]
     public List<EnemySpawnInfo> Enemies;
 

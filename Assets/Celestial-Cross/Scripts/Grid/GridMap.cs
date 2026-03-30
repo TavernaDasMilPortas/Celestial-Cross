@@ -11,6 +11,10 @@ public class GridMap : MonoBehaviour
     public PhaseMap phaseMap;
     public List<TileDefinition> tileDefinitions;
 
+    [Header("Debug")]
+    [Tooltip("Se true, spawna PhaseMap.unitSpawns ao gerar o grid. Em geral, prefira spawnar via scripts (ex: BattleLevelBuilder / fases).")]
+    [SerializeField] private bool spawnUnitsFromPhaseMap = false;
+
     private Dictionary<Vector2Int, GridTile> tiles = new();
     private List<GameObject> spawnedUnits = new();
 
@@ -34,6 +38,56 @@ public class GridMap : MonoBehaviour
     public void Generate()
     {
         RegenerateRuntimeGrid();
+    }
+
+    public Vector3 GridToWorld(Vector2Int gridPos)
+    {
+        return new Vector3(gridPos.x * tileSize, 0f, gridPos.y * tileSize);
+    }
+
+    public Unit SpawnUnitAt(GameObject prefab, Vector2Int gridPos, Team team, bool overwriteIfOccupied = true)
+    {
+        if (prefab == null)
+        {
+            Debug.LogError("[GridMap] SpawnUnitAt recebeu prefab null.");
+            return null;
+        }
+
+        var tile = GetTile(gridPos);
+        if (tile == null)
+        {
+            Debug.LogError($"[GridMap] SpawnUnitAt falhou: tile inexistente em {gridPos}");
+            return null;
+        }
+
+        if (tile.IsOccupied)
+        {
+            if (!overwriteIfOccupied)
+            {
+                Debug.LogWarning($"[GridMap] SpawnUnitAt abortado: tile {gridPos} já ocupado.");
+                return null;
+            }
+
+            tile.IsOccupied = false;
+            tile.OccupyingUnit = null;
+        }
+
+        Vector3 worldPos = GridToWorld(gridPos);
+        var unitObj = Instantiate(prefab, worldPos, Quaternion.identity, transform);
+        spawnedUnits.Add(unitObj);
+
+        var unit = unitObj.GetComponent<Unit>();
+        if (unit == null)
+        {
+            Debug.LogWarning($"[GridMap] Prefab '{prefab.name}' não possui componente Unit.");
+            return null;
+        }
+
+        unit.Team = team;
+        unit.GridPosition = gridPos;
+        tile.IsOccupied = true;
+        tile.OccupyingUnit = unit;
+        return unit;
     }
 
     public GridTile GetTile(Vector2Int pos)
@@ -66,7 +120,8 @@ public class GridMap : MonoBehaviour
         Clear();
 
         GenerateTiles();
-        GenerateUnits();
+        if (spawnUnitsFromPhaseMap)
+            GenerateUnits();
         SyncCameraBounds();
 
         Debug.Log($"[GridMap] Grid lógico reconstruído. Tiles: {tiles.Count}");
@@ -164,6 +219,9 @@ public class GridMap : MonoBehaviour
         spawnedUnits.Clear();
 
         for (int i = transform.childCount - 1; i >= 0; i--)
-            DestroyImmediate(transform.GetChild(i).gameObject);
+        {
+            var child = transform.GetChild(i).gameObject;
+            DestroyImmediate(child);
+        }
     }
 }

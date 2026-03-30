@@ -1,12 +1,16 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Celestial_Cross.Scripts.Abilities;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 [CreateAssetMenu(menuName = "Units/Unit Data")]
 public class UnitData : ScriptableObject
 {
-    [Tooltip("ID único para esta unidade. Pode ser o mesmo que o nome do asset.")]
-    public string UnitID;
+    [SerializeField, HideInInspector]
+    private string unitID;
+    public string UnitID => unitID;
     public string displayName;
 
     [Header("UI")]
@@ -47,5 +51,21 @@ public class UnitData : ScriptableObject
                 yield return action;
         }
     }
+
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        string assetPath = AssetDatabase.GetAssetPath(this);
+        if (string.IsNullOrWhiteSpace(assetPath))
+            return;
+
+        string guid = AssetDatabase.AssetPathToGUID(assetPath);
+        if (string.IsNullOrWhiteSpace(guid) || unitID == guid)
+            return;
+
+        unitID = guid;
+        EditorUtility.SetDirty(this);
+    }
+#endif
 }
 

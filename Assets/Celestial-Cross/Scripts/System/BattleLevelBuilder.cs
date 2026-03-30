@@ -34,6 +34,17 @@ public class BattleLevelBuilder : MonoBehaviour
             return;
         }
 
+        // Aplica o PhaseMap definido no LevelData
+        if (flow.SelectedLevel.PhaseMap != null)
+        {
+            grid.phaseMap = flow.SelectedLevel.PhaseMap;
+            grid.Generate();
+        }
+        else
+        {
+            Debug.LogWarning($"[BattleLevelBuilder] LevelData '{flow.SelectedLevel.name}' sem PhaseMap. Usando o PhaseMap já configurado no GridMap.");
+        }
+
         if (clearExistingUnits)
         {
             ClearUnits(grid);
@@ -54,7 +65,7 @@ public class BattleLevelBuilder : MonoBehaviour
             }
 
             Vector2Int gridPos = ResolvePlayerSpawnPos(flow, unitId);
-            SpawnUnit(prefab, grid, gridPos, Team.Player);
+            grid.SpawnUnitAt(prefab, gridPos, Team.Player);
         }
 
         // Spawns dos inimigos
@@ -79,7 +90,7 @@ public class BattleLevelBuilder : MonoBehaviour
                     continue;
                 }
 
-                SpawnUnit(prefab, grid, enemy.GridPosition, Team.Enemy);
+                grid.SpawnUnitAt(prefab, enemy.GridPosition, Team.Enemy);
             }
         }
 
@@ -127,36 +138,5 @@ public class BattleLevelBuilder : MonoBehaviour
         return new Vector2Int(x, y);
     }
 
-    static void SpawnUnit(GameObject prefab, GridMap grid, Vector2Int gridPos, Team team)
-    {
-        var tile = grid.GetTile(gridPos);
-        if (tile == null)
-        {
-            Debug.LogError($"[BattleLevelBuilder] Tile inexistente em {gridPos}");
-            return;
-        }
-
-        if (tile.IsOccupied)
-        {
-            Debug.LogWarning($"[BattleLevelBuilder] Tile {gridPos} já ocupado. Sobrescrevendo.");
-            tile.IsOccupied = false;
-            tile.OccupyingUnit = null;
-        }
-
-        Vector3 worldPos = new Vector3(gridPos.x * grid.tileSize, 0f, gridPos.y * grid.tileSize);
-        var unitObj = Object.Instantiate(prefab, worldPos, Quaternion.identity, grid.transform);
-
-        var unit = unitObj.GetComponent<Unit>();
-        if (unit != null)
-        {
-            unit.Team = team;
-            unit.GridPosition = gridPos;
-            tile.IsOccupied = true;
-            tile.OccupyingUnit = unit;
-        }
-        else
-        {
-            Debug.LogWarning($"[BattleLevelBuilder] Prefab '{prefab.name}' não possui componente Unit.");
-        }
-    }
+    // Spawn movido para GridMap.SpawnUnitAt
 }

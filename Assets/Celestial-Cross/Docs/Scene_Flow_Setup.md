@@ -12,8 +12,8 @@ Este guia ensina a configurar, no Editor da Unity, o fluxo completo de jogo impl
 ### 1.1 UnitData: campos obrigatórios
 Em cada `UnitData`:
 
-- `UnitID` (string)
-  - Deve ser **único** e **estável** (não reaproveitar IDs).
+- `UnitID`
+  - É gerado automaticamente (GUID do asset) e não é editável no Inspector.
   - Usado para: salvar conta, seleção de units, spawn.
 - `displayName`
 - `icon` (Sprite)
@@ -25,9 +25,9 @@ Crie um asset `UnitCatalog`:
 
 - Menu: `Create → RPG → Unit Catalog`
 - Para cada unit, adicione uma Entry:
-  - `UnitID` (igual ao `UnitData.UnitID`)
+  - `UnitData` (arraste o asset)
   - `Prefab` (prefab que contém um componente `Unit`)
-  - `UnitData` (opcional, recomendado para UI)
+  - `UnitID` é sincronizado automaticamente a partir do `UnitData`.
 
 Este catálogo é usado por:
 - `PreparationSceneController` (para pegar `displayName`/`icon`)
@@ -46,6 +46,7 @@ Crie um `LevelData` por fase:
 - Preencha:
   - `LevelName`
   - `SceneName` (nome exato da cena de batalha no Build Settings)
+  - `PhaseMap` (layout do grid/tiles a ser usado na batalha)
   - `Enemies` (lista de `UnitData` + `GridPosition`)
   - `VictoryRewards` (RewardPackage)
 
@@ -69,7 +70,7 @@ O bootstrap é aplicado **apenas quando não existe** `account.json` ainda.
 Crie um ou mais `AccountProfile`:
 
 - Menu: `Create → Account → Profile`
-- Configure `Money`, `Energy`, `OwnedUnitIDs`.
+- Configure `Money`, `Energy`, `OwnedUnits` e `OwnedPets` (arraste os assets).
 
 No `AccountManager`, habilite:
 - `useDebugProfile = true`
@@ -145,11 +146,13 @@ No Inspector, configure:
 Objetivo: spawn do player (seleção) + spawn dos inimigos (LevelData) + iniciar combate.
 
 ### 5.1 Grid
-Garanta que existe um `GridMap` configurado com um `PhaseMap` (tiles do mapa).
+Garanta que existe um `GridMap` na cena.
+
+O `BattleLevelBuilder` aplica automaticamente o `LevelData.PhaseMap` no `GridMap` e regenera o grid.
 
 Observação: o `PhaseMap` pode conter `unitSpawns` fixos. Como o spawn agora é dinâmico via `BattleLevelBuilder`, recomenda-se:
 - durante testes: deixar `BattleLevelBuilder.clearExistingUnits = true`
-- mais tarde: remover `unitSpawns` do `PhaseMap` para evitar confusão.
+- mais tarde: remover/ignorar `unitSpawns` do `PhaseMap` para evitar confusão (ou ativar/desativar no `GridMap.spawnUnitsFromPhaseMap`).
 
 ### 5.2 Managers obrigatórios
 Na cena de batalha, crie:

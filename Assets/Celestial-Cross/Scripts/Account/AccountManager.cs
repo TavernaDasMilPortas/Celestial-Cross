@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
 
 public class AccountManager : MonoBehaviour
 {
@@ -38,8 +39,8 @@ public class AccountManager : MonoBehaviour
             {
                 Money = debugProfile.Money,
                 Energy = debugProfile.Energy,
-                OwnedUnitIDs = new List<string>(debugProfile.OwnedUnitIDs),
-                OwnedPetIDs = new List<string>(debugProfile.OwnedPetIDs)
+                OwnedUnitIDs = debugProfile.OwnedUnits.Select(u => u.UnitID).ToList(),
+                OwnedPetIDs = debugProfile.OwnedPets.Select(p => p.PetID).ToList()
             };
 
             Debug.Log($"Conta de DEBUG carregada: {debugProfile.name}");
@@ -97,7 +98,7 @@ public class AccountManager : MonoBehaviour
                 if (unitData == null) continue;
                 if (string.IsNullOrWhiteSpace(unitData.UnitID))
                 {
-                    Debug.LogWarning($"[AccountBootstrap] UnitData '{unitData.name}' sem UnitID. Preencha o UnitID.");
+                    Debug.LogWarning($"[AccountBootstrap] UnitData '{unitData.name}' sem UnitID. Reimporte/edite o asset para regenerar o ID automático.");
                     continue;
                 }
                 AddUnitToAccount(unitData.UnitID);
@@ -109,7 +110,12 @@ public class AccountManager : MonoBehaviour
             foreach (var petData in config.StartingPets)
             {
                 if (petData == null) continue;
-                AddPetToAccount(petData.name);
+                if (string.IsNullOrWhiteSpace(petData.PetID))
+                {
+                    Debug.LogWarning($"[AccountBootstrap] PetData '{petData.name}' sem PetID. Reimporte/edite o asset para regenerar o ID automático.");
+                    continue;
+                }
+                AddPetToAccount(petData.PetID);
             }
         }
     }
