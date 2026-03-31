@@ -3,20 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
 
 public class HubSceneController : MonoBehaviour
 {
+        [Header("Flow")]
+        [SerializeField] private string preparationSceneName = "PreparationScene";
+
     [Header("Data")]
     [SerializeField] private LevelCatalog levelCatalog;
 
     [Header("UI")]
     [SerializeField] private Transform levelsContainer;
     [SerializeField] private Button levelButtonPrefab;
-    [SerializeField] private Text moneyText;
-    [SerializeField] private Text energyText;
-
-    [Header("Flow")]
-    [SerializeField] private string preparationSceneName = "PreparationScene";
+    [SerializeField] private TMP_Text moneyText;
+    [SerializeField] private TMP_Text energyText;
 
     void Start()
     {
@@ -59,7 +60,7 @@ public class HubSceneController : MonoBehaviour
             if (level == null) continue;
 
             Button btn = Instantiate(levelButtonPrefab, levelsContainer);
-            Text label = btn.GetComponentInChildren<Text>();
+            TMP_Text label = btn.GetComponentInChildren<TMP_Text>();
             if (label != null)
                 label.text = string.IsNullOrWhiteSpace(level.LevelName) ? level.name : level.LevelName;
 
@@ -76,8 +77,10 @@ public class HubSceneController : MonoBehaviour
         }
 
         GameFlowManager.Instance.SelectedLevel = level;
-        GameFlowManager.Instance.SelectedUnitIDs = new List<string>();
-        GameFlowManager.Instance.UnitInitialPositions = new Dictionary<string, Vector2Int>();
+
+        // A seleção acontece na PreparationScene.
+        GameFlowManager.Instance.SelectedUnitIDs.Clear();
+        GameFlowManager.Instance.PlayerFormation.Clear();
 
         if (string.IsNullOrWhiteSpace(preparationSceneName))
         {

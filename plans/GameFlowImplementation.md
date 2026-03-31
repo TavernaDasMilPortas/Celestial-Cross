@@ -9,10 +9,9 @@ Usaremos uma abordagem de cenas dedicadas com gerenciadores de dados persistente
 ```mermaid
 graph TD
     subgraph Jogo
-        A[Cena de Inicialização/Menu] --> B{Cena do Hub/Seleção de Fase};
-        B --> C{Cena de Preparação};
-        C --> D[Cena de Batalha];
-        D --> B;
+  A[Cena de Inicialização/Menu] --> C[Cena de Preparação];
+  C --> D[Cena de Batalha];
+  D --> A;
     end
 
     subgraph Sistemas Persistentes (DontDestroyOnLoad)
@@ -22,8 +21,6 @@ graph TD
 
     A -- Carrega --> E;
     A -- Carrega --> F;
-    B -- Lê de --> E;
-    B -- Escreve em --> F;
     C -- Lê de --> E;
     C -- Escreve em --> F;
     D -- Lê de --> F;
@@ -35,14 +32,61 @@ graph TD
 
 Componentes adicionados para suportar o fluxo:
 
-- **UnitCatalog**: Mapeia `UnitID -> Prefab` (e opcionalmente `UnitData`) para permitir spawn e UI.
+- **UnitCatalog**: Mapeia `UnitID -> UnitData` para permitir UI e seleção (não há mais prefab por UnitID).
 - **LevelCatalog**: Lista ordenada de `LevelData` disponíveis no Hub.
 - **AccountBootstrapConfig**: Configuração de conta inicial (units/pets/dinheiro/energia) para facilitar testes.
 - **AccountProfile (debug)**: Perfil alternativo para simular contas diferentes no Inspector.
 
+Nota (protótipo): o fluxo acima ignora o Hub e usa um `LevelData` padrão definido no Menu.
+
 ---
 
 ## Divisão de Tarefas
+
+### Parte 0: Protótipo Menu → Preparação → Combate (passo a passo)
+
+Objetivo: ter um “Start” rápido que já leva para a preparação e depois para a batalha.
+
+1) Criar a cena `MenuScene`
+  - Adicione um GameObject `_Managers` com:
+    - `AccountManager` (opcional: `bootstrapConfig`)
+    - `GameFlowManager`
+  - Crie um `Canvas` com um `Button` “Start”.
+  - Adicione um GameObject `_Menu` com `StartMenuController` e configure:
+    - `defaultLevel` (um `LevelData`)
+    - `preparationSceneName = PreparationScene`
+    - `startButton` apontando para o botão.
+
+2) Criar/configurar um `LevelData` (para o protótipo)
+  - `SceneName`: nome exato da cena de batalha.
+  - `PhaseMap`: PhaseMap do grid.
+  - `Waves`: pode ter 1 ou mais waves.
+    - por enquanto o jogo usa apenas a Wave 0 para spawn inicial.
+  - (Legacy) `Enemies`: só use se não quiser preencher `Waves`.
+
+3) Criar a cena `PreparationScene`
+  - UI para listar unidades possuídas e permitir selecionar até `maxUnitsToBring`.
+  - `PreparationSceneController` deve estar configurado com `UnitCatalog`.
+  - Ao clicar “Start Battle”, ele salva `SelectedUnitIDs` no `GameFlowManager` e carrega `SelectedLevel.SceneName`.
+
+4) Criar a cena de batalha (a que está em `LevelData.SceneName`)
+  - Coloque um `GridMap` (sem precisar setar PhaseMap manualmente; o `BattleLevelBuilder` aplica o do `LevelData`).
+  - Coloque `BattleLevelBuilder` e configure os prefabs “molde”:
+    - `playerUnitMold`
+    - `enemyUnitMold`
+    - `placementManager`
+  - Coloque `PlacementManager` e configure:
+    - `playerUnitMoldPrefab`
+    - `unitCatalog`
+    - `tileLayer`
+    - `placementActionBar`
+  - Crie um botão de UI “Confirmar posicionamento” que chama `PlacementManager.EndPlacementPhase()`.
+  - Marque os tiles iniciais do player via `TileDefinition.isPlayerSpawnZone = true`.
+  - Coloque `CombatInitializer` (opcional) e `TurnManager`.
+  - Coloque `PhaseManager` para vitória/derrota e recompensas.
+
+5) Build Settings
+  - Adicione: `MenuScene`, `PreparationScene`, e a(s) cena(s) de batalha.
 
 ### Parte 1: Sistemas de Gerenciamento Core
 
@@ -50,13 +94,15 @@ O foco é criar a estrutura de dados que irá transitar entre as cenas.
 
 - **Tarefa 1.1: Criar `GameFlowManager.cs`**:
   - Deve ser um Singleton persistente (`DontDestroyOnLoad`).
-  - Conterá campos para os dados da sessão: `selectedLevel`, `selectedUnitIDs`, `unitInitialPositions`.
+  - Conterá campos para os dados da sessão: `SelectedLevel`, `SelectedUnitIDs`.
+  - Durante a batalha, a formação colocada pode ser armazenada em `PlayerFormation` (runtime).
 
 - **Tarefa 1.2: Criar `LevelData.cs`**:
   - Um `ScriptableObject` para definir os dados de uma fase: nome da cena, inimigos, posições dos inimigos, recompensas.
+  - Suporte a waves/ondas: `Waves` (lista), usando Wave 0 como spawn inicial.
 
 - **Tarefa 1.2b: Criar `UnitCatalog.cs` e `LevelCatalog.cs`**:
-  - `UnitCatalog`: resolve o prefab a instanciar a partir de um `UnitID`.
+  - `UnitCatalog`: resolve `UnitData` a partir de um `UnitID` (para UI/seleção).
   - `LevelCatalog`: define a lista de fases exibida no Hub.
 
 - **Tarefa 1.3: Integrar `PhaseManager` e `AccountManager`**:
@@ -75,18 +121,20 @@ Com os sistemas prontos, criamos as cenas e a UI para interagir com eles.
 
 - **Tarefa 2.2: Criar Cena de Preparação (`PreparationScene`)**:
   - UI que lê as unidades do `AccountManager`.
-  - Permite ao jogador selecionar unidades e posicioná-las em um grid 3x3.
-  - Ao confirmar, salva a seleção no `GameFlowManager` e carrega a cena de batalha correspondente.
+  - Permite ao jogador selecionar unidades (até `maxUnitsToBring`).
+  - Ao confirmar, salva `SelectedUnitIDs` no `GameFlowManager` e carrega a cena de batalha correspondente.
 
   Implementação de script:
-  - `PreparationSceneController` + `FormationSlotUI`: seleção por clique e posicionamento em 3x3.
+  - `PreparationSceneController`: seleção por clique (sem grid 3×3).
 
 - **Tarefa 2.3: Modificar a Cena de Batalha**:
   - Criar um `LevelBuilder` (ou usar o `PhaseManager`) que, no `Start`, lê os dados do `GameFlowManager`.
-  - Instancia as unidades do jogador e dos inimigos nas posições corretas.
+  - Instancia os inimigos do `LevelData`.
+  - Inicia uma fase de posicionamento do player (antes de chamar `StartCombat`).
 
   Implementação de script:
-  - `BattleLevelBuilder`: instancia units e sincroniza ocupação no `GridMap`.
+  - `BattleLevelBuilder`: spawna inimigos e aguarda `PlacementManager` finalizar para iniciar o combate.
+  - `PlacementManager`: cria preview, permite colocar units em tiles `isPlayerSpawnZone`, e ao confirmar dispara o fim do posicionamento.
 
 ### Parte 3: Testes e Refinamento
 

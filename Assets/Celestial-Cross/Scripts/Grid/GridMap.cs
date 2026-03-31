@@ -45,7 +45,7 @@ public class GridMap : MonoBehaviour
         return new Vector3(gridPos.x * tileSize, 0f, gridPos.y * tileSize);
     }
 
-    public Unit SpawnUnitAt(GameObject prefab, Vector2Int gridPos, Team team, bool overwriteIfOccupied = true)
+    public Unit SpawnUnitAt(GameObject prefab, Vector2Int gridPos, Team team, UnitData unitData, PetData petData = null, bool overwriteIfOccupied = true)
     {
         if (prefab == null)
         {
@@ -75,6 +75,16 @@ public class GridMap : MonoBehaviour
         Vector3 worldPos = GridToWorld(gridPos);
         var unitObj = Instantiate(prefab, worldPos, Quaternion.identity, transform);
         spawnedUnits.Add(unitObj);
+
+        var configurator = unitObj.GetComponent<UnitRuntimeConfigurator>();
+        if (configurator == null)
+        {
+            Debug.LogError($"[GridMap] Prefab '{prefab.name}' não possui componente UnitRuntimeConfigurator. Adicione um para configurar a unidade em tempo de execução.");
+            Destroy(unitObj);
+            return null;
+        }
+
+        configurator.Initialize(unitData, petData);
 
         var unit = unitObj.GetComponent<Unit>();
         if (unit == null)

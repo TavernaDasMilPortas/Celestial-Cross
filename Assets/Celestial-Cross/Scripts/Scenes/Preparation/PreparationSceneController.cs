@@ -13,32 +13,23 @@ public class PreparationSceneController : MonoBehaviour
     [SerializeField] private Transform ownedUnitsContainer;
     [SerializeField] private Button ownedUnitButtonPrefab;
 
-    [Header("UI - Formation")]
-    [SerializeField] private List<FormationSlotUI> formationSlots = new List<FormationSlotUI>();
+    [Header("UI - Selection")]
+    [SerializeField] private Text selectedCountText;
     [SerializeField] private Button startBattleButton;
 
     [Header("Constraints")]
     [SerializeField] private int maxUnitsToBring = 3;
 
-    string selectedUnitIdForPlacement;
-    readonly HashSet<string> selectedUnitIds = new HashSet<string>();
+    private readonly HashSet<string> selectedUnitIds = new HashSet<string>();
 
     void Start()
     {
-        WireSlots();
         BuildOwnedUnitButtons();
 
         if (startBattleButton != null)
             startBattleButton.onClick.AddListener(StartBattle);
-    }
 
-    void WireSlots()
-    {
-        foreach (var slot in formationSlots)
-        {
-            if (slot == null) continue;
-            slot.OnClicked += OnFormationSlotClicked;
-        }
+        RefreshSelectedCount();
     }
 
     void BuildOwnedUnitButtons()
@@ -54,7 +45,13 @@ public class PreparationSceneController : MonoBehaviour
 
         if (AccountManager.Instance == null || AccountManager.Instance.PlayerAccount == null)
         {
-            Debug.LogError("[PreparationScene] AccountManager não encontrado.");
+            Debug.LogError("[PreparationScene] AccountManager/PlayerAccount não encontrado.");
+            return;
+        }
+
+        if (unitCatalog == null)
+        {
+            Debug.LogError("[PreparationScene] UnitCatalog não configurado.");
             return;
         }
 
@@ -63,92 +60,75 @@ public class PreparationSceneController : MonoBehaviour
             if (string.IsNullOrWhiteSpace(unitId))
                 continue;
 
+            var data = unitCatalog.GetUnitData(unitId);
+
             Button btn = Instantiate(ownedUnitButtonPrefab, ownedUnitsContainer);
             Text label = btn.GetComponentInChildren<Text>();
-
-            var data = unitCatalog != null ? unitCatalog.GetUnitData(unitId) : null;
             if (label != null)
                 label.text = data != null && !string.IsNullOrWhiteSpace(data.displayName) ? data.displayName : unitId;
 
-            btn.onClick.AddListener(() => SelectUnitForPlacement(unitId));
+            btn.onClick.AddListener(() => ToggleSelectUnit(unitId, btn));
         }
     }
 
-    void SelectUnitForPlacement(string unitId)
+    void ToggleSelectUnit(string unitId, Button btn)
     {
-        selectedUnitIdForPlacement = unitId;
-        Debug.Log($"[PreparationScene] Selecionado para posicionar: {unitId}");
+        if (selectedUnitIds.Contains(unitId))
+        {
+            selectedUnitIds.Remove(unitId);
+            SetButtonSelectedVisual(btn, false);
+            RefreshSelectedCount();
+            return;
+        }
+
+        if (selectedUnitIds.Count >= maxUnitsToBring)
+        {
+            Debug.Log($"[PreparationScene] Limite de units atingido ({maxUnitsToBring}).");
+            return;
+        }
+
+        selectedUnitIds.Add(unitId);
+        SetButtonSelectedVisual(btn, true);
+        RefreshSelectedCount();
     }
 
-    void OnFormationSlotClicked(FormationSlotUI slot)
+    void SetButtonSelectedVisual(Button btn, bool selected)
     {
-        if (slot == null) return;
+        if (btn == null) return;
 
-        if (GameFlowManager.Instance == null)
-        {
-            Debug.LogError("[PreparationScene] GameFlowManager não encontrado.");
-            return;
-        }
+        // Minimal visual feedback: change button alpha.
+        var colors = btn.colors;
+        colors.normalColor = new Color(colors.normalColor.r, colors.normalColor.g, colors.normalColor.b, selected ? 0.6f : 1f);
+        btn.colors = colors;
+    }
 
-        if (string.IsNullOrWhiteSpace(selectedUnitIdForPlacement))
-        {
-            Debug.Log("[PreparationScene] Selecione uma unit antes de posicionar.");
-            return;
-        }
+    void RefreshSelectedCount()
+    {
+        if (selectedCountText != null)
+            selectedCountText.text = $"Selecionadas: {selectedUnitIds.Count}/{maxUnitsToBring}";
 
-        if (!selectedUnitIds.Contains(selectedUnitIdForPlacement) && selectedUnitIds.Count >= maxUnitsToBring)
-        {
-            Debug.Log($"[PreparationScene] Limite atingido: {maxUnitsToBring} units.");
-            return;
-        }
-
-        var flow = GameFlowManager.Instance;
-        if (flow.UnitInitialPositions == null)
-            flow.UnitInitialPositions = new Dictionary<string, Vector2Int>();
-
-        // Se a unit selecionada já estava em algum slot, limpa o slot antigo
-        if (flow.UnitInitialPositions.TryGetValue(selectedUnitIdForPlacement, out var oldPos))
-        {
-            var oldSlot = formationSlots.FirstOrDefault(s => s != null && s.GridPos == oldPos);
-            if (oldSlot != null)
-                oldSlot.SetIcon(null);
-        }
-
-        // Se outro unit já estiver ocupando esse slot, remove mapeamento + seleção
-        string previousUnit = flow.UnitInitialPositions.FirstOrDefault(kv => kv.Value == slot.GridPos).Key;
-        if (!string.IsNullOrWhiteSpace(previousUnit) && previousUnit != selectedUnitIdForPlacement)
-        {
-            flow.UnitInitialPositions.Remove(previousUnit);
-            selectedUnitIds.Remove(previousUnit);
-        }
-
-        selectedUnitIds.Add(selectedUnitIdForPlacement);
-        flow.UnitInitialPositions[selectedUnitIdForPlacement] = slot.GridPos;
-
-        var data = unitCatalog != null ? unitCatalog.GetUnitData(selectedUnitIdForPlacement) : null;
-        slot.SetIcon(data != null ? data.icon : null);
-
-        Debug.Log($"[PreparationScene] Posicionado {selectedUnitIdForPlacement} em {slot.GridPos}");
+        if (startBattleButton != null)
+            startBattleButton.interactable = selectedUnitIds.Count > 0;
     }
 
     void StartBattle()
     {
         if (GameFlowManager.Instance == null || GameFlowManager.Instance.SelectedLevel == null)
         {
-            Debug.LogError("[PreparationScene] Level não selecionado.");
+            Debug.LogError("[PreparationScene] GameFlowManager/SelectedLevel não configurado.");
             return;
         }
 
-        // selectedUnitIds vem dos slots. Garante consistência.
-        GameFlowManager.Instance.SelectedUnitIDs = selectedUnitIds.ToList();
-
-        string sceneName = GameFlowManager.Instance.SelectedLevel.SceneName;
-        if (string.IsNullOrWhiteSpace(sceneName))
+        var level = GameFlowManager.Instance.SelectedLevel;
+        if (string.IsNullOrWhiteSpace(level.SceneName))
         {
-            Debug.LogError("[PreparationScene] SelectedLevel.SceneName vazio.");
+            Debug.LogError($"[PreparationScene] LevelData '{level.name}' sem SceneName.");
             return;
         }
 
-        SceneManager.LoadScene(sceneName);
+        GameFlowManager.Instance.SelectedUnitIDs = selectedUnitIds.ToList();
+        GameFlowManager.Instance.PlayerFormation.Clear();
+
+        SceneManager.LoadScene(level.SceneName);
     }
 }

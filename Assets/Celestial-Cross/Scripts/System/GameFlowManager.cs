@@ -6,8 +6,11 @@ public class GameFlowManager : MonoBehaviour
     public static GameFlowManager Instance { get; private set; }
 
     public LevelData SelectedLevel { get; set; }
+    // Filled in PreparationScene (unit selection), consumed by PlacementManager.
     public List<string> SelectedUnitIDs { get; set; } = new List<string>();
-    public Dictionary<string, Vector2Int> UnitInitialPositions { get; set; } = new Dictionary<string, Vector2Int>();
+
+    // Filled at runtime during placement (battle scene).
+    public List<Unit> PlayerFormation { get; set; } = new List<Unit>();
 
     private void Awake()
     {

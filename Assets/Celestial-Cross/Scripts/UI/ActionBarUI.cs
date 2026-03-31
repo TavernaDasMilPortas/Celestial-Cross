@@ -8,6 +8,7 @@ public class ActionBarUI : MonoBehaviour
 
     private List<ActionButtonUI> spawnedButtons = new();
     private Unit currentUnit;
+    private Dictionary<string, ActionButtonUI> buttonsByUnitId = new Dictionary<string, ActionButtonUI>();
 
     public void GenerateButtons(Unit unit)
     {
@@ -70,5 +71,35 @@ public class ActionBarUI : MonoBehaviour
             if (btn != null) Destroy(btn.gameObject);
         }
         spawnedButtons.Clear();
+        buttonsByUnitId.Clear();
+    }
+
+    public void GenerateButtonsForPlacement(List<UnitData> units, System.Action<UnitData> onUnitSelected)
+    {
+        ClearButtons();
+        buttonsByUnitId.Clear();
+
+        if (units == null || buttonPrefab == null || container == null)
+            return;
+
+        foreach (var unitData in units)
+        {
+            GameObject btnObj = Instantiate(buttonPrefab, container);
+            ActionButtonUI btnUI = btnObj.GetComponent<ActionButtonUI>();
+            if (btnUI != null)
+            {
+                btnUI.SetupForPlacement(unitData, () => onUnitSelected(unitData));
+                spawnedButtons.Add(btnUI);
+                buttonsByUnitId[unitData.UnitID] = btnUI;
+            }
+        }
+    }
+
+    public void SetButtonInteractable(string unitId, bool interactable)
+    {
+        if (buttonsByUnitId.TryGetValue(unitId, out var button))
+        {
+            button.SetInteractable(interactable);
+        }
     }
 }

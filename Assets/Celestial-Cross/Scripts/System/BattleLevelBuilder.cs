@@ -1,10 +1,15 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class BattleLevelBuilder : MonoBehaviour
 {
-    [Header("Catalog")]
-    [SerializeField] private UnitCatalog unitCatalog;
+    [Header("Molds")]
+    [SerializeField] private GameObject playerUnitMold;
+    [SerializeField] private GameObject enemyUnitMold;
+
+    [Header("Dependencies")]
+    [SerializeField] private PlacementManager placementManager;
 
     [Header("Spawn")]
     [SerializeField] private bool clearExistingUnits = true;
@@ -15,23 +20,23 @@ public class BattleLevelBuilder : MonoBehaviour
 
     void Start()
     {
-        Build();
+        StartCoroutine(BuildRoutine());
     }
 
-    public void Build()
+    public IEnumerator BuildRoutine()
     {
         var flow = GameFlowManager.Instance;
         if (flow == null || flow.SelectedLevel == null)
         {
             Debug.LogWarning("[BattleLevelBuilder] GameFlowManager/SelectedLevel não configurado.");
-            return;
+            yield break;
         }
 
         var grid = GridMap.Instance;
         if (grid == null)
         {
             Debug.LogError("[BattleLevelBuilder] GridMap.Instance não encontrado na cena.");
-            return;
+            yield break;
         }
 
         // Aplica o PhaseMap definido no LevelData
@@ -51,48 +56,24 @@ public class BattleLevelBuilder : MonoBehaviour
             ClearOccupancy(grid);
         }
 
-        // Spawns do player
-        foreach (var unitId in flow.SelectedUnitIDs)
-        {
-            if (string.IsNullOrWhiteSpace(unitId))
-                continue;
-
-            var prefab = unitCatalog != null ? unitCatalog.GetPrefab(unitId) : null;
-            if (prefab == null)
-            {
-                Debug.LogError($"[BattleLevelBuilder] Prefab não encontrado no UnitCatalog para UnitID='{unitId}'");
-                continue;
-            }
-
-            Vector2Int gridPos = ResolvePlayerSpawnPos(flow, unitId);
-            grid.SpawnUnitAt(prefab, gridPos, Team.Player);
-        }
-
         // Spawns dos inimigos
-        if (flow.SelectedLevel.Enemies != null)
+        SpawnEnemies(flow, grid);
+
+        // Inicia a fase de posicionamento do jogador
+        if (placementManager != null)
         {
-            foreach (var enemy in flow.SelectedLevel.Enemies)
-            {
-                if (enemy.UnitData == null)
-                    continue;
+            bool placementComplete = false;
+            placementManager.OnPlacementEnded += () => placementComplete = true;
+            placementManager.StartPlacementPhase();
 
-                string enemyId = enemy.UnitData.UnitID;
-                if (string.IsNullOrWhiteSpace(enemyId))
-                {
-                    Debug.LogWarning($"[BattleLevelBuilder] Enemy UnitData '{enemy.UnitData.name}' sem UnitID.");
-                    continue;
-                }
-
-                var prefab = unitCatalog != null ? unitCatalog.GetPrefab(enemyId) : null;
-                if (prefab == null)
-                {
-                    Debug.LogError($"[BattleLevelBuilder] Prefab não encontrado no UnitCatalog para enemy UnitID='{enemyId}'");
-                    continue;
-                }
-
-                grid.SpawnUnitAt(prefab, enemy.GridPosition, Team.Enemy);
-            }
+            // Espera a fase de posicionamento terminar
+            yield return new WaitUntil(() => placementComplete);
         }
+        else
+        {
+            Debug.LogError("[BattleLevelBuilder] PlacementManager não está configurado!");
+        }
+
 
         Debug.Log("[BattleLevelBuilder] Build concluído.");
 
@@ -103,6 +84,28 @@ public class BattleLevelBuilder : MonoBehaviour
                 initializer.StartCombat();
             else
                 Debug.LogWarning("[BattleLevelBuilder] CombatInitializer não encontrado para autoStart.");
+        }
+    }
+
+    private void SpawnEnemies(GameFlowManager flow, GridMap grid)
+    {
+        var level = flow.SelectedLevel;
+        List<EnemySpawnInfo> enemySpawns = null;
+
+        if (level.Waves != null && level.Waves.Count > 0 && level.Waves[0] != null && level.Waves[0].Enemies != null && level.Waves[0].Enemies.Count > 0)
+            enemySpawns = level.Waves[0].Enemies;
+        else
+            enemySpawns = level.Enemies;
+
+        if (enemySpawns != null)
+        {
+            foreach (var enemy in enemySpawns)
+            {
+                if (enemy.UnitData == null)
+                    continue;
+
+                grid.SpawnUnitAt(enemyUnitMold, enemy.GridPosition, Team.Enemy, enemy.UnitData);
+            }
         }
     }
 
@@ -124,18 +127,6 @@ public class BattleLevelBuilder : MonoBehaviour
             tile.IsOccupied = false;
             tile.OccupyingUnit = null;
         }
-    }
-
-    static Vector2Int ResolvePlayerSpawnPos(GameFlowManager flow, string unitId)
-    {
-        if (flow.UnitInitialPositions != null && flow.UnitInitialPositions.TryGetValue(unitId, out var pos))
-            return pos;
-
-        // fallback simples: usa (0,0) e vai preenchendo linha
-        int index = flow.SelectedUnitIDs.IndexOf(unitId);
-        int x = index % 3;
-        int y = index / 3;
-        return new Vector2Int(x, y);
     }
 
     // Spawn movido para GridMap.SpawnUnitAt

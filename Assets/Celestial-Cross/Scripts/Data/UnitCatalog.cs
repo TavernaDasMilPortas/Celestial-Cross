@@ -1,64 +1,44 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "UnitCatalog", menuName = "RPG/Unit Catalog")]
 public class UnitCatalog : ScriptableObject
 {
-    [Serializable]
+    [System.Serializable]
     public class Entry
     {
-        [SerializeField, HideInInspector] private string unitID;
-        public string UnitID => unitID;
-        public GameObject Prefab;
-        public UnitData UnitData;
-
-        public void SyncUnitIDFromUnitData()
-        {
-            if (UnitData == null) return;
-            if (string.IsNullOrWhiteSpace(UnitData.UnitID)) return;
-            unitID = UnitData.UnitID;
-        }
+        public UnitData unitData;
     }
 
-    public List<Entry> Entries = new List<Entry>();
-
-    private void OnValidate()
-    {
-        if (Entries == null) return;
-
-        foreach (var entry in Entries)
-        {
-            if (entry == null) continue;
-            entry.SyncUnitIDFromUnitData();
-        }
-    }
-
-    public GameObject GetPrefab(string unitId)
-    {
-        if (string.IsNullOrWhiteSpace(unitId))
-            return null;
-
-        foreach (var entry in Entries)
-        {
-            if (entry == null) continue;
-            if (string.Equals(entry.UnitID, unitId, StringComparison.OrdinalIgnoreCase))
-                return entry.Prefab;
-        }
-        return null;
-    }
+    [SerializeField] private List<Entry> entries = new List<Entry>();
 
     public UnitData GetUnitData(string unitId)
     {
         if (string.IsNullOrWhiteSpace(unitId))
             return null;
 
-        foreach (var entry in Entries)
+        for (int i = 0; i < entries.Count; i++)
         {
-            if (entry == null) continue;
-            if (string.Equals(entry.UnitID, unitId, StringComparison.OrdinalIgnoreCase))
-                return entry.UnitData;
+            var data = entries[i]?.unitData;
+            if (data == null)
+                continue;
+
+            if (data.UnitID == unitId)
+                return data;
         }
+
         return null;
+    }
+
+    public List<UnitData> GetAllUnitData()
+    {
+        var result = new List<UnitData>();
+        for (int i = 0; i < entries.Count; i++)
+        {
+            var data = entries[i]?.unitData;
+            if (data != null)
+                result.Add(data);
+        }
+        return result;
     }
 }

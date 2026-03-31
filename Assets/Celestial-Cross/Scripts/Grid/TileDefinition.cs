@@ -5,4 +5,5 @@ public class TileDefinition : ScriptableObject
 {
     public int id;
     public GameObject prefab;
+    public bool isPlayerSpawnZone = false;
 }

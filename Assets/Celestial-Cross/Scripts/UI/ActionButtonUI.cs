@@ -19,6 +19,26 @@ public class ActionButtonUI : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     private bool isHolding;
     private bool modalShown;
 
+    public void SetupForPlacement(UnitData unitData, System.Action onClickCallback)
+    {
+        this.action = null; // Not an action button in this context
+        this.isClickable = true;
+
+        if (iconImage != null && unitData != null && unitData.icon != null)
+        {
+            iconImage.sprite = unitData.icon;
+        }
+
+        if (selectionImage != null) selectionImage.gameObject.SetActive(false);
+
+        if (button != null)
+        {
+            button.onClick.RemoveAllListeners();
+            button.onClick.AddListener(() => onClickCallback?.Invoke());
+            button.interactable = true;
+        }
+    }
+
     public void Setup(IUnitAction action, int index, bool clickable = true)
     {
         this.action = action;
@@ -62,8 +82,17 @@ public class ActionButtonUI : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         if (selectionImage != null) selectionImage.gameObject.SetActive(selected);
     }
 
+    public void SetInteractable(bool interactable)
+    {
+        if (button != null)
+        {
+            button.interactable = interactable;
+        }
+    }
+
     public void OnPointerDown(PointerEventData eventData)
     {
+        if (action == null) return; // Disable hold for placement buttons
         isHolding = true;
         timer = 0f;
         modalShown = false;

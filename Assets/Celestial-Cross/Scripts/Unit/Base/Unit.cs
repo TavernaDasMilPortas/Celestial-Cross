@@ -12,8 +12,8 @@ using Celestial_Cross.Scripts.Units;
 public abstract class Unit : MonoBehaviour
 {
     [Header("Base Data")]
-    [SerializeField] protected UnitData unitData;
-    [SerializeField] protected PetData equippedPet;
+    public UnitData unitData { get; set; }
+    public PetData petData { get; set; }
     public Team Team;
 
     [Header("Runtime")]
@@ -27,7 +27,7 @@ public abstract class Unit : MonoBehaviour
     // =========================
 
     public UnitData Data => unitData;
-    public PetData EquippedPet => equippedPet;
+    public PetData EquippedPet => petData;
     public UnitData UnitData => unitData;
 
     public string DisplayName =>
@@ -38,7 +38,7 @@ public abstract class Unit : MonoBehaviour
         get
         {
             CombatStats baseStats = unitData != null
-                ? unitData.GetCombinedStats(equippedPet)
+                ? unitData.GetCombinedStats(petData)
                 : new CombatStats(1, 0, 0, 0, 0, 0);
 
             return baseStats + modifierStats;
@@ -74,7 +74,7 @@ public abstract class Unit : MonoBehaviour
         }
     }
  
-    protected virtual void Start()
+    public virtual void Initialize()
     {
         if (PhaseManager.Instance != null)
         {
@@ -83,28 +83,26 @@ public abstract class Unit : MonoBehaviour
         if (Health != null) Health.SetMaxHealth(MaxHealth);
         InitializeActions();
 
-        if (equippedPet != null)
+        if (petData != null)
         {
-            Debug.Log($"<color=green>[Unit Stats]</color> {DisplayName} combinou status com o pet <b>{equippedPet.name}</b>. Total -> HP: {MaxHealth} | Atk: {Stats.attack} | Def: {Stats.defense} | Spd: {Stats.speed} | Crit: {Stats.criticalChance}%");
+            Debug.Log($"<color=green>[Unit Stats]</color> {DisplayName} combinou status com o pet <b>{petData.name}</b>. Total -> HP: {MaxHealth} | Atk: {Stats.attack} | Def: {Stats.defense} | Spd: {Stats.speed} | Crit: {Stats.criticalChance}%");
         }
     }
  
     public void InitializeActions()
     {
-        if (unitData == null) { Debug.LogError($"[Unit] {name} n�o possui UnitData."); return; }
+        if (unitData == null) { Debug.LogError($"[Unit] {name} não possui UnitData."); return; }
         actions.Clear();
         foreach (var action in GetComponents<IUnitAction>()) Destroy(action as Component);
         var blueprints = unitData.GetAbilities();
         if (blueprints != null) foreach (var bp in blueprints) if (bp != null ) actions.Add(new BlueprintActionWrapper(this, bp));
-        if (equippedPet != null && equippedPet.ability != null ) actions.Add(new BlueprintActionWrapper(this, equippedPet.ability));
-        foreach (var definition in unitData.GetExecutableDefinitions(equippedPet)) {
-            if (definition == null) continue;
-            System.Type actionType = definition.GetRuntimeActionType();
-            if (actionType == null) continue;
-            var action = gameObject.AddComponent(actionType) as IUnitAction;
-            if (action != null) {
-                definition.Configure(action);
-                actions.Add(action);
+        if (petData != null && petData.ability != null ) actions.Add(new BlueprintActionWrapper(this, petData.ability));
+        foreach (var definition in unitData.GetExecutableDefinitions(petData)) {
+            var component = gameObject.AddComponent(definition.GetType()) as IUnitAction;
+            if (component != null)
+            {
+                definition.Configure(component);
+                actions.Add(component);
             }
         }
     }
