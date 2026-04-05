@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using CelestialCross.Combat;
 using Celestial_Cross.Scripts.Abilities;
 using Celestial_Cross.Scripts.Units;
+using CelestialCross.Artifacts;
 
 [RequireComponent(typeof(Health))]
 [RequireComponent(typeof(Collider))]
@@ -14,6 +15,11 @@ public abstract class Unit : MonoBehaviour
     [Header("Base Data")]
     public UnitData unitData { get; set; }
     public PetData petData { get; set; }
+    
+    [Header("Test/Debug Artifacts")]
+    [SerializeField]
+    public List<ArtifactInstance> equippedArtifacts = new List<ArtifactInstance>();
+    
     public Team Team;
 
     [Header("Runtime")]
@@ -41,7 +47,84 @@ public abstract class Unit : MonoBehaviour
                 ? unitData.GetCombinedStats(petData)
                 : new CombatStats(1, 0, 0, 0, 0, 0);
 
-            return baseStats + modifierStats;
+            // Accumulate Artifact modifiers
+            float healthFlat = 0f, healthPct = 0f;
+            float atkFlat = 0f, atkPct = 0f;
+            float defFlat = 0f, defPct = 0f;
+            float spdFlat = 0f;
+            float critChanceFlat = 0f;
+            float effectAccFlat = 0f;
+
+            if (equippedArtifacts != null)
+            {
+                Dictionary<ArtifactSet, int> setCounts = new Dictionary<ArtifactSet, int>();
+
+                foreach (var artifact in equippedArtifacts)
+                {
+                    if (artifact != null)
+                    {
+                        ProcessArtifactStat(artifact.mainStat, ref healthFlat, ref healthPct, ref atkFlat, ref atkPct, ref defFlat, ref defPct, ref spdFlat, ref critChanceFlat, ref effectAccFlat);
+                        foreach (var sub in artifact.subStats)
+                        {
+                            ProcessArtifactStat(sub, ref healthFlat, ref healthPct, ref atkFlat, ref atkPct, ref defFlat, ref defPct, ref spdFlat, ref critChanceFlat, ref effectAccFlat);
+                        }
+
+                        // Registra quantidade desse "Set"
+                        if (artifact.artifactSet != null)
+                        {
+                            if (!setCounts.ContainsKey(artifact.artifactSet))
+                                setCounts[artifact.artifactSet] = 0;
+                            setCounts[artifact.artifactSet]++;
+                        }
+                    }
+                }
+
+                // Aplica Bônus de Status provindos de Séries Equipadas
+                foreach (var kvp in setCounts)
+                {
+                    ArtifactSet setFamily = kvp.Key;
+                    int piecesEquipped = kvp.Value;
+
+                    foreach (var bonus in setFamily.setBonuses)
+                    {
+                        if (piecesEquipped >= bonus.piecesRequired)
+                        {
+                            foreach (var statMod in bonus.statBonuses)
+                            {
+                                ProcessArtifactStat(statMod, ref healthFlat, ref healthPct, ref atkFlat, ref atkPct, ref defFlat, ref defPct, ref spdFlat, ref critChanceFlat, ref effectAccFlat);
+                            }
+                        }
+                    }
+                }
+            }
+
+            int finalHealth = (int)(Mathf.Round(baseStats.health + healthFlat) * (1f + (healthPct / 100f)));
+            int finalAttack = (int)(Mathf.Round(baseStats.attack + atkFlat) * (1f + (atkPct / 100f)));
+            int finalDefense = (int)(Mathf.Round(baseStats.defense + defFlat) * (1f + (defPct / 100f)));
+            int finalSpeed = (int)Mathf.Round(baseStats.speed + spdFlat); // Speed generally hasn't a percent variant in standard logic
+            int finalCrit = (int)Mathf.Round(baseStats.criticalChance + critChanceFlat);
+            int finalAcc = (int)Mathf.Round(baseStats.effectAccuracy + effectAccFlat);
+
+            CombatStats finalArtifactStats = new CombatStats(finalHealth, finalAttack, finalDefense, finalSpeed, finalCrit, finalAcc);
+
+            return finalArtifactStats + modifierStats;
+        }
+    }
+
+    private void ProcessArtifactStat(StatModifier stat, ref float hF, ref float hP, ref float aF, ref float aP, ref float dF, ref float dP, ref float spdF, ref float crF, ref float eaf)
+    {
+        switch (stat.statType)
+        {
+            case StatType.HealthFlat: hF += stat.value; break;
+            case StatType.HealthPercent: hP += stat.value; break;
+            case StatType.AttackFlat: aF += stat.value; break;
+            case StatType.AttackPercent: aP += stat.value; break;
+            case StatType.DefenseFlat: dF += stat.value; break;
+            case StatType.DefensePercent: dP += stat.value; break;
+            case StatType.Speed: spdF += stat.value; break;
+            case StatType.CriticalRate: crF += stat.value; break;
+            case StatType.EffectHitRate: eaf += stat.value; break;
+            // CriticalDamage and EffectResistance can be added here if Unit.CombatStats supports them in the future.
         }
     }
 

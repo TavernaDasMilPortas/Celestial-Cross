@@ -134,7 +134,7 @@ MonoBehaviour:
   Team: 0
   GridPosition: {x: 0, y: 0}
   modifierStats:
-    health: 1
+    health: 0
     attack: 0
     defense: 0
     speed: 0
