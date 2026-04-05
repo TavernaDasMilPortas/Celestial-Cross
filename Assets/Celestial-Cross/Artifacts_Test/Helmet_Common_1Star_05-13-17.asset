@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3598f4386122736498700c671fea9f52, type: 3}
+  m_Name: Helmet_Common_1Star_05-13-17
+  m_EditorClassIdentifier: Assembly-CSharp::CelestialCross.Artifacts.ArtifactInstance
+  idGUID: dea51d5d-e4b7-431f-b003-e788fe214a02
+  slot: 0
+  artifactSet: {fileID: 11400000, guid: 1c4f1b892b6e20245a0e9ec4a942e09d, type: 2}
+  rarity: 0
+  stars: 1
+  currentLevel: 15
+  mainStat:
+    statType: 1
+    value: 20
+  subStats:
+  - statType: 2
+    value: 17
+  - statType: 9
+    value: 19
+  - statType: 6
+    value: 24
+  - statType: 4
+    value: 18
