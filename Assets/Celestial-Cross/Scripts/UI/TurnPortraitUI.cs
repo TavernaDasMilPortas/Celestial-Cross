@@ -12,14 +12,14 @@ public class TurnPortraitUI : MonoBehaviour
     {
         if (unit == null) return;
 
-        if (iconImage != null && unit.EquippedPet != null)
+        if (iconImage != null && unit.UnitData != null)
         {
-            iconImage.sprite = unit.EquippedPet.icon;
+            iconImage.sprite = unit.UnitData.icon;
         }
 
         if (backgroundImage != null)
         {
-            bool isPlayer = unit is Pet || unit.CompareTag("Player");
+            bool isPlayer = unit is Pet || unit.CompareTag("Player") || unit.Team == Team.Player;
             backgroundImage.color = isPlayer ? playerColor : enemyColor;
         }
     }

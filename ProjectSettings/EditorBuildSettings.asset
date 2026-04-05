@@ -15,7 +15,7 @@ EditorBuildSettings:
     path: Assets/Celestial-Cross/Scenes/MainMenu.unity
     guid: 3a34bb65e0b98494faa8fe5f88d53f86
   - enabled: 1
-    path: "Assets/Celestial-Cross/Scenes/HubProvis\xF3rio.unity"
+    path: Assets/Celestial-Cross/Scenes/HubScene.unity
     guid: aae55989abe44784197dd80958fdd0f5
   - enabled: 1
     path: Assets/Celestial-Cross/Scenes/PreparationScene.unity

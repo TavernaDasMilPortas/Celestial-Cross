@@ -15,6 +15,8 @@ public class PreparationSceneController : MonoBehaviour
     [SerializeField] private Button ownedUnitButtonPrefab;
 
     [Header("UI - Selection")]
+    [SerializeField] private Transform selectedUnitsContainer;
+    [SerializeField] private Button selectedUnitButtonPrefab;
     [SerializeField] private TextMeshProUGUI selectedCountText;
     [SerializeField] private Button startBattleButton;
 
@@ -22,6 +24,8 @@ public class PreparationSceneController : MonoBehaviour
     [SerializeField] private int maxUnitsToBring = 3;
 
     private readonly HashSet<string> selectedUnitIds = new HashSet<string>();
+    private readonly Dictionary<string, Button> ownedButtonsMap = new Dictionary<string, Button>();
+    private readonly Dictionary<string, GameObject> selectedInstancesMap = new Dictionary<string, GameObject>();
 
     void Start()
     {
@@ -56,6 +60,15 @@ public class PreparationSceneController : MonoBehaviour
             return;
         }
 
+        ownedButtonsMap.Clear();
+        selectedInstancesMap.Clear();
+
+        if (selectedUnitsContainer != null)
+        {
+            foreach (Transform child in selectedUnitsContainer)
+                Destroy(child.gameObject);
+        }
+
         foreach (var unitId in AccountManager.Instance.PlayerAccount.OwnedUnitIDs)
         {
             if (string.IsNullOrWhiteSpace(unitId))
@@ -64,21 +77,44 @@ public class PreparationSceneController : MonoBehaviour
             var data = unitCatalog.GetUnitData(unitId);
 
             Button btn = Instantiate(ownedUnitButtonPrefab, ownedUnitsContainer);
-            Text label = btn.GetComponentInChildren<Text>();
-            if (label != null)
-                label.text = data != null && !string.IsNullOrWhiteSpace(data.displayName) ? data.displayName : unitId;
+            SetupButtonVisuals(btn, data, unitId);
 
-            btn.onClick.AddListener(() => ToggleSelectUnit(unitId, btn));
+            btn.onClick.AddListener(() => ToggleSelectUnit(unitId));
+            ownedButtonsMap[unitId] = btn;
         }
     }
 
-    void ToggleSelectUnit(string unitId, Button btn)
+    void SetupButtonVisuals(Button btn, UnitData data, string unitId)
+    {
+        // Define o texto (suporta tanto Text do Unity UI básico quanto TMPro se existir no projeto no futuro)
+        var textLabels = btn.GetComponentsInChildren<Text>(true);
+        foreach (var label in textLabels)
+            label.text = data != null && !string.IsNullOrWhiteSpace(data.displayName) ? data.displayName : unitId;
+
+        var tmproLabels = btn.GetComponentsInChildren<TextMeshProUGUI>(true);
+        foreach (var tmp in tmproLabels)
+            tmp.text = data != null && !string.IsNullOrWhiteSpace(data.displayName) ? data.displayName : unitId;
+
+        // Define a imagem da unidade (procura imgs que sejam filhas, mas que não estejam no próprio gameObject do Button - para não sobrescrever o background do botão em si)
+        if (data != null && data.icon != null)
+        {
+            var images = btn.GetComponentsInChildren<Image>(true);
+            foreach (var img in images)
+            {
+                if (img.gameObject != btn.gameObject)
+                {
+                    img.sprite = data.icon;
+                    img.color = Color.white; // Reseta transparente
+                }
+            }
+        }
+    }
+
+    void ToggleSelectUnit(string unitId)
     {
         if (selectedUnitIds.Contains(unitId))
         {
-            selectedUnitIds.Remove(unitId);
-            SetButtonSelectedVisual(btn, false);
-            RefreshSelectedCount();
+            DeselectUnit(unitId);
             return;
         }
 
@@ -88,8 +124,43 @@ public class PreparationSceneController : MonoBehaviour
             return;
         }
 
+        SelectUnit(unitId);
+    }
+
+    void SelectUnit(string unitId)
+    {
         selectedUnitIds.Add(unitId);
-        SetButtonSelectedVisual(btn, true);
+        
+        if (ownedButtonsMap.TryGetValue(unitId, out Button ownedBtn))
+            SetButtonSelectedVisual(ownedBtn, true);
+
+        // Adiciona à UI de Selecionados
+        if (selectedUnitsContainer != null && selectedUnitButtonPrefab != null)
+        {
+            var data = unitCatalog.GetUnitData(unitId);
+            Button selBtn = Instantiate(selectedUnitButtonPrefab, selectedUnitsContainer);
+            SetupButtonVisuals(selBtn, data, unitId);
+
+            selBtn.onClick.AddListener(() => ToggleSelectUnit(unitId)); // Clicar na selecionada desseleciona
+            selectedInstancesMap[unitId] = selBtn.gameObject;
+        }
+
+        RefreshSelectedCount();
+    }
+
+    void DeselectUnit(string unitId)
+    {
+        selectedUnitIds.Remove(unitId);
+
+        if (ownedButtonsMap.TryGetValue(unitId, out Button ownedBtn))
+            SetButtonSelectedVisual(ownedBtn, false);
+
+        if (selectedInstancesMap.TryGetValue(unitId, out GameObject selObj))
+        {
+            if (selObj != null) Destroy(selObj);
+            selectedInstancesMap.Remove(unitId);
+        }
+
         RefreshSelectedCount();
     }
 
