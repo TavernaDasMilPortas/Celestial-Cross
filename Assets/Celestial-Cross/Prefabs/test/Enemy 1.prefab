@@ -17,6 +17,8 @@ GameObject:
   - component: {fileID: 2753664136210387565}
   - component: {fileID: 4160151421004058064}
   - component: {fileID: 3372150241174663022}
+  - component: {fileID: 1506774815444338841}
+  - component: {fileID: -2240157602709974659}
   m_Layer: 0
   m_Name: Enemy 1
   m_TagString: Untagged
@@ -108,10 +110,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a3286068acaadf4fa3f07584e3fc531, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitData: {fileID: 11400000, guid: d25b938b30bbdcc4aa44545bd797f180, type: 2}
-  equippedPet: {fileID: 11400000, guid: 900ae4f5098769c41b8c14ee61484ab5, type: 2}
-  activeEffects: []
+  Team: 0
   GridPosition: {x: 0, y: 0}
+  modifierStats:
+    health: 1
+    attack: 0
+    defense: 0
+    speed: 0
+    criticalChance: 0
+    effectAccuracy: 0
 --- !u!135 &4606220213784042471
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -190,3 +197,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UnitOutlineController
   hoverColor: {r: 0, g: 1, b: 1, a: 1}
   selectedColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+--- !u!114 &1506774815444338841
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4461724650246820294}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f629fd516a42f1142bc8e7c8b17fa9c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PassiveManager
+--- !u!114 &-2240157602709974659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4461724650246820294}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ba3c3f3d59814f4b9961e04e9ab22bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UnitRuntimeConfigurator
+  unit: {fileID: 3465887578433419913}
+  unitSpriteRenderer: {fileID: 0}

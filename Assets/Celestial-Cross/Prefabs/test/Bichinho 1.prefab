@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: 7065627287030554661}
   - component: {fileID: 3347702082816547593}
   - component: {fileID: 2193862000543773072}
+  - component: {fileID: -3601054528942378275}
   m_Layer: 0
   m_Name: Bichinho 1
   m_TagString: Untagged
@@ -130,8 +131,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a40a08f0acafdea4992493b3bb42f393, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitData: {fileID: 11400000, guid: 642b786367762f940aded926f739f0ba, type: 2}
-  equippedPet: {fileID: 11400000, guid: 9f42cee8184cdaa4b8cd4ad07df68288, type: 2}
   Team: 0
   GridPosition: {x: 0, y: 0}
   modifierStats:
@@ -210,3 +209,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f629fd516a42f1142bc8e7c8b17fa9c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PassiveManager
+--- !u!114 &-3601054528942378275
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8701181467720189833}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ba3c3f3d59814f4b9961e04e9ab22bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UnitRuntimeConfigurator
+  unit: {fileID: -2704106803696065423}
+  unitSpriteRenderer: {fileID: 0}

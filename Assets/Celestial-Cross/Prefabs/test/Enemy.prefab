@@ -18,6 +18,8 @@ GameObject:
   - component: {fileID: -6786496474400010704}
   - component: {fileID: 8534511316413827168}
   - component: {fileID: 7961381063298884986}
+  - component: {fileID: 1506774815444338841}
+  - component: {fileID: 5242653824252836057}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -199,9 +201,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cc69d8253e8c9f4e9dc5343ce18e276, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyUnit
-  unitData: {fileID: 11400000, guid: b1aeb5d725201a641bc40f21512ddeae, type: 2}
-  equippedPet: {fileID: 0}
-  activeEffects: []
+  Team: 0
   GridPosition: {x: 0, y: 0}
   modifierStats:
     health: 1
@@ -211,3 +211,29 @@ MonoBehaviour:
     criticalChance: 0
     effectAccuracy: 0
   behaviorProfile: {fileID: 11400000, guid: 1da039d9adff2d040884ac4725336807, type: 2}
+--- !u!114 &1506774815444338841
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4461724650246820294}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f629fd516a42f1142bc8e7c8b17fa9c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PassiveManager
+--- !u!114 &5242653824252836057
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4461724650246820294}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ba3c3f3d59814f4b9961e04e9ab22bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UnitRuntimeConfigurator
+  unit: {fileID: 7961381063298884986}
+  unitSpriteRenderer: {fileID: 0}

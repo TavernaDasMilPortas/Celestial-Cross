@@ -9,9 +9,8 @@ public class PhaseManager : MonoBehaviour
     [SerializeField] private RewardPackage victoryRewards;
 
     [Header("Flow")]
-    [SerializeField] private bool autoReturnToHub = false;
     [SerializeField] private string hubSceneName = "HubScene";
-    [SerializeField] private float returnDelaySeconds = 1.0f;
+    [SerializeField] private float returnDelaySeconds = 2.0f;
 
     private List<Unit> playerUnits = new List<Unit>();
     private List<Unit> enemyUnits = new List<Unit>();
@@ -83,12 +82,10 @@ public class PhaseManager : MonoBehaviour
 
         OnPhaseEnded?.Invoke(winningTeam);
 
-        if (autoReturnToHub && !string.IsNullOrWhiteSpace(hubSceneName))
+        if (!string.IsNullOrWhiteSpace(hubSceneName))
         {
-            Invoke(nameof(ReturnToHub), Mathf.Max(0f, returnDelaySeconds));
+            Invoke(nameof(ReturnToHub), Mathf.Max(0.5f, returnDelaySeconds));
         }
-        // Aqui você pode adicionar a lógica para carregar a próxima cena, mostrar uma tela de vitória/derrota, etc.
-        // Time.timeScale = 0f; // Pausa o jogo, por exemplo.
     }
 
     void ReturnToHub()
@@ -108,11 +105,12 @@ public class PhaseManager : MonoBehaviour
 
         if (rewardToGrant != null)
         {
-            Debug.Log($"Recompensa concedida: {rewardToGrant.Money} de dinheiro, {rewardToGrant.Energy} de energia.");
+            Debug.Log($"Recompensa adquirida: {rewardToGrant.Money} de dinheiro, {rewardToGrant.Energy} de energia.");
 
             if (AccountManager.Instance != null)
             {
                 AccountManager.Instance.ApplyRewards(rewardToGrant);
+                Debug.Log($"Novos valores da conta -> Dinheiro: {AccountManager.Instance.PlayerAccount.Money} | Energia: {AccountManager.Instance.PlayerAccount.Energy}");
             }
         }
         else

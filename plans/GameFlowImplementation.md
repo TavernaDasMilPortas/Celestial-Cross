@@ -120,12 +120,57 @@ Com os sistemas prontos, criamos as cenas e a UI para interagir com eles.
   - `HubSceneController`: instancia botões de fase e chama `SceneManager.LoadScene`.
 
 - **Tarefa 2.2: Criar Cena de Preparação (`PreparationScene`)**:
-  - UI que lê as unidades do `AccountManager`.
-  - Permite ao jogador selecionar unidades (até `maxUnitsToBring`).
-  - Ao confirmar, salva `SelectedUnitIDs` no `GameFlowManager` e carrega a cena de batalha correspondente.
+  - O objetivo é criar uma UI que lê as unidades do `AccountManager`, permite ao jogador selecionar um time e, ao confirmar, salva as escolhas no `GameFlowManager` para a cena de batalha.
 
-  Implementação de script:
-  - `PreparationSceneController`: seleção por clique (sem grid 3×3).
+  **Passos para a Cena:**
+  1. **Estrutura da Cena**:
+     - Crie uma nova cena chamada `PreparationScene`.
+     - Adicione um `Canvas` para a UI.
+     - Crie um GameObject `_Controllers` e adicione o script `PreparationSceneController`.
+
+  2. **UI de Unidades Disponíveis**:
+     - Adicione um `ScrollView` para listar as unidades que o jogador possui.
+     - Dentro do `ScrollView`, crie um `GridLayoutGroup` para organizar os ícones das unidades.
+     - Crie um prefab de botão (`UnitSelectionButton`) que representará cada unidade. Este prefab deve ter uma `Image` para o ícone da unidade e um `Button` componente.
+
+  3. **UI de Unidades Selecionadas**:
+     - Crie um painel (`HorizontalLayoutGroup`) para mostrar os ícones das unidades selecionadas para a batalha.
+     - Defina um número máximo de unidades que podem ser levadas (ex: 5 slots).
+
+  4. **Botão de Iniciar Batalha**:
+     - Adicione um `Button` com o texto "Iniciar Batalha".
+
+  **Implementação do Script (`PreparationSceneController.cs`):**
+  - **Referências (Fields)**:
+    - `unitCatalog`: Referência ao `UnitCatalog` para obter os dados das unidades.
+    - `ownedUnitsContainer`: O `Transform` do `GridLayoutGroup` onde os botões das unidades disponíveis serão instanciados.
+    - `ownedUnitButtonPrefab`: O prefab do botão de seleção de unidade.
+    - `selectedCountText`: Um `Text` para mostrar a contagem de unidades selecionadas (ex: "3/5").
+    - `startBattleButton`: O botão para iniciar a batalha.
+    - `maxUnitsToBring`: Um inteiro para limitar a seleção.
+
+  - **Lógica no `Start()`**:
+    1. Obtenha a lista de `UnitID`s do `AccountManager.Instance.PlayerAccount.OwnedUnitIDs`.
+    2. Para cada `UnitID`:
+       - Instancie o `ownedUnitButtonPrefab` dentro do `ownedUnitsContainer`.
+       - Obtenha o `UnitData` correspondente usando o `unitCatalog`.
+       - Configure o texto do botão com o nome da unidade.
+       - Adicione um listener ao `onClick` do botão para chamar uma função `ToggleSelectUnit(unitID, button)`.
+    3. Atualize o estado visual do contador e do botão de iniciar.
+
+  - **Lógica de Seleção**:
+    - `ToggleSelectUnit(string unitId, Button btn)`:
+      - Se a unidade já está selecionada, remove da lista de seleção (`selectedUnitIds`).
+      - Se não, e se o limite (`maxUnitsToBring`) não foi atingido, adiciona à lista.
+      - Atualiza o estado visual do botão para indicar se está selecionado ou não.
+      - Chama `RefreshSelectedCount()` para atualizar a UI.
+
+  - **Lógica do Botão de Iniciar**:
+    1. No `Start()`, adicione um listener ao `startBattleButton.onClick`.
+    2. A função chamada (`StartBattle`) deve:
+       - Verificar se `GameFlowManager` e o nível selecionado são válidos.
+       - Salvar a lista de `selectedUnitIds` no `GameFlowManager.Instance.SelectedUnitIDs`.
+       - Carregar a cena de batalha com `SceneManager.LoadScene()`.
 
 - **Tarefa 2.3: Modificar a Cena de Batalha**:
   - Criar um `LevelBuilder` (ou usar o `PhaseManager`) que, no `Start`, lê os dados do `GameFlowManager`.

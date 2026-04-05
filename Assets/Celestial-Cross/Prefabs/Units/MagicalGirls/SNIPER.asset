@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb249868a85523b4686441d22073799e, type: 3}
   m_Name: SNIPER
   m_EditorClassIdentifier: Assembly-CSharp::UnitData
+  unitID: 642b786367762f940aded926f739f0ba
   displayName: sniper
+  icon: {fileID: 21300000, guid: 20e26a81160725c4a92cc84b4bf14192, type: 3}
   baseStats:
     health: 10
     attack: 15

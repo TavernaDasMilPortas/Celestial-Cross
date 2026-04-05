@@ -48,6 +48,8 @@ public class GridTile : MonoBehaviour
     // API PÚBLICA (Flags)
     // =====================
 
+    public bool IsPlayerSpawnZone { get; private set; }
+
     public void Highlight()
     {
         isHighlight = true;
@@ -110,6 +112,13 @@ public class GridTile : MonoBehaviour
         isAreaPreview = false;
         isHighlight = false;
         UpdateVisuals();
+    }
+
+    public void ApplyDefinition(TileDefinition definition)
+    {
+        if (definition == null) return;
+        IsPlayerSpawnZone = definition.isPlayerSpawnZone;
+        // Adicione aqui outras propriedades que você queira copiar da definição.
     }
 
     // =====================

@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b609c611f50aad942beb9dcfe09b95a6, type: 3}
   m_Name: NewLevelData
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
-  LevelName: 
-  SceneName: 
-  PhaseMap: {fileID: 0}
-  Waves:
-  - WaveName: 
-    Enemies: []
-  Enemies: []
-  VictoryRewards: {fileID: 0}
+  LevelName: nivel teste
+  SceneName: Teste 1
+  PhaseMap: {fileID: 11400000, guid: d3f94533ed42a1444a8e8a52acadbd6b, type: 2}
+  Waves: []
+  Enemies:
+  - UnitData: {fileID: 11400000, guid: 6107c25373ff10340a0740b28db3b26e, type: 2}
+    GridPosition: {x: 4, y: 0}
+  VictoryRewards: {fileID: 11400000, guid: 594ba186335bf874c873163cdecdea60, type: 2}

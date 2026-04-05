@@ -39,21 +39,26 @@ public class BattleLevelBuilder : MonoBehaviour
             yield break;
         }
 
-        // Aplica o PhaseMap definido no LevelData
-        if (flow.SelectedLevel.PhaseMap != null)
+        // Aplica o PhaseMap definido no LevelData e gera o grid
+        var phaseMap = flow.SelectedLevel.PhaseMap;
+        if (phaseMap != null)
         {
-            grid.phaseMap = flow.SelectedLevel.PhaseMap;
+            grid.phaseMap = phaseMap;
             grid.Generate();
         }
         else
         {
-            Debug.LogWarning($"[BattleLevelBuilder] LevelData '{flow.SelectedLevel.name}' sem PhaseMap. Usando o PhaseMap já configurado no GridMap.");
+            Debug.LogError($"[BattleLevelBuilder] LevelData '{flow.SelectedLevel.name}' sem PhaseMap. A geração do grid falhará.");
+            yield break;
         }
+
+        // Aguarda um frame para garantir que o grid foi totalmente construído
+        yield return null;
 
         if (clearExistingUnits)
         {
-            ClearUnits(grid);
-            ClearOccupancy(grid);
+            // A lógica de limpar unidades precisa ser revista, pois o grid é recriado.
+            // Por enquanto, vamos assumir que a recriação do grid já limpa o cenário.
         }
 
         // Spawns dos inimigos
@@ -62,28 +67,47 @@ public class BattleLevelBuilder : MonoBehaviour
         // Inicia a fase de posicionamento do jogador
         if (placementManager != null)
         {
-            bool placementComplete = false;
-            placementManager.OnPlacementEnded += () => placementComplete = true;
+            placementManager.OnPlacementEnded += HandlePlacementEnded;
             placementManager.StartPlacementPhase();
-
-            // Espera a fase de posicionamento terminar
-            yield return new WaitUntil(() => placementComplete);
         }
         else
         {
             Debug.LogError("[BattleLevelBuilder] PlacementManager não está configurado!");
+            // Se não há placement, podemos considerar iniciar o combate aqui se for o caso
+            if (autoStartCombatAfterBuild)
+            {
+                StartCombat();
+            }
+        }
+    }
+
+    private void HandlePlacementEnded()
+    {
+        // Remove o listener para não ser chamado múltiplas vezes
+        if (placementManager != null)
+        {
+            placementManager.OnPlacementEnded -= HandlePlacementEnded;
         }
 
-
-        Debug.Log("[BattleLevelBuilder] Build concluído.");
+        Debug.Log("[BattleLevelBuilder] Fase de posicionamento concluída.");
 
         if (autoStartCombatAfterBuild)
         {
-            var initializer = Object.FindFirstObjectByType<CombatInitializer>();
-            if (initializer != null)
-                initializer.StartCombat();
-            else
-                Debug.LogWarning("[BattleLevelBuilder] CombatInitializer não encontrado para autoStart.");
+            StartCombat();
+        }
+    }
+
+    private void StartCombat()
+    {
+        var initializer = FindFirstObjectByType<CombatInitializer>();
+        if (initializer != null)
+        {
+            Debug.Log("[BattleLevelBuilder] Iniciando o combate.");
+            initializer.StartCombat();
+        }
+        else
+        {
+            Debug.LogWarning("[BattleLevelBuilder] CombatInitializer não encontrado para autoStart.");
         }
     }
 

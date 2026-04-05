@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb249868a85523b4686441d22073799e, type: 3}
   m_Name: Leidell
   m_EditorClassIdentifier: Assembly-CSharp::UnitData
+  unitID: 67628d77266bab446ba0b5274c2a9397
   displayName: 
+  icon: {fileID: 21300000, guid: 818165bbcf8b25a40ba19a9fc51a2e52, type: 3}
   baseStats:
     health: 30
     attack: 10

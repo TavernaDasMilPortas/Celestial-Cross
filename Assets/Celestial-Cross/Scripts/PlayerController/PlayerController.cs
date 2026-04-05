@@ -64,9 +64,9 @@ public class PlayerController : MonoBehaviour
         // Proteção contra objeto destruído guardado como interface
         if (activeUnit.CurrentAction is UnityEngine.Object obj && obj == null) return;
 
-        if (GridManager.Instance == null) return;
+        if (GridMap.Instance == null) return;
 
-        var targetPos = GridManager.Instance.GetMouseGridPosition();
+        var targetPos = GridMap.Instance.GetMouseGridPosition();
         
         // Se estamos clicando fora da grid, podemos simplesmente ignorar
         if (targetPos.x == -1 && targetPos.y == -1) return;
@@ -74,7 +74,7 @@ public class PlayerController : MonoBehaviour
         if (targetPos == activeUnit.CurrentAction.Target)
         {
             // Even if the target hasn't changed, we might want to ensure the highlight is still visible
-            // GridManager.Instance.HighlightArea(_currentArea);
+            // GridMap.Instance.HighlightArea(_currentArea);
             return;
         }
 
@@ -91,9 +91,9 @@ public class PlayerController : MonoBehaviour
             _currentArea = AreaResolver.ResolveCells(targetPos, pattern);
         }
         
-        if (GridManager.Instance != null)
+        if (GridMap.Instance != null)
         {
-            GridManager.Instance.HighlightArea(_currentArea);
+            GridMap.Instance.HighlightArea(_currentArea);
         }
     }
 

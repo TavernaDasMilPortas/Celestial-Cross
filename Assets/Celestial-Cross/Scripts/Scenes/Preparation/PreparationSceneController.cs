@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -14,7 +15,7 @@ public class PreparationSceneController : MonoBehaviour
     [SerializeField] private Button ownedUnitButtonPrefab;
 
     [Header("UI - Selection")]
-    [SerializeField] private Text selectedCountText;
+    [SerializeField] private TextMeshProUGUI selectedCountText;
     [SerializeField] private Button startBattleButton;
 
     [Header("Constraints")]

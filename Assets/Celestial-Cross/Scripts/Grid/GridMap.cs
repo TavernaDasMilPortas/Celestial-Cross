@@ -121,6 +121,35 @@ public class GridMap : MonoBehaviour
         }
     }
 
+    public Vector2Int GetMouseGridPosition()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit hit))
+        {
+            GridTile tile = hit.collider.GetComponent<GridTile>();
+            if (tile == null)
+            {
+                Unit unit = hit.collider.GetComponent<Unit>();
+                if (unit != null)
+                {
+                    return unit.GridPosition;
+                }
+            }
+            if (tile != null) return tile.GridPosition;
+        }
+        return new Vector2Int(-1, -1);
+    }
+
+    public void HighlightArea(List<Vector2Int> area)
+    {
+        ResetAllTileVisuals();
+        foreach (var pos in area)
+        {
+            var tile = GetTile(pos);
+            if (tile != null) tile.Highlight();
+        }
+    }
+
     // =============================
     // INTERNAL
     // =============================
@@ -179,6 +208,7 @@ public class GridMap : MonoBehaviour
                 GridTile tile = obj.GetComponent<GridTile>();
                 tile.Init(gridPos);
                 tile.IsOccupied = false;
+                tile.ApplyDefinition(def);
 
                 tiles.Add(gridPos, tile);
             }

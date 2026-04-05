@@ -16,8 +16,9 @@ public class PlacementManager : MonoBehaviour
     [SerializeField] private ActionBarUI placementActionBar;
 
     private UnitData selectedUnitToPlace;
-    private GameObject previewInstance;
-    private List<Unit> placedUnits = new List<Unit>();
+    private Dictionary<UnitData, Unit> placedUnitsDict = new Dictionary<UnitData, Unit>();
+    private HashSet<UnitData> confirmedUnits = new HashSet<UnitData>();
+    private int totalUnitsToPlace;
 
     public event System.Action OnPlacementEnded;
 
@@ -36,16 +37,22 @@ public class PlacementManager : MonoBehaviour
     public void StartPlacementPhase()
     {
         Debug.Log("Starting Placement Phase...");
-        placedUnits.Clear();
+        placedUnitsDict.Clear();
+        confirmedUnits.Clear();
         SetupPlacementUI();
+        HighlightSpawnZones();
         gameObject.SetActive(true);
+    }
+
+    private void HighlightSpawnZones()
+    {
+        var spawnTiles = GridMap.Instance.GetAllTiles().Where(t => t.IsPlayerSpawnZone).Select(t => t.GridPosition).ToList();
+        GridMap.Instance.HighlightArea(spawnTiles);
     }
 
     private void Update()
     {
         if (selectedUnitToPlace == null) return;
-
-        HandlePreview();
         HandlePlacementInput();
     }
 
@@ -79,97 +86,119 @@ public class PlacementManager : MonoBehaviour
             .Where(u => u != null)
             .ToList();
 
+        totalUnitsToPlace = ownedUnits.Count;
+
         placementActionBar.ClearButtons();
         placementActionBar.GenerateButtonsForPlacement(ownedUnits, SelectUnitForPlacement);
     }
 
     private void SelectUnitForPlacement(UnitData unitData)
     {
-        if (selectedUnitToPlace == unitData)
+        // Se a unidade já foi confirmada, podemos desconfirmá-la para permitir realocação,
+        // mas mantendo ela instanciada no local que estava
+        if (confirmedUnits.Contains(unitData))
         {
-            ClearSelection();
-            return;
+            confirmedUnits.Remove(unitData);
+            placementActionBar.SetButtonInteractable(unitData.UnitID, true);
         }
 
-        ClearPreview();
         selectedUnitToPlace = unitData;
         Debug.Log($"Selected '{unitData.displayName}' for placement.");
-        CreatePreview();
-    }
-
-    private void HandlePreview()
-    {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hit, 100f, tileLayer))
-        {
-            GridTile tile = hit.collider.GetComponent<GridTile>();
-            if (tile != null && IsValidPlacementTile(tile))
-            {
-                if (previewInstance != null)
-                {
-                    previewInstance.SetActive(true);
-                    previewInstance.transform.position = tile.transform.position;
-                }
-            }
-            else
-            {
-                if (previewInstance != null)
-                {
-                    previewInstance.SetActive(false);
-                }
-            }
-        }
-        else
-        {
-            if (previewInstance != null)
-            {
-                previewInstance.SetActive(false);
-            }
-        }
     }
 
     private void HandlePlacementInput()
     {
+        bool inputDetected = false;
+
         if (Input.GetMouseButtonDown(0))
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit, 100f, tileLayer))
+            inputDetected = true;
+        }
+        else if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
+        {
+            inputDetected = true;
+        }
+
+        if (!inputDetected) return;
+
+        Vector2Int gridPos = GridMap.Instance.GetMouseGridPosition();
+        if (gridPos.x != -1 && gridPos.y != -1)
+        {
+            GridTile tile = GridMap.Instance.GetTile(gridPos);
+            if (tile != null && IsValidPlacementTile(tile))
             {
-                GridTile tile = hit.collider.GetComponent<GridTile>();
-                if (tile != null && IsValidPlacementTile(tile) && !tile.IsOccupied)
-                {
-                    PlaceUnit(selectedUnitToPlace, tile.GridPosition);
-                    ClearSelection();
-                }
+                HandleTileClick(tile);
             }
         }
     }
 
-    private void CreatePreview()
+    private void HandleTileClick(GridTile tile)
     {
-        if (selectedUnitToPlace == null || playerUnitMoldPrefab == null) return;
+        Unit existingUnit = placedUnitsDict.ContainsKey(selectedUnitToPlace) ? placedUnitsDict[selectedUnitToPlace] : null;
 
-        previewInstance = Instantiate(playerUnitMoldPrefab);
-        var spriteRenderer = previewInstance.GetComponentInChildren<SpriteRenderer>();
-        if (spriteRenderer != null)
+        // Se clicarmos no mesmo tile onde a unidade selecionada DÁ ESTÁ, isso é um Double Tap/Confirmação
+        if (existingUnit != null && existingUnit.GridPosition == tile.GridPosition)
         {
-            spriteRenderer.sprite = selectedUnitToPlace.icon;
-            var color = spriteRenderer.color;
-            color.a = 0.5f; // Set transparency
-            spriteRenderer.color = color;
+            ConfirmUnit(selectedUnitToPlace);
+            return;
         }
-        previewInstance.SetActive(false); // Initially hidden
+
+        // Se o tile já estiver ocupado por OUTRA unidade, ignoramos (não substitui ou empilha)
+        if (tile.IsOccupied && tile.OccupyingUnit != existingUnit)
+        {
+            Debug.Log("Tile já ocupado por outra unidade.");
+            return;
+        }
+
+        // Cria a unidade provisória ou movimenta a já existente controlada agora
+        PlaceOrMoveUnit(selectedUnitToPlace, tile.GridPosition);
     }
 
-    private void PlaceUnit(UnitData unitData, Vector2Int gridPosition)
+    private void PlaceOrMoveUnit(UnitData unitData, Vector2Int newPos)
     {
-        var unit = GridMap.Instance.SpawnUnitAt(playerUnitMoldPrefab, gridPosition, Team.Player, unitData);
-        if (unit != null)
+        if (placedUnitsDict.TryGetValue(unitData, out Unit existingUnit))
         {
-            placedUnits.Add(unit);
-            Debug.Log($"Placed '{unitData.displayName}' at {gridPosition}.");
-            // Update UI to show unit is placed (e.g., disable button)
-            placementActionBar.SetButtonInteractable(unitData.UnitID, false);
+            // Move a unidade existente
+            var oldTile = GridMap.Instance.GetTile(existingUnit.GridPosition);
+            if (oldTile != null)
+            {
+                oldTile.IsOccupied = false;
+                oldTile.OccupyingUnit = null;
+            }
+
+            existingUnit.GridPosition = newPos;
+            existingUnit.transform.position = GridMap.Instance.GridToWorld(newPos);
+            
+            var newTile = GridMap.Instance.GetTile(newPos);
+            if (newTile != null)
+            {
+                newTile.IsOccupied = true;
+                newTile.OccupyingUnit = existingUnit;
+            }
+        }
+        else
+        {
+            // Spawna a nova unidade e atrela ela
+            var unit = GridMap.Instance.SpawnUnitAt(playerUnitMoldPrefab, newPos, Team.Player, unitData);
+            if (unit != null)
+            {
+                placedUnitsDict[unitData] = unit;
+            }
+        }
+    }
+
+    private void ConfirmUnit(UnitData unitData)
+    {
+        confirmedUnits.Add(unitData);
+        placementActionBar.SetButtonInteractable(unitData.UnitID, false);
+        selectedUnitToPlace = null; // Tira seleção atual
+        
+        Debug.Log($"Unit '{unitData.displayName}' placement confirmed.");
+        
+        // Verifica se todas as unidades já foram confirmadas para iniciar o combate automaticamente
+        if (confirmedUnits.Count >= totalUnitsToPlace)
+        {
+            EndPlacementPhase();
         }
     }
 
@@ -177,35 +206,20 @@ public class PlacementManager : MonoBehaviour
     {
         if (tile == null) return false;
 
-        // This is a temporary solution, as we are comparing prefab instances.
-        // A better approach would be for the GridTile to hold a reference to its TileDefinition.
-        // For now, we will find the definition by comparing the name of the instantiated tile's prefab.
-        string tileName = tile.gameObject.name.Replace("(Clone)", "").Trim();
-        var definition = GridMap.Instance.tileDefinitions.Find(d => d.prefab.name == tileName);
-
-        return definition != null && definition.isPlayerSpawnZone;
-    }
-
-    private void ClearPreview()
-    {
-        if (previewInstance != null)
-        {
-            Destroy(previewInstance);
-            previewInstance = null;
-        }
+        return tile.IsPlayerSpawnZone;
     }
 
     private void ClearSelection()
     {
-        ClearPreview();
         selectedUnitToPlace = null;
     }
 
     public void EndPlacementPhase()
     {
         ClearSelection();
+        GridMap.Instance.ResetAllTileVisuals();
         gameObject.SetActive(false);
-        GameFlowManager.Instance.PlayerFormation = placedUnits;
+        GameFlowManager.Instance.PlayerFormation = placedUnitsDict.Values.ToList();
         Debug.Log("Ending Placement Phase...");
         OnPlacementEnded?.Invoke();
     }
