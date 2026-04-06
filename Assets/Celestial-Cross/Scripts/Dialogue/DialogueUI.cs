@@ -26,6 +26,14 @@ public class DialogueUI : MonoBehaviour
     public bool IsTyping { get; private set; }
 
     /// <summary>
+    /// Garante que toda a UI de diálogo comece escondida ao iniciar a cena.
+    /// </summary>
+    void Awake()
+    {
+        Hide();
+    }
+
+    /// <summary>
     /// Exibe uma entrada de diálogo: atualiza imagem, nome e inicia o typewriter.
     /// </summary>
     public void ShowEntry(DialogueEntry entry)
