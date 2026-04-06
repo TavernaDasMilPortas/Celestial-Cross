@@ -15,7 +15,7 @@ MonoBehaviour:
   entries:
   - speakerName: CHIBI
     dialogueText: "Ol\xE1, que bom que apareceu!"
-    characterSprite: {fileID: 0}
+    characterSprite: {fileID: 21300000, guid: 171580878dc9f9043ac9929348b8e850, type: 3}
   - speakerName: CHIBI
-    dialogueText: "Espero que goste da aventura que preparamos!"
-    characterSprite: {fileID: 0}
+    dialogueText: Espero que goste da aventura que preparamos!
+    characterSprite: {fileID: 21300000, guid: 7b0c82a7051bc174da01293067fbf406, type: 3}
