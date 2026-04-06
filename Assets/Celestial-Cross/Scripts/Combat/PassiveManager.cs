@@ -10,8 +10,23 @@ public class PassiveManager : MonoBehaviour
     private Unit unit;
     
     // Lista de condições temporárias durante a batalha
-    private List<AbilityBlueprint> activeRuntimeConditions = new();
+    private readonly List<RuntimeCondition> activeRuntimeConditions = new();
     private HashSet<AbilityBlueprint> executingAbilities = new();
+
+    [System.Serializable]
+    private class RuntimeCondition
+    {
+        public AbilityBlueprint blueprint;
+        public bool isPersistent;
+        public int remainingTurns;
+
+        public RuntimeCondition(AbilityBlueprint blueprint, bool isPersistent, int remainingTurns)
+        {
+            this.blueprint = blueprint;
+            this.isPersistent = isPersistent;
+            this.remainingTurns = remainingTurns;
+        }
+    }
 
     void Awake()
     {
@@ -43,6 +58,9 @@ public class PassiveManager : MonoBehaviour
         if (TurnManager.Instance != null && TurnManager.Instance.CurrentUnit == unit)
         {
             TriggerHook(CombatHook.OnTurnEnd, new CombatContext(unit, unit));
+
+            // Decrementa duração de condições no fim do turno da unidade afetada.
+            TickConditionsOnTurnEnd();
         }
     }
 
@@ -67,7 +85,12 @@ public class PassiveManager : MonoBehaviour
             abilities.Add(unit.Data.GetPetAbility(unit.EquippedPet));
         }
         
-        abilities.AddRange(activeRuntimeConditions);
+        for (int i = 0; i < activeRuntimeConditions.Count; i++)
+        {
+            var cond = activeRuntimeConditions[i];
+            if (cond?.blueprint != null)
+                abilities.Add(cond.blueprint);
+        }
 
         foreach (var blueprint in abilities)
         {
@@ -143,13 +166,25 @@ public class PassiveManager : MonoBehaviour
             sourcePassive?.TriggerHook(CombatHook.OnBeforeApplyCondition, context);
         }
 
-        // Adiciona a condição na lista de runtime
-        if (!activeRuntimeConditions.Contains(conditionBlueprint))
+        if (conditionBlueprint != null)
         {
-            activeRuntimeConditions.Add(conditionBlueprint);
+            bool persistent = conditionBlueprint.isPersistentCondition || conditionBlueprint.durationInTurns <= 0;
+            int duration = persistent ? 0 : conditionBlueprint.durationInTurns;
+
+            // Atualiza existente ou adiciona nova
+            var existing = FindRuntimeCondition(conditionBlueprint);
+            if (existing != null)
+            {
+                existing.isPersistent = persistent;
+                existing.remainingTurns = duration;
+            }
+            else
+            {
+                activeRuntimeConditions.Add(new RuntimeCondition(conditionBlueprint, persistent, duration));
+            }
+
+            Debug.Log($"[PassiveManager] Aplicando condição (Blueprint): {conditionBlueprint.name} | Persistent: {persistent} | Turns: {duration}");
         }
-        
-        Debug.Log($"[PassiveManager] Aplicando condição (Blueprint): {conditionBlueprint.name}");
 
 
         // Hooks DEPOIS de aplicar a condição
@@ -163,9 +198,43 @@ public class PassiveManager : MonoBehaviour
 
     public void RemoveCondition(AbilityBlueprint conditionBlueprint)
     {
-        if (activeRuntimeConditions.Contains(conditionBlueprint))
+        var existing = FindRuntimeCondition(conditionBlueprint);
+        if (existing != null)
+            activeRuntimeConditions.Remove(existing);
+    }
+
+    private RuntimeCondition FindRuntimeCondition(AbilityBlueprint blueprint)
+    {
+        if (blueprint == null) return null;
+        for (int i = 0; i < activeRuntimeConditions.Count; i++)
         {
-            activeRuntimeConditions.Remove(conditionBlueprint);
+            var cond = activeRuntimeConditions[i];
+            if (cond != null && cond.blueprint == blueprint)
+                return cond;
+        }
+        return null;
+    }
+
+    private void TickConditionsOnTurnEnd()
+    {
+        for (int i = activeRuntimeConditions.Count - 1; i >= 0; i--)
+        {
+            var cond = activeRuntimeConditions[i];
+            if (cond == null || cond.blueprint == null)
+            {
+                activeRuntimeConditions.RemoveAt(i);
+                continue;
+            }
+
+            if (cond.isPersistent)
+                continue;
+
+            cond.remainingTurns--;
+            if (cond.remainingTurns <= 0)
+            {
+                Debug.Log($"[PassiveManager] Condição expirada: {cond.blueprint.name}");
+                activeRuntimeConditions.RemoveAt(i);
+            }
         }
     }
 }

@@ -51,6 +51,7 @@ public class AccountManager : MonoBehaviour
         {
             string json = File.ReadAllText(savePath);
             PlayerAccount = JsonUtility.FromJson<Account>(json);
+            PlayerAccount?.EnsureInitialized();
             Debug.Log("Conta do jogador carregada.");
         }
         else

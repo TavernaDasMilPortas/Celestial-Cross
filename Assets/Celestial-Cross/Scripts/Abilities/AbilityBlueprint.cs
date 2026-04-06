@@ -15,6 +15,12 @@ namespace Celestial_Cross.Scripts.Abilities
         [Tooltip("Is this a passive ability? Passive abilities are not shown in the action bar.")]
         public bool isPassive = false;
 
+        [Header("Condition Settings")]
+        [Tooltip("If true, this ability will be applied as a persistent condition on the target.")]
+        public bool isPersistentCondition = false;
+        [Tooltip("Duration in turns. 0 means infinite until cleansed.")]
+        public int durationInTurns = 0;
+
         [Header("Effects & Modifiers")]
         [Title("Active Effects", "Executed when the ability is manually cast.")]
         [ListDrawerSettings(ShowPaging = false, ShowItemCount = false, ShowFoldout = true)]

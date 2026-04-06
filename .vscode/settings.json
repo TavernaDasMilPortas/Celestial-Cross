@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "Bichinhos-Magicos.slnx"
+    "dotnet.defaultSolution": "Celestial-Cross.slnx"
 }

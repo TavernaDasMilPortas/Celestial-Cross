@@ -19,6 +19,18 @@ public abstract class Unit : MonoBehaviour
     [Header("Test/Debug Artifacts")]
     [SerializeField]
     public List<ArtifactInstance> equippedArtifacts = new List<ArtifactInstance>();
+
+    [Header("Runtime Artifacts (Option B)")]
+    [SerializeField]
+    private List<ArtifactInstanceData> equippedArtifactData = new List<ArtifactInstanceData>();
+
+    [SerializeField]
+    private List<StatModifier> cachedArtifactStatModifiers = new List<StatModifier>();
+
+    [SerializeField]
+    private List<AbilityBlueprint> cachedArtifactSetPassives = new List<AbilityBlueprint>();
+
+    public IReadOnlyList<AbilityBlueprint> ArtifactSetPassives => cachedArtifactSetPassives;
     
     public Team Team;
 
@@ -55,7 +67,15 @@ public abstract class Unit : MonoBehaviour
             float critChanceFlat = 0f;
             float effectAccFlat = 0f;
 
-            if (equippedArtifacts != null)
+            // Prefer cache built from saved-data artifacts (Option B). If empty, fallback to debug ScriptableObjects.
+            if (cachedArtifactStatModifiers != null && cachedArtifactStatModifiers.Count > 0)
+            {
+                for (int i = 0; i < cachedArtifactStatModifiers.Count; i++)
+                {
+                    ProcessArtifactStat(cachedArtifactStatModifiers[i], ref healthFlat, ref healthPct, ref atkFlat, ref atkPct, ref defFlat, ref defPct, ref spdFlat, ref critChanceFlat, ref effectAccFlat);
+                }
+            }
+            else if (equippedArtifacts != null)
             {
                 Dictionary<ArtifactSet, int> setCounts = new Dictionary<ArtifactSet, int>();
 
@@ -69,7 +89,6 @@ public abstract class Unit : MonoBehaviour
                             ProcessArtifactStat(sub, ref healthFlat, ref healthPct, ref atkFlat, ref atkPct, ref defFlat, ref defPct, ref spdFlat, ref critChanceFlat, ref effectAccFlat);
                         }
 
-                        // Registra quantidade desse "Set"
                         if (artifact.artifactSet != null)
                         {
                             if (!setCounts.ContainsKey(artifact.artifactSet))
@@ -79,7 +98,6 @@ public abstract class Unit : MonoBehaviour
                     }
                 }
 
-                // Aplica Bônus de Status provindos de Séries Equipadas
                 foreach (var kvp in setCounts)
                 {
                     ArtifactSet setFamily = kvp.Key;
@@ -166,9 +184,97 @@ public abstract class Unit : MonoBehaviour
         if (Health != null) Health.SetMaxHealth(MaxHealth);
         InitializeActions();
 
+        // Garante que passivas de set (artefatos) estejam ativas no PassiveManager.
+        ApplyArtifactSetPassives();
+
         if (petData != null)
         {
             Debug.Log($"<color=green>[Unit Stats]</color> {DisplayName} combinou status com o pet <b>{petData.name}</b>. Total -> HP: {MaxHealth} | Atk: {Stats.attack} | Def: {Stats.defense} | Spd: {Stats.speed} | Crit: {Stats.criticalChance}%");
+        }
+    }
+
+    public void ConfigureArtifactsFromSaveData(List<ArtifactInstanceData> artifacts, ArtifactSetCatalog setCatalog)
+    {
+        equippedArtifactData = artifacts ?? new List<ArtifactInstanceData>();
+        RebuildArtifactCaches(setCatalog);
+    }
+
+    private void RebuildArtifactCaches(ArtifactSetCatalog setCatalog)
+    {
+        cachedArtifactStatModifiers.Clear();
+        cachedArtifactSetPassives.Clear();
+
+        if (equippedArtifactData == null)
+            return;
+
+        // 1) Main/Sub stats
+        for (int i = 0; i < equippedArtifactData.Count; i++)
+        {
+            var artifact = equippedArtifactData[i];
+            if (artifact == null) continue;
+
+            if (artifact.mainStat != null)
+                cachedArtifactStatModifiers.Add(new StatModifier(artifact.mainStat.statType, artifact.mainStat.value));
+
+            if (artifact.subStats != null)
+            {
+                for (int s = 0; s < artifact.subStats.Count; s++)
+                {
+                    var sub = artifact.subStats[s];
+                    if (sub != null)
+                        cachedArtifactStatModifiers.Add(new StatModifier(sub.statType, sub.value));
+                }
+            }
+        }
+
+        // 2) Set bonuses (stats + passives)
+        if (setCatalog == null)
+            return;
+
+        var setCounts = new Dictionary<string, int>();
+        for (int i = 0; i < equippedArtifactData.Count; i++)
+        {
+            var artifact = equippedArtifactData[i];
+            if (artifact == null || string.IsNullOrWhiteSpace(artifact.artifactSetId))
+                continue;
+
+            if (!setCounts.ContainsKey(artifact.artifactSetId))
+                setCounts[artifact.artifactSetId] = 0;
+            setCounts[artifact.artifactSetId]++;
+        }
+
+        foreach (var kvp in setCounts)
+        {
+            var set = setCatalog.GetSetById(kvp.Key);
+            if (set == null) continue;
+
+            int piecesEquipped = kvp.Value;
+            foreach (var bonus in set.setBonuses)
+            {
+                if (piecesEquipped < bonus.piecesRequired)
+                    continue;
+
+                if (bonus.statBonuses != null)
+                    cachedArtifactStatModifiers.AddRange(bonus.statBonuses);
+
+                if (bonus.passiveAbility != null && !cachedArtifactSetPassives.Contains(bonus.passiveAbility))
+                    cachedArtifactSetPassives.Add(bonus.passiveAbility);
+            }
+        }
+    }
+
+    private void ApplyArtifactSetPassives()
+    {
+        if (PassiveManager == null || cachedArtifactSetPassives == null)
+            return;
+
+        for (int i = 0; i < cachedArtifactSetPassives.Count; i++)
+        {
+            var passive = cachedArtifactSetPassives[i];
+            if (passive == null) continue;
+
+            // A duração/persistência é controlada dentro do próprio AbilityBlueprint.
+            PassiveManager.ApplyCondition(passive, this);
         }
     }
  

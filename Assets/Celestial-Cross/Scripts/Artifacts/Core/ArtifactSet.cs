@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using Celestial_Cross.Scripts.Abilities;
 
 namespace CelestialCross.Artifacts
 {
@@ -15,7 +16,7 @@ namespace CelestialCross.Artifacts
         {
             public int piecesRequired; // Ex: 2, 4, ou 6 peças.
             public List<StatModifier> statBonuses;
-            public string passiveAbilityName; // Podemos conectar as skills do character depois.
+            public AbilityBlueprint passiveAbility; // Conecta diretamente a uma habilidade passiva.
         }
 
         public List<SetBonus> setBonuses = new List<SetBonus>();

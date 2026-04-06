@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using CelestialCross.Artifacts;
 using UnityEngine;
 
 [System.Serializable]
@@ -10,7 +11,7 @@ public class Account
     // Usaremos os IDs para referenciar os ScriptableObjects
     public List<string> OwnedUnitIDs = new List<string>();
     public List<string> OwnedPetIDs = new List<string>();
-    public List<string> OwnedArtifactIDs = new List<string>(); // IDs (GUIDs) dos ArtifactInstances na conta
+    public List<ArtifactInstanceData> OwnedArtifacts = new List<ArtifactInstanceData>();
     public List<UnitLoadout> UnitLoadouts = new List<UnitLoadout>();
 
     public Account()
@@ -19,12 +20,22 @@ public class Account
         Energy = 50; // Valor inicial
         OwnedUnitIDs = new List<string>();
         OwnedPetIDs = new List<string>();
-        OwnedArtifactIDs = new List<string>();
+        OwnedArtifacts = new List<ArtifactInstanceData>();
         UnitLoadouts = new List<UnitLoadout>();
+    }
+
+    public void EnsureInitialized()
+    {
+        OwnedUnitIDs ??= new List<string>();
+        OwnedPetIDs ??= new List<string>();
+        OwnedArtifacts ??= new List<ArtifactInstanceData>();
+        UnitLoadouts ??= new List<UnitLoadout>();
     }
 
     public UnitLoadout GetLoadoutForUnit(string unitID)
     {
+        EnsureInitialized();
+
         foreach (var loadout in UnitLoadouts)
         {
             if (loadout.UnitID == unitID)
@@ -35,5 +46,22 @@ public class Account
         var newLoadout = new UnitLoadout(unitID);
         UnitLoadouts.Add(newLoadout);
         return newLoadout;
+    }
+
+    public ArtifactInstanceData GetArtifactByGuid(string guid)
+    {
+        EnsureInitialized();
+
+        if (string.IsNullOrEmpty(guid) || OwnedArtifacts == null)
+            return null;
+
+        for (int i = 0; i < OwnedArtifacts.Count; i++)
+        {
+            var artifact = OwnedArtifacts[i];
+            if (artifact != null && artifact.idGUID == guid)
+                return artifact;
+        }
+
+        return null;
     }
 }
