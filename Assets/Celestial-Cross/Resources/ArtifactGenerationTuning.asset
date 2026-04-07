@@ -1,0 +1,614 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3914efdbc7429ed4faa84d507051fe72, type: 3}
+  m_Name: ArtifactGenerationTuning
+  m_EditorClassIdentifier: Assembly-CSharp::CelestialCross.Artifacts.ArtifactGenerationTuning
+  useTuning: 0
+  commonInitialSubstats:
+    min: 0
+    max: 1
+  uncommonInitialSubstats:
+    min: 1
+    max: 2
+  rareInitialSubstats:
+    min: 2
+    max: 3
+  epicInitialSubstats:
+    min: 3
+    max: 3
+  legendaryInitialSubstats:
+    min: 4
+    max: 4
+  statRanges:
+  - statType: 0
+    mainBaseByStars:
+    - min: 2312312
+      max: 150
+    - min: 300
+      max: 300
+    - min: 450
+      max: 450
+    - min: 600
+      max: 600
+    - min: 750
+      max: 750
+    - min: 900
+      max: 900
+    mainUpgradeByStars:
+    - min: 24
+      max: 24
+    - min: 48
+      max: 48
+    - min: 72
+      max: 72
+    - min: 96
+      max: 96
+    - min: 120
+      max: 120
+    - min: 144
+      max: 144
+    subInitialByStars:
+    - min: 10
+      max: 20
+    - min: 20
+      max: 40
+    - min: 30
+      max: 60
+    - min: 40
+      max: 80
+    - min: 50
+      max: 100
+    - min: 60
+      max: 120
+    subUpgradeByStars:
+    - min: 2.5
+      max: 7.5
+    - min: 5
+      max: 15
+    - min: 7.5
+      max: 22.5
+    - min: 10
+      max: 30
+    - min: 12.5
+      max: 37.5
+    - min: 15
+      max: 45
+  - statType: 1
+    mainBaseByStars:
+    - min: 6
+      max: 6
+    - min: 8
+      max: 8
+    - min: 10
+      max: 10
+    - min: 11
+      max: 11
+    - min: 12
+      max: 12
+    - min: 14
+      max: 14
+    mainUpgradeByStars:
+    - min: 1
+      max: 1
+    - min: 1
+      max: 1
+    - min: 2
+      max: 2
+    - min: 2
+      max: 2
+    - min: 3
+      max: 3
+    - min: 4
+      max: 4
+    subInitialByStars:
+    - min: 0.5
+      max: 1
+    - min: 1
+      max: 2
+    - min: 1.5
+      max: 3
+    - min: 2
+      max: 4
+    - min: 2.5
+      max: 5
+    - min: 3
+      max: 6
+    subUpgradeByStars:
+    - min: 0.25
+      max: 0.75
+    - min: 0.5
+      max: 1.5
+    - min: 0.75
+      max: 2.25
+    - min: 1
+      max: 3
+    - min: 1.25
+      max: 3.75
+    - min: 1.5
+      max: 4.5
+  - statType: 2
+    mainBaseByStars:
+    - min: 150
+      max: 150
+    - min: 300
+      max: 300
+    - min: 450
+      max: 450
+    - min: 600
+      max: 600
+    - min: 750
+      max: 750
+    - min: 900
+      max: 900
+    mainUpgradeByStars:
+    - min: 24
+      max: 24
+    - min: 48
+      max: 48
+    - min: 72
+      max: 72
+    - min: 96
+      max: 96
+    - min: 120
+      max: 120
+    - min: 144
+      max: 144
+    subInitialByStars:
+    - min: 10
+      max: 20
+    - min: 20
+      max: 40
+    - min: 30
+      max: 60
+    - min: 40
+      max: 80
+    - min: 50
+      max: 100
+    - min: 60
+      max: 120
+    subUpgradeByStars:
+    - min: 2.5
+      max: 7.5
+    - min: 5
+      max: 15
+    - min: 7.5
+      max: 22.5
+    - min: 10
+      max: 30
+    - min: 12.5
+      max: 37.5
+    - min: 15
+      max: 45
+  - statType: 3
+    mainBaseByStars:
+    - min: 6
+      max: 6
+    - min: 8
+      max: 8
+    - min: 10
+      max: 10
+    - min: 11
+      max: 11
+    - min: 12
+      max: 12
+    - min: 14
+      max: 14
+    mainUpgradeByStars:
+    - min: 1
+      max: 1
+    - min: 1
+      max: 1
+    - min: 2
+      max: 2
+    - min: 2
+      max: 2
+    - min: 3
+      max: 3
+    - min: 4
+      max: 4
+    subInitialByStars:
+    - min: 0.5
+      max: 1
+    - min: 1
+      max: 2
+    - min: 1.5
+      max: 3
+    - min: 2
+      max: 4
+    - min: 2.5
+      max: 5
+    - min: 3
+      max: 6
+    subUpgradeByStars:
+    - min: 0.25
+      max: 0.75
+    - min: 0.5
+      max: 1.5
+    - min: 0.75
+      max: 2.25
+    - min: 1
+      max: 3
+    - min: 1.25
+      max: 3.75
+    - min: 1.5
+      max: 4.5
+  - statType: 4
+    mainBaseByStars:
+    - min: 150
+      max: 150
+    - min: 300
+      max: 300
+    - min: 450
+      max: 450
+    - min: 600
+      max: 600
+    - min: 750
+      max: 750
+    - min: 900
+      max: 900
+    mainUpgradeByStars:
+    - min: 24
+      max: 24
+    - min: 48
+      max: 48
+    - min: 72
+      max: 72
+    - min: 96
+      max: 96
+    - min: 120
+      max: 120
+    - min: 144
+      max: 144
+    subInitialByStars:
+    - min: 10
+      max: 20
+    - min: 20
+      max: 40
+    - min: 30
+      max: 60
+    - min: 40
+      max: 80
+    - min: 50
+      max: 100
+    - min: 60
+      max: 120
+    subUpgradeByStars:
+    - min: 2.5
+      max: 7.5
+    - min: 5
+      max: 15
+    - min: 7.5
+      max: 22.5
+    - min: 10
+      max: 30
+    - min: 12.5
+      max: 37.5
+    - min: 15
+      max: 45
+  - statType: 5
+    mainBaseByStars:
+    - min: 6
+      max: 6
+    - min: 8
+      max: 8
+    - min: 10
+      max: 10
+    - min: 11
+      max: 11
+    - min: 12
+      max: 12
+    - min: 14
+      max: 14
+    mainUpgradeByStars:
+    - min: 1
+      max: 1
+    - min: 1
+      max: 1
+    - min: 2
+      max: 2
+    - min: 2
+      max: 2
+    - min: 3
+      max: 3
+    - min: 4
+      max: 4
+    subInitialByStars:
+    - min: 0.5
+      max: 1
+    - min: 1
+      max: 2
+    - min: 1.5
+      max: 3
+    - min: 2
+      max: 4
+    - min: 2.5
+      max: 5
+    - min: 3
+      max: 6
+    subUpgradeByStars:
+    - min: 0.25
+      max: 0.75
+    - min: 0.5
+      max: 1.5
+    - min: 0.75
+      max: 2.25
+    - min: 1
+      max: 3
+    - min: 1.25
+      max: 3.75
+    - min: 1.5
+      max: 4.5
+  - statType: 6
+    mainBaseByStars:
+    - min: 150
+      max: 150
+    - min: 300
+      max: 300
+    - min: 450
+      max: 450
+    - min: 600
+      max: 600
+    - min: 750
+      max: 750
+    - min: 900
+      max: 900
+    mainUpgradeByStars:
+    - min: 24
+      max: 24
+    - min: 48
+      max: 48
+    - min: 72
+      max: 72
+    - min: 96
+      max: 96
+    - min: 120
+      max: 120
+    - min: 144
+      max: 144
+    subInitialByStars:
+    - min: 10
+      max: 20
+    - min: 20
+      max: 40
+    - min: 30
+      max: 60
+    - min: 40
+      max: 80
+    - min: 50
+      max: 100
+    - min: 60
+      max: 120
+    subUpgradeByStars:
+    - min: 2.5
+      max: 7.5
+    - min: 5
+      max: 15
+    - min: 7.5
+      max: 22.5
+    - min: 10
+      max: 30
+    - min: 12.5
+      max: 37.5
+    - min: 15
+      max: 45
+  - statType: 7
+    mainBaseByStars:
+    - min: 6
+      max: 6
+    - min: 8
+      max: 8
+    - min: 10
+      max: 10
+    - min: 11
+      max: 11
+    - min: 12
+      max: 12
+    - min: 14
+      max: 14
+    mainUpgradeByStars:
+    - min: 1
+      max: 1
+    - min: 1
+      max: 1
+    - min: 2
+      max: 2
+    - min: 2
+      max: 2
+    - min: 3
+      max: 3
+    - min: 4
+      max: 4
+    subInitialByStars:
+    - min: 0.5
+      max: 1
+    - min: 1
+      max: 2
+    - min: 1.5
+      max: 3
+    - min: 2
+      max: 4
+    - min: 2.5
+      max: 5
+    - min: 3
+      max: 6
+    subUpgradeByStars:
+    - min: 0.25
+      max: 0.75
+    - min: 0.5
+      max: 1.5
+    - min: 0.75
+      max: 2.25
+    - min: 1
+      max: 3
+    - min: 1.25
+      max: 3.75
+    - min: 1.5
+      max: 4.5
+  - statType: 8
+    mainBaseByStars:
+    - min: 6
+      max: 6
+    - min: 8
+      max: 8
+    - min: 10
+      max: 10
+    - min: 11
+      max: 11
+    - min: 12
+      max: 12
+    - min: 14
+      max: 14
+    mainUpgradeByStars:
+    - min: 1
+      max: 1
+    - min: 1
+      max: 1
+    - min: 2
+      max: 2
+    - min: 2
+      max: 2
+    - min: 3
+      max: 3
+    - min: 4
+      max: 4
+    subInitialByStars:
+    - min: 0.5
+      max: 1
+    - min: 1
+      max: 2
+    - min: 1.5
+      max: 3
+    - min: 2
+      max: 4
+    - min: 2.5
+      max: 5
+    - min: 3
+      max: 6
+    subUpgradeByStars:
+    - min: 0.25
+      max: 0.75
+    - min: 0.5
+      max: 1.5
+    - min: 0.75
+      max: 2.25
+    - min: 1
+      max: 3
+    - min: 1.25
+      max: 3.75
+    - min: 1.5
+      max: 4.5
+  - statType: 9
+    mainBaseByStars:
+    - min: 6
+      max: 6
+    - min: 8
+      max: 8
+    - min: 10
+      max: 10
+    - min: 11
+      max: 11
+    - min: 12
+      max: 12
+    - min: 14
+      max: 14
+    mainUpgradeByStars:
+    - min: 1
+      max: 1
+    - min: 1
+      max: 1
+    - min: 2
+      max: 2
+    - min: 2
+      max: 2
+    - min: 3
+      max: 3
+    - min: 4
+      max: 4
+    subInitialByStars:
+    - min: 0.5
+      max: 1
+    - min: 1
+      max: 2
+    - min: 1.5
+      max: 3
+    - min: 2
+      max: 4
+    - min: 2.5
+      max: 5
+    - min: 3
+      max: 6
+    subUpgradeByStars:
+    - min: 0.25
+      max: 0.75
+    - min: 0.5
+      max: 1.5
+    - min: 0.75
+      max: 2.25
+    - min: 1
+      max: 3
+    - min: 1.25
+      max: 3.75
+    - min: 1.5
+      max: 4.5
+  - statType: 10
+    mainBaseByStars:
+    - min: 6
+      max: 6
+    - min: 8
+      max: 8
+    - min: 10
+      max: 10
+    - min: 11
+      max: 11
+    - min: 12
+      max: 12
+    - min: 14
+      max: 14
+    mainUpgradeByStars:
+    - min: 1
+      max: 1
+    - min: 1
+      max: 1
+    - min: 2
+      max: 2
+    - min: 2
+      max: 2
+    - min: 3
+      max: 3
+    - min: 4
+      max: 4
+    subInitialByStars:
+    - min: 0.5
+      max: 1
+    - min: 1
+      max: 2
+    - min: 1.5
+      max: 3
+    - min: 2
+      max: 4
+    - min: 2.5
+      max: 5
+    - min: 3
+      max: 6
+    subUpgradeByStars:
+    - min: 0.25
+      max: 0.75
+    - min: 0.5
+      max: 1.5
+    - min: 0.75
+      max: 2.25
+    - min: 1
+      max: 3
+    - min: 1.25
+      max: 3.75
+    - min: 1.5
+      max: 4.5

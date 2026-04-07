@@ -6,9 +6,27 @@ namespace CelestialCross.Artifacts
 {
     public static class ArtifactGenerator
     {
+        private const string TuningResourceName = "ArtifactGenerationTuning";
+        private static ArtifactGenerationTuning cachedTuning;
+
+        private static ArtifactGenerationTuning GetTuningOrNull()
+        {
+            if (cachedTuning == null)
+                cachedTuning = Resources.Load<ArtifactGenerationTuning>(TuningResourceName);
+
+            if (cachedTuning == null || !cachedTuning.useTuning)
+                return null;
+
+            return cachedTuning;
+        }
+
         // Define quantos substats nascem dependendo da Raridade
         public static int GetInitialSubstatCount(ArtifactRarity rarity)
         {
+            var tuning = GetTuningOrNull();
+            if (tuning != null)
+                return tuning.GetInitialSubstatCount(rarity);
+
             switch (rarity)
             {
                 case ArtifactRarity.Common: return Random.Range(0, 2);    // 0 ou 1
@@ -23,6 +41,13 @@ namespace CelestialCross.Artifacts
         // Base Stat cresce fixiamente baseado exclusivamente na estrela
         public static float GetMainStatBaseValue(StatType statType, int stars)
         {
+            var tuning = GetTuningOrNull();
+            if (tuning != null)
+            {
+                var range = tuning.GetMainBaseRange(statType, stars);
+                return Mathf.Round(Random.Range(range.min, range.max));
+            }
+
             // Essa formula pode ser refinada. Usamos arbitrários pra teste.
             // Para efeitos de escalonamento: Estrelas ditam a força do status
             float valueMultiplier = stars * 1.5f; 
@@ -33,6 +58,13 @@ namespace CelestialCross.Artifacts
         // Substat tem faixas para o roll RNG inicial e UPGRADES baseados nas estrelas
         public static float GenerateSubstatValue(StatType statType, int stars)
         {
+            var tuning = GetTuningOrNull();
+            if (tuning != null)
+            {
+                var range = tuning.GetSubInitialRange(statType, stars);
+                return Mathf.Round(Random.Range(range.min, range.max));
+            }
+
             float minVal = stars * 1.0f;
             float maxVal = stars * 2.0f;
 
@@ -47,6 +79,14 @@ namespace CelestialCross.Artifacts
         // Main stat aumenta exatamente numa quantidade fixa por nível
         public static float GetMainStatUpgradeIncrement(StatType statType, int stars)
         {
+            var tuning = GetTuningOrNull();
+            if (tuning != null)
+            {
+                var range = tuning.GetMainUpgradeRange(statType, stars);
+                float raw = Random.Range(range.min, range.max);
+                return Mathf.Max(1f, Mathf.Round(raw));
+            }
+
             // Cresce um valor FIXO sem RNG baseado na estrela.
             float inc = stars * 1.2f;
             float rawIncrement = (statType.ToString().Contains("Percent") || statType == StatType.CriticalRate) ? inc * 0.5f : inc * 20f;
@@ -56,6 +96,14 @@ namespace CelestialCross.Artifacts
         // Substats aumentam com um range variavel de sorte no RNG
         public static float GetSubstatUpgradeIncrement(StatType statType, int stars)
         {
+            var tuning = GetTuningOrNull();
+            if (tuning != null)
+            {
+                var range = tuning.GetSubUpgradeRange(statType, stars);
+                float raw = Random.Range(range.min, range.max);
+                return Mathf.Max(1f, Mathf.Round(raw));
+            }
+
             float minUpgrade = stars * 0.5f;
             float maxUpgrade = stars * 1.5f;
             

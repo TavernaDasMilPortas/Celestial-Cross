@@ -16,6 +16,10 @@ namespace CelestialCross.Artifacts.Editor
         private int selectedArtifactIndex;
         private string lastLog;
 
+        private string upgradeConsole = "";
+        private Vector2 consoleScroll;
+        private bool scrollConsoleToBottom;
+
         [MenuItem("Celestial Cross/Artifacts/Artifact Data Upgrader (Option B)")]
         public static void ShowWindow()
         {
@@ -39,15 +43,15 @@ namespace CelestialCross.Artifacts.Editor
 
         private void OnGUI()
         {
-            GUILayout.Label("Artifact Upgrader (Option B: Save Data)", EditorStyles.boldLabel);
+            GUILayout.Label("Upgrader de Artefatos (Opção B: Save Data)", EditorStyles.boldLabel);
 
             DrawAccountSection();
 
             var account = GetTargetAccount();
             if (account == null)
             {
-                EditorGUILayout.HelpBox("No account available. Use AccountManager in Play Mode or load JSON.", MessageType.Warning);
-                DrawLog();
+                EditorGUILayout.HelpBox("Nenhuma conta disponível. Use AccountManager no Play Mode ou carregue o JSON.", MessageType.Warning);
+                DrawConsole();
                 return;
             }
 
@@ -55,8 +59,8 @@ namespace CelestialCross.Artifacts.Editor
 
             if (account.OwnedArtifacts == null || account.OwnedArtifacts.Count == 0)
             {
-                EditorGUILayout.HelpBox("Account has no OwnedArtifacts. Forge some first.", MessageType.Info);
-                DrawLog();
+                EditorGUILayout.HelpBox("A conta não tem OwnedArtifacts. Forge alguns primeiro.", MessageType.Info);
+                DrawConsole();
                 return;
             }
 
@@ -65,49 +69,49 @@ namespace CelestialCross.Artifacts.Editor
             var artifact = GetSelectedArtifact(account);
             if (artifact == null)
             {
-                EditorGUILayout.HelpBox("Selected artifact is null.", MessageType.Warning);
-                DrawLog();
+                EditorGUILayout.HelpBox("O artefato selecionado é null.", MessageType.Warning);
+                DrawConsole();
                 return;
             }
 
-            DrawArtifactInfo(artifact);
+            RenderArtifactInfo(artifact);
 
             GUILayout.Space(12);
 
             bool canLevelUp = artifact.currentLevel < 15;
             using (new EditorGUI.DisabledScope(!canLevelUp))
             {
-                if (GUILayout.Button($"Level Up to +{artifact.currentLevel + 1}", GUILayout.Height(40)))
+                if (GUILayout.Button($"Level Up para +{artifact.currentLevel + 1}", GUILayout.Height(40)))
                 {
                     PerformLevelUp(account, artifact);
                 }
             }
 
-            DrawLog();
+            DrawConsole();
         }
 
         private void DrawAccountSection()
         {
-            GUILayout.Label("Target Account", EditorStyles.boldLabel);
+            GUILayout.Label("Conta Alvo", EditorStyles.boldLabel);
 
             bool accountManagerAvailable = AccountManager.Instance != null && AccountManager.Instance.PlayerAccount != null;
 
             EditorGUILayout.BeginVertical(GUI.skin.box);
             useAccountManagerWhenAvailable = EditorGUILayout.ToggleLeft(
-                new GUIContent("Use AccountManager when available (Play Mode)", "If AccountManager.Instance exists, upgrades are applied to the live account and saved via AccountManager.SaveAccount()."),
+                new GUIContent("Usar AccountManager quando disponível (Play Mode)", "Se AccountManager.Instance existir, os upgrades são aplicados na conta em memória e salvos via AccountManager.SaveAccount()."),
                 useAccountManagerWhenAvailable);
 
             if (accountManagerAvailable && useAccountManagerWhenAvailable)
             {
-                GUILayout.Label($"AccountManager detected. Artifacts: {AccountManager.Instance.PlayerAccount.OwnedArtifacts?.Count ?? 0}");
+                GUILayout.Label($"AccountManager detectado. Artefatos: {AccountManager.Instance.PlayerAccount.OwnedArtifacts?.Count ?? 0}");
             }
             else
             {
-                GUILayout.Label("Using JSON file (Edit Mode compatible)");
+                GUILayout.Label("Usando arquivo JSON (compatível com Edit Mode)");
 
                 EditorGUILayout.BeginHorizontal();
                 accountJsonPath = EditorGUILayout.TextField("Account JSON", accountJsonPath);
-                if (GUILayout.Button("Pick", GUILayout.Width(50)))
+                if (GUILayout.Button("Escolher", GUILayout.Width(70)))
                 {
                     string picked = EditorUtility.OpenFilePanel("Select account.json", Application.persistentDataPath, "json");
                     if (!string.IsNullOrWhiteSpace(picked))
@@ -116,12 +120,12 @@ namespace CelestialCross.Artifacts.Editor
                 EditorGUILayout.EndHorizontal();
 
                 EditorGUILayout.BeginHorizontal();
-                if (GUILayout.Button("Load"))
+                if (GUILayout.Button("Carregar"))
                 {
                     LoadAccountFromDisk();
                 }
                 GUI.enabled = workingAccount != null;
-                if (GUILayout.Button("Save"))
+                if (GUILayout.Button("Salvar"))
                 {
                     SaveAccountToDisk();
                 }
@@ -129,7 +133,7 @@ namespace CelestialCross.Artifacts.Editor
                 EditorGUILayout.EndHorizontal();
 
                 if (workingAccount != null)
-                    GUILayout.Label($"Loaded artifacts: {workingAccount.OwnedArtifacts?.Count ?? 0}");
+                    GUILayout.Label($"Artefatos carregados: {workingAccount.OwnedArtifacts?.Count ?? 0}");
             }
 
             EditorGUILayout.EndVertical();
@@ -137,7 +141,7 @@ namespace CelestialCross.Artifacts.Editor
 
         private void DrawArtifactPicker(Account account)
         {
-            GUILayout.Label("Select Artifact", EditorStyles.boldLabel);
+            GUILayout.Label("Selecionar Artefato", EditorStyles.boldLabel);
 
             var options = new string[account.OwnedArtifacts.Count];
             for (int i = 0; i < account.OwnedArtifacts.Count; i++)
@@ -154,7 +158,7 @@ namespace CelestialCross.Artifacts.Editor
             }
 
             selectedArtifactIndex = Mathf.Clamp(selectedArtifactIndex, 0, account.OwnedArtifacts.Count - 1);
-            selectedArtifactIndex = EditorGUILayout.Popup("Artifact", selectedArtifactIndex, options);
+            selectedArtifactIndex = EditorGUILayout.Popup("Artefato", selectedArtifactIndex, options);
         }
 
         private ArtifactInstanceData GetSelectedArtifact(Account account)
@@ -168,28 +172,33 @@ namespace CelestialCross.Artifacts.Editor
             return account.OwnedArtifacts[selectedArtifactIndex];
         }
 
-        private void DrawArtifactInfo(ArtifactInstanceData artifact)
+        private void RenderArtifactInfo(ArtifactInstanceData artifact)
         {
-            EditorGUILayout.BeginVertical(GUI.skin.box);
+            GUIStyle boxStyle = new GUIStyle(GUI.skin.box)
+            {
+                padding = new RectOffset(10, 10, 10, 10)
+            };
 
+            GUILayout.BeginVertical(boxStyle);
+
+            string setLabel = string.IsNullOrWhiteSpace(artifact.artifactSetId) ? "<sem set>" : artifact.artifactSetId;
+            GUILayout.Label($"Raridade: {artifact.rarity}  |  Estrelas: {artifact.stars}*", EditorStyles.label);
+            GUILayout.Label($"Nível Atual: +{artifact.currentLevel}", EditorStyles.boldLabel);
+            GUILayout.Label($"Slot: {artifact.slot}  |  SetId: {setLabel}");
             GUILayout.Label($"GUID: {artifact.idGUID}");
-            GUILayout.Label($"Slot: {artifact.slot} | Rarity: {artifact.rarity} | Stars: {artifact.stars}*");
-            GUILayout.Label($"Level: +{artifact.currentLevel} / +15");
-            GUILayout.Label($"SetId: {(string.IsNullOrWhiteSpace(artifact.artifactSetId) ? "<none>" : artifact.artifactSetId)}");
 
             GUILayout.Space(6);
 
             if (artifact.mainStat != null)
-                GUILayout.Label($"Main Stat: {artifact.mainStat.statType} +{artifact.mainStat.value:F0}", EditorStyles.boldLabel);
+                GUILayout.Label($"Atributo Principal: {artifact.mainStat.statType} +{artifact.mainStat.value:F0}");
             else
-                EditorGUILayout.HelpBox("Main stat is null. This artifact data is invalid.", MessageType.Error);
+                EditorGUILayout.HelpBox("Main stat está null. Este ArtifactInstanceData está inválido.", MessageType.Error);
 
-            GUILayout.Space(6);
-
-            GUILayout.Label("Substats:", EditorStyles.boldLabel);
+            GUILayout.Space(5);
+            GUILayout.Label("Sub-Atributos Obtidos:", EditorStyles.boldLabel);
             if (artifact.subStats == null || artifact.subStats.Count == 0)
             {
-                GUILayout.Label("(none)");
+                GUILayout.Label("(nenhum)");
             }
             else
             {
@@ -197,11 +206,11 @@ namespace CelestialCross.Artifacts.Editor
                 {
                     var s = artifact.subStats[i];
                     if (s == null) continue;
-                    GUILayout.Label($"- {s.statType} +{s.value:F0}");
+                    GUILayout.Label($" - {s.statType} +{s.value:F0}");
                 }
             }
 
-            EditorGUILayout.EndVertical();
+            GUILayout.EndVertical();
         }
 
         private void PerformLevelUp(Account account, ArtifactInstanceData artifact)
@@ -209,13 +218,13 @@ namespace CelestialCross.Artifacts.Editor
             if (artifact == null) return;
             if (artifact.currentLevel >= 15)
             {
-                lastLog = "Artifact already at max level (+15).";
+                AppendToConsole("Artefato já está no nível máximo (+15).");
                 return;
             }
 
             if (artifact.mainStat == null)
             {
-                lastLog = "Cannot upgrade: mainStat is null.";
+                AppendToConsole("Não foi possível upar: mainStat está null.");
                 return;
             }
 
@@ -225,7 +234,7 @@ namespace CelestialCross.Artifacts.Editor
             float upgradeMainIncrement = ArtifactGenerator.GetMainStatUpgradeIncrement(artifact.mainStat.statType, artifact.stars);
             artifact.mainStat.value += upgradeMainIncrement;
 
-            lastLog = $"Main stat +{upgradeMainIncrement:F0}.";
+            string upgradeLog = $"Atributo Base subiu +{upgradeMainIncrement:F0}!";
 
             // Ensure list exists
             artifact.subStats ??= new List<StatModifierData>();
@@ -246,7 +255,7 @@ namespace CelestialCross.Artifacts.Editor
                     float startSubValue = ArtifactGenerator.GenerateSubstatValue(newType, artifact.stars);
 
                     artifact.subStats.Add(new StatModifierData(newType, startSubValue));
-                    lastLog += $"\nNew substat born: {newType} +{startSubValue:F0}";
+                    upgradeLog += $"\n{artifact.subStats.Count}º Substat nascido: {newType} +{startSubValue:F0}";
                 }
                 else
                 {
@@ -262,17 +271,57 @@ namespace CelestialCross.Artifacts.Editor
                     float upgradeRngIncrement = ArtifactGenerator.GetSubstatUpgradeIncrement(target.statType, artifact.stars);
                     target.value += upgradeRngIncrement;
 
-                    lastLog += $"\nProc at +{artifact.currentLevel}: '{target.statType}' +{upgradeRngIncrement:F0}.";
+                    upgradeLog += $"\nEvento Level {artifact.currentLevel}! Substat '{target.statType}' tomou proc RNG e ganhou +{upgradeRngIncrement:F0} na barra!";
                 }
             }
+
+            AppendToConsole($"+{artifact.currentLevel}: {upgradeLog}");
 
             SaveTargetAccount(account);
         }
 
-        private void DrawLog()
+        private void DrawConsole()
         {
+            GUILayout.Space(10);
+
+            EditorGUILayout.BeginVertical(GUI.skin.box);
+            GUILayout.Label("Console de Upgrades", EditorStyles.boldLabel);
+
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("Limpar Console", GUILayout.Width(120)))
+            {
+                upgradeConsole = "";
+                lastLog = null;
+            }
+            GUILayout.FlexibleSpace();
+            EditorGUILayout.EndHorizontal();
+
             if (!string.IsNullOrEmpty(lastLog))
                 EditorGUILayout.HelpBox(lastLog, MessageType.Info);
+
+            consoleScroll = EditorGUILayout.BeginScrollView(consoleScroll, GUILayout.MinHeight(140));
+            EditorGUILayout.TextArea(string.IsNullOrEmpty(upgradeConsole) ? "(sem mensagens ainda)" : upgradeConsole, GUILayout.ExpandHeight(true));
+            EditorGUILayout.EndScrollView();
+
+            if (scrollConsoleToBottom)
+            {
+                consoleScroll.y = float.MaxValue;
+                scrollConsoleToBottom = false;
+            }
+
+            EditorGUILayout.EndVertical();
+        }
+
+        private void AppendToConsole(string message)
+        {
+            lastLog = message;
+
+            if (string.IsNullOrWhiteSpace(upgradeConsole))
+                upgradeConsole = message;
+            else
+                upgradeConsole += "\n" + message;
+
+            scrollConsoleToBottom = true;
         }
 
         private Account GetTargetAccount()
@@ -316,12 +365,12 @@ namespace CelestialCross.Artifacts.Editor
 
                 workingAccount.EnsureInitialized();
                 selectedArtifactIndex = 0;
-                lastLog = $"Loaded account from: {accountJsonPath}";
+                AppendToConsole($"Conta carregada de: {accountJsonPath}");
             }
             catch (Exception ex)
             {
                 workingAccount = null;
-                lastLog = $"Failed to load account: {ex.Message}";
+                AppendToConsole($"Falha ao carregar conta: {ex.Message}");
             }
         }
 
@@ -329,7 +378,7 @@ namespace CelestialCross.Artifacts.Editor
         {
             if (workingAccount == null)
             {
-                lastLog = "No working account loaded.";
+                AppendToConsole("Nenhuma conta carregada para salvar.");
                 return;
             }
 
@@ -338,11 +387,11 @@ namespace CelestialCross.Artifacts.Editor
                 workingAccount.EnsureInitialized();
                 string json = JsonUtility.ToJson(workingAccount, true);
                 File.WriteAllText(accountJsonPath, json);
-                lastLog = $"Saved account to: {accountJsonPath}";
+                AppendToConsole($"Conta salva em: {accountJsonPath}");
             }
             catch (Exception ex)
             {
-                lastLog = $"Failed to save account: {ex.Message}";
+                AppendToConsole($"Falha ao salvar conta: {ex.Message}");
             }
         }
     }

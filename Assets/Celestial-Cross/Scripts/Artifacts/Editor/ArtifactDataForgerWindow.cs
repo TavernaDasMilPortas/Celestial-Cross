@@ -126,7 +126,7 @@ namespace CelestialCross.Artifacts.Editor
         {
             EditorGUILayout.BeginVertical(GUI.skin.box);
 
-            usingAccountManagerWhenAvailable = EditorGUILayout.ToggleLeft(
+            useAccountManagerWhenAvailable = EditorGUILayout.ToggleLeft(
                 new GUIContent("Use AccountManager when available (Play Mode)", "If AccountManager.Instance exists, the artifact is added to the in-memory account and saved via AccountManager.SaveAccount()."),
                 useAccountManagerWhenAvailable);
 
