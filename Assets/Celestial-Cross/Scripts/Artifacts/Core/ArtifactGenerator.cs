@@ -39,8 +39,15 @@ namespace CelestialCross.Artifacts
         }
 
         // Base Stat cresce fixiamente baseado exclusivamente na estrela
+        public static float GetMainStatBaseValue(StatType statType, ArtifactStars stars)
+        {
+            return GetMainStatBaseValue(statType, ClampStars((int)stars));
+        }
+
         public static float GetMainStatBaseValue(StatType statType, int stars)
         {
+            stars = ClampStars(stars);
+
             var tuning = GetTuningOrNull();
             if (tuning != null)
             {
@@ -56,8 +63,15 @@ namespace CelestialCross.Artifacts
         }
 
         // Substat tem faixas para o roll RNG inicial e UPGRADES baseados nas estrelas
+        public static float GenerateSubstatValue(StatType statType, ArtifactStars stars)
+        {
+            return GenerateSubstatValue(statType, ClampStars((int)stars));
+        }
+
         public static float GenerateSubstatValue(StatType statType, int stars)
         {
+            stars = ClampStars(stars);
+
             var tuning = GetTuningOrNull();
             if (tuning != null)
             {
@@ -77,8 +91,15 @@ namespace CelestialCross.Artifacts
         }
 
         // Main stat aumenta exatamente numa quantidade fixa por nível
+        public static float GetMainStatUpgradeIncrement(StatType statType, ArtifactStars stars)
+        {
+            return GetMainStatUpgradeIncrement(statType, ClampStars((int)stars));
+        }
+
         public static float GetMainStatUpgradeIncrement(StatType statType, int stars)
         {
+            stars = ClampStars(stars);
+
             var tuning = GetTuningOrNull();
             if (tuning != null)
             {
@@ -94,8 +115,15 @@ namespace CelestialCross.Artifacts
         }
 
         // Substats aumentam com um range variavel de sorte no RNG
+        public static float GetSubstatUpgradeIncrement(StatType statType, ArtifactStars stars)
+        {
+            return GetSubstatUpgradeIncrement(statType, ClampStars((int)stars));
+        }
+
         public static float GetSubstatUpgradeIncrement(StatType statType, int stars)
         {
+            stars = ClampStars(stars);
+
             var tuning = GetTuningOrNull();
             if (tuning != null)
             {
@@ -131,6 +159,13 @@ namespace CelestialCross.Artifacts
                 return allTypes[Random.Range(0, allTypes.Count)];
             
             return StatType.HealthFlat; // Failsafe
+        }
+
+        private static int ClampStars(int stars)
+        {
+            if (stars < 1) return 1;
+            if (stars > 6) return 6;
+            return stars;
         }
     }
 }

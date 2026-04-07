@@ -38,6 +38,12 @@ public class InventoryTab : MonoBehaviour
         button.onClick.AddListener(() => OnTabClicked?.Invoke(tabIndex));
     }
 
+    public void SetTitle(string title)
+    {
+        if (titleText != null)
+            titleText.text = title;
+    }
+
     // =============================
     // PUBLIC API
     // =============================

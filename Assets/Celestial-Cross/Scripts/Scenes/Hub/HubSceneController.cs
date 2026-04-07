@@ -7,8 +7,9 @@ using TMPro;
 
 public class HubSceneController : MonoBehaviour
 {
-        [Header("Flow")]
-        [SerializeField] private string preparationSceneName = "PreparationScene";
+    [Header("Flow")]
+    [SerializeField] private string preparationSceneName = "PreparationScene";
+    [SerializeField] private string restSceneName = "RestScene";
 
     [Header("Data")]
     [SerializeField] private LevelCatalog levelCatalog;
@@ -23,6 +24,46 @@ public class HubSceneController : MonoBehaviour
     {
         RefreshAccountUI();
         BuildLevelButtons();
+        EnsureInventoryButton();
+    }
+
+    private void EnsureInventoryButton()
+    {
+        if (levelsContainer == null) return;
+        var parentCanvas = levelsContainer.GetComponentInParent<Canvas>();
+        if (parentCanvas == null) return;
+
+        var go = new GameObject("Btn_GoInventory", typeof(RectTransform), typeof(Image), typeof(Button));
+        go.transform.SetParent(parentCanvas.transform, false);
+        
+        var rt = (RectTransform)go.transform;
+        rt.anchorMin = new Vector2(1, 1);
+        rt.anchorMax = new Vector2(1, 1);
+        rt.pivot = new Vector2(1, 1);
+        rt.anchoredPosition = new Vector2(-20, -100); // Top Right corner below potential safe area
+        rt.sizeDelta = new Vector2(180, 60);
+
+        go.GetComponent<Image>().color = new Color(0.2f, 0.6f, 0.8f, 1f);
+        var btn = go.GetComponent<Button>();
+        btn.onClick.AddListener(GoToInventoryScene);
+
+        var txtGo = new GameObject("Text", typeof(RectTransform), typeof(TMP_Text));
+        txtGo.transform.SetParent(go.transform, false);
+        var txtRt = (RectTransform)txtGo.transform;
+        txtRt.anchorMin = Vector2.zero; txtRt.anchorMax = Vector2.one;
+        txtRt.offsetMin = txtRt.offsetMax = Vector2.zero;
+
+        var tmp = txtGo.AddComponent<TextMeshProUGUI>();
+        tmp.text = "Inventário";
+        tmp.color = Color.white;
+        tmp.fontSize = 24;
+        tmp.alignment = TextAlignmentOptions.Center;
+    }
+
+    public void GoToInventoryScene()
+    {
+        if (!string.IsNullOrEmpty(restSceneName))
+            SceneManager.LoadScene(restSceneName);
     }
 
     public void RefreshAccountUI()

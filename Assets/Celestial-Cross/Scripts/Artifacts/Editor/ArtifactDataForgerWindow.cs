@@ -13,7 +13,7 @@ namespace CelestialCross.Artifacts.Editor
         private ArtifactType selectedSlot;
         private ArtifactSet selectedSet;
         private ArtifactRarity selectedRarity;
-        private int selectedStars = 1;
+        private ArtifactStars selectedStars = ArtifactStars.One;
         private StatType selectedMainStat;
 
         // Account target
@@ -154,7 +154,7 @@ namespace CelestialCross.Artifacts.Editor
             selectedSlot = (ArtifactType)EditorGUILayout.EnumPopup("Slot Type", selectedSlot);
             selectedSet = (ArtifactSet)EditorGUILayout.ObjectField("Artifact Set", selectedSet, typeof(ArtifactSet), false);
             selectedRarity = (ArtifactRarity)EditorGUILayout.EnumPopup("Rarity", selectedRarity);
-            selectedStars = EditorGUILayout.IntSlider("Stars", selectedStars, 1, 6);
+            selectedStars = (ArtifactStars)EditorGUILayout.EnumPopup("Stars", selectedStars);
             selectedMainStat = (StatType)EditorGUILayout.EnumPopup("Forced Main Stat", selectedMainStat);
 
             if (selectedSet != null && string.IsNullOrWhiteSpace(selectedSet.id))
@@ -177,8 +177,8 @@ namespace CelestialCross.Artifacts.Editor
 
         private bool CanForge()
         {
-            if (selectedStars < 1 || selectedStars > 6)
-                return false;
+            int starsInt = (int)selectedStars;
+            if (starsInt < 1 || starsInt > 6) return false;
 
             // Account must be accessible either via AccountManager or loaded JSON.
             if (useAccountManagerWhenAvailable && AccountManager.Instance != null && AccountManager.Instance.PlayerAccount != null)
@@ -231,7 +231,7 @@ namespace CelestialCross.Artifacts.Editor
 
             SaveTargetAccount();
 
-            lastLog = $"Forged ArtifactData GUID={artifact.idGUID}\nSlot={artifact.slot} | Rarity={artifact.rarity} | Stars={artifact.stars} | SetId='{artifact.artifactSetId}'\nMain={artifact.mainStat.statType}+{artifact.mainStat.value:F0} | Substats={artifact.subStats.Count}";
+            lastLog = $"Forged ArtifactData GUID={artifact.idGUID}\nSlot={artifact.slot} | Rarity={artifact.rarity} | Stars={artifact.GetStarsAsIntClamped()} | SetId='{artifact.artifactSetId}'\nMain={artifact.mainStat.statType}+{artifact.mainStat.value:F0} | Substats={artifact.subStats.Count}";
         }
 
         private Account GetTargetAccount()

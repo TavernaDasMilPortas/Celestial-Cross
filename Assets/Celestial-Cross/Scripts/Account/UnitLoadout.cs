@@ -11,6 +11,9 @@ public class UnitLoadout
 {
     public string UnitID;
     
+    [Header("Pet")]
+    public string PetID; // Slot de Pet
+
     [Header("Artifact Instance GUIDs")]
     public string HelmetID;     // Slot 1
     public string ChestplateID; // Slot 2

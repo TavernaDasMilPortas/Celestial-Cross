@@ -54,7 +54,7 @@ namespace CelestialCross.Artifacts.Editor
             boxStyle.padding = new RectOffset(10, 10, 10, 10);
             GUILayout.BeginVertical(boxStyle);
 
-            GUILayout.Label($"Raridade: {targetArtifact.rarity}  |  Estrelas: {targetArtifact.stars}*", EditorStyles.label);
+            GUILayout.Label($"Raridade: {targetArtifact.rarity}  |  Estrelas: {targetArtifact.GetStarsAsIntClamped()}*", EditorStyles.label);
             GUILayout.Label($"Nível Atual: +{targetArtifact.currentLevel}", EditorStyles.boldLabel);
             GUILayout.Label($"Atributo Principal: {targetArtifact.mainStat.ToString()}");
             

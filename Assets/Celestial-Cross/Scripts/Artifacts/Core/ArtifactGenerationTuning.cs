@@ -140,9 +140,19 @@ namespace CelestialCross.Artifacts
             return GetRange(statType, stars, RangeKind.MainBase);
         }
 
+        public FloatRange GetMainBaseRange(StatType statType, ArtifactStars stars)
+        {
+            return GetMainBaseRange(statType, (int)stars);
+        }
+
         public FloatRange GetMainUpgradeRange(StatType statType, int stars)
         {
             return GetRange(statType, stars, RangeKind.MainUpgrade);
+        }
+
+        public FloatRange GetMainUpgradeRange(StatType statType, ArtifactStars stars)
+        {
+            return GetMainUpgradeRange(statType, (int)stars);
         }
 
         public FloatRange GetSubInitialRange(StatType statType, int stars)
@@ -150,9 +160,19 @@ namespace CelestialCross.Artifacts
             return GetRange(statType, stars, RangeKind.SubInitial);
         }
 
+        public FloatRange GetSubInitialRange(StatType statType, ArtifactStars stars)
+        {
+            return GetSubInitialRange(statType, (int)stars);
+        }
+
         public FloatRange GetSubUpgradeRange(StatType statType, int stars)
         {
             return GetRange(statType, stars, RangeKind.SubUpgrade);
+        }
+
+        public FloatRange GetSubUpgradeRange(StatType statType, ArtifactStars stars)
+        {
+            return GetSubUpgradeRange(statType, (int)stars);
         }
 
         private enum RangeKind
@@ -168,7 +188,8 @@ namespace CelestialCross.Artifacts
             if (!TryGetRanges(statType, out StatRanges ranges) || ranges == null)
                 return new FloatRange(0, 0);
 
-            int index = Mathf.Clamp(stars - 1, 0, 5);
+            int clampedStars = Mathf.Clamp(stars, 1, 6);
+            int index = Mathf.Clamp(clampedStars - 1, 0, 5);
 
             switch (kind)
             {

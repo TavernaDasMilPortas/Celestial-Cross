@@ -14,7 +14,7 @@ namespace CelestialCross.Artifacts
         public ArtifactType slot;
         public ArtifactSet artifactSet; // Família (Set) a que pertence
         public ArtifactRarity rarity;
-        [Range(1, 6)] public int stars = 1;
+        public ArtifactStars stars = ArtifactStars.One;
         [Range(1, 15)] public int currentLevel = 1;
 
         [Header("Stats")]
@@ -26,6 +26,22 @@ namespace CelestialCross.Artifacts
         {
             if (string.IsNullOrEmpty(idGUID))
                 idGUID = Guid.NewGuid().ToString();
+        }
+
+        public int GetStarsAsIntClamped()
+        {
+            int value = (int)stars;
+            if (value < 1) return 1;
+            if (value > 6) return 6;
+            return value;
+        }
+
+        private void OnValidate()
+        {
+            // Unity can deserialize old int values into enums; clamp invalid legacy/default values.
+            int value = (int)stars;
+            if (value < 1) stars = ArtifactStars.One;
+            else if (value > 6) stars = ArtifactStars.Six;
         }
     }
 }

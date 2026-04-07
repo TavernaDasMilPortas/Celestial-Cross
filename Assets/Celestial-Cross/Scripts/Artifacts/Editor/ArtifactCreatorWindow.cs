@@ -9,7 +9,7 @@ namespace CelestialCross.Artifacts.Editor
         private ArtifactType selectedSlot;
         private ArtifactSet selectedSet;
         private ArtifactRarity selectedRarity;
-        private int selectedStars = 1;
+        private ArtifactStars selectedStars = ArtifactStars.One;
         private StatType selectedMainStat;
 
         [MenuItem("Celestial Cross/Artifacts/Artifact Creator")]
@@ -26,7 +26,7 @@ namespace CelestialCross.Artifacts.Editor
             selectedSlot = (ArtifactType)EditorGUILayout.EnumPopup("Slot Type", selectedSlot);
             selectedSet = (ArtifactSet)EditorGUILayout.ObjectField("Artifact Family Set", selectedSet, typeof(ArtifactSet), false);
             selectedRarity = (ArtifactRarity)EditorGUILayout.EnumPopup("Rarity (Dictates # of Init Substats)", selectedRarity);
-            selectedStars = EditorGUILayout.IntSlider("Stars (Level Scaling & Range)", selectedStars, 1, 6);
+            selectedStars = (ArtifactStars)EditorGUILayout.EnumPopup("Stars (Level Scaling & Range)", selectedStars);
             selectedMainStat = (StatType)EditorGUILayout.EnumPopup("Forced Main Stat", selectedMainStat);
 
             GUILayout.Space(20);
@@ -65,7 +65,7 @@ namespace CelestialCross.Artifacts.Editor
             }
 
             // Salva fisicamente o SO no projeto (na pasta criada pro Dev brincar)
-            string path = $"Assets/Celestial-Cross/Artifacts_Test/{selectedSlot}_{selectedRarity}_{selectedStars}Star_{System.DateTime.Now.ToString("dd-HH-mm")}.asset";
+            string path = $"Assets/Celestial-Cross/Artifacts_Test/{selectedSlot}_{selectedRarity}_{(int)selectedStars}Star_{System.DateTime.Now.ToString("dd-HH-mm")}.asset";
             
             // Cria diretório se não existir
             if (!AssetDatabase.IsValidFolder("Assets/Celestial-Cross/Artifacts_Test"))

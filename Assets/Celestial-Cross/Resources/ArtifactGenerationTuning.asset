@@ -350,17 +350,17 @@ MonoBehaviour:
   - statType: 6
     mainBaseByStars:
     - min: 2
-      max: 150
+      max: 2
     - min: 2
-      max: 300
+      max: 2
     - min: 3
-      max: 450
+      max: 3
     - min: 3
-      max: 600
+      max: 3
     - min: 4
-      max: 750
+      max: 4
     - min: 4
-      max: 900
+      max: 4
     mainUpgradeByStars:
     - min: 1
       max: 24
@@ -376,17 +376,17 @@ MonoBehaviour:
       max: 144
     subInitialByStars:
     - min: 1
+      max: 10
+    - min: 1
       max: 20
     - min: 1
+      max: 30
+    - min: 1
       max: 40
-    - min: 1
+    - min: 2
+      max: 50
+    - min: 2
       max: 60
-    - min: 1
-      max: 80
-    - min: 2
-      max: 100
-    - min: 2
-      max: 120
     subUpgradeByStars:
     - min: 1
       max: 7.5
@@ -451,7 +451,7 @@ MonoBehaviour:
       max: 3
     - min: 7
       max: 3.75
-    - min: 8
+    - min: 0
       max: 4.5
   - statType: 8
     mainBaseByStars:

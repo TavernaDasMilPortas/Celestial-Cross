@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace CelestialCross.Artifacts
 {
@@ -19,13 +20,13 @@ namespace CelestialCross.Artifacts
     }
 
     [Serializable]
-    public class ArtifactInstanceData
+    public class ArtifactInstanceData : ISerializationCallbackReceiver
     {
         public string idGUID;
         public string artifactSetId; // ID do ScriptableObject do Set
         public ArtifactType slot;
         public ArtifactRarity rarity;
-        public int stars;
+        public ArtifactStars stars = ArtifactStars.One;
         public int currentLevel;
 
         public StatModifierData mainStat;
@@ -34,6 +35,23 @@ namespace CelestialCross.Artifacts
         public ArtifactInstanceData()
         {
             idGUID = Guid.NewGuid().ToString();
+        }
+
+        public void OnBeforeSerialize() { }
+
+        public void OnAfterDeserialize()
+        {
+            int value = (int)stars;
+            if (value < 1) stars = ArtifactStars.One;
+            else if (value > 6) stars = ArtifactStars.Six;
+        }
+
+        public int GetStarsAsIntClamped()
+        {
+            int value = (int)stars;
+            if (value < 1) return 1;
+            if (value > 6) return 6;
+            return value;
         }
     }
 }

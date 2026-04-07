@@ -19,11 +19,11 @@ Cada unidade (Personagem) terá exatamente **6 Slots de Artefatos** (podendo ou 
 - **Range Variável (Apenas Substatus):** Enquanto o status principal cresce de forma fixa e padronizada, os Substatus, tanto no momento inicial (criação) quanto nos "saltos" de Upgrade (+3, +6...), recebem valores rolados aleatoriamente dentro de janelas (ranges) que variam de acordo com as Estrelas do artefato (Ex: Substats de Força em um 6* rolam entre 6-10 ao serem criados e aumentam um valor randômico entre +3 e +5 sempre que são sorteados no level up).
 
 ### 2. O Sistema de Inventário (UI Modular)
-O Inventário será estruturado com um controlador mestre (`InventoryUIManager`) que gerencia diversas **Abas (Tabs)**.
-- Cada aba implementa uma interface base (ex: `IInventoryTab`).
+O Inventário será estruturado com um controlador mestre que gerencia diversas **Abas (Tabs)**.
+- Implementação atual (Fase 2): reaproveita o componente `InventoryUI` da RestScene como controlador mestre + `InventoryTab` como botões de aba.
 - Cada aba lida com **apenas 1 tipo de entidade**.
 - Abas planejadas iniciais: **Aba de Unidades**, **Aba de Pets**, **Aba de Artefatos**.
-- Interface de inspeção ao clicar numa unidade: Exibe status cumulativos, habilidades resultantes do base + equipamentos, e 4 slots vazios/preenchidos para clicar e equipar as entidades.
+- Interface de inspeção ao clicar numa unidade: Exibe status cumulativos, habilidades resultantes do base + equipamentos, e **6 slots** vazios/preenchidos para clicar e equipar artefatos.
 
 ---
 
@@ -39,19 +39,20 @@ Nesta fase, criaremos a matemática e a lógica orientada a dados para fazer art
 - Criar scriptable object `ArtifactSet`: Contém ID, Nome, e arrays com habilidades/bônus dados ao equipar peças (ex: Bonus 2 peças = Passiva 1, 4 peças = Passiva 2).
 - Criar struct `StatModifier`: Identifica qual status (Attack, Defense, Health, etc) e o valor.
 
-**Passo 2: Definição de Dados e Ferramentas (Blueprints vs Instâncias)**
+**Passo 2: Definição de Dados e Ferramentas (Tuning vs Instâncias)**
 - Diferente de `UnitData` que são moldes, artefatos precisam ser gerados com diferentes substats, estrelas e conjuntos.
+- Arquitetura atual (Fase 1): a matemática é centralizada em `ArtifactGenerator` (runtime/editor) e pode ser dirigida por um asset de tuning `ArtifactGenerationTuning` em `Resources`.
 - Construção de **Ferramentas de Editor (Custom Interfaces no Unity)** para podermos criar e verificar a matemática desses processos inteiramente **Fora de Runtime**, em tempo de projeto.
   - **Menu/Janela de Forja (ArtifactCreator)**: Permite gerar ScriptableObjects de instâncias determinantes ou sorteadas apontando: Slot selecionado, Atributo estático, Raridade, Estrelas, e que produzirá o arquivo do item testável na maleta do projeto com os substats já sorteados pelas regras da janela de estrelas.
   - **Menu/Janela de Upgrade (ArtifactUpgrader)**: Onde você rastreia e insere aquela instância já forjada para upar ela de +1 a +15, ativando as rolagens e verificando se o bônus triggou (no lvl 3,6,9,12,15) o acréscimo de status RNG em um substat antigo ou materializou um novo de acrodo com a falta do 4º substatus.
-- Criar `ArtifactBlueprint` (ScriptableObject): Define o tipo do artefato, atributo principal base (se estático) e Set pertencente, além de servir de referência para os valores das janelas/ranges mínimos e máximos da quantidade de Estrelas.
-- Criar `ArtifactInstance` (Classe/ScriptableObject dependendo se é pra teste): Representará o item único criado. Guarda o GUID universal, seu `ArtifactType`, o ID do Set, a Raridade e a Estrela (1 a 6), além do seu **Nível Atual (1 a 15)** e a lista gerada/evoluída de Substats numéricos obtidos através dos Rolls.
+- Modelo de instância para testes de editor: `ArtifactInstance` (ScriptableObject).
+- Modelo de instância para save/runtime (conta): `ArtifactInstanceData` (classe serializável em `Account`).
 
 **Passo 3: Mapeamento de Equipamentos na Conta (`AccountManager`)**
 - Atualizar a classe `Account` para salvar:
-  - Uma lista de `ArtifactInstance` globais do jogador (o inventário de itens dele).
+  - Uma lista de `ArtifactInstanceData` globais do jogador (o inventário de itens dele).
   - Um dicionário/modelo relacional dizendo quem veste o quê: `Dictionary<string, UnitLoadout>`.
-  - Criar `UnitLoadout` (Classe): Guarda as _strings_ (IDs) das 6 instâncias de artefatos equipados.
+  - Criar `UnitLoadout` (Classe): Guarda as _strings_ (GUIDs) das 6 instâncias de artefatos equipados.
 
 **Passo 4: Atualizar Lógica da `Unit` em Combate**
 - Atualizar `UnitRuntimeConfigurator` e `Unit.Initialize` para receberem o `UnitLoadout` contendo as requisições de Pets e Artefatos.
@@ -76,7 +77,7 @@ A tela de Inventário atual da `RestScene` (criada originariamente pela Giulia) 
 
 ### Fase 4: Abas de Exervo (Tabs: Pets e Artefatos)
 - **Tab de Artefatos:**
-  - **Ambiente Inferior:** Um grid contendo a fusão de todos os `ArtifactInstance` da conta do jogador.
+  - **Ambiente Inferior:** Um grid contendo a fusão de todos os `ArtifactInstanceData` da conta do jogador.
   - **Ambiente Superior:** Informações do item focado no grid. Mostra Ícone, Slot, Set pertencente, Estrelas, Level, MainStat e os Substats sorteados. No futuro, abrigará ali mesmo os botões reais de "Nivelar +1" gastando ouro (chamando a mesma nossa matemática criada no upgrader).
 - **Tab de Pets:**
   - **Ambiente Inferior:** Grid apenas de Pets colecionados.
@@ -88,12 +89,15 @@ A tela de Inventário atual da `RestScene` (criada originariamente pela Giulia) 
 
 Para iniciarmos a **Fase 1**, necessitaremos criar os seguintes arquivos em sequência (próxima instrução):
 
-1. `ArtifactEnums.cs`: Conterá `ArtifactType` (os 6 slots), `ArtifactRarity` (dita quantidade de substats), `ArtifactStars` (dita valor dos atributos) e `StatType`.
-2. `StatModifier.cs`: Estrutura simples de bônus (`StatType`, `int value`).
+1. `ArtifactEnums.cs`: Conterá `ArtifactType` (os 6 slots), `ArtifactRarity` (dita quantidade de substats), `ArtifactStars` (1..6) e `StatType`.
+2. `StatModifier.cs`: Estrutura simples de bônus (`StatType`, `float value`).
 3. `ArtifactSet.cs`: ScriptableObject definindo os bônus ganhos quando a Unit usa (ex) 2, 4 ou 6 partes de conjuntos de idêntica família.
-4. `ArtifactBlueprint.cs`: Moldes e restrições de roll primário para gerar as variáveis iniciais, contendo definições de range de valores de base e de upgrade para gerar no Roll dependendo das estrelas.
-5. `ArtifactInstance.cs`: O item final (pode ser serializado ou um ScriptableObject para fins de teste no Editor) com a definição de todas as rolagens contendo as propriedades estáticas preenchidas e com o Nível Atual (CurrentLevel de 1 a 15) com métodos independentes de aplicar e recalcular upgrades.
-6. **Ferramentas de Editor (Fora do Runtime):**
-   - **`ArtifactCreatorWindow.cs`**: Um painel/menu customizado na Unity (`EditorWindow`) exclusivo para gerar os SOs de instâncias experimentais. No menu você escolherá explicitamente o **Slot**, o **Atributo Principal**, a **Raridade** e as **Estrelas**, e o script vai cuspir um artefato salvo magicamente na pasta do projeto com os substats já rolados baseado nesses seus inputs.
-   - **`ArtifactUpgraderWindow.cs`**: Outro menu/painel onde você arrastará um ScriptableObject/Instância de um artefato previamente criado, apertará o botão "Level Up" e assistirá o script aumentar seu nível base e exibir qual substatus tomou RNG bônus (ou gerou um novo por bater as janelas múltiplas de 3). Isso vai validar o nosso sistema matemático direto nas pastas da sua Engine.
-7. Alterar `Account.cs` para suportar 6 espaços em `UnitLoadout` para acomodar essa estrutura.
+4. `ArtifactGenerationTuning.cs`: ScriptableObject (em `Resources`) com faixas por estrela para main/sub e increments; usado automaticamente por `ArtifactGenerator` quando `useTuning=true`.
+5. `ArtifactGenerator.cs`: Matemática central de geração (main base, sub roll, increments) com overloads para `ArtifactStars` e clamp para compatibilidade.
+6. `ArtifactInstance.cs`: ScriptableObject de instância (para forja/testes no Editor).
+7. `ArtifactData.cs`: Modelo serializável de instância para Save/Conta (`ArtifactInstanceData`), incluindo clamp pós-deserialização (compatibilidade com saves legados).
+8. **Ferramentas de Editor (Fora do Runtime):**
+  - **`ArtifactCreatorWindow.cs`** e **`ArtifactUpgraderWindow.cs`**: Forja/upgrade de `ArtifactInstance` (ScriptableObject) para validar a matemática.
+  - **`ArtifactDataForgerWindow.cs`** e **`ArtifactDataUpgraderWindow.cs`**: Alternativa (Option B) para forjar/upgradear diretamente itens do tipo `ArtifactInstanceData` dentro de uma conta (via `AccountManager` ou JSON).
+  - **`ArtifactGenerationTuningWindow.cs`**: Janela para criar/editar rapidamente o asset `ArtifactGenerationTuning` em `Resources`.
+9. Alterar `Account.cs` para suportar 6 espaços em `UnitLoadout` para acomodar essa estrutura.

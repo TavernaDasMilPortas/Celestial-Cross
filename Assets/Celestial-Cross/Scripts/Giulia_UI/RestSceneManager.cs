@@ -1,6 +1,9 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+using TMPro;
+using UnityEngine.SceneManagement;
+
 /// <summary>
 /// Gerenciador principal da cena de descanso (Rest Scene).
 /// Controla a abertura/fechamento dos painéis de Missões e Inventário.
@@ -28,6 +31,10 @@ public class RestSceneManager : MonoBehaviour
     [Tooltip("Cor do fundo placeholder")]
     public Color backgroundColor = new Color(0.12f, 0.10f, 0.15f, 1f);
 
+    [Header("Transition")]
+    [Tooltip("Nome da cena do Hub (Menu principal)")]
+    public string hubSceneName = "HubScene";
+
     void Awake()
     {
         // Singleton simples
@@ -44,12 +51,53 @@ public class RestSceneManager : MonoBehaviour
 
     void Start()
     {
-        // Garantir que painéis comecem fechados
+        // Garantir que a cena abra com o inventário aberto e outras coisas ocultas
         if (missionsPanel != null)
             missionsPanel.gameObject.SetActive(false);
 
         if (inventoryPanel != null)
-            inventoryPanel.SetActive(false);
+            inventoryPanel.SetActive(true);
+
+        EnsureBackToHubButton();
+    }
+
+    private void EnsureBackToHubButton()
+    {
+        if (mainCanvas == null) return;
+
+        var go = new GameObject("Btn_BackToHub", typeof(RectTransform), typeof(Image), typeof(Button));
+        go.transform.SetParent(mainCanvas.transform, false);
+
+        var rt = (RectTransform)go.transform;
+        rt.anchorMin = new Vector2(0, 1);
+        rt.anchorMax = new Vector2(0, 1);
+        rt.pivot = new Vector2(0, 1);
+        rt.anchoredPosition = new Vector2(20, -100); // Top Left corner
+        rt.sizeDelta = new Vector2(180, 60);
+
+        go.GetComponent<Image>().color = new Color(0.8f, 0.4f, 0.2f, 1f);
+        var btn = go.GetComponent<Button>();
+        btn.onClick.AddListener(GoToHubScene);
+
+        var txtGo = new GameObject("Text", typeof(RectTransform), typeof(TMP_Text));
+        txtGo.transform.SetParent(go.transform, false);
+        var txtRt = (RectTransform)txtGo.transform;
+        txtRt.anchorMin = Vector2.zero; txtRt.anchorMax = Vector2.one;
+        txtRt.offsetMin = txtRt.offsetMax = Vector2.zero;
+
+        var tmp = txtGo.AddComponent<TextMeshProUGUI>();
+        tmp.text = "Voltar (Hub)";
+        tmp.color = Color.white;
+        tmp.fontSize = 24;
+        tmp.alignment = TextAlignmentOptions.Center;
+    }
+
+    public void GoToHubScene()
+    {
+        if (!string.IsNullOrEmpty(hubSceneName))
+        {
+            SceneManager.LoadScene(hubSceneName);
+        }
     }
 
     // =============================

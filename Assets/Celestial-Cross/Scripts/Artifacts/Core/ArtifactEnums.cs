@@ -21,6 +21,18 @@ namespace CelestialCross.Artifacts
         Legendary   // 4 substats garantidos iniciais
     }
 
+    // Stars (1..6) define scaling and stat value ranges.
+    // Explicit values keep compatibility with prior int-based serialization.
+    public enum ArtifactStars
+    {
+        One = 1,
+        Two = 2,
+        Three = 3,
+        Four = 4,
+        Five = 5,
+        Six = 6
+    }
+
     public enum StatType
     {
         HealthFlat,

@@ -154,7 +154,7 @@ namespace CelestialCross.Artifacts.Editor
                 }
 
                 string setLabel = string.IsNullOrWhiteSpace(a.artifactSetId) ? "NoSet" : a.artifactSetId;
-                options[i] = $"[{i}] {a.slot} {a.rarity} {a.stars}* +{a.currentLevel} ({setLabel})";
+                options[i] = $"[{i}] {a.slot} {a.rarity} {a.GetStarsAsIntClamped()}* +{a.currentLevel} ({setLabel})";
             }
 
             selectedArtifactIndex = Mathf.Clamp(selectedArtifactIndex, 0, account.OwnedArtifacts.Count - 1);
@@ -182,7 +182,7 @@ namespace CelestialCross.Artifacts.Editor
             GUILayout.BeginVertical(boxStyle);
 
             string setLabel = string.IsNullOrWhiteSpace(artifact.artifactSetId) ? "<sem set>" : artifact.artifactSetId;
-            GUILayout.Label($"Raridade: {artifact.rarity}  |  Estrelas: {artifact.stars}*", EditorStyles.label);
+            GUILayout.Label($"Raridade: {artifact.rarity}  |  Estrelas: {artifact.GetStarsAsIntClamped()}*", EditorStyles.label);
             GUILayout.Label($"Nível Atual: +{artifact.currentLevel}", EditorStyles.boldLabel);
             GUILayout.Label($"Slot: {artifact.slot}  |  SetId: {setLabel}");
             GUILayout.Label($"GUID: {artifact.idGUID}");
