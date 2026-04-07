@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3914efdbc7429ed4faa84d507051fe72, type: 3}
   m_Name: ArtifactGenerationTuning
   m_EditorClassIdentifier: Assembly-CSharp::CelestialCross.Artifacts.ArtifactGenerationTuning
-  useTuning: 0
+  useTuning: 1
   commonInitialSubstats:
     min: 0
     max: 1
@@ -31,43 +31,43 @@ MonoBehaviour:
   statRanges:
   - statType: 0
     mainBaseByStars:
-    - min: 2312312
+    - min: 20
       max: 150
-    - min: 300
+    - min: 30
       max: 300
-    - min: 450
+    - min: 40
       max: 450
-    - min: 600
+    - min: 45
       max: 600
-    - min: 750
+    - min: 55
       max: 750
-    - min: 900
+    - min: 60
       max: 900
     mainUpgradeByStars:
-    - min: 24
+    - min: 2
       max: 24
-    - min: 48
+    - min: 3
       max: 48
-    - min: 72
+    - min: 4
       max: 72
-    - min: 96
+    - min: 5
       max: 96
-    - min: 120
+    - min: 6
       max: 120
-    - min: 144
+    - min: 7
       max: 144
     subInitialByStars:
-    - min: 10
+    - min: 5
       max: 20
-    - min: 20
+    - min: 10
       max: 40
-    - min: 30
+    - min: 15
       max: 60
-    - min: 40
+    - min: 20
       max: 80
-    - min: 50
+    - min: 25
       max: 100
-    - min: 60
+    - min: 30
       max: 120
     subUpgradeByStars:
     - min: 2.5
@@ -84,30 +84,30 @@ MonoBehaviour:
       max: 45
   - statType: 1
     mainBaseByStars:
-    - min: 6
-      max: 6
-    - min: 8
-      max: 8
     - min: 10
+      max: 6
+    - min: 15
+      max: 8
+    - min: 20
       max: 10
-    - min: 11
+    - min: 25
       max: 11
-    - min: 12
+    - min: 30
       max: 12
-    - min: 14
+    - min: 35
       max: 14
     mainUpgradeByStars:
     - min: 1
       max: 1
     - min: 1
       max: 1
-    - min: 2
+    - min: 1
       max: 2
-    - min: 2
+    - min: 1
       max: 2
-    - min: 3
+    - min: 1
       max: 3
-    - min: 4
+    - min: 1
       max: 4
     subInitialByStars:
     - min: 0.5
@@ -137,70 +137,70 @@ MonoBehaviour:
       max: 4.5
   - statType: 2
     mainBaseByStars:
-    - min: 150
+    - min: 10
       max: 150
-    - min: 300
+    - min: 20
       max: 300
-    - min: 450
+    - min: 30
       max: 450
-    - min: 600
+    - min: 35
       max: 600
-    - min: 750
+    - min: 40
       max: 750
-    - min: 900
+    - min: 45
       max: 900
     mainUpgradeByStars:
-    - min: 24
+    - min: 2
       max: 24
-    - min: 48
+    - min: 2
       max: 48
-    - min: 72
+    - min: 2
       max: 72
-    - min: 96
+    - min: 3
       max: 96
-    - min: 120
+    - min: 3
       max: 120
-    - min: 144
+    - min: 4
       max: 144
     subInitialByStars:
-    - min: 10
+    - min: 3
       max: 20
-    - min: 20
+    - min: 4
       max: 40
-    - min: 30
+    - min: 5
       max: 60
-    - min: 40
+    - min: 6
       max: 80
-    - min: 50
+    - min: 7
       max: 100
-    - min: 60
+    - min: 8
       max: 120
     subUpgradeByStars:
-    - min: 2.5
+    - min: 1
       max: 7.5
-    - min: 5
+    - min: 2
       max: 15
-    - min: 7.5
+    - min: 3
       max: 22.5
-    - min: 10
+    - min: 3
       max: 30
-    - min: 12.5
+    - min: 4
       max: 37.5
-    - min: 15
+    - min: 4
       max: 45
   - statType: 3
     mainBaseByStars:
-    - min: 6
+    - min: 2
       max: 6
-    - min: 8
+    - min: 3
       max: 8
-    - min: 10
+    - min: 4
       max: 10
-    - min: 11
+    - min: 5
       max: 11
-    - min: 12
+    - min: 6
       max: 12
-    - min: 14
+    - min: 7
       max: 14
     mainUpgradeByStars:
     - min: 1
@@ -229,84 +229,84 @@ MonoBehaviour:
     - min: 3
       max: 6
     subUpgradeByStars:
-    - min: 0.25
-      max: 0.75
-    - min: 0.5
-      max: 1.5
-    - min: 0.75
-      max: 2.25
     - min: 1
+      max: 0.75
+    - min: 1
+      max: 1.5
+    - min: 2
+      max: 2.25
+    - min: 2
       max: 3
-    - min: 1.25
+    - min: 3
       max: 3.75
-    - min: 1.5
+    - min: 3
       max: 4.5
   - statType: 4
     mainBaseByStars:
-    - min: 150
+    - min: 10
       max: 150
-    - min: 300
+    - min: 20
       max: 300
-    - min: 450
+    - min: 30
       max: 450
-    - min: 600
+    - min: 35
       max: 600
-    - min: 750
+    - min: 40
       max: 750
-    - min: 900
+    - min: 45
       max: 900
     mainUpgradeByStars:
-    - min: 24
+    - min: 2
       max: 24
-    - min: 48
+    - min: 3
       max: 48
-    - min: 72
+    - min: 4
       max: 72
-    - min: 96
+    - min: 5
       max: 96
-    - min: 120
+    - min: 6
       max: 120
-    - min: 144
+    - min: 7
       max: 144
     subInitialByStars:
-    - min: 10
+    - min: 3
       max: 20
-    - min: 20
+    - min: 4
       max: 40
-    - min: 30
+    - min: 5
       max: 60
-    - min: 40
+    - min: 6
       max: 80
-    - min: 50
+    - min: 7
       max: 100
-    - min: 60
+    - min: 8
       max: 120
     subUpgradeByStars:
-    - min: 2.5
+    - min: 1
       max: 7.5
-    - min: 5
+    - min: 2
       max: 15
-    - min: 7.5
+    - min: 3
       max: 22.5
-    - min: 10
+    - min: 3
       max: 30
-    - min: 12.5
+    - min: 4
       max: 37.5
-    - min: 15
+    - min: 4
       max: 45
   - statType: 5
     mainBaseByStars:
-    - min: 6
+    - min: 2
       max: 6
-    - min: 8
+    - min: 3
       max: 8
-    - min: 10
+    - min: 4
       max: 10
-    - min: 11
+    - min: 5
       max: 11
-    - min: 12
+    - min: 6
       max: 12
-    - min: 14
+    - min: 7
       max: 14
     mainUpgradeByStars:
     - min: 1
@@ -335,84 +335,84 @@ MonoBehaviour:
     - min: 3
       max: 6
     subUpgradeByStars:
-    - min: 0.25
-      max: 0.75
-    - min: 0.5
-      max: 1.5
-    - min: 0.75
-      max: 2.25
     - min: 1
+      max: 0.75
+    - min: 1
+      max: 1.5
+    - min: 2
+      max: 2.25
+    - min: 2
       max: 3
-    - min: 1.25
+    - min: 3
       max: 3.75
-    - min: 1.5
+    - min: 3
       max: 4.5
   - statType: 6
     mainBaseByStars:
-    - min: 150
+    - min: 2
       max: 150
-    - min: 300
+    - min: 2
       max: 300
-    - min: 450
+    - min: 3
       max: 450
-    - min: 600
+    - min: 3
       max: 600
-    - min: 750
+    - min: 4
       max: 750
-    - min: 900
+    - min: 4
       max: 900
     mainUpgradeByStars:
-    - min: 24
+    - min: 1
       max: 24
-    - min: 48
+    - min: 1
       max: 48
-    - min: 72
+    - min: 1
       max: 72
-    - min: 96
+    - min: 1
       max: 96
-    - min: 120
+    - min: 2
       max: 120
-    - min: 144
+    - min: 2
       max: 144
     subInitialByStars:
-    - min: 10
+    - min: 1
       max: 20
-    - min: 20
+    - min: 1
       max: 40
-    - min: 30
+    - min: 1
       max: 60
-    - min: 40
+    - min: 1
       max: 80
-    - min: 50
+    - min: 2
       max: 100
-    - min: 60
+    - min: 2
       max: 120
     subUpgradeByStars:
-    - min: 2.5
+    - min: 1
       max: 7.5
-    - min: 5
+    - min: 1
       max: 15
-    - min: 7.5
+    - min: 1
       max: 22.5
-    - min: 10
+    - min: 1
       max: 30
-    - min: 12.5
+    - min: 1
       max: 37.5
-    - min: 15
+    - min: 2
       max: 45
   - statType: 7
     mainBaseByStars:
-    - min: 6
+    - min: 5
       max: 6
-    - min: 8
+    - min: 7
       max: 8
     - min: 10
       max: 10
-    - min: 11
+    - min: 13
       max: 11
-    - min: 12
+    - min: 15
       max: 12
-    - min: 14
+    - min: 17
       max: 14
     mainUpgradeByStars:
     - min: 1
@@ -425,86 +425,86 @@ MonoBehaviour:
       max: 2
     - min: 3
       max: 3
-    - min: 4
+    - min: 3
       max: 4
     subInitialByStars:
-    - min: 0.5
-      max: 1
-    - min: 1
-      max: 2
-    - min: 1.5
-      max: 3
-    - min: 2
-      max: 4
-    - min: 2.5
-      max: 5
     - min: 3
+      max: 1
+    - min: 3
+      max: 2
+    - min: 3
+      max: 3
+    - min: 4
+      max: 4
+    - min: 4
+      max: 5
+    - min: 4
       max: 6
     subUpgradeByStars:
-    - min: 0.25
+    - min: 5
       max: 0.75
-    - min: 0.5
+    - min: 5
       max: 1.5
-    - min: 0.75
+    - min: 5
       max: 2.25
-    - min: 1
+    - min: 7
       max: 3
-    - min: 1.25
+    - min: 7
       max: 3.75
-    - min: 1.5
+    - min: 8
       max: 4.5
   - statType: 8
     mainBaseByStars:
-    - min: 6
-      max: 6
-    - min: 8
-      max: 8
     - min: 10
+      max: 6
+    - min: 15
+      max: 8
+    - min: 20
       max: 10
-    - min: 11
+    - min: 25
       max: 11
-    - min: 12
+    - min: 30
       max: 12
-    - min: 14
+    - min: 35
       max: 14
     mainUpgradeByStars:
-    - min: 1
+    - min: 5
       max: 1
-    - min: 1
+    - min: 5
       max: 1
-    - min: 2
+    - min: 5
       max: 2
-    - min: 2
+    - min: 10
       max: 2
-    - min: 3
+    - min: 10
       max: 3
-    - min: 4
+    - min: 10
       max: 4
     subInitialByStars:
-    - min: 0.5
+    - min: 7
       max: 1
-    - min: 1
+    - min: 10
       max: 2
-    - min: 1.5
+    - min: 13
       max: 3
-    - min: 2
+    - min: 16
       max: 4
-    - min: 2.5
+    - min: 19
       max: 5
-    - min: 3
+    - min: 21
       max: 6
     subUpgradeByStars:
-    - min: 0.25
+    - min: 5
       max: 0.75
-    - min: 0.5
+    - min: 5
       max: 1.5
-    - min: 0.75
+    - min: 5
       max: 2.25
-    - min: 1
+    - min: 7
       max: 3
-    - min: 1.25
+    - min: 7
       max: 3.75
-    - min: 1.5
+    - min: 10
       max: 4.5
   - statType: 9
     mainBaseByStars:
