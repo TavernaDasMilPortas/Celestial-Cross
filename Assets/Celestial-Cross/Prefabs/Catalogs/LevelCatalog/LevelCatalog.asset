@@ -14,4 +14,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LevelCatalog
   Levels:
   - {fileID: 11400000, guid: 04b233a88d7d57e4db2331de296ee77d, type: 2}
-  - {fileID: 11400000, guid: 7ee318239f53f7e459d553be35f90bd2, type: 2}

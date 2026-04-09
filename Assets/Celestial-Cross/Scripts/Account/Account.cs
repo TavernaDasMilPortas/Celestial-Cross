@@ -64,4 +64,56 @@ public class Account
 
         return null;
     }
+
+    public bool IsPetEquipped(string petId)
+    {
+        if (string.IsNullOrEmpty(petId)) return false;
+        EnsureInitialized();
+        foreach (var loadout in UnitLoadouts)
+        {
+            if (loadout.PetID == petId) return true;
+        }
+        return false;
+    }
+
+    public bool IsArtifactEquipped(string artifactGuid)
+    {
+        if (string.IsNullOrEmpty(artifactGuid)) return false;
+        EnsureInitialized();
+        foreach (var loadout in UnitLoadouts)
+        {
+            if (loadout.HelmetID == artifactGuid || loadout.ChestplateID == artifactGuid ||
+                loadout.GlovesID == artifactGuid || loadout.BootsID == artifactGuid ||
+                loadout.NecklaceID == artifactGuid || loadout.RingID == artifactGuid) return true;
+        }
+        return false;
+    }
+
+    public void UnequipPetFromAll(string petId)
+    {
+        if (string.IsNullOrEmpty(petId)) return;
+        EnsureInitialized();
+        foreach (var loadout in UnitLoadouts)
+        {
+            if (loadout.PetID == petId)
+            {
+                loadout.PetID = string.Empty;
+            }
+        }
+    }
+
+    public void UnequipArtifactFromAll(string artifactGuid)
+    {
+        if (string.IsNullOrEmpty(artifactGuid)) return;
+        EnsureInitialized();
+        foreach (var loadout in UnitLoadouts)
+        {
+            if (loadout.HelmetID == artifactGuid) loadout.HelmetID = string.Empty;
+            if (loadout.ChestplateID == artifactGuid) loadout.ChestplateID = string.Empty;
+            if (loadout.GlovesID == artifactGuid) loadout.GlovesID = string.Empty;
+            if (loadout.BootsID == artifactGuid) loadout.BootsID = string.Empty;
+            if (loadout.NecklaceID == artifactGuid) loadout.NecklaceID = string.Empty;
+            if (loadout.RingID == artifactGuid) loadout.RingID = string.Empty;
+        }
+    }
 }

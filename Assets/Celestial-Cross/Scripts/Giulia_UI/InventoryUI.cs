@@ -66,6 +66,7 @@ public class InventoryUI : MonoBehaviour
     private Button equipArtifactButton;
     private TextMeshProUGUI equipArtifactText;
     private Button cancelEquipButton;
+    private Button unequipArtifactButton;
     private CelestialCross.Artifacts.ArtifactInstanceData selectedArtifactToEquip;
     private string selectedPetToEquipId;
     private string defaultStatsText;
@@ -466,6 +467,26 @@ public class InventoryUI : MonoBehaviour
                 equipArtifactText = eTMP;
                 equipArtifactButton.gameObject.SetActive(false);
                 equipArtifactButton.onClick.AddListener(ConfirmEquip);
+
+                // Unequip
+                var ueGO = new GameObject("UnequipBtn", typeof(RectTransform), typeof(Image), typeof(Button));
+                ueGO.transform.SetParent(artPanel, false);
+                var ueRT = (RectTransform)ueGO.transform;
+                ueRT.anchorMin = new Vector2(1, 0); ueRT.anchorMax = new Vector2(1, 0);
+                ueRT.pivot = new Vector2(1, 0);
+                ueRT.anchoredPosition = new Vector2(-150, 16);
+                ueRT.sizeDelta = new Vector2(120, 50);
+                ueGO.GetComponent<Image>().color = new Color(0.8f, 0.3f, 0.3f, 0.9f);
+                var ueText = new GameObject("Text", typeof(RectTransform), typeof(TextMeshProUGUI));
+                ueText.transform.SetParent(ueGO.transform, false);
+                var ueTMP = ueText.GetComponent<TextMeshProUGUI>();
+                ueTMP.rectTransform.anchorMin = Vector2.zero; ueTMP.rectTransform.anchorMax = Vector2.one;
+                ueTMP.rectTransform.offsetMin = ueTMP.rectTransform.offsetMax = Vector2.zero;
+                ueTMP.alignment = TextAlignmentOptions.Center;
+                ueTMP.fontSize = 24; ueTMP.text = "Remover";
+                unequipArtifactButton = ueGO.GetComponent<Button>();
+                unequipArtifactButton.gameObject.SetActive(false);
+                unequipArtifactButton.onClick.AddListener(ConfirmUnequip);
             }
             // -----------------------------
         }
@@ -638,12 +659,17 @@ public class InventoryUI : MonoBehaviour
                         if (string.IsNullOrWhiteSpace(id)) continue;
                         
                         Sprite icon = null;
+                        string label = "Unidade";
                         if (unitCatalog != null) {
                             var data = unitCatalog.GetUnitData(id);
-                            if (data != null) icon = data.icon;
+                            if (data != null) 
+                            {
+                                icon = data.icon;
+                                label = data.displayName;
+                            }
                         }
                         
-                        SpawnItem(tabIndex, container, id, () => ShowUnitDetails(id, account), icon);
+                        SpawnItem(tabIndex, container, label, () => ShowUnitDetails(id, account), icon);
                     }
                 }
                 break;
@@ -656,13 +682,21 @@ public class InventoryUI : MonoBehaviour
                         string id = account.OwnedPetIDs[i];
                         if (string.IsNullOrWhiteSpace(id)) continue;
                         
+                        if (isSelectingPet && account.IsPetEquipped(id))
+                            continue;
+
                         Sprite icon = null;
+                        string label = "Pet";
                         if (petCatalog != null) {
                             var data = petCatalog.GetPetData(id);
-                            if (data != null) icon = data.icon;
+                            if (data != null) 
+                            {
+                                icon = data.icon;
+                                label = data.displayName;
+                            }
                         }
                         
-                        SpawnItem(tabIndex, container, id, () => OnPetClicked(id), icon);
+                        SpawnItem(tabIndex, container, label, () => OnPetClicked(id), icon);
                     }
                 }
                 break;
@@ -676,8 +710,11 @@ public class InventoryUI : MonoBehaviour
                         if (a == null) continue;
 
                         // Phase 4 filter
-                        if (isSelectingArtifact && a.slot != selectingForSlot)
-                            continue;
+                        if (isSelectingArtifact)
+                        {
+                            if (a.slot != selectingForSlot) continue;
+                            if (account.IsArtifactEquipped(a.idGUID)) continue;
+                        }
 
                         string label = $"{a.slot}\n{a.rarity} {a.GetStarsAsIntClamped()}* +{a.currentLevel}";
                         SpawnItem(tabIndex, container, label, () => OnArtifactClicked(a));
@@ -918,6 +955,13 @@ public class InventoryUI : MonoBehaviour
             int finalCrit = Mathf.Clamp((int)Mathf.Round(baseStats.criticalChance + crF), 0, 100);
             int finalAcc = Mathf.Clamp((int)Mathf.Round(baseStats.effectAccuracy + eaf), 0, 100);
 
+            string healthText = finalHealth > data.baseStats.health ? $"<color=#00ff00>{finalHealth}</color> <color=#aaaaaa>({data.baseStats.health} +{finalHealth - data.baseStats.health})</color>" : finalHealth.ToString();
+            string attackText = finalAttack > data.baseStats.attack ? $"<color=#00ff00>{finalAttack}</color> <color=#aaaaaa>({data.baseStats.attack} +{finalAttack - data.baseStats.attack})</color>" : finalAttack.ToString();
+            string defenseText = finalDefense > data.baseStats.defense ? $"<color=#00ff00>{finalDefense}</color> <color=#aaaaaa>({data.baseStats.defense} +{finalDefense - data.baseStats.defense})</color>" : finalDefense.ToString();
+            string speedText = finalSpeed > data.baseStats.speed ? $"<color=#00ff00>{finalSpeed}</color> <color=#aaaaaa>({data.baseStats.speed} +{finalSpeed - data.baseStats.speed})</color>" : finalSpeed.ToString();
+            string critText = finalCrit > data.baseStats.criticalChance ? $"<color=#00ff00>{finalCrit}%</color> <color=#aaaaaa>({data.baseStats.criticalChance}% +{finalCrit - data.baseStats.criticalChance}%)</color>" : $"{finalCrit}%";
+            string accText = finalAcc > data.baseStats.effectAccuracy ? $"<color=#00ff00>{finalAcc}%</color> <color=#aaaaaa>({data.baseStats.effectAccuracy}% +{finalAcc - data.baseStats.effectAccuracy}%)</color>" : $"{finalAcc}%";
+
             string abilitiesList = "Nenhuma habilidade";
             if (unitAbilitiesContainer != null)
             {
@@ -940,18 +984,18 @@ public class InventoryUI : MonoBehaviour
 
             defaultStatsText = $"<b><size=24>{data.displayName}</size></b>\n" +
                                  $"<size=18>" +
-                                 $"<color=#ff8888>HP:</color> {finalHealth}   " +
-                                 $"<color=#ff8888>ATK:</color> {finalAttack}   " +
-                                 $"<color=#ff8888>DEF:</color> {finalDefense}\n" +
-                                 $"<color=#ff8888>SPD:</color> {finalSpeed}   " +
-                                 $"<color=#ff8888>CRIT:</color> {finalCrit}%   " +
-                                 $"<color=#ff8888>ACC:</color> {finalAcc}%" +
+                                 $"<color=#ff8888>HP:</color> {healthText}   " +
+                                 $"<color=#ff8888>ATK:</color> {attackText}   " +
+                                 $"<color=#ff8888>DEF:</color> {defenseText}\n" +
+                                 $"<color=#ff8888>SPD:</color> {speedText}   " +
+                                 $"<color=#ff8888>CRIT:</color> {critText}   " +
+                                 $"<color=#ff8888>ACC:</color> {accText}" +
                                  $"</size>";
             unitStatsText.text = defaultStatsText;
         }
         else if (unitStatsText != null)
         {
-            unitStatsText.text = $"<b>{unitId}</b>\n(UnitData não encontrado - configure o UnitCatalog)";
+            unitStatsText.text = $"<b>Unidade Desconhecida</b>\n(UnitData não encontrado no Catálogo)";
             if (unitIconImage != null) unitIconImage.sprite = null;
         }
 
@@ -971,7 +1015,7 @@ public class InventoryUI : MonoBehaviour
                     if (pet != null)
                         unitEquipTexts[i].text = $"<b>Pet</b>\n<color=#ffb>{pet.displayName}</color>";
                     else
-                        unitEquipTexts[i].text = $"<b>Pet</b>\n<color=#ffb>{loadout.PetID}</color>";
+                        unitEquipTexts[i].text = $"<b>Pet</b>\n<color=#ffb>Desconhecido</color>";
                 }
                 else
                 {
@@ -1014,14 +1058,51 @@ public class InventoryUI : MonoBehaviour
     private void OnUnitEquipSlotClicked(CelestialCross.Artifacts.ArtifactType slot)
     {
         if (string.IsNullOrEmpty(selectingForUnitId)) return;
+        var account = AccountManager.Instance?.PlayerAccount;
+        if (account == null) return;
         
+        string unitName = "Unidade";
+        if (unitCatalog != null)
+        {
+            var d = unitCatalog.GetUnitData(selectingForUnitId);
+            if (d != null) unitName = d.displayName;
+        }
+        
+        var loadout = account.GetLoadoutForUnit(selectingForUnitId);
+        bool hasEquip = false;
+        if (loadout != null)
+        {
+            switch (slot)
+            {
+                case CelestialCross.Artifacts.ArtifactType.Helmet: hasEquip = !string.IsNullOrEmpty(loadout.HelmetID); break;
+                case CelestialCross.Artifacts.ArtifactType.Chestplate: hasEquip = !string.IsNullOrEmpty(loadout.ChestplateID); break;
+                case CelestialCross.Artifacts.ArtifactType.Gloves: hasEquip = !string.IsNullOrEmpty(loadout.GlovesID); break;
+                case CelestialCross.Artifacts.ArtifactType.Boots:  hasEquip = !string.IsNullOrEmpty(loadout.BootsID); break;
+                case CelestialCross.Artifacts.ArtifactType.Necklace: hasEquip = !string.IsNullOrEmpty(loadout.NecklaceID); break;
+                case CelestialCross.Artifacts.ArtifactType.Ring:   hasEquip = !string.IsNullOrEmpty(loadout.RingID); break;
+            }
+        }
+
         isSelectingArtifact = true;
         isSelectingPet = false;
         selectingForSlot = slot;
         
-        if (cancelEquipButton != null) cancelEquipButton.gameObject.SetActive(true);
-        if (equipArtifactButton != null) equipArtifactButton.gameObject.SetActive(false);
-        SetDetails(2, $"Selecione um <b>{slot}</b> para <b>{selectingForUnitId}</b>");
+        if (cancelEquipButton != null) 
+        {
+            if (topPanels != null && topPanels.Length > 2) cancelEquipButton.transform.SetParent(topPanels[2], false);
+            cancelEquipButton.gameObject.SetActive(true);
+        }
+        if (equipArtifactButton != null) 
+        {
+            if (topPanels != null && topPanels.Length > 2) equipArtifactButton.transform.SetParent(topPanels[2], false);
+            equipArtifactButton.gameObject.SetActive(false);
+        }
+        if (unequipArtifactButton != null)
+        {
+            if (topPanels != null && topPanels.Length > 2) unequipArtifactButton.transform.SetParent(topPanels[2], false);
+            unequipArtifactButton.gameObject.SetActive(hasEquip);
+        }
+        SetDetails(2, $"Selecione um <b>{slot}</b> para <b>{unitName}</b>");
 
         SwitchToTab(2); // Vai para artefatos
         PopulateTab(2); // Refaz a lista mostrando apenas a categoria filtrada
@@ -1030,13 +1111,38 @@ public class InventoryUI : MonoBehaviour
     private void OnUnitPetSlotClicked()
     {
         if (string.IsNullOrEmpty(selectingForUnitId)) return;
+        var account = AccountManager.Instance?.PlayerAccount;
+        if (account == null) return;
         
+        string unitName = "Unidade";
+        var loadout = account.GetLoadoutForUnit(selectingForUnitId);
+        bool hasPet = loadout != null && !string.IsNullOrEmpty(loadout.PetID);
+
+        if (unitCatalog != null)
+        {
+            var d = unitCatalog.GetUnitData(selectingForUnitId);
+            if (d != null) unitName = d.displayName;
+        }
+
         isSelectingPet = true;
         isSelectingArtifact = false;
         
-        if (cancelEquipButton != null) cancelEquipButton.gameObject.SetActive(true);
-        if (equipArtifactButton != null) equipArtifactButton.gameObject.SetActive(false);
-        SetDetails(1, $"Selecione um Pet para <b>{selectingForUnitId}</b>");
+        if (cancelEquipButton != null) 
+        {
+            if (topPanels != null && topPanels.Length > 1) cancelEquipButton.transform.SetParent(topPanels[1], false);
+            cancelEquipButton.gameObject.SetActive(true);
+        }
+        if (equipArtifactButton != null) 
+        {
+            if (topPanels != null && topPanels.Length > 1) equipArtifactButton.transform.SetParent(topPanels[1], false);
+            equipArtifactButton.gameObject.SetActive(false);
+        }
+        if (unequipArtifactButton != null)
+        {
+            if (topPanels != null && topPanels.Length > 1) unequipArtifactButton.transform.SetParent(topPanels[1], false);
+            unequipArtifactButton.gameObject.SetActive(hasPet);
+        }
+        SetDetails(1, $"Selecione um Pet para <b>{unitName}</b>");
 
         SwitchToTab(1); // Vai para Pets
         PopulateTab(1); // Refaz a lista, dessa vez em modo seleção
@@ -1044,7 +1150,33 @@ public class InventoryUI : MonoBehaviour
 
     private void OnPetClicked(string petId)
     {
-        SetDetails(1, $"Pet selecionado:\n{petId}");
+        string details = "Pet desconhecido";
+        if (petCatalog != null)
+        {
+            var data = petCatalog.GetPetData(petId);
+            if (data != null)
+            {
+                details = $"<b>{data.displayName}</b>\n" +
+                          $"HP: +{data.baseStats.health}   " +
+                          $"ATK: +{data.baseStats.attack}   " +
+                          $"DEF: +{data.baseStats.defense}\n" +
+                          $"SPD: +{data.baseStats.speed}   " +
+                          $"CRIT: +{data.baseStats.criticalChance}%   " +
+                          $"ACC: +{data.baseStats.effectAccuracy}%\n\n";
+
+                if (data.ability != null)
+                {
+                    details += $"<color=#ffffaa>{data.ability.abilityName}</color>\n";
+                    details += $"<size=16>{data.ability.abilityDescription}</size>";
+                }
+                else
+                {
+                    details += "<color=#aaaaaa>(Pet sem passiva equipada)</color>";
+                }
+            }
+        }
+
+        SetDetails(1, details);
         
         if (isSelectingPet)
         {
@@ -1063,6 +1195,7 @@ public class InventoryUI : MonoBehaviour
         
         if (cancelEquipButton != null) cancelEquipButton.gameObject.SetActive(false);
         if (equipArtifactButton != null) equipArtifactButton.gameObject.SetActive(false);
+        if (unequipArtifactButton != null) unequipArtifactButton.gameObject.SetActive(false);
         
         SwitchToTab(0); // Volta pra Unidades
         PopulateTab(1); // Atualiza Pets para todos
@@ -1080,6 +1213,38 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
+    private void ConfirmUnequip()
+    {
+        var account = AccountManager.Instance?.PlayerAccount;
+        if (account == null) return;
+        
+        var loadout = account.GetLoadoutForUnit(selectingForUnitId);
+        if (loadout == null) return;
+
+        if (isSelectingArtifact)
+        {
+            switch (selectingForSlot)
+            {
+                case CelestialCross.Artifacts.ArtifactType.Helmet: loadout.HelmetID = string.Empty; break;
+                case CelestialCross.Artifacts.ArtifactType.Chestplate: loadout.ChestplateID = string.Empty; break;
+                case CelestialCross.Artifacts.ArtifactType.Gloves: loadout.GlovesID = string.Empty; break;
+                case CelestialCross.Artifacts.ArtifactType.Boots:  loadout.BootsID = string.Empty; break;
+                case CelestialCross.Artifacts.ArtifactType.Necklace: loadout.NecklaceID = string.Empty; break;
+                case CelestialCross.Artifacts.ArtifactType.Ring:   loadout.RingID = string.Empty; break;
+            }
+        }
+        else if (isSelectingPet)
+        {
+            loadout.PetID = string.Empty;
+        }
+
+        AccountManager.Instance.SaveAccount();
+        
+        string unitToRefresh = selectingForUnitId;
+        CancelEquipMode();
+        ShowUnitDetails(unitToRefresh, account);
+    }
+
     private void ConfirmEquip()
     {
         var account = AccountManager.Instance?.PlayerAccount;
@@ -1090,6 +1255,8 @@ public class InventoryUI : MonoBehaviour
 
         if (isSelectingArtifact && selectedArtifactToEquip != null)
         {
+            account.UnequipArtifactFromAll(selectedArtifactToEquip.idGUID);
+
             switch (selectingForSlot)
             {
                 case CelestialCross.Artifacts.ArtifactType.Helmet: loadout.HelmetID = selectedArtifactToEquip.idGUID; break;
@@ -1102,6 +1269,7 @@ public class InventoryUI : MonoBehaviour
         }
         else if (isSelectingPet && !string.IsNullOrEmpty(selectedPetToEquipId))
         {
+            account.UnequipPetFromAll(selectedPetToEquipId);
             loadout.PetID = selectedPetToEquipId;
         }
         else
@@ -1140,7 +1308,6 @@ public class InventoryUI : MonoBehaviour
 
         return
             $"Artefato\n" +
-            $"GUID: {a.idGUID}\n" +
             $"Slot: {a.slot}\n" +
             $"Set: {setLabel}\n" +
             $"Raridade: {a.rarity}\n" +

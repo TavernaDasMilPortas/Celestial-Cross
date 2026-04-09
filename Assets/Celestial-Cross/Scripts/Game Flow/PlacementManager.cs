@@ -11,6 +11,7 @@ public class PlacementManager : MonoBehaviour
     [SerializeField] private GameObject playerUnitMoldPrefab;
     [SerializeField] private LayerMask tileLayer;
     [SerializeField] private UnitCatalog unitCatalog;
+    [SerializeField] private PetCatalog petCatalog;
 
     [Header("UI")]
     [SerializeField] private ActionBarUI placementActionBar;
@@ -32,6 +33,13 @@ public class PlacementManager : MonoBehaviour
         {
             Instance = this;
         }
+        
+#if UNITY_EDITOR
+        if (petCatalog == null)
+        {
+            petCatalog = UnityEditor.AssetDatabase.LoadAssetAtPath<PetCatalog>("Assets/Celestial-Cross/Prefabs/PetCatalog.asset");
+        }
+#endif
     }
 
     public void StartPlacementPhase()
@@ -178,8 +186,19 @@ public class PlacementManager : MonoBehaviour
         }
         else
         {
+            // Recupera o loadout e o pet (se houver) dessa unidade
+            PetData petData = null;
+            if (petCatalog != null && AccountManager.Instance != null && AccountManager.Instance.PlayerAccount != null)
+            {
+                var loadout = AccountManager.Instance.PlayerAccount.GetLoadoutForUnit(unitData.UnitID);
+                if (loadout != null && !string.IsNullOrEmpty(loadout.PetID))
+                {
+                    petData = petCatalog.GetPetData(loadout.PetID);
+                }
+            }
+
             // Spawna a nova unidade e atrela ela
-            var unit = GridMap.Instance.SpawnUnitAt(playerUnitMoldPrefab, newPos, Team.Player, unitData);
+            var unit = GridMap.Instance.SpawnUnitAt(playerUnitMoldPrefab, newPos, Team.Player, unitData, petData);
             if (unit != null)
             {
                 placedUnitsDict[unitData] = unit;

@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bab812ca73f33a43ae9c3cda74cea5e, type: 3}
+  m_Name: PetCatalog
+  m_EditorClassIdentifier: Assembly-CSharp::PetCatalog
+  entries:
+  - petData: {fileID: 11400000, guid: 992169e206295a442ba5afb83c9de1de, type: 2}
+  - petData: {fileID: 11400000, guid: db86892950f887b4f89de5a3f4faa303, type: 2}
+  - petData: {fileID: 11400000, guid: dc33a365684753c4fbb9069886e81710, type: 2}
+  - petData: {fileID: 11400000, guid: 8bc82eb6baeb8bf4e8da36f6cdc97549, type: 2}
+  - petData: {fileID: 11400000, guid: f4d8c0e03478b1d4aa233b167f0b36d5, type: 2}
+  - petData: {fileID: 11400000, guid: 7bba04fb91889dc4189715d51ab5c0d9, type: 2}
+  - petData: {fileID: 11400000, guid: 9a3d4c01c546e0e48889783c7238a9c6, type: 2}
+  - petData: {fileID: 11400000, guid: fa95167bffae88940a4135d196adfaad, type: 2}
+  - petData: {fileID: 11400000, guid: 9d077f0c1d99e7944b7c47e24bfeaac7, type: 2}
+  - petData: {fileID: 11400000, guid: a3e22efbb24bc824f99528aa38fb1812, type: 2}
+  - petData: {fileID: 11400000, guid: 9f42cee8184cdaa4b8cd4ad07df68288, type: 2}

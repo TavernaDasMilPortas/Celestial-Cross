@@ -186,9 +186,31 @@ public abstract class Unit : MonoBehaviour
 
         // Garante que passivas de set (artefatos) estejam ativas no PassiveManager.
         ApplyArtifactSetPassives();
+        
+        // Aplica passivas de habilidades inatas da classe/unidade ao PassiveManager
+        if (unitData != null)
+        {
+            var blueprints = unitData.GetAbilities();
+            if (blueprints != null)
+            {
+                foreach (var bp in blueprints)
+                {
+                    if (bp != null && (bp.isPassive || (bp.modifiers != null && bp.modifiers.Count > 0)))
+                    {
+                        PassiveManager?.ApplyCondition(bp, this);
+                    }
+                }
+            }
+        }
 
         if (petData != null)
         {
+            // Aplica a habilidade do pet como passiva caso aplicável
+            if (petData.ability != null && (petData.ability.isPassive || (petData.ability.modifiers != null && petData.ability.modifiers.Count > 0)))
+            {
+                PassiveManager?.ApplyCondition(petData.ability, this);
+            }
+
             Debug.Log($"<color=green>[Unit Stats]</color> {DisplayName} combinou status com o pet <b>{petData.name}</b>. Total -> HP: {MaxHealth} | Atk: {Stats.attack} | Def: {Stats.defense} | Spd: {Stats.speed} | Crit: {Stats.criticalChance}%");
         }
     }

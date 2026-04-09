@@ -35,6 +35,9 @@ public class RestSceneManager : MonoBehaviour
     [Tooltip("Nome da cena do Hub (Menu principal)")]
     public string hubSceneName = "HubScene";
 
+    [Tooltip("Botão físico na cena para voltar (se nulo, criará dinamicamente)")]
+    public Button backToHubButton;
+
     void Awake()
     {
         // Singleton simples
@@ -63,6 +66,13 @@ public class RestSceneManager : MonoBehaviour
 
     private void EnsureBackToHubButton()
     {
+        if (backToHubButton != null)
+        {
+            backToHubButton.onClick.RemoveListener(GoToHubScene);
+            backToHubButton.onClick.AddListener(GoToHubScene);
+            return;
+        }
+
         if (mainCanvas == null) return;
 
         var go = new GameObject("Btn_BackToHub", typeof(RectTransform), typeof(Image), typeof(Button));
