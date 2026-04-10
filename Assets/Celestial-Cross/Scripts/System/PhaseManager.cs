@@ -95,17 +95,19 @@ public class PhaseManager : MonoBehaviour
 
     private void GrantRewards()
     {
-        RewardPackage rewardToGrant = null;
+        RewardPackage baseReward = null;
 
         if (GameFlowManager.Instance != null && GameFlowManager.Instance.SelectedLevel != null)
-            rewardToGrant = GameFlowManager.Instance.SelectedLevel.VictoryRewards;
+            baseReward = GameFlowManager.Instance.SelectedLevel.VictoryRewards;
 
-        if (rewardToGrant == null)
-            rewardToGrant = victoryRewards;
+        if (baseReward == null)
+            baseReward = victoryRewards;
+
+        var rewardToGrant = new CelestialCross.Data.Dungeon.RuntimeReward(baseReward);
 
         if (rewardToGrant != null)
         {
-            Debug.Log($"Recompensa adquirida: {rewardToGrant.Money} de dinheiro, {rewardToGrant.Energy} de energia.");
+            Debug.Log($"Recompensa base adquirida: {rewardToGrant.Money} de dinheiro, {rewardToGrant.Energy} de energia.");
 
             if (AccountManager.Instance != null)
             {

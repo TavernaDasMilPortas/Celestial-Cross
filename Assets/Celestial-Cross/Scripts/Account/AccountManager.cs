@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.IO;
-using System.Collections.Generic;
+using global::System.Collections.Generic;
 using System.Linq;
 
 public class AccountManager : MonoBehaviour
@@ -74,13 +74,23 @@ public class AccountManager : MonoBehaviour
         Debug.Log("Conta do jogador salva em: " + savePath);
     }
 
-    public void ApplyRewards(RewardPackage reward)
+    public void ApplyRewards(CelestialCross.Data.Dungeon.RuntimeReward reward)
     {
         if (reward == null || PlayerAccount == null)
             return;
 
         PlayerAccount.Money += reward.Money;
         PlayerAccount.Energy += reward.Energy;
+
+        if (reward.GeneratedArtifacts != null && reward.GeneratedArtifacts.Count > 0)
+        {
+            if (PlayerAccount.OwnedArtifacts == null)
+            {
+                PlayerAccount.OwnedArtifacts = new global::System.Collections.Generic.List<CelestialCross.Artifacts.ArtifactInstanceData>();
+            }
+            PlayerAccount.OwnedArtifacts.AddRange(reward.GeneratedArtifacts);
+        }
+
         SaveAccount();
     }
 

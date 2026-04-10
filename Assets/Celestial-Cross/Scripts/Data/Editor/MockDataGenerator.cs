@@ -200,7 +200,7 @@ namespace CelestialCross.Editor
 
             byte[] bytes = texture.EncodeToPNG();
             string path = $"{BasePath}/{spriteName}.png";
-            System.IO.File.WriteAllBytes(path, bytes);
+            global::System.IO.File.WriteAllBytes(path, bytes);
             AssetDatabase.ImportAsset(path);
 
             TextureImporter ti = AssetImporter.GetAtPath(path) as TextureImporter;

@@ -74,10 +74,6 @@ public class InventoryUI : MonoBehaviour
     
     private CelestialCross.Artifacts.ArtifactInstanceData selectedArtifactToEquip;
     private string selectedPetToEquipId;
-    private string currentlySelectedTabItemId;
-    private string originEquippedId;
-    private string currentlySelectedTabItemId;
-    private string originEquippedId;
     private string defaultStatsText;
     // -------------------------
 
@@ -315,7 +311,7 @@ private void PopulateTab(int tabIndex)
         {
             // No account available: show placeholders.
             for (int i = 0; i < 12; i++)
-                SpawnItem(tabIndex, container, "", $"Item {i + 1}", () => SetDetails(tabIndex, $"Item {i + 1}"));
+                SpawnItem(tabIndex, container, $"Item {i + 1}", () => SetDetails(tabIndex, $"Item {i + 1}"));
             return;
         }
 
@@ -342,7 +338,7 @@ private void PopulateTab(int tabIndex)
                             }
                         }
                         
-                        SpawnItem(tabIndex, container, id, label, () => ShowUnitDetails(id, account), icon);
+                        SpawnItem(tabIndex, container, label, () => ShowUnitDetails(id, account), icon);
                     }
                 }
                 break;
@@ -355,7 +351,8 @@ private void PopulateTab(int tabIndex)
                         string id = account.OwnedPetIDs[i];
                         if (string.IsNullOrWhiteSpace(id)) continue;
                         
-                        if (isSelectingPet) { if (id == originEquippedId) { /* keep it */ } else if (account.IsPetEquipped(id)) continue; }
+                        if (isSelectingPet && account.IsPetEquipped(id))
+                            continue;
 
                         Sprite icon = null;
                         string label = "Pet";
@@ -368,7 +365,7 @@ private void PopulateTab(int tabIndex)
                             }
                         }
                         
-                        SpawnItem(tabIndex, container, id, label, () => OnPetClicked(id), icon);
+                        SpawnItem(tabIndex, container, label, () => OnPetClicked(id), icon);
                     }
                 }
                 break;
@@ -382,10 +379,14 @@ private void PopulateTab(int tabIndex)
                         if (a == null) continue;
 
                         // Phase 4 filter
-                        if (isSelectingArtifact) { if (a.slot != selectingForSlot) continue; if (a.idGUID == originEquippedId) { /* keep it */ } else if (account.IsArtifactEquipped(a.idGUID)) continue; }
+                        if (isSelectingArtifact)
+                        {
+                            if (a.slot != selectingForSlot) continue;
+                            if (account.IsArtifactEquipped(a.idGUID)) continue;
+                        }
 
                         string label = $"{a.slot}\n{a.rarity} {a.GetStarsAsIntClamped()}* +{a.currentLevel}\n<size=10>{UIStatFormatter.FormatStat(a.mainStat)}</size>";
-                        SpawnItem(tabIndex, container, a.idGUID, label, () => OnArtifactClicked(a));
+                        SpawnItem(tabIndex, container, label, () => OnArtifactClicked(a));
                     }
                 }
                 break;
@@ -395,7 +396,7 @@ private void PopulateTab(int tabIndex)
         if (spawnedItemsPerTab[tabIndex].Count == 0)
         {
             string emptyLabel = tabIndex == 0 ? "(sem unidades)" : tabIndex == 1 ? "(sem pets)" : "(sem artefatos)";
-            SpawnItem(tabIndex, container, "", emptyLabel, () => SetDetails(tabIndex, emptyLabel));
+            SpawnItem(tabIndex, container, emptyLabel, () => SetDetails(tabIndex, emptyLabel));
         }
     }
 
@@ -411,14 +412,8 @@ private void PopulateTab(int tabIndex)
         list.Clear();
     }
 
-    private void SpawnItem(int tabIndex, RectTransform parent, string itemId, string label, Action onClick, Sprite icon = null)
+    private void SpawnItem(int tabIndex, RectTransform parent, string label, Action onClick, Sprite icon = null)
     {
-        bool isSelected = (!string.IsNullOrEmpty(itemId) && itemId == currentlySelectedTabItemId);
-        bool isEquippedTarget = false;
-        
-        if (isSelectingPet && tabIndex == 1) isEquippedTarget = (!string.IsNullOrEmpty(itemId) && itemId == originEquippedId);
-        if (isSelectingArtifact && tabIndex == 2) isEquippedTarget = (!string.IsNullOrEmpty(itemId) && itemId == originEquippedId);
-
         if (parent == null) return;
 
         GameObject go;
@@ -439,29 +434,7 @@ private void PopulateTab(int tabIndex)
         {
             button.onClick.RemoveAllListeners();
             if (onClick != null)
-            {
-                button.onClick.AddListener(() => { onClick(); RefreshAllTabs(); }); // Atualiza a borda quando clica
-            }
-        }
-
-        var outline = go.GetComponent<UnityEngine.UI.Outline>();
-        if (outline == null) outline = go.AddComponent<UnityEngine.UI.Outline>();
-        
-        if (isSelected) 
-        {
-            outline.enabled = true;
-            outline.effectColor = isEquippedTarget ? new UnityEngine.Color(0.2f, 1f, 0.2f, 1f) : new UnityEngine.Color(1f, 0.9f, 0.2f, 1f); // Verde para equipado, Amarelo para seleção normal
-            outline.effectDistance = new UnityEngine.Vector2(3, 3);
-        }
-        else if (isEquippedTarget)
-        {
-            outline.enabled = true;
-            outline.effectColor = new UnityEngine.Color(0.2f, 1f, 0.2f, 0.5f); // Verde fraco para já equipado mas não selecionado
-            outline.effectDistance = new UnityEngine.Vector2(2, 2);
-        }
-        else
-        {
-            outline.enabled = false;
+                button.onClick.AddListener(() => onClick());
         }
     }
 
@@ -598,7 +571,6 @@ private void PopulateTab(int tabIndex)
     // --- Phase 3 & 4 Logics ---
     private void ShowUnitDetails(string unitId, Account account)
     {
-        currentlySelectedTabItemId = unitId;
         selectingForUnitId = unitId;
         
         if (unitEquipContainer != null) unitEquipContainer.gameObject.SetActive(true);
@@ -779,19 +751,18 @@ private void PopulateTab(int tabIndex)
         {
             switch (slot)
             {
-                case CelestialCross.Artifacts.ArtifactType.Helmet: originEquippedId = loadout.HelmetID; hasEquip = !string.IsNullOrEmpty(originEquippedId); break;
-                case CelestialCross.Artifacts.ArtifactType.Chestplate: originEquippedId = loadout.ChestplateID; hasEquip = !string.IsNullOrEmpty(originEquippedId); break;
-                case CelestialCross.Artifacts.ArtifactType.Gloves: originEquippedId = loadout.GlovesID; hasEquip = !string.IsNullOrEmpty(originEquippedId); break;
-                case CelestialCross.Artifacts.ArtifactType.Boots:  originEquippedId = loadout.BootsID; hasEquip = !string.IsNullOrEmpty(originEquippedId); break;
-                case CelestialCross.Artifacts.ArtifactType.Necklace: originEquippedId = loadout.NecklaceID; hasEquip = !string.IsNullOrEmpty(originEquippedId); break;
-                case CelestialCross.Artifacts.ArtifactType.Ring:   originEquippedId = loadout.RingID; hasEquip = !string.IsNullOrEmpty(originEquippedId); break;
+                case CelestialCross.Artifacts.ArtifactType.Helmet: hasEquip = !string.IsNullOrEmpty(loadout.HelmetID); break;
+                case CelestialCross.Artifacts.ArtifactType.Chestplate: hasEquip = !string.IsNullOrEmpty(loadout.ChestplateID); break;
+                case CelestialCross.Artifacts.ArtifactType.Gloves: hasEquip = !string.IsNullOrEmpty(loadout.GlovesID); break;
+                case CelestialCross.Artifacts.ArtifactType.Boots:  hasEquip = !string.IsNullOrEmpty(loadout.BootsID); break;
+                case CelestialCross.Artifacts.ArtifactType.Necklace: hasEquip = !string.IsNullOrEmpty(loadout.NecklaceID); break;
+                case CelestialCross.Artifacts.ArtifactType.Ring:   hasEquip = !string.IsNullOrEmpty(loadout.RingID); break;
             }
         }
 
         isSelectingArtifact = true;
         isSelectingPet = false;
         selectingForSlot = slot;
-        currentlySelectedTabItemId = originEquippedId;
         
         if (cancelEquipButton != null) 
         {
@@ -823,8 +794,6 @@ private void PopulateTab(int tabIndex)
         string unitName = "Unidade";
         var loadout = account.GetLoadoutForUnit(selectingForUnitId);
         bool hasPet = loadout != null && !string.IsNullOrEmpty(loadout.PetID);
-        originEquippedId = hasPet ? loadout.PetID : null;
-        currentlySelectedTabItemId = originEquippedId;
 
         if (unitCatalog != null)
         {
@@ -856,8 +825,8 @@ private void PopulateTab(int tabIndex)
         PopulateTab(1); // Refaz a lista, dessa vez em modo seleção
     }
 
-    private void OnPetClicked(string petId) {
-        currentlySelectedTabItemId = petId;
+    private void OnPetClicked(string petId)
+    {
         string details = "Pet desconhecido";
         if (petCatalog != null)
         {
@@ -889,16 +858,7 @@ private void PopulateTab(int tabIndex)
         if (isSelectingPet)
         {
             selectedPetToEquipId = petId;
-            if (currentlySelectedTabItemId == originEquippedId && originEquippedId != null) 
-            {
-                if (equipArtifactButton != null) equipArtifactButton.gameObject.SetActive(false);
-                if (unequipArtifactButton != null) unequipArtifactButton.gameObject.SetActive(true);
-            }
-            else 
-            {
-                if (equipArtifactButton != null) equipArtifactButton.gameObject.SetActive(true);
-                if (unequipArtifactButton != null) unequipArtifactButton.gameObject.SetActive(false);
-            }
+            if (equipArtifactButton != null) equipArtifactButton.gameObject.SetActive(true);
         }
     }
 
@@ -909,8 +869,6 @@ private void PopulateTab(int tabIndex)
         selectingForUnitId = null;
         selectedArtifactToEquip = null;
         selectedPetToEquipId = null;
-        originEquippedId = null;
-        currentlySelectedTabItemId = null;
         
         if (cancelEquipButton != null) cancelEquipButton.gameObject.SetActive(false);
         if (equipArtifactButton != null) equipArtifactButton.gameObject.SetActive(false);
@@ -922,25 +880,15 @@ private void PopulateTab(int tabIndex)
         PopulateTab(2); // Atualiza Artefatos para todos
     }
 
-    private void OnArtifactClicked(CelestialCross.Artifacts.ArtifactInstanceData artifact) {
-        if (artifact != null) currentlySelectedTabItemId = artifact.idGUID;
+    private void OnArtifactClicked(CelestialCross.Artifacts.ArtifactInstanceData artifact)
+    {
         SetDetails(2, FormatArtifactDetails(artifact));
         selectedArtifactToEquip = artifact;
         
         if (isSelectingArtifact)
         {
+            if (equipArtifactButton != null) equipArtifactButton.gameObject.SetActive(true);
             if (manageArtifactButton != null) manageArtifactButton.gameObject.SetActive(false);
-
-            if (currentlySelectedTabItemId == originEquippedId && originEquippedId != null) 
-            {
-                if (equipArtifactButton != null) equipArtifactButton.gameObject.SetActive(false);
-                if (unequipArtifactButton != null) unequipArtifactButton.gameObject.SetActive(true);
-            }
-            else 
-            {
-                if (equipArtifactButton != null) equipArtifactButton.gameObject.SetActive(true);
-                if (unequipArtifactButton != null) unequipArtifactButton.gameObject.SetActive(false);
-            }
         }
         else
         {

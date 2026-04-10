@@ -1,8 +1,4 @@
-using UnityEngine;
-using System.Collections.Generic;
-using CelestialCross.Artifacts;
-
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections.Generic;
 using CelestialCross.Artifacts;
 
@@ -13,7 +9,6 @@ public class UnitLoadout
     
     [Header("Pet")]
     public string PetID; // Slot de Pet
-
     [Header("Artifact Instance GUIDs")]
     public string HelmetID;     // Slot 1
     public string ChestplateID; // Slot 2
@@ -21,14 +16,11 @@ public class UnitLoadout
     public string BootsID;      // Slot 4
     public string NecklaceID;   // Slot 5
     public string RingID;       // Slot 6
-
     public UnitLoadout() {}
-
     public UnitLoadout(string unitID)
     {
         UnitID = unitID;
     }
-
     // Recupera uma lista apenas com os GUIDs que não estão nulos/vazios
     public List<string> GetEquippedArtifactIDs()
     {

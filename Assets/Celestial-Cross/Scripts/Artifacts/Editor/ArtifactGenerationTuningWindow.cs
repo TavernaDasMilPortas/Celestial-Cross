@@ -87,7 +87,7 @@ namespace CelestialCross.Artifacts.Editor
             var asset = CreateInstance<ArtifactGenerationTuning>();
             asset.ResetToGeneratorDefaults();
 
-            string folder = System.IO.Path.GetDirectoryName(DefaultAssetPath);
+            string folder = global::System.IO.Path.GetDirectoryName(DefaultAssetPath);
             if (!AssetDatabase.IsValidFolder(folder))
             {
                 // Creates missing folders recursively.

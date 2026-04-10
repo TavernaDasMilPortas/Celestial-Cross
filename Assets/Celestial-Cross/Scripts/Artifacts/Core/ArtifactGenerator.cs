@@ -146,7 +146,7 @@ namespace CelestialCross.Artifacts
         public static StatType GetRandomSubstatType(StatType mainStatToExclude, List<StatModifier> currentSubstats)
         {
             // Pega todos os stat types possiveis
-            var allTypes = System.Enum.GetValues(typeof(StatType)).Cast<StatType>().ToList();
+            var allTypes = global::System.Enum.GetValues(typeof(StatType)).Cast<StatType>().ToList();
             
             // Bloqueia duplicatas (não pode rolar um substat que é do mesmo tipo do Main e que já existe listado)
             allTypes.Remove(mainStatToExclude);

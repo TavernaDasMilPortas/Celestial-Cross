@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace CelestialCross.Combat
 {
@@ -38,8 +38,8 @@ namespace CelestialCross.Combat
         public bool isCritical;
         public IUnitAction action; 
 
-        public System.Collections.Generic.Dictionary<string, float> Variables;
-        public System.Collections.Generic.List<Celestial_Cross.Scripts.Abilities.Conditions.AbilityConditionData> conditionPool;
+        public global::System.Collections.Generic.Dictionary<string, float> Variables;
+        public global::System.Collections.Generic.List<Celestial_Cross.Scripts.Abilities.Conditions.AbilityConditionData> conditionPool;
 
         public CombatContext(Unit source, Unit target = null, int amount = 0, IUnitAction action = null)
         {
@@ -47,8 +47,8 @@ namespace CelestialCross.Combat
             this.target = target;
             this.amount = amount;
             this.action = action;
-            this.Variables = new System.Collections.Generic.Dictionary<string, float>();
-            this.conditionPool = new System.Collections.Generic.List<Celestial_Cross.Scripts.Abilities.Conditions.AbilityConditionData>();
+            this.Variables = new global::System.Collections.Generic.Dictionary<string, float>();
+            this.conditionPool = new global::System.Collections.Generic.List<Celestial_Cross.Scripts.Abilities.Conditions.AbilityConditionData>();
         }
     }
 }

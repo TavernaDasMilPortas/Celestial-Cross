@@ -12,8 +12,8 @@ namespace CelestialCross.Artifacts.Editor
 
         private Vector2 statsScroll;
 
-        private readonly System.Collections.Generic.Dictionary<StatType, bool> statFoldouts =
-            new System.Collections.Generic.Dictionary<StatType, bool>();
+        private readonly global::System.Collections.Generic.Dictionary<StatType, bool> statFoldouts =
+            new global::System.Collections.Generic.Dictionary<StatType, bool>();
 
         public override void OnInspectorGUI()
         {

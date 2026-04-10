@@ -65,7 +65,8 @@ namespace CelestialCross.Artifacts.Editor
             }
 
             // Salva fisicamente o SO no projeto (na pasta criada pro Dev brincar)
-            string path = $"Assets/Celestial-Cross/Artifacts_Test/{selectedSlot}_{selectedRarity}_{(int)selectedStars}Star_{System.DateTime.Now.ToString("dd-HH-mm")}.asset";
+            string dateStr = global::System.DateTime.Now.ToString("dd-HH-mm");
+            string path = $"Assets/Celestial-Cross/Artifacts_Test/{selectedSlot}_{selectedRarity}_{(int)selectedStars}Star_{dateStr}.asset";
             
             // Cria diretório se não existir
             if (!AssetDatabase.IsValidFolder("Assets/Celestial-Cross/Artifacts_Test"))

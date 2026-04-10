@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e5d2c7dea048ae40ba0719ad4ab26e7, type: 3}
   m_Name: AccountProfileTest
   m_EditorClassIdentifier: Assembly-CSharp::AccountProfile
-  Money: 100
+  Money: 1000000000
   Energy: 50
   OwnedUnits:
   - {fileID: 11400000, guid: 90c9076b7a221204897b90b1a48cf69e, type: 2}

@@ -116,10 +116,15 @@ public abstract class Unit : MonoBehaviour
                 }
             }
 
-            int finalHealth = (int)(Mathf.Round(baseStats.health + healthFlat) * (1f + (healthPct / 100f)));
-            int finalAttack = (int)(Mathf.Round(baseStats.attack + atkFlat) * (1f + (atkPct / 100f)));
-            int finalDefense = (int)(Mathf.Round(baseStats.defense + defFlat) * (1f + (defPct / 100f)));
-            int finalSpeed = (int)Mathf.Round(baseStats.speed + spdFlat); // Speed generally hasn't a percent variant in standard logic
+            CombatStats uBase = unitData != null ? unitData.baseStats : baseStats;
+            int petHealth = baseStats.health - uBase.health;
+            int petAttack = baseStats.attack - uBase.attack;
+            int petDefense = baseStats.defense - uBase.defense;
+
+            int finalHealth = (int)(Mathf.Round(uBase.health * (1f + (healthPct / 100f))) + healthFlat) + petHealth;
+            int finalAttack = (int)(Mathf.Round(uBase.attack * (1f + (atkPct / 100f))) + atkFlat) + petAttack;
+            int finalDefense = (int)(Mathf.Round(uBase.defense * (1f + (defPct / 100f))) + defFlat) + petDefense;
+            int finalSpeed = (int)Mathf.Round(baseStats.speed + spdFlat); // Pet speed already in baseStats. Speed generally hasn't a percent variant in standard logic
             int finalCrit = (int)Mathf.Round(baseStats.criticalChance + critChanceFlat);
             int finalAcc = (int)Mathf.Round(baseStats.effectAccuracy + effectAccFlat);
 

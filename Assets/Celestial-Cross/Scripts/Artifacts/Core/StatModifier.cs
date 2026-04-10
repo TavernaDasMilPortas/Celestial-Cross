@@ -1,8 +1,8 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace CelestialCross.Artifacts
 {
-    [System.Serializable]
+    [global::System.Serializable]
     public struct StatModifier
     {
         public StatType statType;

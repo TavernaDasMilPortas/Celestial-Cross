@@ -60,7 +60,7 @@ namespace CelestialCross.Combat
         public static void Log(string message, LogCategory category = LogCategory.System)
         {
             // Remove tags HTML de logs antigos para nÃ£o duplicar no novo sistema se vierem strings sujas
-            string cleanMsg = System.Text.RegularExpressions.Regex.Replace(message, "<.*?>", string.Empty);
+            string cleanMsg = global::System.Text.RegularExpressions.Regex.Replace(message, "<.*?>", string.Empty);
 
             if (Instance == null)
             {

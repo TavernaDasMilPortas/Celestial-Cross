@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections.Generic;
 using Celestial_Cross.Scripts.Abilities;
 
@@ -11,10 +11,10 @@ namespace CelestialCross.Artifacts
         public string setName;
         [TextArea] public string description;
 
-        [System.Serializable]
+        [global::System.Serializable]
         public struct SetBonus
         {
-            public int piecesRequired; // Ex: 2, 4, ou 6 peças.
+            public int piecesRequired; // Ex: 2, 4, ou 6 peÃ§as.
             public List<StatModifier> statBonuses;
             public AbilityBlueprint passiveAbility; // Conecta diretamente a uma habilidade passiva.
         }
