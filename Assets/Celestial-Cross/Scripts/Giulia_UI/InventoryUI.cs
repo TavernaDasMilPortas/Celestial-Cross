@@ -76,8 +76,6 @@ public class InventoryUI : MonoBehaviour
     private string selectedPetToEquipId;
     private string currentlySelectedTabItemId;
     private string originEquippedId;
-    private string currentlySelectedTabItemId;
-    private string originEquippedId;
     private string defaultStatsText;
     // -------------------------
 
