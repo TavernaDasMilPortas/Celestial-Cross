@@ -63,7 +63,7 @@ MonoBehaviour:
       responseEntries:
       - speakerName: Shany
         dialogueText: Tudo bem, eu entendo.
-        characterSprite: {fileID: 0}
+        characterSprite: {fileID: 21300000, guid: 171580878dc9f9043ac9929348b8e850, type: 3}
         choices: []
         flagToSet: 
       flagToSet: desculpou_shany
