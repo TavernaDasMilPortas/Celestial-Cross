@@ -18,6 +18,19 @@ public class DialogueFlagManager : MonoBehaviour
 
     private HashSet<string> _flags = new HashSet<string>();
 
+    /// <summary>
+    /// Garante que o DialogueFlagManager exista em qualquer cena,
+    /// mesmo que não tenha sido colocado manualmente na Hierarchy.
+    /// </summary>
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    private static void AutoInitialize()
+    {
+        if (Instance != null) return;
+
+        var go = new GameObject("DialogueFlagManager (Auto)");
+        go.AddComponent<DialogueFlagManager>();
+    }
+
     void Awake()
     {
         if (Instance != null && Instance != this)
