@@ -25,6 +25,12 @@ public class DialogueManager : MonoBehaviour
 
     private int _currentIndex = -1;
     private bool _isActive;
+    private bool _waitingForChoice;
+    private DialogueEntry _pendingEntry;
+
+    // Branch: sequência de entries gerada por uma escolha
+    private DialogueEntry[] _branchEntries;
+    private int _branchIndex;
 
     void Start()
     {
@@ -65,6 +71,8 @@ public class DialogueManager : MonoBehaviour
         dialogueSequence = sequence;
         _currentIndex = -1;
         _isActive = true;
+        _branchEntries = null;
+        _branchIndex = 0;
 
         ShowNext();
     }
@@ -75,11 +83,36 @@ public class DialogueManager : MonoBehaviour
     public void Advance()
     {
         if (!_isActive) return;
+        if (_waitingForChoice) return; // bloqueia input enquanto escolhas estão visíveis
 
         if (dialogueUI != null && dialogueUI.IsTyping)
         {
             dialogueUI.CompleteText();
             return;
+        }
+
+        // Se a entry atual tem choices, mostra as opções ao invés de avançar
+        if (_pendingEntry.HasChoices)
+        {
+            _waitingForChoice = true;
+            dialogueUI.ShowChoices(_pendingEntry.choices, OnChoiceSelected);
+            return;
+        }
+
+        // Se estamos dentro de um branch, avança nele
+        if (_branchEntries != null)
+        {
+            _branchIndex++;
+
+            if (_branchIndex < _branchEntries.Length)
+            {
+                ShowBranchEntry();
+                return;
+            }
+
+            // Branch terminou, volta para a sequência principal
+            _branchEntries = null;
+            _branchIndex = 0;
         }
 
         ShowNext();
@@ -96,15 +129,53 @@ public class DialogueManager : MonoBehaviour
         }
 
         DialogueEntry entry = dialogueSequence.entries[_currentIndex];
+        _pendingEntry = entry;
 
         if (dialogueUI != null)
             dialogueUI.ShowEntry(entry);
+    }
+
+    private void ShowBranchEntry()
+    {
+        _pendingEntry = _branchEntries[_branchIndex];
+
+        if (dialogueUI != null)
+            dialogueUI.ShowEntry(_pendingEntry);
+    }
+
+    /// <summary>
+    /// Chamado pela UI quando o jogador seleciona uma opção de escolha.
+    /// </summary>
+    private void OnChoiceSelected(int choiceIndex)
+    {
+        if (!_waitingForChoice) return;
+        _waitingForChoice = false;
+
+        DialogueChoice choice = _pendingEntry.choices[choiceIndex];
+
+        if (dialogueUI != null)
+            dialogueUI.HideChoices();
+
+        if (choice.responseEntries != null && choice.responseEntries.Length > 0)
+        {
+            _branchEntries = choice.responseEntries;
+            _branchIndex = 0;
+            ShowBranchEntry();
+        }
+        else
+        {
+            // Choice sem respostas, avança direto
+            ShowNext();
+        }
     }
 
     private void EndDialogue()
     {
         _isActive = false;
         _currentIndex = -1;
+        _waitingForChoice = false;
+        _branchEntries = null;
+        _branchIndex = 0;
 
         if (dialogueUI != null)
             dialogueUI.Hide();

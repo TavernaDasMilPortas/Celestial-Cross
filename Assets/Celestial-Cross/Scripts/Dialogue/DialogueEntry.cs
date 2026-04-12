@@ -16,4 +16,10 @@ public struct DialogueEntry
 
     [Tooltip("Sprite do personagem (retrato/expressão). Deixe vazio para esconder a imagem.")]
     public Sprite characterSprite;
+
+    [Tooltip("Opções de escolha para o jogador. Deixe vazio para diálogo sem escolha.")]
+    public DialogueChoice[] choices;
+
+    /// <summary>Retorna true se esta entry possui escolhas configuradas.</summary>
+    public bool HasChoices => choices != null && choices.Length > 0;
 }

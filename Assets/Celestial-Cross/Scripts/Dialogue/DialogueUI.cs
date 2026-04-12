@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,11 +17,18 @@ public class DialogueUI : MonoBehaviour
     [SerializeField] private TMP_Text dialogueText;
     [SerializeField] private GameObject continueIndicator;
 
+    [Header("Escolhas")]
+    [Tooltip("Container (ex: VerticalLayoutGroup) onde os botões de escolha serão instanciados.")]
+    [SerializeField] private Transform choicesContainer;
+    [Tooltip("Prefab de botão com TMP_Text filho. Será instanciado para cada opção.")]
+    [SerializeField] private Button choiceButtonPrefab;
+
     [Header("Typewriter")]
     [SerializeField] private float typingSpeed = 40f;
 
     private Coroutine _typingCoroutine;
     private string _fullText;
+    private Action<int> _onChoiceSelected;
 
     /// <summary>Retorna true enquanto o texto ainda está sendo "digitado".</summary>
     public bool IsTyping { get; private set; }
@@ -108,6 +116,7 @@ public class DialogueUI : MonoBehaviour
         }
 
         IsTyping = false;
+        HideChoices();
 
         if (dialoguePanel != null)
             dialoguePanel.SetActive(false);
@@ -117,6 +126,49 @@ public class DialogueUI : MonoBehaviour
 
         if (continueIndicator != null)
             continueIndicator.SetActive(false);
+    }
+
+    /// <summary>
+    /// Instancia botões de escolha dentro do container.
+    /// Cada botão dispara onSelect com o índice correspondente.
+    /// </summary>
+    public void ShowChoices(DialogueChoice[] choices, Action<int> onSelect)
+    {
+        if (choicesContainer == null || choiceButtonPrefab == null) return;
+
+        _onChoiceSelected = onSelect;
+
+        if (continueIndicator != null)
+            continueIndicator.SetActive(false);
+
+        for (int i = 0; i < choices.Length; i++)
+        {
+            Button btn = Instantiate(choiceButtonPrefab, choicesContainer);
+            btn.gameObject.SetActive(true);
+
+            TMP_Text label = btn.GetComponentInChildren<TMP_Text>();
+            if (label != null)
+                label.text = choices[i].choiceText;
+
+            int idx = i; // captura para closure
+            btn.onClick.AddListener(() => _onChoiceSelected?.Invoke(idx));
+        }
+
+        choicesContainer.gameObject.SetActive(true);
+    }
+
+    /// <summary>
+    /// Destrói os botões de escolha e esconde o container.
+    /// </summary>
+    public void HideChoices()
+    {
+        if (choicesContainer == null) return;
+
+        foreach (Transform child in choicesContainer)
+            Destroy(child.gameObject);
+
+        choicesContainer.gameObject.SetActive(false);
+        _onChoiceSelected = null;
     }
 
     private IEnumerator TypeText(string text)
