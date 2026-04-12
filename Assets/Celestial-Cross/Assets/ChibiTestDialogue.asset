@@ -18,13 +18,56 @@ MonoBehaviour:
     characterSprite: {fileID: 21300000, guid: 171580878dc9f9043ac9929348b8e850, type: 3}
     choices: []
     flagToSet: 
-  - speakerName: CHIBI
-    dialogueText: Gostaria de ir em uma aventura hoje?
+  - speakerName: Shany
+    dialogueText: Vamos ir em uma aventura hoje?
     characterSprite: {fileID: 21300000, guid: 171580878dc9f9043ac9929348b8e850, type: 3}
     choices:
     - choiceText: Sim
-      responseEntries: []
-      flagToSet: 
+      responseEntries:
+      - speakerName: Shany
+        dialogueText: "Que \xF3timo, mal posso esperar para ver qual planeta explorar!"
+        characterSprite: {fileID: 21300000, guid: 171580878dc9f9043ac9929348b8e850, type: 3}
+        choices: []
+        flagToSet: 
+      flagToSet: aceitou_shany
       requiredFlags: []
+      blockedByFlags: []
+    - choiceText: "N\xE3o"
+      responseEntries:
+      - speakerName: Shany
+        dialogueText: "Tudo bem, fica para a pr\xF3xima ent\xE3o."
+        characterSprite: {fileID: 21300000, guid: 171580878dc9f9043ac9929348b8e850, type: 3}
+        choices: []
+        flagToSet: 
+      flagToSet: recusou_shany
+      requiredFlags: []
+      blockedByFlags: []
+    flagToSet: 
+  - speakerName: Shany
+    dialogueText: Nos encontramos de novo! O que gostaria de fazer?
+    characterSprite: {fileID: 21300000, guid: 171580878dc9f9043ac9929348b8e850, type: 3}
+    choices:
+    - choiceText: Vamos para Witch Woo?
+      responseEntries:
+      - speakerName: Shany
+        dialogueText: "Vamos! Estava morrendo de vontade de explorar l\xE1!"
+        characterSprite: {fileID: 21300000, guid: 171580878dc9f9043ac9929348b8e850, type: 3}
+        choices: []
+        flagToSet: 
+      flagToSet: 
+      requiredFlags:
+      - aceitou_shany
+      blockedByFlags:
+      - recusou_shany
+    - choiceText: Estava ocupada antes, me desculpa.
+      responseEntries:
+      - speakerName: Shany
+        dialogueText: Tudo bem, eu entendo.
+        characterSprite: {fileID: 0}
+        choices: []
+        flagToSet: 
+      flagToSet: desculpou_shany
+      requiredFlags:
+      - recusou_shany
       blockedByFlags: []
     flagToSet: 
