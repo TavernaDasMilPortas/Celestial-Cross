@@ -130,6 +130,7 @@ public class DialogueManager : MonoBehaviour
 
         DialogueEntry entry = dialogueSequence.entries[_currentIndex];
         _pendingEntry = entry;
+        SetEntryFlag(entry);
 
         if (dialogueUI != null)
             dialogueUI.ShowEntry(entry);
@@ -138,9 +139,16 @@ public class DialogueManager : MonoBehaviour
     private void ShowBranchEntry()
     {
         _pendingEntry = _branchEntries[_branchIndex];
+        SetEntryFlag(_pendingEntry);
 
         if (dialogueUI != null)
             dialogueUI.ShowEntry(_pendingEntry);
+    }
+
+    private void SetEntryFlag(DialogueEntry entry)
+    {
+        if (!string.IsNullOrEmpty(entry.flagToSet) && DialogueFlagManager.Instance != null)
+            DialogueFlagManager.Instance.SetFlag(entry.flagToSet);
     }
 
     /// <summary>
@@ -152,6 +160,10 @@ public class DialogueManager : MonoBehaviour
         _waitingForChoice = false;
 
         DialogueChoice choice = _pendingEntry.choices[choiceIndex];
+
+        // Seta a flag da escolha, se definida
+        if (!string.IsNullOrEmpty(choice.flagToSet) && DialogueFlagManager.Instance != null)
+            DialogueFlagManager.Instance.SetFlag(choice.flagToSet);
 
         if (dialogueUI != null)
             dialogueUI.HideChoices();

@@ -131,6 +131,7 @@ public class DialogueUI : MonoBehaviour
     /// <summary>
     /// Instancia botões de escolha dentro do container.
     /// Cada botão dispara onSelect com o índice correspondente.
+    /// Botões que não atendem às condições de flags ficam desabilitados (cinza).
     /// </summary>
     public void ShowChoices(DialogueChoice[] choices, Action<int> onSelect)
     {
@@ -143,8 +144,19 @@ public class DialogueUI : MonoBehaviour
 
         for (int i = 0; i < choices.Length; i++)
         {
+            bool isAvailable = IsChoiceAvailable(choices[i]);
+
             Button btn = Instantiate(choiceButtonPrefab, choicesContainer);
             btn.gameObject.SetActive(true);
+            btn.interactable = isAvailable;
+
+            // Reduz opacidade visual se bloqueado
+            if (!isAvailable)
+            {
+                var colors = btn.colors;
+                colors.disabledColor = new Color(0.5f, 0.5f, 0.5f, 0.4f);
+                btn.colors = colors;
+            }
 
             TMP_Text label = btn.GetComponentInChildren<TMP_Text>();
             if (label != null)
@@ -155,6 +167,37 @@ public class DialogueUI : MonoBehaviour
         }
 
         choicesContainer.gameObject.SetActive(true);
+    }
+
+    /// <summary>
+    /// Verifica se uma choice está disponível com base nas flags do jogador.
+    /// </summary>
+    private bool IsChoiceAvailable(DialogueChoice choice)
+    {
+        var fm = DialogueFlagManager.Instance;
+        if (fm == null) return true;
+
+        // Verifica se tem todas as flags necessárias
+        if (choice.requiredFlags != null)
+        {
+            foreach (string flag in choice.requiredFlags)
+            {
+                if (!string.IsNullOrEmpty(flag) && !fm.HasFlag(flag))
+                    return false;
+            }
+        }
+
+        // Verifica se tem alguma flag que bloqueia
+        if (choice.blockedByFlags != null)
+        {
+            foreach (string flag in choice.blockedByFlags)
+            {
+                if (!string.IsNullOrEmpty(flag) && fm.HasFlag(flag))
+                    return false;
+            }
+        }
+
+        return true;
     }
 
     /// <summary>

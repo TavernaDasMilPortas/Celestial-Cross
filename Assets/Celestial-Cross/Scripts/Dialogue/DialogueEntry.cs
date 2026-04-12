@@ -20,6 +20,10 @@ public struct DialogueEntry
     [Tooltip("Opções de escolha para o jogador. Deixe vazio para diálogo sem escolha.")]
     public DialogueChoice[] choices;
 
+    [Header("Flag")]
+    [Tooltip("Flag que será ativada ao exibir esta fala. Deixe vazio se não precisa.")]
+    public string flagToSet;
+
     /// <summary>Retorna true se esta entry possui escolhas configuradas.</summary>
     public bool HasChoices => choices != null && choices.Length > 0;
 }

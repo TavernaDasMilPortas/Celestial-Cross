@@ -13,4 +13,15 @@ public struct DialogueChoice
 
     [Tooltip("Sequência de respostas ao selecionar esta opção. Pode ter várias entries para criar branches longos.")]
     public DialogueEntry[] responseEntries;
+
+    [Header("Flags")]
+    [Tooltip("Flag que será ativada quando o jogador selecionar esta opção. Deixe vazio se não precisa.")]
+    public string flagToSet;
+
+    [Tooltip("Flags necessárias para esta opção estar disponível. TODAS devem existir.")]
+    public string[] requiredFlags;
+
+    [Tooltip("Flags que BLOQUEIAM esta opção. Se QUALQUER uma existir, a opção fica indisponível.")]
+    public string[] blockedByFlags;
 }
+
