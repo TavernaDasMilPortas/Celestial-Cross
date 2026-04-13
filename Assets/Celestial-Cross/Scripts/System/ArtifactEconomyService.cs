@@ -92,7 +92,9 @@ namespace CelestialCross.System
             account.Money += sellPrice;
             account.OwnedArtifacts.Remove(artifact);
             
-            // Opcional: Se houver sistema equipado, checar e desequipar aqui
+            // Garantir que a peça vendida seja desequipada do Loadout
+            account.UnequipArtifactFromAll(artifact.idGUID);
+
             return true;
         }
 

@@ -13,6 +13,7 @@ public class HubSceneController : MonoBehaviour
 
     [Header("Data")]
     [SerializeField] private LevelCatalog levelCatalog;
+    [SerializeField] private CelestialCross.Data.DungeonCatalog dungeonCatalog;
 
     [Header("UI")]
     [SerializeField] private Transform levelsContainer;
@@ -118,6 +119,26 @@ public class HubSceneController : MonoBehaviour
         }
 
         GameFlowManager.Instance.SelectedLevel = level;
+
+        // Resolve qual Dungeon e Node pertencem a essa fase para poder dropar os artefatos certos depois
+        if (dungeonCatalog != null)
+        {
+            if (dungeonCatalog.TryFindDungeonForLevel(level, out var d, out var node))
+            {
+                GameFlowManager.Instance.SelectedDungeon = d;
+                GameFlowManager.Instance.SelectedDungeonNode = node;
+            }
+            else
+            {
+                GameFlowManager.Instance.SelectedDungeon = null;
+                GameFlowManager.Instance.SelectedDungeonNode = null;
+                Debug.LogWarning($"[HubSceneController] Nenhuma Dungeon no catálogo contém o {level.name}. Esta fase não vai ter drop procedural de Artefatos.");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("[HubSceneController] dungeonCatalog não referenciado no Inspector.");
+        }
 
         // A seleção acontece na PreparationScene.
         GameFlowManager.Instance.SelectedUnitIDs.Clear();

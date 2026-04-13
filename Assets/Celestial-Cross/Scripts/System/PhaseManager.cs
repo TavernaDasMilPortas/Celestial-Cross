@@ -70,10 +70,12 @@ public class PhaseManager : MonoBehaviour
 
     private void EndPhase(Team winningTeam)
     {
+        CelestialCross.Data.Dungeon.RuntimeReward finalReward = null;
+
         if (winningTeam == Team.Player)
         {
             Debug.Log("Fase concluída! Vitória do Jogador!");
-            GrantRewards();
+            finalReward = GrantRewards();
         }
         else
         {
@@ -82,8 +84,18 @@ public class PhaseManager : MonoBehaviour
 
         OnPhaseEnded?.Invoke(winningTeam);
 
-        if (!string.IsNullOrWhiteSpace(hubSceneName))
+        if (winningTeam == Team.Player && finalReward != null)
         {
+            // Mostra a UI procedimental e só volta pro Hub depois do clique
+            CelestialCross.Giulia_UI.VictoryRewardUI.ShowVictoryUI(finalReward, () => 
+            {
+                if (!string.IsNullOrWhiteSpace(hubSceneName))
+                    ReturnToHub();
+            });
+        }
+        else if (!string.IsNullOrWhiteSpace(hubSceneName))
+        {
+            // Derrota: Volta para o hub com atraso
             Invoke(nameof(ReturnToHub), Mathf.Max(0.5f, returnDelaySeconds));
         }
     }
@@ -93,7 +105,7 @@ public class PhaseManager : MonoBehaviour
         SceneManager.LoadScene(hubSceneName);
     }
 
-    private void GrantRewards()
+    private CelestialCross.Data.Dungeon.RuntimeReward GrantRewards()
     {
         RewardPackage baseReward = null;
 
@@ -104,6 +116,21 @@ public class PhaseManager : MonoBehaviour
             baseReward = victoryRewards;
 
         var rewardToGrant = new CelestialCross.Data.Dungeon.RuntimeReward(baseReward);
+
+        // --- INTEGRAÇÃO DO DROP PROCEDURAL DE ARTEFATOS ---
+        if (GameFlowManager.Instance != null && GameFlowManager.Instance.SelectedDungeon != null && GameFlowManager.Instance.SelectedDungeonNode != null)
+        {
+            var generatedLoot = CelestialCross.System.ArtifactLootService.GenerateLoot(
+                GameFlowManager.Instance.SelectedDungeon, 
+                GameFlowManager.Instance.SelectedDungeonNode
+            );
+
+            if (generatedLoot != null && generatedLoot.Count > 0)
+            {
+                rewardToGrant.GeneratedArtifacts.AddRange(generatedLoot);
+                Debug.Log($"[PhaseManager] {generatedLoot.Count} Artefatos gerados proceduralmente!");
+            }
+        }
 
         if (rewardToGrant != null)
         {
@@ -119,5 +146,7 @@ public class PhaseManager : MonoBehaviour
         {
             Debug.Log("Nenhuma recompensa configurada para esta fase.");
         }
+
+        return rewardToGrant;
     }
 }
