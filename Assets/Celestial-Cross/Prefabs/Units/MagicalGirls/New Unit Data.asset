@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb249868a85523b4686441d22073799e, type: 3}
   m_Name: New Unit Data
   m_EditorClassIdentifier: Assembly-CSharp::UnitData
-  unitID: 
-  displayName: 
-  icon: {fileID: 0}
+  unitID: 704753636e58dab40b1e29a96fbcd4ee
+  displayName: shanny
+  icon: {fileID: 21300000, guid: 818165bbcf8b25a40ba19a9fc51a2e52, type: 3}
   baseStats:
     health: 30
     attack: 10
@@ -22,7 +22,8 @@ MonoBehaviour:
     speed: 7
     criticalChance: 7
     effectAccuracy: 1
-  abilities: []
+  abilities:
+  - {fileID: 11400000, guid: 1ce9c6b3a1749ba4184caef9cecad6ae, type: 2}
   nativeActions: []
   references:
     version: 2

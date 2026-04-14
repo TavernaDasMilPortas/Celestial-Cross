@@ -13,7 +13,17 @@ MonoBehaviour:
   m_Name: New AI Behavior Profile
   m_EditorClassIdentifier: Assembly-CSharp::AIBehaviorProfile
   profileName: New Profile
-  rules: []
+  rules:
+  - ruleName: New Rule
+    priority: 50
+    behavior: 3
+    targetPreference: 2
+    activateWhenHpBelow: 1
+    activateWhenAlone: 0
+    activateWhenAlliesBelow: 0
+    attackWeight: 1
+    moveWeight: 1
+    abilityWeight: 1
   randomnessFactor: 0.124
   fallbackBehavior: 0
   fallbackTargetPreference: 5

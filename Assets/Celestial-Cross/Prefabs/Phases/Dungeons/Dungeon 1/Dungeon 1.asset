@@ -28,9 +28,7 @@ MonoBehaviour:
         BaseDropChance: 100
         AllowedPets:
         - Species: {fileID: 11400000, guid: ca3587875a7b1d64bbb5e2585641ebca, type: 2}
-          Weight: 10
-        - Species: {fileID: 11400000, guid: 52c34e207dee2284f86e51d9d05b28fd, type: 2}
-          Weight: 10
+          Weight: 50
         DropMatrix:
           oneStarChance: 60
           twoStarChance: 30

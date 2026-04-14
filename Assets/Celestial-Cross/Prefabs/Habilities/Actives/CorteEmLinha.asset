@@ -17,9 +17,47 @@ MonoBehaviour:
   abilityDescription: 
   displayRange: 1
   isPassive: 0
-  effectSteps: []
+  isPersistentCondition: 0
+  durationInTurns: 0
+  effectSteps:
+  - rid: 4202905515405082703
   modifierSteps: []
   modifiers: []
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 4202905515405082703
+      type: {class: EffectStep, ns: Celestial_Cross.Scripts.Abilities, asm: Assembly-CSharp}
+      data:
+        trigger: 0
+        reusePreviousTargets: 0
+        targetingStrategy:
+          rid: 4202905515405082704
+        effects:
+        - rid: 4202905515405082705
+    - rid: 4202905515405082704
+      type: {class: ManualTargetingStrategy, ns: Celestial_Cross.Scripts.Abilities.Targeting, asm: Assembly-CSharp}
+      data:
+        RequiresManualSelection: 1
+        ManualRule:
+          mode: 1
+          origin: 0
+          allowMultiple: 0
+          minTargets: 1
+          maxTargets: 1
+          canTargetSelf: 0
+          targetFaction: 2
+        AreaPattern: {fileID: 11400000, guid: 7d2f045f982493849b07cf9c23eb262c, type: 2}
+        PreferredDirection: 0
+        AutoRotateArea: 1
+        ManualRange: 1
+    - rid: 4202905515405082705
+      type: {class: DamageEffectData, ns: Celestial_Cross.Scripts.Abilities, asm: Assembly-CSharp}
+      data:
+        conditions: []
+        requireAllConditions: 1
+        scaleWithDistance: 0
+        distanceScaleFactor: 0.1
+        valueType: 1
+        amount: 100
+        baseAttribute: 1

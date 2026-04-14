@@ -13,20 +13,6 @@ MonoBehaviour:
   m_Name: UnitCatalog
   m_EditorClassIdentifier: Assembly-CSharp::UnitCatalog
   entries:
-  - unitData: {fileID: 11400000, guid: 90c9076b7a221204897b90b1a48cf69e, type: 2}
-  - unitData: {fileID: 11400000, guid: 8564d8cc1db64474688f6b86bb4030cf, type: 2}
-  - unitData: {fileID: 11400000, guid: 5af9220f407700142862eddd8b5c09b3, type: 2}
-  - unitData: {fileID: 11400000, guid: 72641cd8cb2e34644999ae2c586542b1, type: 2}
-  - unitData: {fileID: 11400000, guid: fa69a36d57941ab489ba54bce09874cd, type: 2}
-  - unitData: {fileID: 11400000, guid: a5a23d5665f7b934c8964520d4456532, type: 2}
-  - unitData: {fileID: 11400000, guid: 7da94d1672385fd4ab3565c7d31b3401, type: 2}
-  - unitData: {fileID: 11400000, guid: ee1511e1cec88744aaebc302ed407e8e, type: 2}
-  - unitData: {fileID: 11400000, guid: 0fc17fd16abb7074b97682cd8e2fd847, type: 2}
-  - unitData: {fileID: 11400000, guid: d983a73c1bb370e49bea0ae03095f7ef, type: 2}
-  - unitData: {fileID: 11400000, guid: 7d666864f6b1480439e141d9a007dcbb, type: 2}
-  - unitData: {fileID: 11400000, guid: b1aeb5d725201a641bc40f21512ddeae, type: 2}
-  - unitData: {fileID: 11400000, guid: 8ffe7de8de59ca34a896ebfe0f73d4f8, type: 2}
-  - unitData: {fileID: 11400000, guid: 67628d77266bab446ba0b5274c2a9397, type: 2}
   - unitData: {fileID: 11400000, guid: 642b786367762f940aded926f739f0ba, type: 2}
   - unitData: {fileID: 11400000, guid: 6107c25373ff10340a0740b28db3b26e, type: 2}
-  - unitData: {fileID: 11400000, guid: ba1202906ae7a724cbf2492b1ec00a7a, type: 2}
+  - unitData: {fileID: 11400000, guid: 67628d77266bab446ba0b5274c2a9397, type: 2}

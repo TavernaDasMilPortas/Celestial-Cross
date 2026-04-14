@@ -16,13 +16,16 @@ MonoBehaviour:
   height: 3
   originX: 1
   originY: 1
-  canRotate: 0
-  rotationType: 0
-  diagonalPattern: []
+  canRotate: 1
+  rotationType: 1
+  diagonalPattern:
+  - cells: 000001
+  - cells: 000100
+  - cells: 010000
   referenceDiagonal: 1
   diagOriginX: 1
   diagOriginY: 1
   rows:
   - cells: 000000
-  - cells: 000000
+  - cells: 010101
   - cells: 000000
