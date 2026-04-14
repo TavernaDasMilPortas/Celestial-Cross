@@ -21,6 +21,12 @@ namespace CelestialCross.Artifacts
         public StatModifier mainStat;
         public List<StatModifier> subStats = new List<StatModifier>();
 
+        public Sprite GetIcon()
+        {
+            if (artifactSet == null) return null;
+            return artifactSet.GetIconForSlot(slot);
+        }
+
         // Método auxiliar caso usemos pra inicializar num save futuramente.
         public void GenerateGUID()
         {

@@ -1,4 +1,4 @@
-﻿using UnityEditor;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -103,6 +103,11 @@ namespace CelestialCross.Giulia_UI.Editor
 
             // Let's create an artifact prefab proxy
             var fakeArtifactGo = new GameObject("ArtifactItem_PrefabProxy", typeof(RectTransform), typeof(Image));
+            var iconGo = new GameObject("Icon", typeof(RectTransform), typeof(Image));
+            iconGo.transform.SetParent(fakeArtifactGo.transform, false);
+            var iconRt = iconGo.GetComponent<RectTransform>();
+            iconRt.anchorMin = new Vector2(0.1f, 0.5f); iconRt.anchorMax = new Vector2(0.3f, 0.9f);
+            iconGo.GetComponent<Image>().preserveAspect = true;
             fakeArtifactGo.transform.SetParent(itemsContent.transform, false);
             fakeArtifactGo.GetComponent<RectTransform>().sizeDelta = new Vector2(200, 100);
             fakeArtifactGo.GetComponent<Image>().color = new Color(0.3f, 0.3f, 0.3f);

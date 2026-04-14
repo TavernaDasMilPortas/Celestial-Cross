@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
@@ -7,34 +7,35 @@ using CelestialCross.Giulia_UI;
 using CelestialCross.Data.Pets;
 
 /// <summary>
-/// (Fase 2) UI de inventário modular com 3 abas (Unidades, Pets, Artefatos).
-/// Layout split-screen: Painel Superior (detalhes dinâmicos) + Painel Inferior (grid/scroll).
+/// (Fase 2) UI de inventÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡rio modular com 3 abas (Unidades, Pets, Artefatos).
+/// Layout split-screen: Painel Superior (detalhes dinÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢micos) + Painel Inferior (grid/scroll).
 /// Suporta troca por toque nas abas ou swipe horizontal.
 /// </summary>
 public class InventoryUI : MonoBehaviour
 {
     [Header("Data Catalogs")]
-    [Tooltip("Necessário para renderizar detalhes da Unidade (ícone, stats, skills)")]
+    [Tooltip("NecessÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡rio para renderizar detalhes da Unidade (ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­cone, stats, skills)")]
     public UnitCatalog unitCatalog;
     public PetCatalog petCatalog;
+    public ArtifactSetCatalog artifactSetCatalog;
 
     [Header("Abas")]
     [Tooltip("Arrastar as 3 InventoryTab (Unidades, Pets, Artefatos) na ordem")]
     public InventoryTab[] tabs;
 
-    [Header("Integra��o Aba de Itens")]
+    [Header("IntegraÃƒÆ’Ã‚Â¯Ãƒâ€šÃ‚Â¿Ãƒâ€šÃ‚Â½ÃƒÆ’Ã‚Â¯Ãƒâ€šÃ‚Â¿Ãƒâ€šÃ‚Â½o Aba de Itens")]
     public ItemsInventoryUI itemsInventoryPanel;
 
-    [Header("Conteúdo Inferior (Grids)")]
+    [Header("ConteÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âºdo Inferior (Grids)")]
     [Tooltip("Um RectTransform com GridLayoutGroup para cada aba, na mesma ordem das tabs")]
     public RectTransform[] gridContainers;
 
     [Header("Item Prefab (Opcional)")]
-    [Tooltip("Prefab de cada item do grid (Button + Image/Text). Se vazio, o UI é criado via código.")]
+    [Tooltip("Prefab de cada item do grid (Button + Image/Text). Se vazio, o UI ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â© criado via cÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³digo.")]
     public GameObject slotPrefab;
 
     [Header("Split Layout")]
-    [Tooltip("Altura do painel superior em proporção (0..1). Ex: 0.45 = 45% superior.")]
+    [Tooltip("Altura do painel superior em proporÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o (0..1). Ex: 0.45 = 45% superior.")]
     [Range(0.25f, 0.75f)]
     public float topPanelHeightNormalized = 0.45f;
 
@@ -47,7 +48,7 @@ public class InventoryUI : MonoBehaviour
     public Vector2 cellSpacing = new Vector2(10f, 10f);
 
     [Header("Swipe")]
-    [Tooltip("Referência ao SwipeDetector (pode estar no mesmo GameObject)")]
+    [Tooltip("ReferÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âªncia ao SwipeDetector (pode estar no mesmo GameObject)")]
     public SwipeDetector swipeDetector;
 
     private int currentTabIndex = 0;
@@ -182,7 +183,7 @@ public class InventoryUI : MonoBehaviour
     }
 
     // =============================
-    // INICIALIZAÇÃO
+    // INICIALIZAÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢O
     // =============================
 
     
@@ -285,7 +286,7 @@ public class InventoryUI : MonoBehaviour
 
     void OnSwipeLeft()
     {
-        // Swipe para esquerda → próxima aba
+        // Swipe para esquerda ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ prÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³xima aba
         int next = currentTabIndex + 1;
         if (next < tabs.Length)
             SwitchToTab(next);
@@ -293,7 +294,7 @@ public class InventoryUI : MonoBehaviour
 
     void OnSwipeRight()
     {
-        // Swipe para direita → aba anterior
+        // Swipe para direita ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ aba anterior
         int prev = currentTabIndex - 1;
         if (prev >= 0)
             SwitchToTab(prev);
@@ -399,8 +400,14 @@ private void PopulateTab(int tabIndex)
                         // Phase 4 filter
                         if (isSelectingArtifact) { if (a.slot != selectingForSlot) continue; if (a.idGUID == originEquippedId) { /* keep it */ } else if (account.IsArtifactEquipped(a.idGUID)) continue; }
 
-                        string label = $"{a.slot}\n{a.rarity} {a.GetStarsAsIntClamped()}* +{a.currentLevel}\n<size=10>{UIStatFormatter.FormatStat(a.mainStat)}</size>";
-                        SpawnItem(tabIndex, container, a.idGUID, label, () => OnArtifactClicked(a));
+                        Sprite icon = null;
+                        if (artifactSetCatalog != null)
+                        {
+                            var set = artifactSetCatalog.GetSetById(a.artifactSetId);
+                            if (set != null) icon = set.GetIconForSlot(a.slot);
+                        }
+                        string label = $"{a.slot}\\n{a.rarity} {a.GetStarsAsIntClamped()}* +{a.currentLevel}\\n<size=10>{UIStatFormatter.FormatStat(a.mainStat)}</size>";
+                        SpawnItem(tabIndex, container, a.idGUID, label, () => OnArtifactClicked(a), icon);
                     }
                 }
                 break;
@@ -465,13 +472,13 @@ private void PopulateTab(int tabIndex)
         if (isSelected) 
         {
             outline.enabled = true;
-            outline.effectColor = isEquippedTarget ? new UnityEngine.Color(0.2f, 1f, 0.2f, 1f) : new UnityEngine.Color(1f, 0.9f, 0.2f, 1f); // Verde para equipado, Amarelo para seleção normal
+            outline.effectColor = isEquippedTarget ? new UnityEngine.Color(0.2f, 1f, 0.2f, 1f) : new UnityEngine.Color(1f, 0.9f, 0.2f, 1f); // Verde para equipado, Amarelo para seleÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o normal
             outline.effectDistance = new UnityEngine.Vector2(3, 3);
         }
         else if (isEquippedTarget)
         {
             outline.enabled = true;
-            outline.effectColor = new UnityEngine.Color(0.2f, 1f, 0.2f, 0.5f); // Verde fraco para já equipado mas não selecionado
+            outline.effectColor = new UnityEngine.Color(0.2f, 1f, 0.2f, 0.5f); // Verde fraco para jÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡ equipado mas nÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o selecionado
             outline.effectDistance = new UnityEngine.Vector2(2, 2);
         }
         else
@@ -520,8 +527,8 @@ private void PopulateTab(int tabIndex)
         // Se tiver icone, poderiamos esconder o texto (temporariamente vamos mostrar embaixo com fonte menor)
         if (icon != null)
         {
-            // Opcional: esconder a label inteira
-            // textGO.SetActive(false);
+            // Hide text if icon exists
+            textGO.SetActive(false);
         }
 
         return root;
@@ -592,7 +599,7 @@ private void PopulateTab(int tabIndex)
         // Tooltip logic: press and hold overrides unitStatsText temporarly or a dedicated panel
         var trigger = btnGO.GetComponent<UnityEngine.EventSystems.EventTrigger>();
         var ptrDown = new UnityEngine.EventSystems.EventTrigger.Entry { eventID = UnityEngine.EventSystems.EventTriggerType.PointerDown };
-        string desc = string.IsNullOrEmpty(ability.abilityDescription) ? "Sem descrição" : ability.abilityDescription;
+        string desc = string.IsNullOrEmpty(ability.abilityDescription) ? "Sem descriÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o" : ability.abilityDescription;
         ptrDown.callback.AddListener((e) => {
             if (unitStatsText != null) unitStatsText.text = $"<b>{ability.abilityName}</b>\n<size=14>{desc}</size>";
         });
@@ -740,26 +747,44 @@ private void PopulateTab(int tabIndex)
             if (i == 6)
             {
                 // Pet Slot
+                Sprite petIcon = null;
                 if (loadout != null && !string.IsNullOrEmpty(loadout.PetID))
                 {
-                    var pet = petCatalog?.GetPetSpecies(loadout.PetID);
-                    if (pet != null)
-                        unitEquipTexts[i].text = $"<b>Pet</b>\n<color=#ffb>{pet.SpeciesName}</color>"; 
-                    else 
-                    {
-                        var rp = AccountManager.Instance.PlayerAccount.GetPetByUUID(loadout.PetID);
-                        unitEquipTexts[i].text = rp != null ? $"<b>Pet</b>\n<color=#ffb>{rp.DisplayName}</color>" : $"<b>Pet</b>\n<color=#ffb>Desconhecido</color>";
+                    var rp = AccountManager.Instance.PlayerAccount.GetPetByUUID(loadout.PetID);
+                    if (rp != null) {
+                        var pet = petCatalog?.GetPetSpecies(rp.SpeciesID);
+                        if (pet != null) petIcon = pet.Icon;
+                        unitEquipTexts[i].text = $"<b>Pet</b>\n<color=#ffb>{rp.DisplayName}</color>";
+                    } else {
+                        unitEquipTexts[i].text = $"<b>Pet</b>\n<color=#ffb>Desconhecido</color>";
                     }
                 }
-                else
-                {
-                    unitEquipTexts[i].text = "Pet\n<color=#888>(vazio)</color>";
+                else { unitEquipTexts[i].text = "Pet\n<color=#888>(vazio)</color>"; }
+
+                Transform iconTr = unitEquipButtons[i].transform.Find("Icon");
+                if (iconTr == null) {
+                    var iconGo = new GameObject("Icon", typeof(RectTransform), typeof(Image));
+                    iconGo.transform.SetParent(unitEquipButtons[i].transform, false);
+                    var irt = (RectTransform)iconGo.transform;
+                    irt.anchorMin = Vector2.zero; irt.anchorMax = Vector2.one;
+                    irt.offsetMin = new Vector2(4, 4); irt.offsetMax = new Vector2(-4, -4);
+                    var img = iconGo.GetComponent<Image>();
+                    img.preserveAspect = true;
+                    iconTr = iconGo.transform;
+                }
+                if (petIcon != null) {
+                    iconTr.gameObject.SetActive(true);
+                    iconTr.GetComponent<Image>().sprite = petIcon;
+                    unitEquipTexts[i].gameObject.SetActive(false);
+                } else {
+                    iconTr.gameObject.SetActive(false);
+                    unitEquipTexts[i].gameObject.SetActive(true);
                 }
                 continue;
             }
 
             var sType = slotTypes[Mathf.Min(i, slotTypes.Length - 1)];
-            
+
             string equippedGuid = null;
             if (loadout != null)
             {
@@ -774,18 +799,43 @@ private void PopulateTab(int tabIndex)
                 }
             }
 
-            if (string.IsNullOrEmpty(equippedGuid))
-            {
-                unitEquipTexts[i].text = $"{sType}\n<color=#888>(vazio)</color>";
-            }
-            else
+            Sprite artiIcon = null;
+            if (!string.IsNullOrEmpty(equippedGuid))
             {
                 var artifact = account.GetArtifactByGuid(equippedGuid);
                 if (artifact != null)
+                {
                     unitEquipTexts[i].text = $"<b>{sType}</b>\n<color=#ffb>{artifact.rarity} +{artifact.currentLevel}</color>";
-                else
-                    unitEquipTexts[i].text = $"{sType}\n<color=red>Miss</color>";
+                    if (artifactSetCatalog != null)
+                    {
+                        var set = artifactSetCatalog.GetSetById(artifact.artifactSetId);
+                        if (set != null) artiIcon = set.GetIconForSlot(artifact.slot);
+                    }
+                }
+                else { unitEquipTexts[i].text = $"{sType}\n<color=red>Miss</color>"; }
             }
+            else { unitEquipTexts[i].text = $"{sType}\n<color=#888>(vazio)</color>"; }
+            
+            { Transform iconTr = unitEquipButtons[i].transform.Find("Icon");
+            if (iconTr == null) {
+                var iconGo = new GameObject("Icon", typeof(RectTransform), typeof(Image));
+                iconGo.transform.SetParent(unitEquipButtons[i].transform, false);
+                var irt = (RectTransform)iconGo.transform;
+                irt.anchorMin = Vector2.zero; irt.anchorMax = Vector2.one;
+                irt.offsetMin = new Vector2(10, 10); irt.offsetMax = new Vector2(-10, -10);
+                var img = iconGo.GetComponent<Image>();
+                img.preserveAspect = true;
+                img.raycastTarget = false;
+                iconTr = iconGo.transform;
+            }
+            if (artiIcon != null) {
+                iconTr.gameObject.SetActive(true);
+                iconTr.GetComponent<Image>().sprite = artiIcon;
+                unitEquipTexts[i].gameObject.SetActive(false);
+            } else {
+                iconTr.gameObject.SetActive(false);
+                unitEquipTexts[i].gameObject.SetActive(true);
+            } }
         }
     }
 
@@ -882,7 +932,7 @@ private void PopulateTab(int tabIndex)
         SetDetails(1, $"Selecione um Pet para <b>{unitName}</b>");
 
         SwitchToTab(1); // Vai para Pets
-        PopulateTab(1); // Refaz a lista, dessa vez em modo seleção
+        PopulateTab(1); // Refaz a lista, dessa vez em modo seleÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o
     }
 
     private void OnPetClicked(string petId) {
@@ -1091,7 +1141,7 @@ private void PopulateTab(int tabIndex)
 
     private static string FormatArtifactDetails(CelestialCross.Artifacts.ArtifactInstanceData a)
     {
-        if (a == null) return "Artefato inválido.";
+        if (a == null) return "Artefato invÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡lido.";
 
         string setLabel = string.IsNullOrWhiteSpace(a.artifactSetId) ? "<sem set>" : a.artifactSetId;
         string main = a.mainStat != null ? UIStatFormatter.FormatStat(a.mainStat) : "<mainStat null>";
@@ -1120,6 +1170,13 @@ private void PopulateTab(int tabIndex)
             $"Substats:\n{sub}";
     }
 }
+
+
+
+
+
+
+
 
 
 

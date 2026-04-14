@@ -12,6 +12,27 @@ namespace CelestialCross.Artifacts
         [TextArea] public string description;
 
         [global::System.Serializable]
+        public struct SlotIconMapping
+        {
+            public ArtifactType slot;
+            public Sprite icon;
+        }
+        
+        [Header("Icons per Slot")]
+        public List<SlotIconMapping> slotIcons = new List<SlotIconMapping>();
+        
+        public Sprite GetIconForSlot(ArtifactType targetSlot)
+        {
+            if (slotIcons == null) return null;
+            foreach (var mapping in slotIcons)
+            {
+                if (mapping.slot == targetSlot)
+                    return mapping.icon;
+            }
+            return null;
+        }
+
+        [global::System.Serializable]
         public struct SetBonus
         {
             public int piecesRequired; // Ex: 2, 4, ou 6 peÃ§as.

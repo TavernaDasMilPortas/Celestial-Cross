@@ -5272,6 +5272,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InventoryUI
   unitCatalog: {fileID: 11400000, guid: 7d18229e63a7d974fbfa170b4cb71025, type: 2}
   petCatalog: {fileID: 11400000, guid: ff04443928da5b14dbdfed42ecd6db1c, type: 2}
+  artifactSetCatalog: {fileID: 11400000, guid: ba31e5cc6fccb08478437f02f0896260, type: 2}
   tabs:
   - {fileID: 713066890}
   - {fileID: 1241220081}

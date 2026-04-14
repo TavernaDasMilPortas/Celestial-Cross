@@ -10,31 +10,33 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 28cc91197516aad4bb088f659df632b9, type: 3}
-  m_Name: Dungeon 1
+  m_Name: Dungeon 2
   m_EditorClassIdentifier: Assembly-CSharp::CelestialCross.Data.Dungeon.DungeonBaseSO
-  DungeonName: Terras do Fogo
+  DungeonName: Dominio dos Ventos
   Description: 
   GlobalLootTables: []
   Levels:
-  - LevelRef: {fileID: 11400000, guid: 055cc12e4970b5f46a1fb4d04331f2bf, type: 2}
+  - LevelRef: {fileID: 11400000, guid: 36bdc3ccdd67f8846b07d8a6b3deb94d, type: 2}
     SpecificLootTables:
-    - rid: 4202905515405082624
+    - rid: 4202905515405082696
   references:
     version: 2
     RefIds:
-    - rid: 4202905515405082624
-      type: {class: PetLootTable, ns: CelestialCross.Data.Dungeon, asm: Assembly-CSharp}
+    - rid: 4202905515405082696
+      type: {class: ArtifactLootTable, ns: CelestialCross.Data.Loot, asm: Assembly-CSharp}
       data:
         BaseDropChance: 100
-        AllowedPets:
-        - Species: {fileID: 11400000, guid: ca3587875a7b1d64bbb5e2585641ebca, type: 2}
-          Weight: 10
-        - Species: {fileID: 11400000, guid: 52c34e207dee2284f86e51d9d05b28fd, type: 2}
-          Weight: 10
+        AllowedArtifactSets:
+        - {fileID: 11400000, guid: 1c4f1b892b6e20245a0e9ec4a942e09d, type: 2}
         DropMatrix:
+          commonChance: 50
+          uncommonChance: 30
+          rareChance: 15
+          epicChance: 4
+          legendaryChance: 1
           oneStarChance: 60
           twoStarChance: 30
           threeStarChance: 10
           fourStarChance: 0
           fiveStarChance: 0
-        NumberOfRolls: 10
+        NumberOfDrops: 10

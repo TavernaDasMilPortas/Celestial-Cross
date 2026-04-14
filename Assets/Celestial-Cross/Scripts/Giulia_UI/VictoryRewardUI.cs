@@ -1,4 +1,4 @@
-ï»¿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using CelestialCross.Data.Dungeon;
@@ -12,6 +12,10 @@ namespace CelestialCross.Giulia_UI
     public class VictoryRewardUI : MonoBehaviour
     {
         public static VictoryRewardUI Instance { get; private set; }
+
+        [Header("Data Catalogs")]
+        public ArtifactSetCatalog artifactSetCatalog;
+        public PetCatalog petCatalog;
 
         [Header("Containers")]
         [SerializeField] private GameObject rootContainer;
@@ -30,7 +34,7 @@ namespace CelestialCross.Giulia_UI
         private global::System.Action onCloseCallback;
         private List<GameObject> spawnedItems = new List<GameObject>();
 
-        // === Modal FÃ­sico (Inspector) ===
+        // === Modal Físico (Inspector) ===
         [Header("Reward Details Modal")]
         [SerializeField] private GameObject detailsModal;
         [SerializeField] private TextMeshProUGUI modalTitle;
@@ -81,6 +85,36 @@ namespace CelestialCross.Giulia_UI
             int sellValue = ArtifactEconomyService.GetSellValue(arti);
             modalSellTxt.text = $"VENDER\n(+{sellValue} Moedas)";
             
+            Sprite iconSprite = null;
+            if (cardGo != null) {
+                Transform iTr = cardGo.transform.Find("Icon");
+                if (iTr != null) {
+                    Image img = iTr.GetComponent<Image>();
+                    if (img != null) iconSprite = img.sprite;
+                }
+            }
+            Transform mIconTr = detailsModal.transform.Find("ModalIcon");
+            if (mIconTr == null) {
+                // Modificado para usar Prefab
+                // removido: delega ao prefab
+                // removido: delega ao prefab
+                // removido: delega ao prefab
+                // removido: delega ao prefab
+                // removido: delega ao prefab
+                // removido: delega ao prefab
+                // removido: delega ao prefab
+            }
+            if (iconSprite != null) {
+                mIconTr.gameObject.SetActive(true);
+                mIconTr.GetComponent<Image>().sprite = iconSprite;
+                // removido: delega ao prefab
+                // removido: delega ao prefab
+            } else {
+                mIconTr.gameObject.SetActive(false);
+                // removido: delega ao prefab
+                // removido: delega ao prefab
+            }
+
             detailsModal.SetActive(true);
             detailsModal.transform.SetAsLastSibling(); // Puxa pra frente
         }
@@ -91,10 +125,40 @@ namespace CelestialCross.Giulia_UI
             currentSelectedPet = pet;
             
             modalTitle.text = pet.DisplayName;
-            modalDesc.text = $"Estrelas: {pet.RarityStars}*\nNÃ­vel: {pet.CurrentLevel}\nHP: {pet.Health} | ATK: {pet.Attack} | DEF: {pet.Defense}\nSPD: {pet.Speed} | CRIT: {pet.CriticalChance}% | ACC: {pet.EffectAccuracy}%";
+            modalDesc.text = $"Estrelas: {pet.RarityStars}*\nNível: {pet.CurrentLevel}\nHP: {pet.Health} | ATK: {pet.Attack} | DEF: {pet.Defense}\nSPD: {pet.Speed} | CRIT: {pet.CriticalChance}% | ACC: {pet.EffectAccuracy}%";
             
             modalSellTxt.text = "SOLTAR\n(+ Pet Souls)";
             
+            Sprite iconSprite = null;
+            if (cardGo != null) {
+                Transform iTr = cardGo.transform.Find("Icon");
+                if (iTr != null) {
+                    Image img = iTr.GetComponent<Image>();
+                    if (img != null) iconSprite = img.sprite;
+                }
+            }
+            Transform mIconTr = detailsModal.transform.Find("ModalIcon");
+            if (mIconTr == null) {
+                // Modificado para usar Prefab
+                // removido: delega ao prefab
+                // removido: delega ao prefab
+                // removido: delega ao prefab
+                // removido: delega ao prefab
+                // removido: delega ao prefab
+                // removido: delega ao prefab
+                // removido: delega ao prefab
+            }
+            if (iconSprite != null) {
+                mIconTr.gameObject.SetActive(true);
+                mIconTr.GetComponent<Image>().sprite = iconSprite;
+                // removido: delega ao prefab
+                // removido: delega ao prefab
+            } else {
+                mIconTr.gameObject.SetActive(false);
+                // removido: delega ao prefab
+                // removido: delega ao prefab
+            }
+
             detailsModal.SetActive(true);
             detailsModal.transform.SetAsLastSibling();
         }
@@ -145,7 +209,7 @@ namespace CelestialCross.Giulia_UI
         {
             if (Instance == null)
             {
-                Debug.LogWarning("[VictoryRewardUI] Nenhuma instÃ¢ncia encontrada. Fallback.");
+                Debug.LogWarning("[VictoryRewardUI] Nenhuma instância encontrada. Fallback.");
                 onClose?.Invoke();
                 return;
             }
@@ -164,7 +228,7 @@ namespace CelestialCross.Giulia_UI
                 // filter explicitly by name to avoid hijacking my modal texts
                 if (t.name.Contains("Title") || t.text.Contains("VIT") || t.text.Contains("Vit") || t.text.Contains("DERROTA")) {
                     if (t.transform.parent != detailsModal.transform) {
-                        t.text = isVictory ? "VITÃ“RIA!" : "DERROTA...";
+                        t.text = isVictory ? "VITÓRIA!" : "DERROTA...";
                         t.color = isVictory ? Color.yellow : Color.red;
                     }
                 }
@@ -175,7 +239,7 @@ namespace CelestialCross.Giulia_UI
                     moneyAndEnergyText.text = "Dinheiro: <color=#00FF00>+" + reward.Money + "</color>   Energia: <color=#00FFFF>+" + reward.Energy + "</color>";
                     if (reward.Stardust > 0) moneyAndEnergyText.text += "   Poeira: <color=#FFAA00>+" + reward.Stardust + "</color>";
                 } else {
-                    moneyAndEnergyText.text = "Sorte na prÃ³xima!";
+                    moneyAndEnergyText.text = "Sorte na próxima!";
                 }
             }
 
@@ -197,7 +261,38 @@ namespace CelestialCross.Giulia_UI
                         go.SetActive(true);
                         spawnedItems.Add(go);
                         TMP_Text[] texts = go.GetComponentsInChildren<TMP_Text>();
-                        
+
+                        if (artifactSetCatalog != null)
+                        {
+                            var set = artifactSetCatalog.GetSetById(arti.artifactSetId);
+                            if (set != null)
+                            {
+                                Sprite iconSprite = set.GetIconForSlot(arti.slot);
+                                if (iconSprite != null)
+                                {
+                                    Transform iconTransform = go.transform.Find("Icon");
+                                    if (iconTransform == null) {
+                                        // removido: delega ao prefab da carta
+                                        // removido: delega ao prefab da carta
+                                        // removido: delega ao prefab da carta
+                                        // removido: delega ao prefab da carta
+                                        // removido: delega ao prefab da carta
+                                        // removido: delega ao prefab da carta
+                                        // removido: delega ao prefab
+                                        // removido: delega ao prefab da carta
+                                    }
+                                    if (iconTransform != null) {
+                                        Image img = iconTransform.GetComponent<Image>();
+                                        if (img != null) {
+                                            img.sprite = iconSprite;
+                                            // removido: delega ao prefab
+                                        }
+                                        iconTransform.gameObject.SetActive(true);
+                                        }
+                                    }
+                            }
+                        }
+
                         Color rarityColor = Color.gray;
                         switch(arti.rarity)
                         {
@@ -210,15 +305,13 @@ namespace CelestialCross.Giulia_UI
 
                         if (texts.Length > 0)
                         {
-                            string setString = string.IsNullOrWhiteSpace(arti.artifactSetId) ? "" : " (" + arti.artifactSetId + ")";
-                            texts[0].text = "<color=#" + ColorUtility.ToHtmlStringRGB(rarityColor) + ">" + arti.slot + setString + "</color>\n" + arti.GetStarsAsIntClamped() + "* Lv." + arti.currentLevel;
+                            texts[0].text = "<color=#" + ColorUtility.ToHtmlStringRGB(rarityColor) + "><b>" + arti.slot + "</b></color>";
+                            texts[0].alignment = TextAlignmentOptions.Bottom;
+                            texts[0].enableWordWrapping = false;
                         }
                         if (texts.Length > 1)
                         {
-                            string statLine = "sem main stats";
-                            if (arti.mainStat != null) statLine = "+" + arti.mainStat.value.ToString("F0") + " " + arti.mainStat.statType;
-                            texts[1].text = statLine;
-                            texts[1].color = Color.yellow;
+                            texts[1].gameObject.SetActive(false);
                         }
                         Image bg = go.GetComponent<Image>();
                         if (bg != null) bg.color = new Color(rarityColor.r * 0.3f, rarityColor.g * 0.3f, rarityColor.b * 0.3f, 1f);
@@ -240,15 +333,44 @@ namespace CelestialCross.Giulia_UI
                         go.SetActive(true);
                         spawnedItems.Add(go);
                         TMP_Text[] texts = go.GetComponentsInChildren<TMP_Text>();
-                        
+
+                        Sprite petIcon = null;
+                        if (petCatalog != null) {
+                            var speciesData = petCatalog.GetPetSpecies(p.SpeciesID);
+                            if (speciesData != null) petIcon = speciesData.Icon;
+                        }
+
+                        if (petIcon != null) {
+                            Transform iconTransform = go.transform.Find("Icon");
+                            if (iconTransform == null) {
+                                // removido: delega ao prefab da carta
+                                // removido: delega ao prefab da carta
+                                // removido: delega ao prefab da carta
+                                // removido: delega ao prefab da carta
+                                // removido: delega ao prefab da carta
+                                // removido: delega ao prefab da carta
+                                // removido: delega ao prefab
+                                // removido: delega ao prefab da carta
+                            }
+                            if (iconTransform != null) {
+                                Image img = iconTransform.GetComponent<Image>();
+                                if (img != null) {
+                                    img.sprite = petIcon;
+                                    // removido: delega ao prefab
+                                }
+                                iconTransform.gameObject.SetActive(true);
+                            }
+                        }
+
                         if (texts.Length > 0)
                         {
-                            texts[0].text = "<color=#FF8800>NOVO PET!</color>\n" + p.DisplayName + " " + p.RarityStars + "*";
+                            texts[0].text = "<color=#FF8800><b>" + p.DisplayName + "</b></color>";
+                            texts[0].alignment = TextAlignmentOptions.Bottom;
+                            texts[0].enableWordWrapping = false;
                         }
                         if (texts.Length > 1)
                         {
-                            texts[1].text = "HP: " + p.Health + " ATK: " + p.Attack;
-                            texts[1].color = Color.white;
+                            texts[1].gameObject.SetActive(false);
                         }
                         Image bg = go.GetComponent<Image>();
                         if (bg != null) bg.color = new Color(0.8f, 0.3f, 0.1f, 1f);
@@ -266,6 +388,8 @@ namespace CelestialCross.Giulia_UI
         }
     }
 }
+
+
 
 
 
