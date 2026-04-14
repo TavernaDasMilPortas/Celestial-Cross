@@ -5,66 +5,61 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
 
+[Serializable]
+public class HubCategory
+{
+    public string categoryName;
+    [Tooltip("Deixe preenchido para modos com v·rias masmorras.")]
+    public CelestialCross.Data.DungeonCatalog dungeonCatalog;
+    [Tooltip("Deixe preenchido para modos de histÛria diretos (sem masmorras).")]
+    public LevelCatalog levelCatalog;
+}
+
 public class HubSceneController : MonoBehaviour
 {
     [Header("Flow")]
     [SerializeField] private string preparationSceneName = "PreparationScene";
     [SerializeField] private string restSceneName = "RestScene";
 
-    [Header("Data")]
-    [SerializeField] private LevelCatalog levelCatalog;
-    [SerializeField] private CelestialCross.Data.DungeonCatalog dungeonCatalog;
+    [Header("Categories Config")]
+    [SerializeField] private List<HubCategory> hubCategories = new List<HubCategory>();
 
-    [Header("UI")]
-    [SerializeField] private Transform levelsContainer;
-    [SerializeField] private Button levelButtonPrefab;
+    [Header("Top Bar UI")]
     [SerializeField] private TMP_Text moneyText;
     [SerializeField] private TMP_Text energyText;
+
+    [Header("Panels")]
+    [SerializeField] private GameObject mainPanel;
+    [SerializeField] private GameObject dungeonsPanel;
+    [SerializeField] private GameObject levelsPanel;
+
+    [Header("Titles")]
+    [SerializeField] private TMP_Text dungeonsPanelTitle;
+    [SerializeField] private TMP_Text levelsPanelTitle;
+
+    [Header("Containers")]
+    [SerializeField] private Transform mainCategoriesContainer;
+    [SerializeField] private Transform dungeonsContainer;
+    [SerializeField] private Transform levelsContainer;
+    
+    [Header("Buttons & Prefabs")]
+    [SerializeField] private Button genericButtonPrefab;
+    [SerializeField] private Button btnGoInventory;
+    [SerializeField] private Button btnBackFromDungeons;
+    [SerializeField] private Button btnBackFromLevels;
+
+    private bool levelsCameFromDungeon = false;
 
     void Start()
     {
         RefreshAccountUI();
-        BuildLevelButtons();
-        EnsureInventoryButton();
-    }
 
-    private void EnsureInventoryButton()
-    {
-        if (levelsContainer == null) return;
-        var parentCanvas = levelsContainer.GetComponentInParent<Canvas>();
-        if (parentCanvas == null) return;
+        if (btnGoInventory != null) btnGoInventory.onClick.AddListener(GoToInventoryScene);
+        if (btnBackFromDungeons != null) btnBackFromDungeons.onClick.AddListener(ShowMainPanel);
+        if (btnBackFromLevels != null) btnBackFromLevels.onClick.AddListener(OnBackFromLevels);
 
-        var go = new GameObject("Btn_GoInventory", typeof(RectTransform), typeof(Image), typeof(Button));
-        go.transform.SetParent(parentCanvas.transform, false);
-        
-        var rt = (RectTransform)go.transform;
-        rt.anchorMin = new Vector2(1, 1);
-        rt.anchorMax = new Vector2(1, 1);
-        rt.pivot = new Vector2(1, 1);
-        rt.anchoredPosition = new Vector2(-20, -100); // Top Right corner below potential safe area
-        rt.sizeDelta = new Vector2(180, 60);
-
-        go.GetComponent<Image>().color = new Color(0.2f, 0.6f, 0.8f, 1f);
-        var btn = go.GetComponent<Button>();
-        btn.onClick.AddListener(GoToInventoryScene);
-
-        var txtGo = new GameObject("Text", typeof(RectTransform), typeof(TMP_Text));
-        txtGo.transform.SetParent(go.transform, false);
-        var txtRt = (RectTransform)txtGo.transform;
-        txtRt.anchorMin = Vector2.zero; txtRt.anchorMax = Vector2.one;
-        txtRt.offsetMin = txtRt.offsetMax = Vector2.zero;
-
-        var tmp = txtGo.AddComponent<TextMeshProUGUI>();
-        tmp.text = "Invent√°rio";
-        tmp.color = Color.white;
-        tmp.fontSize = 24;
-        tmp.alignment = TextAlignmentOptions.Center;
-    }
-
-    public void GoToInventoryScene()
-    {
-        if (!string.IsNullOrEmpty(restSceneName))
-            SceneManager.LoadScene(restSceneName);
+        BuildCategoryButtons();
+        ShowMainPanel();
     }
 
     public void RefreshAccountUI()
@@ -79,68 +74,169 @@ public class HubSceneController : MonoBehaviour
             energyText.text = $"Energia: {AccountManager.Instance.PlayerAccount.Energy}";
     }
 
-    void BuildLevelButtons()
+    public void GoToInventoryScene()
     {
-        if (levelsContainer == null || levelButtonPrefab == null)
-        {
-            Debug.LogWarning("[HubSceneController] UI n√£o configurada (levelsContainer / levelButtonPrefab). ");
-            return;
-        }
+        if (!string.IsNullOrEmpty(restSceneName))
+            SceneManager.LoadScene(restSceneName);
+    }
 
-        foreach (Transform child in levelsContainer)
+    private void ClearContainer(Transform container)
+    {
+        if (container == null) return;
+        foreach (Transform child in container)
             Destroy(child.gameObject);
+    }
 
-        List<LevelData> levels = levelCatalog != null ? levelCatalog.Levels : null;
-        if (levels == null || levels.Count == 0)
+    private void BuildCategoryButtons()
+    {
+        ClearContainer(mainCategoriesContainer);
+
+        if (hubCategories == null) return;
+
+        foreach (var cat in hubCategories)
         {
-            Debug.LogWarning("[HubSceneController] Nenhum LevelData configurado no LevelCatalog.");
-            return;
-        }
+            Button btn = Instantiate(genericButtonPrefab, mainCategoriesContainer);
+            btn.gameObject.SetActive(true);
 
-        foreach (var level in levels)
+            TMP_Text label = btn.GetComponentInChildren<TMP_Text>();
+            if (label != null) label.text = cat.categoryName;
+
+            btn.onClick.AddListener(() => OnCategoryClicked(cat));
+        }
+    }
+
+    private void OnCategoryClicked(HubCategory category)
+    {
+        if (category.dungeonCatalog != null)
+        {
+            if (dungeonsPanelTitle != null) dungeonsPanelTitle.text = category.categoryName;
+            BuildDungeonButtons(category.dungeonCatalog);
+            ShowDungeonsPanel();
+        }
+        else if (category.levelCatalog != null)
+        {
+            if (levelsPanelTitle != null) levelsPanelTitle.text = category.categoryName;
+            levelsCameFromDungeon = false;
+            BuildLevelButtonsForCatalog(category.levelCatalog);
+            ShowLevelsPanel();
+        }
+        else
+        {
+            Debug.LogWarning($"[HubSceneController] Categoria '{category.categoryName}' n„o tem cat·logo configurado.");
+        }
+    }
+
+    public void ShowMainPanel()
+    {
+        if (mainPanel != null) mainPanel.SetActive(true);
+        if (dungeonsPanel != null) dungeonsPanel.SetActive(false);
+        if (levelsPanel != null) levelsPanel.SetActive(false);
+    }
+
+    public void ShowDungeonsPanel()
+    {
+        if (mainPanel != null) mainPanel.SetActive(false);
+        if (dungeonsPanel != null) dungeonsPanel.SetActive(true);
+        if (levelsPanel != null) levelsPanel.SetActive(false);
+    }
+
+    public void ShowLevelsPanel()
+    {
+        if (mainPanel != null) mainPanel.SetActive(false);
+        if (dungeonsPanel != null) dungeonsPanel.SetActive(false);
+        if (levelsPanel != null) levelsPanel.SetActive(true);
+    }
+
+    private void OnBackFromLevels()
+    {
+        if (levelsCameFromDungeon)
+            ShowDungeonsPanel();
+        else
+            ShowMainPanel();
+    }
+
+    private void BuildDungeonButtons(CelestialCross.Data.DungeonCatalog catalog)
+    {
+        ClearContainer(dungeonsContainer);
+
+        if (catalog == null || catalog.Dungeons == null) return;
+
+        foreach (var dungeon in catalog.Dungeons)
+        {
+            if (dungeon == null) continue;
+
+            Button btn = Instantiate(genericButtonPrefab, dungeonsContainer);
+            btn.gameObject.SetActive(true);
+
+            TMP_Text label = btn.GetComponentInChildren<TMP_Text>();
+            if (label != null)
+                label.text = string.IsNullOrWhiteSpace(dungeon.DungeonName) ? dungeon.name : dungeon.DungeonName;
+
+            btn.onClick.AddListener(() => 
+            {
+                if (levelsPanelTitle != null) levelsPanelTitle.text = label.text;
+                levelsCameFromDungeon = true;
+                BuildLevelButtonsForDungeon(dungeon);
+                ShowLevelsPanel();
+            });
+        }
+    }
+
+    private void BuildLevelButtonsForDungeon(CelestialCross.Data.Dungeon.DungeonBaseSO dungeon)
+    {
+        ClearContainer(levelsContainer);
+
+        if (dungeon == null || dungeon.Levels == null) return;
+
+        foreach (var node in dungeon.Levels)
+        {
+            if (node == null || node.LevelRef == null) continue;
+
+            Button btn = Instantiate(genericButtonPrefab, levelsContainer);
+            btn.gameObject.SetActive(true);
+            
+            TMP_Text label = btn.GetComponentInChildren<TMP_Text>();
+            if (label != null)
+                label.text = string.IsNullOrWhiteSpace(node.LevelRef.LevelName) ? node.LevelRef.name : node.LevelRef.LevelName;
+
+            btn.onClick.AddListener(() => SelectLevelAndGo(node.LevelRef, dungeon, node));
+        }
+    }
+
+    private void BuildLevelButtonsForCatalog(LevelCatalog catalog)
+    {
+        ClearContainer(levelsContainer);
+
+        if (catalog == null || catalog.Levels == null) return;
+
+        foreach (var level in catalog.Levels)
         {
             if (level == null) continue;
 
-            Button btn = Instantiate(levelButtonPrefab, levelsContainer);
+            Button btn = Instantiate(genericButtonPrefab, levelsContainer);
+            btn.gameObject.SetActive(true);
+            
             TMP_Text label = btn.GetComponentInChildren<TMP_Text>();
             if (label != null)
                 label.text = string.IsNullOrWhiteSpace(level.LevelName) ? level.name : level.LevelName;
 
-            btn.onClick.AddListener(() => SelectLevelAndGo(level));
+            // N„o tem dungeon originada
+            btn.onClick.AddListener(() => SelectLevelAndGo(level, null, null));
         }
     }
 
-    void SelectLevelAndGo(LevelData level)
+    private void SelectLevelAndGo(LevelData level, CelestialCross.Data.Dungeon.DungeonBaseSO dungeon, CelestialCross.Data.Dungeon.DungeonLevelNode node)
     {
         if (GameFlowManager.Instance == null)
         {
-            Debug.LogError("[HubSceneController] GameFlowManager n√£o encontrado na cena.");
+            Debug.LogError("[HubSceneController] GameFlowManager n„o encontrado na cena.");
             return;
         }
 
         GameFlowManager.Instance.SelectedLevel = level;
+        GameFlowManager.Instance.SelectedDungeon = dungeon;
+        GameFlowManager.Instance.SelectedDungeonNode = node;
 
-        // Resolve qual Dungeon e Node pertencem a essa fase para poder dropar os artefatos certos depois
-        if (dungeonCatalog != null)
-        {
-            if (dungeonCatalog.TryFindDungeonForLevel(level, out var d, out var node))
-            {
-                GameFlowManager.Instance.SelectedDungeon = d;
-                GameFlowManager.Instance.SelectedDungeonNode = node;
-            }
-            else
-            {
-                GameFlowManager.Instance.SelectedDungeon = null;
-                GameFlowManager.Instance.SelectedDungeonNode = null;
-                Debug.LogWarning($"[HubSceneController] Nenhuma Dungeon no cat√°logo cont√©m o {level.name}. Esta fase n√£o vai ter drop procedural de Artefatos.");
-            }
-        }
-        else
-        {
-            Debug.LogWarning("[HubSceneController] dungeonCatalog n√£o referenciado no Inspector.");
-        }
-
-        // A sele√ß√£o acontece na PreparationScene.
         GameFlowManager.Instance.SelectedUnitIDs.Clear();
         GameFlowManager.Instance.PlayerFormation.Clear();
 

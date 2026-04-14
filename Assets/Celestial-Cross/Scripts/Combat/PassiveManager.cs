@@ -79,10 +79,10 @@ public class PassiveManager : MonoBehaviour
         {
             abilities.AddRange(unit.Data.GetAbilities());
         }
-        
-        if (unit.EquippedPet != null && unit.Data.GetPetAbility(unit.EquippedPet) != null)
+        if (unit.petSpeciesData != null)
         {
-            abilities.Add(unit.Data.GetPetAbility(unit.EquippedPet));
+            if (unit.petSpeciesData.PassiveSkills != null) abilities.AddRange(unit.petSpeciesData.PassiveSkills);
+            if (unit.petSpeciesData.ActiveSkills != null) abilities.AddRange(unit.petSpeciesData.ActiveSkills);
         }
         
         for (int i = 0; i < activeRuntimeConditions.Count; i++)
@@ -238,6 +238,7 @@ public class PassiveManager : MonoBehaviour
         }
     }
 }
+
 
 
 

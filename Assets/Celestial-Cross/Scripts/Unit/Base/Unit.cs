@@ -1,4 +1,4 @@
-ï»¿using UnityEngine;
+using UnityEngine;
 using System.Collections.Generic;
 using CelestialCross.Combat;
 using Celestial_Cross.Scripts.Abilities;
@@ -14,7 +14,8 @@ public abstract class Unit : MonoBehaviour
 {
     [Header("Base Data")]
     public UnitData unitData { get; set; }
-    public PetData petData { get; set; }
+    public CelestialCross.Data.Pets.PetSpeciesSO petSpeciesData { get; set; }
+    public CelestialCross.Data.Pets.RuntimePetData runtimePetData { get; set; }
     
     [Header("Test/Debug Artifacts")]
     [SerializeField]
@@ -45,7 +46,7 @@ public abstract class Unit : MonoBehaviour
     // =========================
 
     public UnitData Data => unitData;
-    public PetData EquippedPet => petData;
+    public CelestialCross.Data.Pets.RuntimePetData EquippedPet => runtimePetData;
     public UnitData UnitData => unitData;
 
     public string DisplayName =>
@@ -56,8 +57,19 @@ public abstract class Unit : MonoBehaviour
         get
         {
             CombatStats baseStats = unitData != null
-                ? unitData.GetCombinedStats(petData)
+                ? unitData.baseStats
                 : new CombatStats(1, 0, 0, 0, 0, 0);
+
+            if (runtimePetData != null)
+            {
+                baseStats.health += runtimePetData.Health;
+                baseStats.attack += runtimePetData.Attack;
+                baseStats.defense += runtimePetData.Defense;
+                baseStats.speed += runtimePetData.Speed;
+                baseStats.criticalChance = Mathf.Clamp(baseStats.criticalChance + runtimePetData.CriticalChance, 0, 100);
+                baseStats.effectAccuracy = Mathf.Clamp(baseStats.effectAccuracy + runtimePetData.EffectAccuracy, 0, 100);
+            }
+            
 
             // Accumulate Artifact modifiers
             float healthFlat = 0f, healthPct = 0f;
@@ -208,15 +220,12 @@ public abstract class Unit : MonoBehaviour
             }
         }
 
-        if (petData != null)
+        if (petSpeciesData != null)
         {
-            // Aplica a habilidade do pet como passiva caso aplicÃ¡vel
-            if (petData.ability != null && (petData.ability.isPassive || (petData.ability.modifiers != null && petData.ability.modifiers.Count > 0)))
-            {
-                PassiveManager?.ApplyCondition(petData.ability, this);
-            }
+            // Aplica a habilidade do pet como passiva caso aplicável
+            if (petSpeciesData.PassiveSkills != null) { foreach(var pass in petSpeciesData.PassiveSkills) { if (pass != null) PassiveManager?.ApplyCondition(pass, this); } }
 
-            Debug.Log($"<color=green>[Unit Stats]</color> {DisplayName} combinou status com o pet <b>{petData.name}</b>. Total -> HP: {MaxHealth} | Atk: {Stats.attack} | Def: {Stats.defense} | Spd: {Stats.speed} | Crit: {Stats.criticalChance}%");
+            Debug.Log($"<color=green>[Unit Stats]</color> {DisplayName} combinou status com o pet <b>{(runtimePetData != null ? runtimePetData.DisplayName : petSpeciesData.SpeciesName)}</b>. Total -> HP: {MaxHealth} | Atk: {Stats.attack} | Def: {Stats.defense} | Spd: {Stats.speed} | Crit: {Stats.criticalChance}%");
         }
     }
 
@@ -300,20 +309,24 @@ public abstract class Unit : MonoBehaviour
             var passive = cachedArtifactSetPassives[i];
             if (passive == null) continue;
 
-            // A duraÃ§Ã£o/persistÃªncia Ã© controlada dentro do prÃ³prio AbilityBlueprint.
+            // A duração/persistência é controlada dentro do próprio AbilityBlueprint.
             PassiveManager.ApplyCondition(passive, this);
         }
     }
  
     public void InitializeActions()
     {
-        if (unitData == null) { Debug.LogError($"[Unit] {name} nÃ£o possui UnitData."); return; }
+        if (unitData == null) { Debug.LogError($"[Unit] {name} não possui UnitData."); return; }
         actions.Clear();
         foreach (var action in GetComponents<IUnitAction>()) Destroy(action as Component);
         var blueprints = unitData.GetAbilities();
         if (blueprints != null) foreach (var bp in blueprints) if (bp != null ) actions.Add(new BlueprintActionWrapper(this, bp));
-        if (petData != null && petData.ability != null ) actions.Add(new BlueprintActionWrapper(this, petData.ability));
-        foreach (var definition in unitData.GetExecutableDefinitions(petData)) {
+        if (petSpeciesData != null)
+        {
+            if (petSpeciesData.PassiveSkills != null) foreach (var pass in petSpeciesData.PassiveSkills) if (pass != null) actions.Add(new BlueprintActionWrapper(this, pass));
+            if (petSpeciesData.ActiveSkills != null) foreach (var act in petSpeciesData.ActiveSkills) if (act != null) actions.Add(new BlueprintActionWrapper(this, act));
+        }
+        foreach (var definition in unitData.GetExecutableDefinitions()) {
             var component = gameObject.AddComponent(definition.GetType()) as IUnitAction;
             if (component != null)
             {
@@ -386,11 +399,11 @@ public abstract class Unit : MonoBehaviour
         GetComponent<Collider>().enabled = false;
         // Adicione aqui outros componentes a serem desativados, como IA, scripts de movimento, etc.
 
-        // 2. Ativar animaÃ§Ã£o/efeito de morte
+        // 2. Ativar animação/efeito de morte
         // Ex: GetComponent<Animator>().SetTrigger("Die");
         Debug.Log($"{DisplayName} foi derrotado(a).");
 
-        // 3. Adicionar ao cemitÃ©rio
+        // 3. Adicionar ao cemitério
         if (GraveyardManager.Instance != null)
         {
             GraveyardManager.Instance.AddDeadUnit(this);
@@ -402,9 +415,13 @@ public abstract class Unit : MonoBehaviour
             PhaseManager.Instance.UnregisterUnit(this);
         }
 
-        // 5. Desativar o GameObject apÃ³s um tempo para a animaÃ§Ã£o tocar
-        // Destroy(gameObject, 2f); // Exemplo: Destruir apÃ³s 2 segundos
+        // 5. Desativar o GameObject após um tempo para a animação tocar
+        // Destroy(gameObject, 2f); // Exemplo: Destruir após 2 segundos
         gameObject.SetActive(false); // Ou simplesmente desativar
     }
 }
+
+
+
+
 

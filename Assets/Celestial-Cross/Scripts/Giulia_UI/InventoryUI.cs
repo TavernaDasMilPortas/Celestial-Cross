@@ -4,6 +4,7 @@ using TMPro;
 using System;
 using System.Collections.Generic;
 using CelestialCross.Giulia_UI;
+using CelestialCross.Data.Pets;
 
 /// <summary>
 /// (Fase 2) UI de inventário modular com 3 abas (Unidades, Pets, Artefatos).
@@ -20,6 +21,9 @@ public class InventoryUI : MonoBehaviour
     [Header("Abas")]
     [Tooltip("Arrastar as 3 InventoryTab (Unidades, Pets, Artefatos) na ordem")]
     public InventoryTab[] tabs;
+
+    [Header("Integra��o Aba de Itens")]
+    public ItemsInventoryUI itemsInventoryPanel;
 
     [Header("Conteúdo Inferior (Grids)")]
     [Tooltip("Um RectTransform com GridLayoutGroup para cada aba, na mesma ordem das tabs")]
@@ -71,8 +75,13 @@ public class InventoryUI : MonoBehaviour
     [Header("Artifact Management UI")]
     public Button manageArtifactButton;
     public ArtifactUpgradeModal upgradeModal;
+
+    [Header("Pet Management UI")]
+    public Button managePetButton;
+    public PetManageModal petManageModal;
     
     private CelestialCross.Artifacts.ArtifactInstanceData selectedArtifactToEquip;
+    private RuntimePetData selectedPetInstance;
     private string selectedPetToEquipId;
     private string currentlySelectedTabItemId;
     private string originEquippedId;
@@ -111,6 +120,9 @@ public class InventoryUI : MonoBehaviour
 
         if (manageArtifactButton != null)
             manageArtifactButton.onClick.AddListener(OnManageArtifactClicked);
+
+        if (managePetButton != null)
+            managePetButton.onClick.AddListener(OnManagePetClicked);
 
         WireUpFixedButtons();
         
@@ -174,24 +186,22 @@ public class InventoryUI : MonoBehaviour
     // =============================
 
     
-    void InitializeTabs()
+        void InitializeTabs()
     {
         if (tabs == null) return;
-
         for (int i = 0; i < tabs.Length; i++)
         {
             if (tabs[i] == null) continue;
             tabs[i].tabIndex = i;
             tabs[i].OnTabClicked += SwitchToTab;
         }
-
-        // Rename tab titles to match the new plan.
         if (tabs.Length > 0 && tabs[0] != null) tabs[0].SetTitle("Unidades");
         if (tabs.Length > 1 && tabs[1] != null) tabs[1].SetTitle("Pets");
         if (tabs.Length > 2 && tabs[2] != null) tabs[2].SetTitle("Artefatos");
+        if (tabs.Length > 3 && tabs[3] != null) tabs[3].SetTitle("Itens");
     }
 
-void RegisterSwipe()
+    void RegisterSwipe()
     {
         if (swipeDetector == null) return;
         swipeDetector.OnSwipeLeft  += OnSwipeLeft;
@@ -211,6 +221,7 @@ void RegisterSwipe()
 
     public void SwitchToTab(int index)
     {
+        if (itemsInventoryPanel != null) itemsInventoryPanel.gameObject.SetActive(index == 3);
         if (tabs == null || gridContainers == null) return;
         if (index < 0 || index >= tabs.Length) return;
 
@@ -224,12 +235,14 @@ void RegisterSwipe()
 
         // Reset visibility of action buttons when switching
         if (manageArtifactButton != null) manageArtifactButton.gameObject.SetActive(false);
+        if (managePetButton != null) managePetButton.gameObject.SetActive(false);
         if (equipArtifactButton != null) equipArtifactButton.gameObject.SetActive(false);
         if (cancelEquipButton != null) cancelEquipButton.gameObject.SetActive(false);
         if (unequipArtifactButton != null) unequipArtifactButton.gameObject.SetActive(false);
         
         selectedPetToEquipId = null;
         selectedArtifactToEquip = null;
+        selectedPetInstance = null;
 
         // Ativar/desativar top panel + bottom area
         if (topPanels != null)
@@ -237,7 +250,7 @@ void RegisterSwipe()
             for (int i = 0; i < topPanels.Length; i++)
             {
                 if (topPanels[i] != null)
-                    topPanels[i].gameObject.SetActive(i == index);
+                    topPanels[i].gameObject.SetActive(i == index && index != 3);
             }
         }
 
@@ -246,7 +259,7 @@ void RegisterSwipe()
             for (int i = 0; i < bottomScrollRoots.Length; i++)
             {
                 if (bottomScrollRoots[i] != null)
-                    bottomScrollRoots[i].SetActive(i == index);
+                    bottomScrollRoots[i].SetActive(i == index && index != 3);
             }
         }
         else
@@ -255,7 +268,7 @@ void RegisterSwipe()
             for (int i = 0; i < gridContainers.Length; i++)
             {
                 if (gridContainers[i] != null)
-                    gridContainers[i].gameObject.SetActive(i == index);
+                    gridContainers[i].gameObject.SetActive(i == index && index != 3);
             }
         }
 
@@ -263,7 +276,7 @@ void RegisterSwipe()
         for (int i = 0; i < tabs.Length; i++)
             tabs[i].SetActive(i == index);
 
-        EnsureDefaultSelection(index);
+        if (index == 3 && itemsInventoryPanel != null) itemsInventoryPanel.RefreshGrid(); else EnsureDefaultSelection(index);
     }
 
     // =============================
@@ -346,25 +359,29 @@ private void PopulateTab(int tabIndex)
                 break;
 
             case InventoryKind.Pets:
-                if (account.OwnedPetIDs != null)
+                if (account.OwnedRuntimePets != null)
                 {
-                    for (int i = 0; i < account.OwnedPetIDs.Count; i++)
+                    for (int i = 0; i < account.OwnedRuntimePets.Count; i++)
                     {
-                        string id = account.OwnedPetIDs[i];
-                        if (string.IsNullOrWhiteSpace(id)) continue;
+                        var pet = account.OwnedRuntimePets[i];
+                        if (pet == null) continue;
+                        string id = pet.UUID;
                         
                         if (isSelectingPet) { if (id == originEquippedId) { /* keep it */ } else if (account.IsPetEquipped(id)) continue; }
 
                         Sprite icon = null;
-                        string label = "Pet";
-                        if (petCatalog != null) {
-                            var data = petCatalog.GetPetData(id);
-                            if (data != null) 
+                        string speciesName = pet.DisplayName;
+                        if (petCatalog != null)
+                        {
+                            var speciesData = petCatalog.GetPetSpecies(pet.SpeciesID);
+                            if (speciesData != null)
                             {
-                                icon = data.icon;
-                                label = data.displayName;
+                                icon = speciesData.Icon;
+                                speciesName = speciesData.SpeciesName;
                             }
                         }
+
+                        string label = $"{speciesName}\n<size=10>{pet.RarityStars}* Lvl:{pet.CurrentLevel}</size>";
                         
                         SpawnItem(tabIndex, container, id, label, () => OnPetClicked(id), icon);
                     }
@@ -612,13 +629,24 @@ private void PopulateTab(int tabIndex)
             unitIconImage.sprite = data.icon;
             
             var baseStats = data.baseStats;
-            PetData equippedPet = null;
-            if (loadout != null && !string.IsNullOrEmpty(loadout.PetID) && petCatalog != null)
+            RuntimePetData equippedPet = null;
+            CelestialCross.Data.Pets.PetSpeciesSO equippedPetSpecies = null;
+            if (loadout != null && !string.IsNullOrEmpty(loadout.PetID))
             {
-                equippedPet = petCatalog.GetPetData(loadout.PetID);
-                if (equippedPet != null)
+                equippedPet = account.GetPetByUUID(loadout.PetID);
+                if (equippedPet != null && petCatalog != null)
                 {
-                    baseStats += equippedPet.baseStats;
+                    equippedPetSpecies = petCatalog.GetPetSpecies(equippedPet.SpeciesID);
+                    if (equippedPetSpecies != null)
+                    {
+                        // Adding simple pet stats to base stats manually 
+                        baseStats.health += equippedPet.Health;
+                        baseStats.attack += equippedPet.Attack;
+                        baseStats.defense += equippedPet.Defense;
+                        baseStats.speed += equippedPet.Speed;
+                        baseStats.criticalChance = Mathf.Clamp(baseStats.criticalChance + equippedPet.CriticalChance, 0, 100);
+                        baseStats.effectAccuracy = Mathf.Clamp(baseStats.effectAccuracy + equippedPet.EffectAccuracy, 0, 100);
+                    }
                 }
             }
 
@@ -647,11 +675,11 @@ private void PopulateTab(int tabIndex)
             int finalAttack = (int)Mathf.Round(data.baseStats.attack * (1f + (aP / 100f)) + aF);
             int finalDefense = (int)Mathf.Round(data.baseStats.defense * (1f + (dP / 100f)) + dF);
             
-            if (equippedPet != null)
+            if (equippedPet != null && equippedPetSpecies != null)
             {
-                finalHealth += equippedPet.baseStats.health;
-                finalAttack += equippedPet.baseStats.attack;
-                finalDefense += equippedPet.baseStats.defense;
+                finalHealth += equippedPet.Health;
+                finalAttack += equippedPet.Attack;
+                finalDefense += equippedPet.Defense;
             }
             
             int finalSpeed = (int)Mathf.Round(baseStats.speed + spdF);
@@ -678,10 +706,10 @@ private void PopulateTab(int tabIndex)
                         if (ab != null) SpawnAbilityButton(unitAbilitiesContainer, ab, false);
                     }
                 }
-                
-                if (equippedPet != null && equippedPet.ability != null)
+                if (equippedPetSpecies != null)
                 {
-                    SpawnAbilityButton(unitAbilitiesContainer, equippedPet.ability, true);
+                    if (equippedPetSpecies.PassiveSkills != null) foreach(var ab in equippedPetSpecies.PassiveSkills) if (ab != null) SpawnAbilityButton(unitAbilitiesContainer, ab, true);
+                    if (equippedPetSpecies.ActiveSkills != null) foreach(var ab in equippedPetSpecies.ActiveSkills) if (ab != null) SpawnAbilityButton(unitAbilitiesContainer, ab, true);
                 }
             }
 
@@ -714,11 +742,14 @@ private void PopulateTab(int tabIndex)
                 // Pet Slot
                 if (loadout != null && !string.IsNullOrEmpty(loadout.PetID))
                 {
-                    var pet = petCatalog?.GetPetData(loadout.PetID);
+                    var pet = petCatalog?.GetPetSpecies(loadout.PetID);
                     if (pet != null)
-                        unitEquipTexts[i].text = $"<b>Pet</b>\n<color=#ffb>{pet.displayName}</color>";
-                    else
-                        unitEquipTexts[i].text = $"<b>Pet</b>\n<color=#ffb>Desconhecido</color>";
+                        unitEquipTexts[i].text = $"<b>Pet</b>\n<color=#ffb>{pet.SpeciesName}</color>"; 
+                    else 
+                    {
+                        var rp = AccountManager.Instance.PlayerAccount.GetPetByUUID(loadout.PetID);
+                        unitEquipTexts[i].text = rp != null ? $"<b>Pet</b>\n<color=#ffb>{rp.DisplayName}</color>" : $"<b>Pet</b>\n<color=#ffb>Desconhecido</color>";
+                    }
                 }
                 else
                 {
@@ -857,28 +888,33 @@ private void PopulateTab(int tabIndex)
     private void OnPetClicked(string petId) {
         currentlySelectedTabItemId = petId;
         string details = "Pet desconhecido";
-        if (petCatalog != null)
-        {
-            var data = petCatalog.GetPetData(petId);
-            if (data != null)
-            {
-                details = $"<b>{data.displayName}</b>\n" +
-                          $"HP: +{data.baseStats.health}   " +
-                          $"ATK: +{data.baseStats.attack}   " +
-                          $"DEF: +{data.baseStats.defense}\n" +
-                          $"SPD: +{data.baseStats.speed}   " +
-                          $"CRIT: +{data.baseStats.criticalChance}%   " +
-                          $"ACC: +{data.baseStats.effectAccuracy}%\n\n";
+        
+        var account = AccountManager.Instance.PlayerAccount;
+        RuntimePetData data = account.GetPetByUUID(petId);
 
-                if (data.ability != null)
-                {
-                    details += $"<color=#ffffaa>{data.ability.abilityName}</color>\n";
-                    details += $"<size=16>{data.ability.abilityDescription}</size>";
-                }
-                else
-                {
-                    details += "<color=#aaaaaa>(Pet sem passiva equipada)</color>";
-                }
+        if (data != null)
+        {
+            selectedPetInstance = data;
+            string speciesName = data.DisplayName;
+            CelestialCross.Data.Pets.PetSpeciesSO speciesData = null;
+            if (petCatalog != null)
+            {
+                speciesData = petCatalog.GetPetSpecies(data.SpeciesID);
+                if (speciesData != null) speciesName = speciesData.SpeciesName;
+            }
+
+            details = $"<b>{speciesName}</b>\n" +
+                      $"Estrelas: {data.RarityStars}* | Nível: {data.CurrentLevel}\n\n" +
+                      $"HP: +{data.Health}   ATK: +{data.Attack}   DEF: +{data.Defense}\n" +
+                      $"SPD: +{data.Speed}   CRIT: +{data.CriticalChance}%   ACC: +{data.EffectAccuracy}%\n\n";
+            if (speciesData != null)
+            {
+                if (speciesData.PassiveSkills != null) foreach (var ab in speciesData.PassiveSkills) if (ab != null) { details += $"<color=#ffffaa>{ab.abilityName}</color>\n<size=16>{ab.abilityDescription}</size>\n"; }
+                if (speciesData.ActiveSkills != null) foreach (var ab in speciesData.ActiveSkills) if (ab != null) { details += $"<color=#ffffaa>{ab.abilityName}</color>\n<size=16>{ab.abilityDescription}</size>\n"; }
+            }
+            else
+            {
+                details += "<color=#aaaaaa>(Pet sem habilidade equipada)</color>";
             }
         }
 
@@ -886,6 +922,7 @@ private void PopulateTab(int tabIndex)
         
         if (isSelectingPet)
         {
+            if (managePetButton != null) managePetButton.gameObject.SetActive(false);
             selectedPetToEquipId = petId;
             if (currentlySelectedTabItemId == originEquippedId && originEquippedId != null) 
             {
@@ -898,6 +935,12 @@ private void PopulateTab(int tabIndex)
                 if (unequipArtifactButton != null) unequipArtifactButton.gameObject.SetActive(false);
             }
         }
+        else
+        {
+            if (managePetButton != null) managePetButton.gameObject.SetActive(true);
+            if (equipArtifactButton != null) equipArtifactButton.gameObject.SetActive(false);
+            if (unequipArtifactButton != null) unequipArtifactButton.gameObject.SetActive(false);
+        }
     }
 
     private void CancelEquipMode()
@@ -909,11 +952,13 @@ private void PopulateTab(int tabIndex)
         selectedPetToEquipId = null;
         originEquippedId = null;
         currentlySelectedTabItemId = null;
+        selectedPetInstance = null;
         
         if (cancelEquipButton != null) cancelEquipButton.gameObject.SetActive(false);
         if (equipArtifactButton != null) equipArtifactButton.gameObject.SetActive(false);
         if (unequipArtifactButton != null) unequipArtifactButton.gameObject.SetActive(false);
         if (manageArtifactButton != null) manageArtifactButton.gameObject.SetActive(false);
+        if (managePetButton != null) managePetButton.gameObject.SetActive(false);
         
         SwitchToTab(0); // Volta pra Unidades
         PopulateTab(1); // Atualiza Pets para todos
@@ -957,6 +1002,17 @@ private void PopulateTab(int tabIndex)
             RefreshAllTabs();
             SetDetails(2, FormatArtifactDetails(selectedArtifactToEquip));
             if (manageArtifactButton != null) manageArtifactButton.gameObject.SetActive(false); // Hide until re-clicked
+        });
+    }
+
+    private void OnManagePetClicked()
+    {
+        if (selectedPetInstance == null || petManageModal == null) return;
+        petManageModal.Show(selectedPetInstance, () => 
+        {
+            RefreshAllTabs();
+            SetDetails(1, "(selecione um item abaixo)");
+            if (managePetButton != null) managePetButton.gameObject.SetActive(false);
         });
     }
 
@@ -1064,3 +1120,11 @@ private void PopulateTab(int tabIndex)
             $"Substats:\n{sub}";
     }
 }
+
+
+
+
+
+
+
+

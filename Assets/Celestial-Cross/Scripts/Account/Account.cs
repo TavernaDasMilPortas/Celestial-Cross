@@ -3,34 +3,94 @@ using CelestialCross.Artifacts;
 using UnityEngine;
 
 [System.Serializable]
+public class ItemQuantity
+{
+    public string ItemID; // Pode ser ID de soul, po��o, fragmento, etc.
+    public int Quantity;
+
+    public ItemQuantity(string itemId, int quantity)
+    {
+        ItemID = itemId;
+        Quantity = quantity;
+    }
+}
+
+[System.Serializable]
 public class Account
 {
     public int Money;
     public int Energy;
+    public int Stardust;
 
     // Usaremos os IDs para referenciar os ScriptableObjects
     public List<string> OwnedUnitIDs = new List<string>();
     public List<string> OwnedPetIDs = new List<string>();
+    public List<CelestialCross.Data.Pets.RuntimePetData> OwnedRuntimePets = new List<CelestialCross.Data.Pets.RuntimePetData>();
     public List<ArtifactInstanceData> OwnedArtifacts = new List<ArtifactInstanceData>();
     public List<UnitLoadout> UnitLoadouts = new List<UnitLoadout>();
+
+    [Header("Itens Gerais e Consum�veis")]
+    public List<ItemQuantity> OwnedItems = new List<ItemQuantity>();
 
     public Account()
     {
         Money = 100; // Valor inicial
         Energy = 50; // Valor inicial
+        Stardust = 0; // Valor inicial configurado em 0
         OwnedUnitIDs = new List<string>();
         OwnedPetIDs = new List<string>();
+        OwnedRuntimePets = new List<CelestialCross.Data.Pets.RuntimePetData>();
         OwnedArtifacts = new List<ArtifactInstanceData>();
         UnitLoadouts = new List<UnitLoadout>();
+        OwnedItems = new List<ItemQuantity>();
     }
 
     public void EnsureInitialized()
     {
         OwnedUnitIDs ??= new List<string>();
         OwnedPetIDs ??= new List<string>();
+        OwnedRuntimePets ??= new List<CelestialCross.Data.Pets.RuntimePetData>();
         OwnedArtifacts ??= new List<ArtifactInstanceData>();
         UnitLoadouts ??= new List<UnitLoadout>();
+        OwnedItems ??= new List<ItemQuantity>();
     }
+
+    // --- M�TODOS AUXILIARES: ITEMS ---
+    public void AddItem(string itemId, int amount)
+    {
+        EnsureInitialized();
+        var item = OwnedItems.Find(i => i.ItemID == itemId);
+        if (item != null)
+        {
+            item.Quantity += amount;
+        }
+        else
+        {
+            OwnedItems.Add(new ItemQuantity(itemId, amount));
+        }
+    }
+
+    public int GetItemCount(string itemId)
+    {
+        EnsureInitialized();
+        var item = OwnedItems.Find(i => i.ItemID == itemId);
+        return item != null ? item.Quantity : 0;
+    }
+
+    public bool RemoveItem(string itemId, int amount)
+    {
+        EnsureInitialized();
+        var item = OwnedItems.Find(i => i.ItemID == itemId);
+        if (item != null && item.Quantity >= amount)
+        {
+            item.Quantity -= amount;
+            if (item.Quantity <= 0)
+                OwnedItems.Remove(item);
+            return true;
+        }
+        return false;
+    }
+    // ---------------------------------
 
     public UnitLoadout GetLoadoutForUnit(string unitID)
     {
@@ -42,7 +102,6 @@ public class Account
                 return loadout;
         }
         
-        // Se ela não tem um ainda no Save, criamos um em branco para a lógica funcionar bem
         var newLoadout = new UnitLoadout(unitID);
         UnitLoadouts.Add(newLoadout);
         return newLoadout;
@@ -60,6 +119,23 @@ public class Account
             var artifact = OwnedArtifacts[i];
             if (artifact != null && artifact.idGUID == guid)
                 return artifact;
+        }
+
+        return null;
+    }
+
+    public CelestialCross.Data.Pets.RuntimePetData GetPetByUUID(string uuid)
+    {
+        EnsureInitialized();
+
+        if (string.IsNullOrEmpty(uuid) || OwnedRuntimePets == null)
+            return null;
+
+        for (int i = 0; i < OwnedRuntimePets.Count; i++)
+        {
+            var p = OwnedRuntimePets[i];
+            if (p != null && p.UUID == uuid)
+                return p;
         }
 
         return null;

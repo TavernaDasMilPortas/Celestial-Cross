@@ -27,23 +27,10 @@ public class UnitData : ScriptableObject
     [SerializeReference]
     public List<UnitActionData> nativeActions = new();
 
-    public CombatStats GetCombinedStats(PetData equippedPet = null)
-    {
-        CombatStats total = baseStats;
-        if (equippedPet != null)
-            total += equippedPet.baseStats;
-        return total;
-    }
-
     public List<AbilityBlueprint> GetAbilities() => abilities;
 
-    public AbilityBlueprint GetPetAbility(PetData equippedPet = null)
-    {
-        return equippedPet != null ? equippedPet.ability : null;
-    }
-
     // Adaptado para Unit.cs - UnitActionContext se comunica com UnitActionData
-    public IEnumerable<UnitActionData> GetExecutableDefinitions(PetData equippedPet = null)
+    public IEnumerable<UnitActionData> GetExecutableDefinitions()
     {
         foreach (var action in nativeActions)
         {

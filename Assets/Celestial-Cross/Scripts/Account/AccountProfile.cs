@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
+using CelestialCross.Data.Pets;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -12,7 +13,7 @@ public class AccountProfile : ScriptableObject
     public int Energy = 50;
 
     public List<UnitData> OwnedUnits = new List<UnitData>();
-    public List<PetData> OwnedPets = new List<PetData>();
+    public List<PetSpeciesSO> OwnedPets = new List<PetSpeciesSO>();
 
 #if UNITY_EDITOR
     [Button("Auto-Preencher com TODAS as Unidades/Pets do Projeto", ButtonSizes.Large), GUIColor(0.2f, 0.8f, 0.2f)]
@@ -30,10 +31,10 @@ public class AccountProfile : ScriptableObject
         }
 
         OwnedPets.Clear();
-        string[] petGuids = AssetDatabase.FindAssets("t:PetData");
+        string[] petGuids = AssetDatabase.FindAssets("t:PetSpeciesSO");
         foreach (string guid in petGuids)
         {
-            PetData pd = AssetDatabase.LoadAssetAtPath<PetData>(AssetDatabase.GUIDToAssetPath(guid));
+            PetSpeciesSO pd = AssetDatabase.LoadAssetAtPath<PetSpeciesSO>(AssetDatabase.GUIDToAssetPath(guid));
             if (pd != null && !OwnedPets.Contains(pd))
             {
                 OwnedPets.Add(pd);

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
 using Celestial_Cross.Scripts.Abilities;
@@ -90,10 +90,10 @@ namespace CelestialCross.Editor
 
         private static void GeneratePets()
         {
-            string[] petNames = { "Dragão Flamejante", "Lobo de Gelo", "Golem de Terra", "Falcão dos Ventos", "Fada de Luz", "Pantera das Sombras", "Espírito da Água", "Pássaro Trovão", "Serpente Venenosa", "Coruja Arcana" };
+            string[] petNames = { "DragÃ£o Flamejante", "Lobo de Gelo", "Golem de Terra", "FalcÃ£o dos Ventos", "Fada de Luz", "Pantera das Sombras", "EspÃ­rito da Ãgua", "PÃ¡ssaro TrovÃ£o", "Serpente Venenosa", "Coruja Arcana" };
             Color[] petColors = { Color.red, Color.cyan, new Color(0.6f, 0.3f, 0.1f), Color.white, Color.yellow, Color.black, Color.blue, Color.magenta, Color.green, new Color(0.5f, 0, 0.5f) };
             
-            // Atributos Bônus
+            // Atributos BÃ´nus
             CombatStats[] petStats = {
                 new CombatStats(20, 50, 10, 5, 5, 0), // Fogo (Atk)
                 new CombatStats(30, 20, 20, 15, 2, 0), // Gelo (Balanceado/Spd)
@@ -102,7 +102,7 @@ namespace CelestialCross.Editor
                 new CombatStats(80, 15, 25, 5, 0, 10), // Luz (HP/Acc)
                 new CombatStats(10, 60, 5, 10, 15, 0), // Sombra (Atk/Crit)
                 new CombatStats(60, 15, 30, 0, 0, 5),   // Agua (HP/Def)
-                new CombatStats(10, 45, 5, 25, 5, 0),   // Trovão (Atk/Spd)
+                new CombatStats(10, 45, 5, 25, 5, 0),   // TrovÃ£o (Atk/Spd)
                 new CombatStats(40, 25, 15, 5, 0, 20),  // Veneno (Acc/HP)
                 new CombatStats(20, 40, 10, 10, 5, 15)  // Arcano (Atk/Acc)
             };
@@ -112,16 +112,21 @@ namespace CelestialCross.Editor
                 // 1. Criar Passiva
                 AbilityBlueprint passive = ScriptableObject.CreateInstance<AbilityBlueprint>();
                 passive.abilityName = "Aura do " + petNames[i].Split(' ')[0];
-                passive.abilityDescription = "Concede bônus instintivos e poder místico passivo da criatura ao mestre.";
+                passive.abilityDescription = "Concede bÃ´nus instintivos e poder mÃ­stico passivo da criatura ao mestre.";
                 passive.isPassive = true;
                 AssetDatabase.CreateAsset(passive, $"{AbilitiesPath}/Ability_Pet_{i}.asset");
 
                 // 2. Criar Pet
-                PetData pet = ScriptableObject.CreateInstance<PetData>();
-                pet.displayName = petNames[i];
-                pet.baseStats = petStats[i];
-                pet.ability = passive;
-                pet.icon = GenerateColoredSprite(petColors[i], $"Icon_Pet_{i}");
+                CelestialCross.Data.Pets.PetSpeciesSO pet = ScriptableObject.CreateInstance<CelestialCross.Data.Pets.PetSpeciesSO>();
+                pet.SpeciesName = petNames[i];
+                pet.MinBaseHealth = petStats[i].health; pet.MaxBaseHealth = petStats[i].health * 1.5f; 
+                pet.MinBaseAttack = petStats[i].attack; pet.MaxBaseAttack = petStats[i].attack * 1.5f; 
+                pet.MinBaseDefense = petStats[i].defense; pet.MaxBaseDefense = petStats[i].defense * 1.5f; 
+                pet.MinBaseSpeed = petStats[i].speed; pet.MaxBaseSpeed = petStats[i].speed * 1.5f; 
+                pet.MinBaseCriticalChance = petStats[i].criticalChance; pet.MaxBaseCriticalChance = petStats[i].criticalChance * 1.5f; 
+                pet.MinBaseEffectAccuracy = petStats[i].effectAccuracy; pet.MaxBaseEffectAccuracy = petStats[i].effectAccuracy * 1.5f;
+                pet.PassiveSkills.Add(passive);
+                pet.Icon = GenerateColoredSprite(petColors[i], $"Icon_Pet_{i}");
                 
                 AssetDatabase.CreateAsset(pet, $"{PetsPath}/Pet_{i}.asset");
             }
@@ -129,7 +134,7 @@ namespace CelestialCross.Editor
 
         private static void GenerateUnits()
         {
-            string[] unitNames = { "Paladino Guardião", "Assassino Furtivo", "Piromante Supremo", "Clériga Divina", "Bárbaro Sangrento", "Patrulheiro Élfico", "Cavaleiro Real", "Necromante Obscuro", "Bardo Inspirador", "Evocador Astral" };
+            string[] unitNames = { "Paladino GuardiÃ£o", "Assassino Furtivo", "Piromante Supremo", "ClÃ©riga Divina", "BÃ¡rbaro Sangrento", "Patrulheiro Ã‰lfico", "Cavaleiro Real", "Necromante Obscuro", "Bardo Inspirador", "Evocador Astral" };
             Color[] unitColors = { Color.white, Color.black, Color.red, Color.yellow, new Color(0.8f, 0.1f, 0.1f), Color.green, Color.gray, new Color(0.3f, 0, 0.4f), Color.cyan, Color.magenta };
 
             CombatStats[] unitStats = {
@@ -149,20 +154,20 @@ namespace CelestialCross.Editor
             {
                 // Criar Habilidades (1 Passiva, 2 Ativas)
                 AbilityBlueprint passiva = ScriptableObject.CreateInstance<AbilityBlueprint>();
-                passiva.abilityName = "Técnica de " + unitNames[i].Split(' ')[0];
+                passiva.abilityName = "TÃ©cnica de " + unitNames[i].Split(' ')[0];
                 passiva.abilityDescription = $"Habilidade passiva de um verdadeiro {unitNames[i].Split(' ')[0]}.";
                 passiva.isPassive = true;
                 AssetDatabase.CreateAsset(passiva, $"{AbilitiesPath}/Ability_Unit_{i}_Passive.asset");
 
                 AbilityBlueprint ativa1 = ScriptableObject.CreateInstance<AbilityBlueprint>();
-                ativa1.abilityName = "Ataque Básico";
-                ativa1.abilityDescription = "Golpe rápido e direto em um inimigo.";
+                ativa1.abilityName = "Ataque BÃ¡sico";
+                ativa1.abilityDescription = "Golpe rÃ¡pido e direto em um inimigo.";
                 ativa1.isPassive = false;
                 AssetDatabase.CreateAsset(ativa1, $"{AbilitiesPath}/Ability_Unit_{i}_Active1.asset");
 
                 AbilityBlueprint ativa2 = ScriptableObject.CreateInstance<AbilityBlueprint>();
                 ativa2.abilityName = "Poder Ultimate";
-                ativa2.abilityDescription = "Usa todo o dom do herói para um impacto destrutivo ou curativo massivo.";
+                ativa2.abilityDescription = "Usa todo o dom do herÃ³i para um impacto destrutivo ou curativo massivo.";
                 ativa2.isPassive = false;
                 AssetDatabase.CreateAsset(ativa2, $"{AbilitiesPath}/Ability_Unit_{i}_Active2.asset");
 
@@ -214,3 +219,9 @@ namespace CelestialCross.Editor
         }
     }
 }
+
+
+
+
+
+

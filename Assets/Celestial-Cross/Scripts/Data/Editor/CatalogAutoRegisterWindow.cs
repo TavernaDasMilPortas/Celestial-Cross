@@ -1,6 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 using System.Collections.Generic;
+using CelestialCross.Data.Pets;
 
 namespace CelestialCross.Editor
 {
@@ -116,13 +117,13 @@ namespace CelestialCross.Editor
 
         private void RegisterPets()
         {
-            string[] guids = AssetDatabase.FindAssets("t:PetData");
-            List<PetData> foundPets = new List<PetData>();
+            string[] guids = AssetDatabase.FindAssets("t:PetSpeciesSO");
+            List<PetSpeciesSO> foundPets = new List<PetSpeciesSO>();
 
             foreach (var guid in guids)
             {
                 string path = AssetDatabase.GUIDToAssetPath(guid);
-                PetData data = AssetDatabase.LoadAssetAtPath<PetData>(path);
+                PetSpeciesSO data = AssetDatabase.LoadAssetAtPath<PetSpeciesSO>(path);
                 if (data != null)
                 {
                     foundPets.Add(data);
@@ -138,7 +139,7 @@ namespace CelestialCross.Editor
             for (int i = 0; i < foundPets.Count; i++)
             {
                 SerializedProperty elementProp = entriesProp.GetArrayElementAtIndex(i);
-                SerializedProperty dataProp = elementProp.FindPropertyRelative("petData");
+                SerializedProperty dataProp = elementProp.FindPropertyRelative("petSpecies");
                 dataProp.objectReferenceValue = foundPets[i];
             }
 
@@ -148,3 +149,5 @@ namespace CelestialCross.Editor
         }
     }
 }
+
+

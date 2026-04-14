@@ -19,7 +19,7 @@ public class UnitStatsDebugEditor : Editor
         GUILayout.BeginVertical(style);
         GUILayout.Label("📊 Calculadora Final em Tempo Real (Não precisa de PlayMode!)", EditorStyles.boldLabel);
         
-        var baseStats = unit.unitData.GetCombinedStats(unit.petData);
+        var baseStats = unit.unitData.baseStats;
         var finalStats = unit.Stats;
 
         DrawStatComparison("HP Max", baseStats.health, finalStats.health);

@@ -10,7 +10,7 @@ public class UnitRuntimeConfigurator : MonoBehaviour
     [Header("Artifacts (Option B)")]
     [SerializeField] private ArtifactSetCatalog artifactSetCatalog;
 
-    public void Initialize(UnitData unitData, PetData petData = null)
+    public void Initialize(UnitData unitData, CelestialCross.Data.Pets.RuntimePetData runtimePetData = null, CelestialCross.Data.Pets.PetSpeciesSO petSpeciesData = null)
     {
         if (unit == null)
         {
@@ -20,7 +20,8 @@ public class UnitRuntimeConfigurator : MonoBehaviour
 
         // Assign the Scriptable Objects
         unit.unitData = unitData;
-        unit.petData = petData;
+        unit.runtimePetData = runtimePetData;
+        unit.petSpeciesData = petSpeciesData;
 
         // Inject equipped artifacts from save-data BEFORE initializing (affects MaxHealth/Stats)
         TryConfigureArtifactsFromAccount(unitData);

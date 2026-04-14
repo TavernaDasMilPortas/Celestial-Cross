@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b609c611f50aad942beb9dcfe09b95a6, type: 3}
+  m_Name: Dungeon_1-nivel_1
+  m_EditorClassIdentifier: Assembly-CSharp::LevelData
+  LevelName: Terras do Fogo - Fase 1
+  SceneName: Teste 1
+  PhaseMap: {fileID: 11400000, guid: aa84a7dcbee22b84ebe4ed90ff5c0a6b, type: 2}
+  Waves: []
+  Enemies:
+  - UnitData: {fileID: 11400000, guid: 67628d77266bab446ba0b5274c2a9397, type: 2}
+    GridPosition: {x: 4, y: 4}
+  VictoryRewards: {fileID: 0}

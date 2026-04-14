@@ -187,20 +187,30 @@ public class PlacementManager : MonoBehaviour
         else
         {
             // Recupera o loadout e o pet (se houver) dessa unidade
-            PetData petData = null;
+            CelestialCross.Data.Pets.PetSpeciesSO petSpecies = null;
+            CelestialCross.Data.Pets.RuntimePetData runtimePetData = null;
             if (petCatalog != null && AccountManager.Instance != null && AccountManager.Instance.PlayerAccount != null)
             {
                 var loadout = AccountManager.Instance.PlayerAccount.GetLoadoutForUnit(unitData.UnitID);
                 if (loadout != null && !string.IsNullOrEmpty(loadout.PetID))
                 {
-                    petData = petCatalog.GetPetData(loadout.PetID);
+                    runtimePetData = AccountManager.Instance.PlayerAccount.GetPetByUUID(loadout.PetID);
+                    if (runtimePetData != null)
+                    {
+                        petSpecies = petCatalog.GetPetSpecies(runtimePetData.SpeciesID);
+                    }
+                    else
+                    {
+                        petSpecies = petCatalog.GetPetSpecies(loadout.PetID);
+                    }
                 }
             }
 
             // Spawna a nova unidade e atrela ela
-            var unit = GridMap.Instance.SpawnUnitAt(playerUnitMoldPrefab, newPos, Team.Player, unitData, petData);
+            var unit = GridMap.Instance.SpawnUnitAt(playerUnitMoldPrefab, newPos, Team.Player, unitData, runtimePetData, petSpecies);
             if (unit != null)
             {
+                unit.runtimePetData = runtimePetData;
                 placedUnitsDict[unitData] = unit;
             }
         }
@@ -243,3 +253,6 @@ public class PlacementManager : MonoBehaviour
         OnPlacementEnded?.Invoke();
     }
 }
+
+
+

@@ -1,19 +1,21 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
+using UnityEngine;
 using CelestialCross.Artifacts;
+using CelestialCross.Data.Pets;
 
 namespace CelestialCross.Data.Dungeon
 {
-    /// <summary>
-    /// Objeto que transporta as recompensas de fim de fase dinamicamente, 
-    /// em vez de referenciar diretamente o SO de Reward.
-    /// </summary>
+    [global::System.Serializable]
     public class RuntimeReward
     {
         public int Money;
         public int Energy;
         
-        // Artefatos gerados aleatoriamente baseados na matriz da Dungeon
+        [Header("NOVO: Poeira Estelar")]
+        public int Stardust;
+
         public List<ArtifactInstanceData> GeneratedArtifacts = new List<ArtifactInstanceData>();
+        public List<RuntimePetData> GeneratedPets = new List<RuntimePetData>();
         
         public RuntimeReward() { }
         

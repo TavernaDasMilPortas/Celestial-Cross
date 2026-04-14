@@ -7,22 +7,11 @@ namespace CelestialCross.System
 {
     public static class ArtifactLootService
     {
-        public static List<ArtifactInstanceData> GenerateLoot(DungeonBaseSO dungeonBase, DungeonLevelNode levelNode)
+        // NOVO: Exposto para uso na LootTableSO Genérica
+        public static ArtifactInstanceData GenerateSingleFromMatrix(List<ArtifactSet> allowedSets, ArtifactDropMatrix matrix)
         {
-            List<ArtifactInstanceData> loot = new List<ArtifactInstanceData>();
-            if (dungeonBase == null || levelNode == null || dungeonBase.AllowedArtifactSets == null || dungeonBase.AllowedArtifactSets.Count == 0)
-                return loot;
-
-            for (int i = 0; i < levelNode.ArtifactsToDrop; i++)
-            {
-                ArtifactInstanceData artifact = GenerateSingleArtifact(dungeonBase.AllowedArtifactSets, levelNode.DropMatrix);
-                if (artifact != null)
-                {
-                    loot.Add(artifact);
-                }
-            }
-
-            return loot;
+            if (allowedSets == null || allowedSets.Count == 0) return null;
+            return GenerateSingleArtifact(allowedSets, matrix);
         }
 
         private static ArtifactInstanceData GenerateSingleArtifact(List<ArtifactSet> allowedSets, ArtifactDropMatrix matrix)
@@ -39,10 +28,6 @@ namespace CelestialCross.System
             // 4. RNG Estrelas
             ArtifactStars stars = RollStars(matrix);
 
-            // 5. Determinar Main Stat (Usar a inteligï¿½ncia do ArtifactGenerator - precisa do set ou rules)
-            // Tipicamente o Main Stat do Helmet ï¿½ HP plano, mas para simular, precisamos obter um MainStat vï¿½lido para o slot.
-            // Para simplificar e delegar para algo genï¿½rico se nï¿½o tiver lï¿½gica no Set,
-            // poderï¿½amos pegar o stat principal do Set ou usar RNG para Slots 3-6.
             StatType mainStat = DetermineMainStatForSlot(selectedSlot);
 
             // 6. Instanciar e Preencher Runtime Data
@@ -107,8 +92,6 @@ namespace CelestialCross.System
 
         private static StatType DetermineMainStatForSlot(ArtifactType slot)
         {
-            // Slots 0 (Helmet) e 1 (Chestplate) geralmente tï¿½m status fixos? Se nï¿½o houver regra, soteia.
-            // Para simplificar, deixaremos RNG. Ajuste conforme as regras de negï¿½cio!
             List<StatType> pool = new List<StatType>
             {
                 StatType.HealthFlat, StatType.HealthPercent, StatType.AttackFlat, StatType.AttackPercent, 

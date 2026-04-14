@@ -39,9 +39,9 @@ public class UnitPanelUI : MonoBehaviour
 
         if (petIconImage != null)
         {
-            if (currentUnit.EquippedPet != null && currentUnit.EquippedPet.icon != null)
+            if (currentUnit.petSpeciesData != null && currentUnit.petSpeciesData.Icon != null)
             {
-                petIconImage.sprite = currentUnit.EquippedPet.icon;
+                petIconImage.sprite = currentUnit.petSpeciesData.Icon;
                 petIconImage.gameObject.SetActive(true);
             }
             else
@@ -70,3 +70,4 @@ public class UnitPanelUI : MonoBehaviour
         }
     }
 }
+

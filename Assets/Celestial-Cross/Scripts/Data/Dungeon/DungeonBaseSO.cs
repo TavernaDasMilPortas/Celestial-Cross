@@ -1,6 +1,7 @@
-ï»¿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 using CelestialCross.Artifacts;
+using CelestialCross.Data.Loot;
 
 namespace CelestialCross.Data.Dungeon
 {
@@ -26,10 +27,11 @@ namespace CelestialCross.Data.Dungeon
     public class DungeonLevelNode
     {
         public LevelData LevelRef;
-        public ArtifactDropMatrix DropMatrix;
         
-        [Tooltip("Quantidade de artefatos sorteados ao concluir.")]
-        public int ArtifactsToDrop = 1;
+        [Header("NOVO: Loot Procedural Flexível")]
+        [Tooltip("Tabelas de Drop específicas para ESTE ANDAR. Estas tabelas rodarão ao completar esta fase.")]
+        [SerializeReference]
+        public List<BaseLootTable> SpecificLootTables = new List<BaseLootTable>();
     }
 
     [CreateAssetMenu(fileName = "NewDungeonBase", menuName = "RPG/Dungeon/Dungeon Base")]
@@ -39,11 +41,12 @@ namespace CelestialCross.Data.Dungeon
         public string DungeonName;
         [TextArea] public string Description;
 
-        [Header("Loot Pool Global da Dungeon")]
-        [Tooltip("Quais conjuntos de artefatos podem dropar em qualquer fase desta masmorra?")]
-        public List<ArtifactSet> AllowedArtifactSets;
+        [Header("Drop System (GENERICO)")]
+        [Tooltip("Estas tabelas de loot globais rodam sempre que você vence QUALQUER fase desta masmorra.")]
+        [SerializeReference]
+        public List<BaseLootTable> GlobalLootTables = new List<BaseLootTable>();
 
-        [Header("NÃ­veis (Fases)")]
+        [Header("Níveis (Fases)")]
         public List<DungeonLevelNode> Levels;
     }
 }

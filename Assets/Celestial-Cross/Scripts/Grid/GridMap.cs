@@ -45,7 +45,7 @@ public class GridMap : MonoBehaviour
         return new Vector3(gridPos.x * tileSize, 0f, gridPos.y * tileSize);
     }
 
-    public Unit SpawnUnitAt(GameObject prefab, Vector2Int gridPos, Team team, UnitData unitData, PetData petData = null, bool overwriteIfOccupied = true)
+    public Unit SpawnUnitAt(GameObject prefab, Vector2Int gridPos, Team team, UnitData unitData, CelestialCross.Data.Pets.RuntimePetData runtimePetData = null, CelestialCross.Data.Pets.PetSpeciesSO petSpeciesData = null, bool overwriteIfOccupied = true)
     {
         if (prefab == null)
         {
@@ -84,7 +84,7 @@ public class GridMap : MonoBehaviour
             return null;
         }
 
-        configurator.Initialize(unitData, petData);
+        configurator.Initialize(unitData, runtimePetData, petSpeciesData);
 
         var unit = unitObj.GetComponent<Unit>();
         if (unit == null)

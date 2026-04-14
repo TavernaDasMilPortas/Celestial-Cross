@@ -1,4 +1,4 @@
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -7,7 +7,7 @@ namespace CelestialCross.Giulia_UI.Editor
 {
     public static class VictoryRewardUIBuilder
     {
-        [MenuItem("Celestial Cross/UI Builders/Generate Victory Reward UI")]
+        [MenuItem("Celestial Cross/UI Builders/Generate Victory Reward UI (COMPLETE)")]
         public static void GenerateUI()
         {
             Canvas canvas = GameObject.FindObjectOfType<Canvas>();
@@ -50,7 +50,7 @@ namespace CelestialCross.Giulia_UI.Editor
             var moneyAndEnergyTxt = CreateText(panel.transform, "Dinheiro: +X   Energia: +Y", 24, new Vector2(0, 0.8f), new Vector2(1, 0.9f), Color.white);
 
             // Sub Title
-            CreateText(panel.transform, "Artefatos Encontrados", 24, new Vector2(0.05f, 0.72f), new Vector2(0.95f, 0.78f), Color.white);
+            CreateText(panel.transform, "Recompensas Encontradas", 24, new Vector2(0.05f, 0.72f), new Vector2(0.95f, 0.78f), Color.white);
 
             // Scroll/Content Area
             GameObject scrollArea = new GameObject("ItemsScrollArea", typeof(RectTransform), typeof(Image));
@@ -78,8 +78,8 @@ namespace CelestialCross.Giulia_UI.Editor
             glg.startAxis = GridLayoutGroup.Axis.Horizontal;
             glg.childAlignment = TextAnchor.UpperCenter;
 
-            var noArtifactsTxt = CreateText(itemsContent.transform, "(Nenhum Artefato nesta tentativa)", 20, Vector2.zero, Vector2.one, Color.gray);
-            noArtifactsTxt.gameObject.SetActive(false); // managed by script
+            var noArtifactsTxt = CreateText(itemsContent.transform, "(Nenhuma recompensa nesta tentativa)", 20, Vector2.zero, Vector2.one, Color.gray);
+            noArtifactsTxt.gameObject.SetActive(false);
 
             // Button
             GameObject btnGo = new GameObject("Btn_Continue", typeof(RectTransform), typeof(Image), typeof(Button));
@@ -109,13 +109,53 @@ namespace CelestialCross.Giulia_UI.Editor
             CreateText(fakeArtifactGo.transform, "SlotName (Set)\n1* Lv.1", 18, new Vector2(0, 0.5f), new Vector2(1, 1f), Color.white);
             CreateText(fakeArtifactGo.transform, "+123 Stat", 16, new Vector2(0, 0), new Vector2(1, 0.5f), Color.yellow);
             
-            fakeArtifactGo.SetActive(false);
+            fakeArtifactGo.SetActive(false); // Builder sets it false so it doesn't show over real items
             serializedObject.FindProperty("artifactItemPrefab").objectReferenceValue = fakeArtifactGo;
+
+            // ===== Modal =====
+            GameObject detailsModal = new GameObject("RewardDetailsModal_Physical", typeof(RectTransform), typeof(Image));
+            detailsModal.transform.SetParent(uiRoot.transform, false);
+            detailsModal.transform.SetAsLastSibling();
+            RectTransform modRt = detailsModal.GetComponent<RectTransform>();
+            modRt.anchorMin = new Vector2(0.2f, 0.2f);
+            modRt.anchorMax = new Vector2(0.8f, 0.8f);
+            modRt.offsetMin = Vector2.zero; modRt.offsetMax = Vector2.zero;
+            detailsModal.GetComponent<Image>().color = new Color(0.1f, 0.1f, 0.12f, 1f);
+            
+            var title = CreateText(detailsModal.transform, "Título", 36, new Vector2(0, 0.8f), new Vector2(1, 1), Color.yellow);
+            var desc = CreateText(detailsModal.transform, "Detalhes...", 24, new Vector2(0.05f, 0.3f), new Vector2(0.95f, 0.8f), Color.white);
+            
+            GameObject sBtnGo = new GameObject("Btn_Sell", typeof(RectTransform), typeof(Image), typeof(Button));
+            sBtnGo.transform.SetParent(detailsModal.transform, false);
+            RectTransform sRt = sBtnGo.GetComponent<RectTransform>();
+            sRt.anchorMin = new Vector2(0.1f, 0.05f); sRt.anchorMax = new Vector2(0.45f, 0.2f);
+            sRt.offsetMin = Vector2.zero; sRt.offsetMax = Vector2.zero;
+            sBtnGo.GetComponent<Image>().color = new Color(0.8f, 0.2f, 0.2f, 1f);
+            var sellBtn = sBtnGo.GetComponent<Button>();
+            var sellTxt = CreateText(sBtnGo.transform, "Vender", 24, Vector2.zero, Vector2.one, Color.white);
+
+            GameObject cBtnGo = new GameObject("Btn_Close", typeof(RectTransform), typeof(Image), typeof(Button));
+            cBtnGo.transform.SetParent(detailsModal.transform, false);
+            RectTransform cRt = cBtnGo.GetComponent<RectTransform>();
+            cRt.anchorMin = new Vector2(0.55f, 0.05f); cRt.anchorMax = new Vector2(0.9f, 0.2f);
+            cRt.offsetMin = Vector2.zero; cRt.offsetMax = Vector2.zero;
+            cBtnGo.GetComponent<Image>().color = new Color(0.4f, 0.4f, 0.4f, 1f);
+            var closeBtn = cBtnGo.GetComponent<Button>();
+            CreateText(cBtnGo.transform, "Fechar", 24, Vector2.zero, Vector2.one, Color.white);
+            
+            detailsModal.SetActive(false);
+
+            serializedObject.FindProperty("detailsModal").objectReferenceValue = detailsModal;
+            serializedObject.FindProperty("modalTitle").objectReferenceValue = title.GetComponent<TMP_Text>();
+            serializedObject.FindProperty("modalDesc").objectReferenceValue = desc.GetComponent<TMP_Text>();
+            serializedObject.FindProperty("modalSellBtn").objectReferenceValue = sellBtn;
+            serializedObject.FindProperty("modalSellTxt").objectReferenceValue = sellTxt.GetComponent<TMP_Text>();
+            serializedObject.FindProperty("modalCloseBtn").objectReferenceValue = closeBtn;
 
             serializedObject.ApplyModifiedProperties();
             
             Selection.activeGameObject = uiRoot;
-            Debug.Log("VictoryRewardUI generated! You can now adjust anchors and visuals, and ideally save it as a Prefab.");
+            Debug.Log("VictoryRewardUI COMPLETE generated! All links and models are fully attached.");
         }
 
         private static GameObject CreateText(Transform parent, string content, int fontSize, Vector2 anchorMin, Vector2 anchorMax, Color color)

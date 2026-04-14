@@ -40,7 +40,7 @@ public class AccountManager : MonoBehaviour
                 Money = debugProfile.Money,
                 Energy = debugProfile.Energy,
                 OwnedUnitIDs = debugProfile.OwnedUnits.Select(u => u.UnitID).ToList(),
-                OwnedPetIDs = debugProfile.OwnedPets.Select(p => p.PetID).ToList()
+                OwnedPetIDs = debugProfile.OwnedPets.Select(p => p.id).ToList()
             };
 
             Debug.Log($"Conta de DEBUG carregada: {debugProfile.name}");
@@ -81,6 +81,7 @@ public class AccountManager : MonoBehaviour
 
         PlayerAccount.Money += reward.Money;
         PlayerAccount.Energy += reward.Energy;
+        PlayerAccount.Stardust += reward.Stardust;
 
         if (reward.GeneratedArtifacts != null && reward.GeneratedArtifacts.Count > 0)
         {
@@ -89,6 +90,15 @@ public class AccountManager : MonoBehaviour
                 PlayerAccount.OwnedArtifacts = new global::System.Collections.Generic.List<CelestialCross.Artifacts.ArtifactInstanceData>();
             }
             PlayerAccount.OwnedArtifacts.AddRange(reward.GeneratedArtifacts);
+        }
+        
+        if (reward.GeneratedPets != null && reward.GeneratedPets.Count > 0)
+        {
+            if (PlayerAccount.OwnedRuntimePets == null)
+            {
+                PlayerAccount.OwnedRuntimePets = new global::System.Collections.Generic.List<CelestialCross.Data.Pets.RuntimePetData>();
+            }
+            PlayerAccount.OwnedRuntimePets.AddRange(reward.GeneratedPets);
         }
 
         SaveAccount();
@@ -116,17 +126,29 @@ public class AccountManager : MonoBehaviour
             }
         }
 
-        if (config.StartingPets != null)
+        if (config.GrantStartingPets && config.StartingPets != null)
         {
-            foreach (var petData in config.StartingPets)
+            foreach (var petSpecies in config.StartingPets)
             {
-                if (petData == null) continue;
-                if (string.IsNullOrWhiteSpace(petData.PetID))
+                if (petSpecies == null) continue;
+                if (string.IsNullOrWhiteSpace(petSpecies.id))
                 {
-                    Debug.LogWarning($"[AccountBootstrap] PetData '{petData.name}' sem PetID. Reimporte/edite o asset para regenerar o ID automático.");
+                    Debug.LogWarning($"[AccountBootstrap] PetSpeciesSO '{petSpecies.name}' sem id. Salve o asset para regenerar.");
                     continue;
                 }
-                AddPetToAccount(petData.PetID);
+                
+                var newPet = new CelestialCross.Data.Pets.RuntimePetData(
+                    petSpecies.id, 
+                    petSpecies.SpeciesName, 
+                    3, // Default 3 stars
+                    (int)petSpecies.MaxBaseHealth, 
+                    (int)petSpecies.MaxBaseAttack, 
+                    (int)petSpecies.MaxBaseDefense,
+                    (int)petSpecies.MaxBaseSpeed,
+                    (int)petSpecies.MaxBaseCriticalChance,
+                    (int)petSpecies.MaxBaseEffectAccuracy
+                );
+                PlayerAccount.OwnedRuntimePets.Add(newPet);
             }
         }
     }
@@ -156,3 +178,5 @@ public class AccountManager : MonoBehaviour
         SaveAccount();
     }
 }
+
+
