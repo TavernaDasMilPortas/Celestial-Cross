@@ -13,7 +13,7 @@ namespace CelestialCross.Editor
         private const string PetsPath = BasePath + "/Pets";
         private const string AbilitiesPath = BasePath + "/Abilities";
 
-        [MenuItem("Celestial Cross/Generate Mock Units and Pets")]
+        [MenuItem("Celestial Cross/Data Config/Generate Mock Units and Pets")]
         public static void GenerateData()
         {
             EnsureDirectories();
@@ -27,7 +27,7 @@ namespace CelestialCross.Editor
             Debug.Log("Foram gerados com sucesso 10 Units, 10 Pets e 40 Abilities de teste na pasta: " + BasePath);
         }
 
-        [MenuItem("Celestial Cross/Patch Existing generated Mock Abilities")]
+        [MenuItem("Celestial Cross/Data Config/Patch Existing generated Mock Abilities")]
         public static void PatchAbilities()
         {
             string[] guids = AssetDatabase.FindAssets("t:AbilityBlueprint", new[] { AbilitiesPath });

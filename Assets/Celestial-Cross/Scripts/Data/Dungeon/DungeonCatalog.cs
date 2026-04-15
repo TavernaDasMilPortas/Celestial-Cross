@@ -4,7 +4,7 @@ using CelestialCross.Data.Dungeon;
 
 namespace CelestialCross.Data
 {
-    [CreateAssetMenu(fileName = "DungeonCatalog", menuName = "RPG/Dungeon/Dungeon Catalog")]
+    [CreateAssetMenu(fileName = "DungeonCatalog", menuName = "Celestial Cross/Catalogs/Dungeon Catalog")]
     public class DungeonCatalog : ScriptableObject
     {
         public List<DungeonBaseSO> Dungeons = new List<DungeonBaseSO>();

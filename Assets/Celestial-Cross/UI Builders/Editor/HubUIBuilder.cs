@@ -7,7 +7,7 @@ namespace CelestialCross.UI.Builders
 {
     public class HubUIBuilder
     {
-        [MenuItem("Tools/UI Builders/Generate Hub Navigation UI")]
+        [MenuItem("Celestial Cross/UI Builders/Generate Hub Navigation UI")]
         public static void GenerateHubUI()
         {
             // 1. Setup Canvas
@@ -53,7 +53,7 @@ namespace CelestialCross.UI.Builders
             catVlg.childControlWidth = true;
             catVlg.childControlHeight = false;
 
-            var btnInv = CreateButton("Btn_Inventory", mainPanel.transform, "Inventário", new Vector2(500, 120), new Vector2(0, -600));
+            var btnInv = CreateButton("Btn_Inventory", mainPanel.transform, "Inventï¿½rio", new Vector2(500, 120), new Vector2(0, -600));
 
             // 4. Dungeons Panel
             var dungeonsPanel = CreatePanel("DungeonsPanel", container.transform, new Color(0, 0, 0.2f, 0.9f));
@@ -103,6 +103,9 @@ namespace CelestialCross.UI.Builders
                 // Assign the new Top Bar Texts
                 so.FindProperty("moneyText").objectReferenceValue = txtMoney.GetComponent<TMP_Text>();
                 so.FindProperty("energyText").objectReferenceValue = txtEnergy.GetComponent<TMP_Text>();
+
+                // (Opcional - aviso pro desenvolvedor associar manual na interface)
+                Debug.Log("[HubUIBuilder] HubSceneController configurado. Lembre-se de criar o 'BtnShop' manualmente na hierarchy ou via inspector caso queira.");
 
                 so.ApplyModifiedProperties();
                 Debug.Log("[HubUIBuilder] HubSceneController automaticamente configurado com Dinheiro e Energia!");

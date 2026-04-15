@@ -4,7 +4,7 @@ using Celestial_Cross.Scripts.Abilities;
 
 namespace CelestialCross.Data.Pets
 {
-    [CreateAssetMenu(fileName = "NewPetSpecies", menuName = "RPG/Pets/Pet Species Base")]
+    [CreateAssetMenu(fileName = "NewPetSpecies", menuName = "Celestial Cross/Pets/Pet Species Base")]
     public class PetSpeciesSO : ScriptableObject
     {
         [HideInInspector] // o id das especies não deve ser gerado no inspector

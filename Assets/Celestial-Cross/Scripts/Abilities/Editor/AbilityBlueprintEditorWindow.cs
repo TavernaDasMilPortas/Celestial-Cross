@@ -8,7 +8,7 @@ public class AbilityBlueprintEditorWindow : EditorWindow
     private SerializedObject _serializedBlueprint;
     private SerializedProperty _effectStepsProperty;
 
-    [MenuItem("Tools/Ability Blueprint Editor")]
+    [MenuItem("Celestial Cross/Abilities/Ability Blueprint Editor")]
     public static void ShowWindow()
     {
         GetWindow<AbilityBlueprintEditorWindow>("Ability Blueprint Editor");

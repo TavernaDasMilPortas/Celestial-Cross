@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "UnitCatalog", menuName = "RPG/Unit Catalog")]
+[CreateAssetMenu(fileName = "UnitCatalog", menuName = "Celestial Cross/Catalogs/Unit Catalog")]
 public class UnitCatalog : ScriptableObject
 {
     [System.Serializable]

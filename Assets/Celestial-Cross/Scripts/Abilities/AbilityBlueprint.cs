@@ -4,7 +4,7 @@ using Sirenix.OdinInspector;
 
 namespace Celestial_Cross.Scripts.Abilities
 {
-    [CreateAssetMenu(fileName = "NewAbilityBlueprint", menuName = "Celestial-Cross/Abilities/Ability Blueprint")]
+    [CreateAssetMenu(fileName = "NewAbilityBlueprint", menuName = "Celestial Cross/Abilities/Ability Blueprint")]
     public class AbilityBlueprint : ScriptableObject
     {
         [Header("UI & Identity")]

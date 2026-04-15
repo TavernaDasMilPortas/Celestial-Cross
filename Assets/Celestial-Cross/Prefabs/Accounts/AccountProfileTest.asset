@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AccountProfile
   Money: 1000000000
   Energy: 50
+  Stardust: 0
+  StarMaps: 90
   OwnedUnits:
   - {fileID: 11400000, guid: 90c9076b7a221204897b90b1a48cf69e, type: 2}
   - {fileID: 11400000, guid: 8564d8cc1db64474688f6b86bb4030cf, type: 2}

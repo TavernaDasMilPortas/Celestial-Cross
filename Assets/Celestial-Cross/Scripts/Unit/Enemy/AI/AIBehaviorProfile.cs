@@ -6,7 +6,7 @@ using UnityEngine;
 /// Montável no Inspector com lista de regras priorizadas e fator de aleatoriedade.
 /// Create > AI > Behavior Profile
 /// </summary>
-[CreateAssetMenu(menuName = "AI/Behavior Profile")]
+[CreateAssetMenu(menuName = "Celestial Cross/AI/Behavior Profile")]
 public class AIBehaviorProfile : ScriptableObject
 {
     public string profileName = "New Profile";

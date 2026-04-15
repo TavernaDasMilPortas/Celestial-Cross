@@ -73,8 +73,7 @@ public class PlayerController : MonoBehaviour
 
         if (targetPos == activeUnit.CurrentAction.Target)
         {
-            // Even if the target hasn't changed, we might want to ensure the highlight is still visible
-            // GridMap.Instance.HighlightArea(_currentArea);
+            // O HighlightArea foi desativado aqui para não colidir com o TargetSelector!
             return;
         }
 
@@ -91,10 +90,14 @@ public class PlayerController : MonoBehaviour
             _currentArea = AreaResolver.ResolveCells(targetPos, pattern);
         }
         
+        // Seção removida: PlayerController não deve mais tentar manipular o grid visualmente
+        // e apagar as camadas. O TargetSelector cuida disso de forma não destrutiva.
+        /*
         if (GridMap.Instance != null)
         {
             GridMap.Instance.HighlightArea(_currentArea);
         }
+        */
     }
 
     private Direction GetDirection(Vector2Int origin, Vector2Int target)

@@ -34,7 +34,7 @@ namespace CelestialCross.Giulia_UI
         private global::System.Action onCloseCallback;
         private List<GameObject> spawnedItems = new List<GameObject>();
 
-        // === Modal Físico (Inspector) ===
+        // === Modal Fï¿½sico (Inspector) ===
         [Header("Reward Details Modal")]
         [SerializeField] private GameObject detailsModal;
         [SerializeField] private TextMeshProUGUI modalTitle;
@@ -60,15 +60,92 @@ namespace CelestialCross.Giulia_UI
 
             if (continueButton != null)
                 continueButton.onClick.AddListener(OnContinueClicked);
-                
-            if (modalSellBtn != null) 
-                modalSellBtn.onClick.AddListener(OnSellClicked);
-
-            if (modalCloseBtn != null) 
-                modalCloseBtn.onClick.AddListener(() => { if (detailsModal != null) detailsModal.SetActive(false); });
 
             if (detailsModal != null)
+            {
+                AutoLinkModalComponents();
+
+                if (modalSellBtn != null) 
+                    modalSellBtn.onClick.AddListener(OnSellClicked);
+
+                if (modalCloseBtn != null) 
+                    modalCloseBtn.onClick.AddListener(() => { if (detailsModal != null) detailsModal.SetActive(false); });
+
                 detailsModal.SetActive(false);
+            }
+        }
+
+        private void AutoLinkModalComponents()
+        {
+            if (modalTitle == null) {
+                var t = detailsModal.transform.Find("ModalTitle");
+                if (t != null) modalTitle = t.GetComponent<TextMeshProUGUI>();
+            }
+            if (modalDesc == null) {
+                var t = detailsModal.transform.Find("ModalDesc");
+                if (t != null) modalDesc = t.GetComponent<TextMeshProUGUI>();
+            }
+
+            if (modalSellBtn == null) {
+                var btnTr = detailsModal.transform.Find("Generated_Btn_Sell");
+                if (btnTr == null) btnTr = detailsModal.transform.Find("Btn_Sell");
+                if (btnTr != null) {
+                    modalSellBtn = btnTr.GetComponent<Button>();
+                    var txtTr = btnTr.Find("Text");
+                    if (txtTr != null) modalSellTxt = txtTr.GetComponent<TextMeshProUGUI>();
+                }
+            }
+
+            if (modalCloseBtn == null) {
+                var btnTr = detailsModal.transform.Find("Generated_Btn_Close");
+                if (btnTr == null) btnTr = detailsModal.transform.Find("Btn_Close");
+                if (btnTr != null) modalCloseBtn = btnTr.GetComponent<Button>();
+            }
+
+            // Gerar botÃµes dinamicamente se nÃ£o existem
+            if (modalSellBtn == null || modalCloseBtn == null)
+            {
+                // Vender Btn
+                GameObject sBtnGo = new GameObject("Generated_Btn_Sell", typeof(RectTransform), typeof(Image), typeof(Button));
+                sBtnGo.transform.SetParent(detailsModal.transform, false);
+                RectTransform sRt = sBtnGo.GetComponent<RectTransform>();
+                sRt.anchorMin = new Vector2(0.1f, 0.05f); sRt.anchorMax = new Vector2(0.45f, 0.15f);
+                sRt.offsetMin = Vector2.zero; sRt.offsetMax = Vector2.zero;
+                sBtnGo.GetComponent<Image>().color = new Color(0.8f, 0.2f, 0.2f, 1f);
+                
+                modalSellBtn = sBtnGo.GetComponent<Button>();
+                
+                GameObject sTxtGo = new GameObject("Text", typeof(RectTransform), typeof(TextMeshProUGUI));
+                sTxtGo.transform.SetParent(sBtnGo.transform, false);
+                RectTransform stRt = sTxtGo.GetComponent<RectTransform>();
+                stRt.anchorMin = Vector2.zero; stRt.anchorMax = Vector2.one;
+                stRt.offsetMin = Vector2.zero; stRt.offsetMax = Vector2.zero;
+                modalSellTxt = sTxtGo.GetComponent<TextMeshProUGUI>();
+                modalSellTxt.alignment = TextAlignmentOptions.Center;
+                modalSellTxt.color = Color.white;
+                modalSellTxt.fontSize = 20;
+
+                // Fechar Btn
+                GameObject cBtnGo = new GameObject("Generated_Btn_Close", typeof(RectTransform), typeof(Image), typeof(Button));
+                cBtnGo.transform.SetParent(detailsModal.transform, false);
+                RectTransform cRt = cBtnGo.GetComponent<RectTransform>();
+                cRt.anchorMin = new Vector2(0.55f, 0.05f); cRt.anchorMax = new Vector2(0.9f, 0.15f);
+                cRt.offsetMin = Vector2.zero; cRt.offsetMax = Vector2.zero;
+                cBtnGo.GetComponent<Image>().color = new Color(0.4f, 0.4f, 0.4f, 1f);
+
+                modalCloseBtn = cBtnGo.GetComponent<Button>();
+                
+                GameObject cTxtGo = new GameObject("Text", typeof(RectTransform), typeof(TextMeshProUGUI));
+                cTxtGo.transform.SetParent(cBtnGo.transform, false);
+                RectTransform ctRt = cTxtGo.GetComponent<RectTransform>();
+                ctRt.anchorMin = Vector2.zero; ctRt.anchorMax = Vector2.one;
+                ctRt.offsetMin = Vector2.zero; ctRt.offsetMax = Vector2.zero;
+                var cTxt = cTxtGo.GetComponent<TextMeshProUGUI>();
+                cTxt.text = "Fechar";
+                cTxt.alignment = TextAlignmentOptions.Center;
+                cTxt.color = Color.white;
+                cTxt.fontSize = 20;
+            }
         }
 
         private void OpenArtifactModal(ArtifactInstanceData arti, GameObject cardGo)
@@ -77,13 +154,13 @@ namespace CelestialCross.Giulia_UI
             currentSelectedPet = null;
             
             string setString = string.IsNullOrWhiteSpace(arti.artifactSetId) ? "" : $" ({arti.artifactSetId})";
-            modalTitle.text = $"{arti.slot}{setString}";
+            if (modalTitle != null) modalTitle.text = $"{arti.slot}{setString}";
             
             string mStat = arti.mainStat != null ? $"+{arti.mainStat.value:F0} {arti.mainStat.statType}" : "none";
-            modalDesc.text = $"Raridade: {arti.rarity}\nLevel: {arti.currentLevel}\nEstrelas: {arti.stars}*\n\nMain Stat: {mStat}";
+            if (modalDesc != null) modalDesc.text = $"Raridade: {arti.rarity}\nLevel: {arti.currentLevel}\nEstrelas: {arti.stars}*\n\nMain Stat: {mStat}";
             
             int sellValue = ArtifactEconomyService.GetSellValue(arti);
-            modalSellTxt.text = $"VENDER\n(+{sellValue} Moedas)";
+            if (modalSellTxt != null) modalSellTxt.text = $"VENDER\n(+{sellValue} Moedas)";
             
             Sprite iconSprite = null;
             if (cardGo != null) {
@@ -94,25 +171,15 @@ namespace CelestialCross.Giulia_UI
                 }
             }
             Transform mIconTr = detailsModal.transform.Find("ModalIcon");
-            if (mIconTr == null) {
-                // Modificado para usar Prefab
-                // removido: delega ao prefab
-                // removido: delega ao prefab
-                // removido: delega ao prefab
-                // removido: delega ao prefab
-                // removido: delega ao prefab
-                // removido: delega ao prefab
-                // removido: delega ao prefab
-            }
-            if (iconSprite != null) {
-                mIconTr.gameObject.SetActive(true);
-                mIconTr.GetComponent<Image>().sprite = iconSprite;
-                // removido: delega ao prefab
-                // removido: delega ao prefab
-            } else {
-                mIconTr.gameObject.SetActive(false);
-                // removido: delega ao prefab
-                // removido: delega ao prefab
+            if (mIconTr != null)
+            {
+                if (iconSprite != null) {
+                    mIconTr.gameObject.SetActive(true);
+                    var img = mIconTr.GetComponent<Image>();
+                    if (img != null) img.sprite = iconSprite;
+                } else {
+                    mIconTr.gameObject.SetActive(false);
+                }
             }
 
             detailsModal.SetActive(true);
@@ -124,10 +191,10 @@ namespace CelestialCross.Giulia_UI
             currentSelectedArtifact = null;
             currentSelectedPet = pet;
             
-            modalTitle.text = pet.DisplayName;
-            modalDesc.text = $"Estrelas: {pet.RarityStars}*\nNível: {pet.CurrentLevel}\nHP: {pet.Health} | ATK: {pet.Attack} | DEF: {pet.Defense}\nSPD: {pet.Speed} | CRIT: {pet.CriticalChance}% | ACC: {pet.EffectAccuracy}%";
+            if (modalTitle != null) modalTitle.text = pet.DisplayName;
+            if (modalDesc != null) modalDesc.text = $"Estrelas: {pet.RarityStars}*\nNÃ­vel: {pet.CurrentLevel}\nHP: {pet.Health} | ATK: {pet.Attack} | DEF: {pet.Defense}\nSPD: {pet.Speed} | CRIT: {pet.CriticalChance}% | ACC: {pet.EffectAccuracy}%";
             
-            modalSellTxt.text = "SOLTAR\n(+ Pet Souls)";
+            if (modalSellTxt != null) modalSellTxt.text = "SOLTAR\n(+ Pet Souls)";
             
             Sprite iconSprite = null;
             if (cardGo != null) {
@@ -138,25 +205,15 @@ namespace CelestialCross.Giulia_UI
                 }
             }
             Transform mIconTr = detailsModal.transform.Find("ModalIcon");
-            if (mIconTr == null) {
-                // Modificado para usar Prefab
-                // removido: delega ao prefab
-                // removido: delega ao prefab
-                // removido: delega ao prefab
-                // removido: delega ao prefab
-                // removido: delega ao prefab
-                // removido: delega ao prefab
-                // removido: delega ao prefab
-            }
-            if (iconSprite != null) {
-                mIconTr.gameObject.SetActive(true);
-                mIconTr.GetComponent<Image>().sprite = iconSprite;
-                // removido: delega ao prefab
-                // removido: delega ao prefab
-            } else {
-                mIconTr.gameObject.SetActive(false);
-                // removido: delega ao prefab
-                // removido: delega ao prefab
+            if (mIconTr != null)
+            {
+                if (iconSprite != null) {
+                    mIconTr.gameObject.SetActive(true);
+                    var img = mIconTr.GetComponent<Image>();
+                    if (img != null) img.sprite = iconSprite;
+                } else {
+                    mIconTr.gameObject.SetActive(false);
+                }
             }
 
             detailsModal.SetActive(true);
@@ -209,7 +266,7 @@ namespace CelestialCross.Giulia_UI
         {
             if (Instance == null)
             {
-                Debug.LogWarning("[VictoryRewardUI] Nenhuma instância encontrada. Fallback.");
+                Debug.LogWarning("[VictoryRewardUI] Nenhuma instï¿½ncia encontrada. Fallback.");
                 onClose?.Invoke();
                 return;
             }
@@ -228,7 +285,7 @@ namespace CelestialCross.Giulia_UI
                 // filter explicitly by name to avoid hijacking my modal texts
                 if (t.name.Contains("Title") || t.text.Contains("VIT") || t.text.Contains("Vit") || t.text.Contains("DERROTA")) {
                     if (t.transform.parent != detailsModal.transform) {
-                        t.text = isVictory ? "VITÓRIA!" : "DERROTA...";
+                        t.text = isVictory ? "VITï¿½RIA!" : "DERROTA...";
                         t.color = isVictory ? Color.yellow : Color.red;
                     }
                 }
@@ -239,7 +296,7 @@ namespace CelestialCross.Giulia_UI
                     moneyAndEnergyText.text = "Dinheiro: <color=#00FF00>+" + reward.Money + "</color>   Energia: <color=#00FFFF>+" + reward.Energy + "</color>";
                     if (reward.Stardust > 0) moneyAndEnergyText.text += "   Poeira: <color=#FFAA00>+" + reward.Stardust + "</color>";
                 } else {
-                    moneyAndEnergyText.text = "Sorte na próxima!";
+                    moneyAndEnergyText.text = "Sorte na prï¿½xima!";
                 }
             }
 

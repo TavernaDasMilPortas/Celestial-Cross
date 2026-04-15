@@ -5,7 +5,7 @@ using UnityEngine;
 /// ScriptableObject que armazena uma sequência completa de diálogos.
 /// Crie pelo menu: Create → Celestial-Cross → Dialogue Sequence.
 /// </summary>
-[CreateAssetMenu(fileName = "NewDialogueSequence", menuName = "Celestial-Cross/Dialogue Sequence")]
+[CreateAssetMenu(fileName = "NewDialogueSequence", menuName = "Celestial Cross/Story/Dialogue Sequence")]
 public class DialogueSequence : ScriptableObject
 {
     [Tooltip("Lista ordenada de falas que compõem esta sequência.")]

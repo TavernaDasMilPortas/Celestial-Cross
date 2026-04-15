@@ -12,15 +12,49 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebb333c3a1e5eb2479e385837ed6ba93, type: 3}
   m_Name: test
   m_EditorClassIdentifier: 
-  width: 0
-  height: 0
+  width: 5
+  height: 5
   tiles:
-  - columns: 0100000001000000010000000000000000000000
-  - columns: 0100000001000000010000000000000000000000
-  - columns: 0100000001000000010000000000000000000000
-  - columns: 0000000000000000000000000000000000000000
-  - columns: 0000000000000000000000000000000000000000
+  - columns: ffffffffffffffffffffffffffffffffffffffff
+  - columns: ffffffffffffffffffffffffffffffffffffffff
+  - columns: ffffffffffffffffffffffffffffffffffffffff
+  - columns: ffffffffffffffffffffffffffffffffffffffff
+  - columns: ffffffffffffffffffffffffffffffffffffffff
+  walkableOverrides:
+  - columns: 0101010101
+  - columns: 0101010101
+  - columns: 0101010101
+  - columns: 0101010101
+  - columns: 0101010101
+  spriteOverrides:
+  - columns:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+  - columns:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+  - columns:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+  - columns:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+  - columns:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
   unitSpawns: []
-  tileDefinitions:
-  - {fileID: 11400000, guid: 896b64d97efaaeb4e896a8557d814ac6, type: 2}
-  - {fileID: 11400000, guid: dca7bae8aee8e3c40864400193081e58, type: 2}

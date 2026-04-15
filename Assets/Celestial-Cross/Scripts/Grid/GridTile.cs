@@ -7,30 +7,34 @@ public class GridTile : MonoBehaviour
     public bool IsOccupied;
     public Unit OccupyingUnit;
 
-    [SerializeField] private Renderer tileRenderer;
+    // ── Gameplay properties ──────────────────────────────────────────────────
+    public bool IsPlayerSpawnZone { get; private set; }
+    public bool IsWalkable { get; private set; } = true;
 
-    [Header("Colors")]
+    // ── Visual renderers ─────────────────────────────────────────────────────
+    [SerializeField] private Renderer tileRenderer;
+    [SerializeField] private SpriteRenderer visualSpriteRenderer;
+
+    [Header("Colors (Darken)")]
     [SerializeField] private Color baseColor = Color.gray;
     [SerializeField] private Color executionColor = new Color(0.15f, 0.15f, 0.15f, 1f);
-    [SerializeField] private Color highlightColor = Color.green;
-    [SerializeField] private Color selectedColor = Color.yellow;
-    [SerializeField] private Color areaPreviewColor = new Color(1f, 0.5f, 0f, 1f);
-    [SerializeField] private Color areaCenterColor = new Color(0.8f, 0.2f, 0f, 1f);
 
     private MaterialPropertyBlock propertyBlock;
 
-    // IDs possíveis de cor (compatibilidade total)
     private static readonly int ColorId = Shader.PropertyToID("_Color");
     private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
-
     private int activeColorProperty = -1;
 
-    // Estado visual empilhado (prioridades)
+    // ── Visual state flags ───────────────────────────────────────────────────
     private bool isExecution = false;
     private bool isSelected = false;
     private bool isAreaCenter = false;
     private bool isAreaPreview = false;
     private bool isHighlight = false;
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // INIT
+    // ─────────────────────────────────────────────────────────────────────────
 
     public void Init(Vector2Int pos)
     {
@@ -44,11 +48,48 @@ public class GridTile : MonoBehaviour
         HardClearAllStates();
     }
 
-    // =====================
-    // API PÚBLICA (Flags)
-    // =====================
+    public void ApplyDefinition(TileDefinition definition)
+    {
+        if (definition == null) return;
+        IsPlayerSpawnZone = definition.isPlayerSpawnZone;
+        IsWalkable = definition.isWalkable;
+    }
 
-    public bool IsPlayerSpawnZone { get; private set; }
+    /// <summary>
+    /// Applies walkable state from PhaseMap Layer 2 (overrides the TileDefinition default).
+    /// </summary>
+    public void ApplyWalkableOverride(bool walkable)
+    {
+        IsWalkable = walkable;
+    }
+
+    /// <summary>
+    /// Applies a visual sprite from PhaseMap Layer 3. Falls back to TileDefinition.defaultSprite if null.
+    /// </summary>
+    public void ApplySprite(Sprite sprite)
+    {
+        if (visualSpriteRenderer == null) return;
+        
+        visualSpriteRenderer.sprite = sprite;
+        visualSpriteRenderer.gameObject.SetActive(sprite != null);
+
+        // Ensure a tiny offset to avoid Z-fighting with the 3D mesh face
+        if (sprite != null)
+        {
+            var p = visualSpriteRenderer.transform.localPosition;
+            if (p.y <= 0.001f) p.y = 0.505f; // Standard cube top
+            visualSpriteRenderer.transform.localPosition = p;
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // PUBLIC API — Visual State Flags
+    // ─────────────────────────────────────────────────────────────────────────
+
+    public bool IsHighlighted => isHighlight;
+    public bool IsSelected => isSelected;
+    public bool IsAreaPreview => isAreaPreview;
+    public bool IsAreaCenter => isAreaCenter;
 
     public void Highlight()
     {
@@ -103,7 +144,7 @@ public class GridTile : MonoBehaviour
         isExecution = false;
         UpdateVisuals();
     }
-    
+
     public void HardClearAllStates()
     {
         isExecution = false;
@@ -114,48 +155,34 @@ public class GridTile : MonoBehaviour
         UpdateVisuals();
     }
 
-    public void ApplyDefinition(TileDefinition definition)
-    {
-        if (definition == null) return;
-        IsPlayerSpawnZone = definition.isPlayerSpawnZone;
-        // Adicione aqui outras propriedades que você queira copiar da definição.
-    }
-
-    // =====================
-    // EVENT CALLBACKS (Mantidos para compatibilidade, caso usados externamente)
-    // =====================
-
-    void ApplyHighlight() => Highlight();
-    void ApplySelected() => Select();
-    void ClearHighlight() => Clear();
-
-    // =====================
-    // VISUAL UPDATE LOGIC
-    // =====================
+    // ─────────────────────────────────────────────────────────────────────────
+    // VISUAL UPDATE — Only Darken uses MaterialPropertyBlock now.
+    // Highlight/Select/Area overlays are handled by HighlightOverlayPool (Feature B).
+    // ─────────────────────────────────────────────────────────────────────────
 
     void UpdateVisuals()
     {
-        if (isExecution) ApplyColor(executionColor);
-        else if (isSelected) ApplyColor(selectedColor);
-        else if (isAreaCenter) ApplyColor(areaCenterColor);
-        else if (isAreaPreview) ApplyColor(areaPreviewColor);
-        else if (isHighlight) ApplyColor(highlightColor);
-        else ApplyColor(baseColor);
+        // Only the execution darken affects the base tile material.
+        if (isExecution)
+            ApplyColor(executionColor);
+        else
+            ApplyColor(baseColor);
+            
+        GridMap.Instance?.MarkHighlightsDirty();
     }
 
     void ApplyColor(Color color)
     {
-        if (activeColorProperty == -1)
-            return;
+        if (activeColorProperty == -1) return;
 
         tileRenderer.GetPropertyBlock(propertyBlock);
         propertyBlock.SetColor(activeColorProperty, color);
         tileRenderer.SetPropertyBlock(propertyBlock);
     }
 
-    // =====================
-    // SETUP SEGURO
-    // =====================
+    // ─────────────────────────────────────────────────────────────────────────
+    // SETUP HELPERS
+    // ─────────────────────────────────────────────────────────────────────────
 
     void EnsureRenderer()
     {
@@ -177,26 +204,15 @@ public class GridTile : MonoBehaviour
 
     void DetectColorProperty()
     {
-        if (tileRenderer == null || tileRenderer.sharedMaterial == null)
-            return;
+        if (tileRenderer == null || tileRenderer.sharedMaterial == null) return;
 
         var mat = tileRenderer.sharedMaterial;
 
         if (mat.HasProperty(BaseColorId))
-        {
             activeColorProperty = BaseColorId;
-           // Debug.Log($"[GridTile] Usando _BaseColor em {name}");
-        }
         else if (mat.HasProperty(ColorId))
-        {
             activeColorProperty = ColorId;
-            Debug.Log($"[GridTile] Usando _Color em {name}");
-        }
         else
-        {
-            Debug.LogError(
-                $"[GridTile] Shader do tile '{name}' não possui _Color nem _BaseColor"
-            );
-        }
+            Debug.LogError($"[GridTile] Shader '{name}' não possui _Color nem _BaseColor");
     }
 }

@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 825b128264e0f0545883bf3d2f9fda92, type: 3}
+  m_Name: HighlightConfigTeste
+  m_EditorClassIdentifier: Assembly-CSharp::CelestialCross.Grid.HighlightConfig
+  moveColor: {r: 0, g: 0.5, b: 1, a: 0.5}
+  attackColor: {r: 1, g: 0, b: 0, a: 0.5}
+  specialColor: {r: 1, g: 0, b: 0.9577489, a: 0.5}
+  previewColor: {r: 1, g: 0.9, b: 0, a: 0.5}
+  Borda_CBED: {fileID: 21300000, guid: 547e8b5fc5cf5c34b9aad08e93d4f582, type: 3}
+  Borda_BED: {fileID: 21300000, guid: ccda1963500c7d347bd2d6fddb95d09b, type: 3}
+  Borda_CBE: {fileID: 21300000, guid: 17c6fec839307444fa82a094f864c813, type: 3}
+  Borda_CED: {fileID: 21300000, guid: 96fc3db5ff64c0144831f6e92a1ac358, type: 3}
+  Borda_CBD: {fileID: 21300000, guid: 9899ffce7e97900439aa3fb14de90e4b, type: 3}
+  Borda_ED: {fileID: 21300000, guid: 5b49addabc8d28f48835a6bc44771601, type: 3}
+  Borda_CB: {fileID: 21300000, guid: 7f51671f56b46a941af5211e6f9def87, type: 3}
+  Borda_BE: {fileID: 21300000, guid: 0760cb6c486ac594694063a92d00220d, type: 3}
+  Borda_BD: {fileID: 21300000, guid: 1c52b14155cfe014f8040e81e8fd49a7, type: 3}
+  Borda_CE: {fileID: 21300000, guid: 59948f83e610e654ab7b4505e9427c0a, type: 3}
+  Borda_CD: {fileID: 21300000, guid: 250eaf41f0ff4154caa348535a738002, type: 3}
+  Borda_E: {fileID: 21300000, guid: 4a37ed9ec2d324845a77e2c3a9a1b5d8, type: 3}
+  Borda_D: {fileID: 21300000, guid: 8196d03c25743bf43b16ea695c44c9dc, type: 3}
+  Borda_B: {fileID: 21300000, guid: 7dbdaef9bf4311b4598936cc82a4100f, type: 3}
+  Borda_C: {fileID: 21300000, guid: 6a1ceea064dafae42b22483584e7477c, type: 3}
+  Sem_Borda: {fileID: 21300000, guid: 78a7dd1798b716e4abd47b746b07d6c1, type: 3}

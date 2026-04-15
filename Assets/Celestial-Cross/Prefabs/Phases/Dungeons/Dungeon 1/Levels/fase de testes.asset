@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebb333c3a1e5eb2479e385837ed6ba93, type: 3}
+  m_Name: fase de testes
+  m_EditorClassIdentifier: Assembly-CSharp::PhaseMap
+  width: 5
+  height: 5
+  tiles:
+  - columns: 0000000000000000000000000000000000000000
+  - columns: 0000000000000000000000000000000000000000
+  - columns: 0100000001000000010000000000000000000000
+  - columns: 0100000001000000010000000000000000000000
+  - columns: 0100000001000000010000000000000000000000
+  walkableOverrides:
+  - columns: 0101010101
+  - columns: 0101010101
+  - columns: 0101010101
+  - columns: 0101010101
+  - columns: 0101010101
+  spriteOverrides:
+  - columns:
+    - {fileID: -555259718, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
+    - {fileID: -735588308, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
+    - {fileID: -735588308, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
+    - {fileID: -735588308, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
+    - {fileID: 1018812758, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
+  - columns:
+    - {fileID: 578667616, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
+    - {fileID: -2005473662, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
+    - {fileID: -2005473662, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
+    - {fileID: -2005473662, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
+    - {fileID: 1986898712, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
+  - columns:
+    - {fileID: 578667616, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
+    - {fileID: -2005473662, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
+    - {fileID: -2005473662, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
+    - {fileID: -2005473662, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
+    - {fileID: 1986898712, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
+  - columns:
+    - {fileID: 578667616, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
+    - {fileID: -2005473662, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
+    - {fileID: -2005473662, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
+    - {fileID: -2005473662, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
+    - {fileID: 1986898712, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
+  - columns:
+    - {fileID: 356569212, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
+    - {fileID: -1425292593, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
+    - {fileID: -1729962621, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
+    - {fileID: -507617303, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
+    - {fileID: -1662261976, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
+  unitSpawns: []

@@ -5,7 +5,7 @@ using Celestial_Cross.Scripts.Abilities;
 using UnityEditor;
 #endif
 
-[CreateAssetMenu(menuName = "Units/Unit Data")]
+[CreateAssetMenu(menuName = "Celestial Cross/Units/Unit Data")]
 public class UnitData : ScriptableObject
 {
     [SerializeField, HideInInspector]

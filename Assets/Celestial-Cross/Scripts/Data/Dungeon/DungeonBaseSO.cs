@@ -28,13 +28,13 @@ namespace CelestialCross.Data.Dungeon
     {
         public LevelData LevelRef;
         
-        [Header("NOVO: Loot Procedural Flexível")]
-        [Tooltip("Tabelas de Drop específicas para ESTE ANDAR. Estas tabelas rodarão ao completar esta fase.")]
+        [Header("NOVO: Loot Procedural Flexï¿½vel")]
+        [Tooltip("Tabelas de Drop especï¿½ficas para ESTE ANDAR. Estas tabelas rodarï¿½o ao completar esta fase.")]
         [SerializeReference]
         public List<BaseLootTable> SpecificLootTables = new List<BaseLootTable>();
     }
 
-    [CreateAssetMenu(fileName = "NewDungeonBase", menuName = "RPG/Dungeon/Dungeon Base")]
+    [CreateAssetMenu(fileName = "NewDungeonBase", menuName = "Celestial Cross/Levels/Dungeon Base")]
     public class DungeonBaseSO : ScriptableObject
     {
         [Header("Dungeon Info")]
@@ -42,11 +42,11 @@ namespace CelestialCross.Data.Dungeon
         [TextArea] public string Description;
 
         [Header("Drop System (GENERICO)")]
-        [Tooltip("Estas tabelas de loot globais rodam sempre que você vence QUALQUER fase desta masmorra.")]
+        [Tooltip("Estas tabelas de loot globais rodam sempre que vocï¿½ vence QUALQUER fase desta masmorra.")]
         [SerializeReference]
         public List<BaseLootTable> GlobalLootTables = new List<BaseLootTable>();
 
-        [Header("Níveis (Fases)")]
+        [Header("Nï¿½veis (Fases)")]
         public List<DungeonLevelNode> Levels;
     }
 }

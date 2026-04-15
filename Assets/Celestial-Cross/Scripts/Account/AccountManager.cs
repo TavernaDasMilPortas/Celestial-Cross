@@ -39,9 +39,12 @@ public class AccountManager : MonoBehaviour
             {
                 Money = debugProfile.Money,
                 Energy = debugProfile.Energy,
+                Stardust = debugProfile.Stardust,
+                StarMaps = debugProfile.StarMaps,
                 OwnedUnitIDs = debugProfile.OwnedUnits.Select(u => u.UnitID).ToList(),
                 OwnedPetIDs = debugProfile.OwnedPets.Select(p => p.id).ToList()
             };
+            PlayerAccount.EnsureInitialized(); // Migrates Units as well
 
             Debug.Log($"Conta de DEBUG carregada: {debugProfile.name}");
             return;
@@ -111,6 +114,8 @@ public class AccountManager : MonoBehaviour
 
         PlayerAccount.Money = config.StartingMoney;
         PlayerAccount.Energy = config.StartingEnergy;
+        PlayerAccount.Stardust = config.StartingStardust;
+        PlayerAccount.StarMaps = config.StartingStarMaps;
 
         if (config.StartingUnits != null)
         {

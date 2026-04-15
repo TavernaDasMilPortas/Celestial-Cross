@@ -21,14 +21,18 @@ public class Account
     public int Money;
     public int Energy;
     public int Stardust;
+    public int StarMaps; // Moeda premium/invocao do gacha
 
     // Usaremos os IDs para referenciar os ScriptableObjects
-    public List<string> OwnedUnitIDs = new List<string>();
+    public List<string> OwnedUnitIDs = new List<string>(); // Legacy para retrocompatibilidade
+    public List<CelestialCross.Data.RuntimeUnitData> OwnedUnits = new List<CelestialCross.Data.RuntimeUnitData>();
+    
     public List<string> OwnedPetIDs = new List<string>();
     public List<CelestialCross.Data.Pets.RuntimePetData> OwnedRuntimePets = new List<CelestialCross.Data.Pets.RuntimePetData>();
     public List<ArtifactInstanceData> OwnedArtifacts = new List<ArtifactInstanceData>();
     public List<UnitLoadout> UnitLoadouts = new List<UnitLoadout>();
-
+    [Header("Sistema de Gacha (Pity)")]
+    public List<CelestialCross.Gacha.GachaPityState> GachaPityStates = new List<CelestialCross.Gacha.GachaPityState>();
     [Header("Itens Gerais e Consum�veis")]
     public List<ItemQuantity> OwnedItems = new List<ItemQuantity>();
 
@@ -37,22 +41,36 @@ public class Account
         Money = 100; // Valor inicial
         Energy = 50; // Valor inicial
         Stardust = 0; // Valor inicial configurado em 0
+        StarMaps = 0;
         OwnedUnitIDs = new List<string>();
+        OwnedUnits = new List<CelestialCross.Data.RuntimeUnitData>();
         OwnedPetIDs = new List<string>();
         OwnedRuntimePets = new List<CelestialCross.Data.Pets.RuntimePetData>();
         OwnedArtifacts = new List<ArtifactInstanceData>();
         UnitLoadouts = new List<UnitLoadout>();
+        GachaPityStates = new List<CelestialCross.Gacha.GachaPityState>();
         OwnedItems = new List<ItemQuantity>();
     }
 
     public void EnsureInitialized()
     {
         OwnedUnitIDs ??= new List<string>();
+        OwnedUnits ??= new List<CelestialCross.Data.RuntimeUnitData>();
         OwnedPetIDs ??= new List<string>();
         OwnedRuntimePets ??= new List<CelestialCross.Data.Pets.RuntimePetData>();
         OwnedArtifacts ??= new List<ArtifactInstanceData>();
         UnitLoadouts ??= new List<UnitLoadout>();
+        GachaPityStates ??= new List<CelestialCross.Gacha.GachaPityState>();
         OwnedItems ??= new List<ItemQuantity>();
+
+        // Migrar units legacy
+        if (OwnedUnitIDs != null && OwnedUnitIDs.Count > 0 && OwnedUnits.Count == 0)
+        {
+            foreach (var id in OwnedUnitIDs)
+            {
+                OwnedUnits.Add(new CelestialCross.Data.RuntimeUnitData(id, 4)); // Assume 4 estrelas padro inicial
+            }
+        }
     }
 
     // --- M�TODOS AUXILIARES: ITEMS ---

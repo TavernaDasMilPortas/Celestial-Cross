@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace CelestialCross.Data.Pets
 {
-    [CreateAssetMenu(fileName = "PetReleaseConfig", menuName = "RPG/Pets/Pet Release Configuration")]
+    [CreateAssetMenu(fileName = "PetReleaseConfig", menuName = "Celestial Cross/Pets/Pet Release Configuration")]
     public class PetReleaseConfigSO : ScriptableObject
     {
         [Header("Recompensas por Soltar um Pet")]

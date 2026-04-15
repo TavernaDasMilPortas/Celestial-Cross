@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 
-[CreateAssetMenu(menuName = "Units/Area Pattern Data")]
+[CreateAssetMenu(menuName = "Celestial Cross/Grid/Area Pattern Data")]
 public class AreaPatternData : ScriptableObject
 {
     [Min(1)] public int width = 3;

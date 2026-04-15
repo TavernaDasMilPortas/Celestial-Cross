@@ -111,7 +111,7 @@ public class MoveAction : UnitActionBase
                     continue;
 
                 GridTile nextTile = gridMap.GetTile(next);
-                if (nextTile == null || nextTile.IsOccupied)
+                if (nextTile == null || nextTile.IsOccupied || !nextTile.IsWalkable)
                     continue;
 
                 visited.Add(next);

@@ -6,11 +6,13 @@ using CelestialCross.Data.Pets;
 using UnityEditor;
 #endif
 
-[CreateAssetMenu(fileName = "AccountProfile", menuName = "Account/Profile")]
+[CreateAssetMenu(fileName = "AccountProfile", menuName = "Celestial Cross/Account/Profile")]
 public class AccountProfile : ScriptableObject
 {
     public int Money = 100;
     public int Energy = 50;
+    public int Stardust = 0;
+    public int StarMaps = 10; // "Mapas das Estrelas" ganhos de brinde no modo debug
 
     public List<UnitData> OwnedUnits = new List<UnitData>();
     public List<PetSpeciesSO> OwnedPets = new List<PetSpeciesSO>();

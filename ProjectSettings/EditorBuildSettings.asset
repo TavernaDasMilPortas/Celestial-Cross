@@ -23,6 +23,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Celestial-Cross/Scenes/Teste 1.unity
     guid: 8e33882f7fba925478cbd19e61365198
+  - enabled: 1
+    path: Assets/Celestial-Cross/Scenes/ShopScene.unity
+    guid: 3bea51b30b1a74742b70e245c7a07f9c
   m_configObjects:
     com.unity.adaptivePerformance.basic.provider_settings: {fileID: 11400000, guid: 81c6a135fcad177479fd34a2f6a80d20, type: 2}
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 801f113cbebbf734e9dac349dd5c025d, type: 2}

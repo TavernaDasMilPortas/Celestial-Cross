@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "NewLevelData", menuName = "RPG/Level Data")]
+[CreateAssetMenu(fileName = "NewLevelData", menuName = "Celestial Cross/Levels/Level Data")]
 public class LevelData : ScriptableObject
 {
     [Header("Level Info")]

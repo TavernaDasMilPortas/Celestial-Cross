@@ -98,13 +98,16 @@ public abstract class UnitActionBase : MonoBehaviour, IUnitAction
     {
         state = ActionState.Resolving;
 
-        // Feedback Visual: Darken apenas nos Tiles
-        foreach (var pos in context.targetPoints)
+        // Limpamos o Overlay chamativo (Amarelo) e pegamos a área final
+        HashSet<Vector2Int> finalArea = new HashSet<Vector2Int>();
+        if (targetSelector != null)
         {
-            GridMap.Instance?.GetTile(pos)?.Darken();
+            finalArea = targetSelector.GetFinalTargetArea();
+            targetSelector.ClearAllHighlights(); 
         }
 
-        foreach (var pos in context.affectedAreaCells)
+        // Feedback Visual: Darken os Tiles finais
+        foreach (var pos in finalArea)
         {
             GridMap.Instance?.GetTile(pos)?.Darken();
         }
@@ -115,7 +118,6 @@ public abstract class UnitActionBase : MonoBehaviour, IUnitAction
 
         if (targetSelector != null)
         {
-            targetSelector.ClearAllHighlights();
             Destroy(targetSelector);
         }
 

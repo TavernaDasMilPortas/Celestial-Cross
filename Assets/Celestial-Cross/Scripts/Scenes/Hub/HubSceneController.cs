@@ -9,9 +9,9 @@ using TMPro;
 public class HubCategory
 {
     public string categoryName;
-    [Tooltip("Deixe preenchido para modos com várias masmorras.")]
+    [Tooltip("Deixe preenchido para modos com vï¿½rias masmorras.")]
     public CelestialCross.Data.DungeonCatalog dungeonCatalog;
-    [Tooltip("Deixe preenchido para modos de história diretos (sem masmorras).")]
+    [Tooltip("Deixe preenchido para modos de histï¿½ria diretos (sem masmorras).")]
     public LevelCatalog levelCatalog;
 }
 
@@ -20,6 +20,7 @@ public class HubSceneController : MonoBehaviour
     [Header("Flow")]
     [SerializeField] private string preparationSceneName = "PreparationScene";
     [SerializeField] private string restSceneName = "RestScene";
+    [SerializeField] private string shopSceneName = "ShopScene";
 
     [Header("Categories Config")]
     [SerializeField] private List<HubCategory> hubCategories = new List<HubCategory>();
@@ -45,6 +46,7 @@ public class HubSceneController : MonoBehaviour
     [Header("Buttons & Prefabs")]
     [SerializeField] private Button genericButtonPrefab;
     [SerializeField] private Button btnGoInventory;
+    [SerializeField] private Button btnGoShop;  // NOVO
     [SerializeField] private Button btnBackFromDungeons;
     [SerializeField] private Button btnBackFromLevels;
 
@@ -55,11 +57,18 @@ public class HubSceneController : MonoBehaviour
         RefreshAccountUI();
 
         if (btnGoInventory != null) btnGoInventory.onClick.AddListener(GoToInventoryScene);
+        if (btnGoShop != null) btnGoShop.onClick.AddListener(GoToShopScene);
         if (btnBackFromDungeons != null) btnBackFromDungeons.onClick.AddListener(ShowMainPanel);
         if (btnBackFromLevels != null) btnBackFromLevels.onClick.AddListener(OnBackFromLevels);
 
         BuildCategoryButtons();
         ShowMainPanel();
+    }
+
+    public void GoToShopScene()
+    {
+        if (!string.IsNullOrEmpty(shopSceneName))
+            SceneManager.LoadScene(shopSceneName);
     }
 
     public void RefreshAccountUI()
@@ -122,7 +131,7 @@ public class HubSceneController : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning($"[HubSceneController] Categoria '{category.categoryName}' não tem catálogo configurado.");
+            Debug.LogWarning($"[HubSceneController] Categoria '{category.categoryName}' nï¿½o tem catï¿½logo configurado.");
         }
     }
 
@@ -220,7 +229,7 @@ public class HubSceneController : MonoBehaviour
             if (label != null)
                 label.text = string.IsNullOrWhiteSpace(level.LevelName) ? level.name : level.LevelName;
 
-            // Não tem dungeon originada
+            // Nï¿½o tem dungeon originada
             btn.onClick.AddListener(() => SelectLevelAndGo(level, null, null));
         }
     }
@@ -229,7 +238,7 @@ public class HubSceneController : MonoBehaviour
     {
         if (GameFlowManager.Instance == null)
         {
-            Debug.LogError("[HubSceneController] GameFlowManager não encontrado na cena.");
+            Debug.LogError("[HubSceneController] GameFlowManager nï¿½o encontrado na cena.");
             return;
         }
 

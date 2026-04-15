@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using CelestialCross.Artifacts;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "ArtifactSetCatalog", menuName = "Celestial Cross/Artifacts/Artifact Set Catalog")]
+[CreateAssetMenu(fileName = "ArtifactSetCatalog", menuName = "Celestial Cross/Catalogs/Artifact Set Catalog")]
 public class ArtifactSetCatalog : ScriptableObject
 {
     [System.Serializable]

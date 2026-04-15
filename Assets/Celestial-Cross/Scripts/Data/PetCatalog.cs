@@ -2,7 +2,7 @@
 using UnityEngine;
 using CelestialCross.Data.Pets;
 
-[CreateAssetMenu(fileName = "PetCatalog", menuName = "RPG/Pet Catalog")]
+[CreateAssetMenu(fileName = "PetCatalog", menuName = "Celestial Cross/Catalogs/Pet Catalog")]
 public class PetCatalog : ScriptableObject
 {
     [System.Serializable]

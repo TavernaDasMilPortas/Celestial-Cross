@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "NewRewardPackage", menuName = "RPG/Reward Package")]
+[CreateAssetMenu(fileName = "NewRewardPackage", menuName = "Celestial Cross/Rewards/Reward Package")]
 public class RewardPackage : ScriptableObject
 {
     public int Money;

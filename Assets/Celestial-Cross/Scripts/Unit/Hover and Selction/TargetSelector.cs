@@ -187,7 +187,10 @@ public class TargetSelector : MonoBehaviour
     void HighlightValidTargets()
     {
         foreach (var unit in validTargets)
-            unit.GetComponent<UnitOutlineController>()?.SetHover(true);
+        {
+            GridTile tile = GridMap.Instance?.GetTile(unit.GridPosition);
+            if (tile != null) tile.Highlight();
+        }
     }
 
     void HighlightValidTiles()
@@ -202,12 +205,16 @@ public class TargetSelector : MonoBehaviour
 
         foreach (var unit in validTargets)
         {
+            GridTile tile = GridMap.Instance?.GetTile(unit.GridPosition);
+            if (tile != null) tile.HardClearAllStates();
+            
+            // Removemos garantidamente os states visuais das unidades caso ainda existam
             var outline = unit.GetComponent<UnitOutlineController>();
-            if (outline == null)
-                continue;
-
-            outline.SetHover(false);
-            outline.SetSelected(false);
+            if (outline != null)
+            {
+                outline.SetHover(false);
+                outline.SetSelected(false);
+            }
         }
 
         foreach (var tile in validTiles)
@@ -290,12 +297,10 @@ public class TargetSelector : MonoBehaviour
             Unit first = selectedTargets[0];
             selectedTargets.RemoveAt(0);
             
-            first.GetComponent<UnitOutlineController>()?.SetSelected(false);
             GridMap.Instance?.GetTile(first.GridPosition)?.ClearSelect();
         }
 
         selectedTargets.Add(unit);
-        outline?.SetSelected(true);
         tileUnderUnit?.Select();
 
         RefreshAreaPreview(); // Adicionado para atualizar preview de área centrada em Unit
@@ -404,6 +409,15 @@ public class TargetSelector : MonoBehaviour
 
         foreach (var target in selectedTargets)
             yield return target.GridPosition;
+    }
+
+    public HashSet<Vector2Int> GetFinalTargetArea()
+    {
+        HashSet<Vector2Int> all = new HashSet<Vector2Int>();
+        foreach (var t in selectedTargets) all.Add(t.GridPosition); // single selected unit
+        foreach (var t in areaPreviewTiles) all.Add(t.GridPosition); // aoe cells
+        foreach (var p in selectedPoints) all.Add(p); // point cells
+        return all;
     }
 
     void OnDestroy()
