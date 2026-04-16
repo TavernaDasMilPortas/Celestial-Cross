@@ -71,6 +71,8 @@ public class TurnManager : MonoBehaviour
         Unit current = turnQueue.Dequeue();
         turnQueue.Enqueue(current);
         CurrentUnit = current;
+        
+        current.GetComponentInChildren<UnitVisualController>()?.SetCombatState(true);
 
         Debug.Log($"[TurnManager] Turno de {current.DisplayName}");
 
@@ -105,6 +107,7 @@ public class TurnManager : MonoBehaviour
 
     public void EndTurn()
     {
+        CurrentUnit?.GetComponentInChildren<UnitVisualController>()?.SetCombatState(false);
         OnTurnEnded?.Invoke();
         Invoke(nameof(NextTurn), 0.5f);
     }

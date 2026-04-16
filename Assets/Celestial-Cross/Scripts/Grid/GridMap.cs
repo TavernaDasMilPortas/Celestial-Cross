@@ -147,6 +147,13 @@ public class GridMap : MonoBehaviour
         unit.GridPosition = gridPos;
         tile.IsOccupied = true;
         tile.OccupyingUnit = unit;
+        
+        var visual = unitObj.GetComponentInChildren<UnitVisualController>();
+        if (visual != null && phaseMap != null)
+        {
+            visual.ForceFlip(gridPos.x > phaseMap.width / 2);
+        }
+
         return unit;
     }
 

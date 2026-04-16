@@ -8,7 +8,6 @@ using CelestialCross.Artifacts;
 [RequireComponent(typeof(Health))]
 [RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(UnitHoverDetector))]
-[RequireComponent(typeof(UnitOutlineController))]
 [RequireComponent(typeof(PassiveManager))]
 public abstract class Unit : MonoBehaviour
 {
@@ -200,6 +199,8 @@ public abstract class Unit : MonoBehaviour
         }
         if (Health != null) Health.SetMaxHealth(MaxHealth);
         InitializeActions();
+        
+        GetComponentInChildren<UnitVisualController>()?.Init(this);
 
         // Garante que passivas de set (artefatos) estejam ativas no PassiveManager.
         ApplyArtifactSetPassives();
@@ -222,7 +223,7 @@ public abstract class Unit : MonoBehaviour
 
         if (petSpeciesData != null)
         {
-            // Aplica a habilidade do pet como passiva caso aplicável
+            // Aplica a habilidade do pet como passiva caso aplicÃ¡vel
             if (petSpeciesData.PassiveSkills != null) { foreach(var pass in petSpeciesData.PassiveSkills) { if (pass != null) PassiveManager?.ApplyCondition(pass, this); } }
 
             Debug.Log($"<color=green>[Unit Stats]</color> {DisplayName} combinou status com o pet <b>{(runtimePetData != null ? runtimePetData.DisplayName : petSpeciesData.SpeciesName)}</b>. Total -> HP: {MaxHealth} | Atk: {Stats.attack} | Def: {Stats.defense} | Spd: {Stats.speed} | Crit: {Stats.criticalChance}%");
@@ -309,14 +310,14 @@ public abstract class Unit : MonoBehaviour
             var passive = cachedArtifactSetPassives[i];
             if (passive == null) continue;
 
-            // A duração/persistência é controlada dentro do próprio AbilityBlueprint.
+            // A duraÃ§Ã£o/persistÃªncia Ã© controlada dentro do prÃ³prio AbilityBlueprint.
             PassiveManager.ApplyCondition(passive, this);
         }
     }
  
     public void InitializeActions()
     {
-        if (unitData == null) { Debug.LogError($"[Unit] {name} não possui UnitData."); return; }
+        if (unitData == null) { Debug.LogError($"[Unit] {name} nÃ£o possui UnitData."); return; }
         actions.Clear();
         foreach (var action in GetComponents<IUnitAction>()) Destroy(action as Component);
         var blueprints = unitData.GetAbilities();
@@ -399,11 +400,11 @@ public abstract class Unit : MonoBehaviour
         GetComponent<Collider>().enabled = false;
         // Adicione aqui outros componentes a serem desativados, como IA, scripts de movimento, etc.
 
-        // 2. Ativar animação/efeito de morte
+        // 2. Ativar animaÃ§Ã£o/efeito de morte
         // Ex: GetComponent<Animator>().SetTrigger("Die");
         Debug.Log($"{DisplayName} foi derrotado(a).");
 
-        // 3. Adicionar ao cemitério
+        // 3. Adicionar ao cemitÃ©rio
         if (GraveyardManager.Instance != null)
         {
             GraveyardManager.Instance.AddDeadUnit(this);
@@ -415,8 +416,8 @@ public abstract class Unit : MonoBehaviour
             PhaseManager.Instance.UnregisterUnit(this);
         }
 
-        // 5. Desativar o GameObject após um tempo para a animação tocar
-        // Destroy(gameObject, 2f); // Exemplo: Destruir após 2 segundos
+        // 5. Desativar o GameObject apÃ³s um tempo para a animaÃ§Ã£o tocar
+        // Destroy(gameObject, 2f); // Exemplo: Destruir apÃ³s 2 segundos
         gameObject.SetActive(false); // Ou simplesmente desativar
     }
 }

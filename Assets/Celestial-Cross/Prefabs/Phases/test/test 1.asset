@@ -12,14 +12,51 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebb333c3a1e5eb2479e385837ed6ba93, type: 3}
   m_Name: test 1
   m_EditorClassIdentifier: 
-  width: 0
-  height: 0
+  width: 5
+  height: 5
   tiles:
-  - columns: 0100000001000000010000000100000000000000
+  - columns: 0000000000000000000000000100000001000000
+  - columns: 0000000000000000000000000100000001000000
   - columns: 0000000000000000000000000000000000000000
   - columns: 0000000000000000000000000000000000000000
   - columns: 0000000000000000000000000000000000000000
-  - columns: 0000000000000000000000000000000000000000
+  walkableOverrides:
+  - columns: 0000000101
+  - columns: 0101010101
+  - columns: 0101010100
+  - columns: 0101010100
+  - columns: 0101010100
+  spriteOverrides:
+  - columns:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+  - columns:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+  - columns:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+  - columns:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+  - columns:
+    - {fileID: 1864054657, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
   unitSpawns:
   - unitPrefab: {fileID: 4461724650246820294, guid: 9bd781df8d37e8d4d9feaabd4af585e3, type: 3}
     gridPosition: {x: 4, y: 4}

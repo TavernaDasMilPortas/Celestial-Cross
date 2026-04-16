@@ -302,6 +302,8 @@ public class TargetSelector : MonoBehaviour
 
         selectedTargets.Add(unit);
         tileUnderUnit?.Select();
+        
+        sourceUnit?.GetComponentInChildren<UnitVisualController>()?.FaceDirection(unit.GridPosition);
 
         RefreshAreaPreview(); // Adicionado para atualizar preview de área centrada em Unit
         OnSelectedTargetsChanged?.Invoke(GetResolvedTargets(selectedTargets, selectedPoints));
@@ -334,6 +336,8 @@ public class TargetSelector : MonoBehaviour
 
         selectedPoints.Add(tile.GridPosition);
         tile.Select();
+        
+        sourceUnit?.GetComponentInChildren<UnitVisualController>()?.FaceDirection(tile.GridPosition);
 
         RefreshAreaPreview(); // Adicionado para atualizar preview de área centrada em Point
         OnSelectedTargetsChanged?.Invoke(GetResolvedTargets(selectedTargets, selectedPoints));

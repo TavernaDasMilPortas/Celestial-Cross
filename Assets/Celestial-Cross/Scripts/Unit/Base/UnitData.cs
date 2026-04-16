@@ -13,8 +13,14 @@ public class UnitData : ScriptableObject
     public string UnitID => unitID;
     public string displayName;
 
-    [Header("UI")]
+    [Header("UI & Visuals")]
     public Sprite icon;
+    
+    [Tooltip("Animação base usada quando a unidade está apenas esperando.")]
+    public AnimationClip idleAnim;
+    
+    [Tooltip("Animação usada quando for o turno desta unidade no combate.")]
+    public AnimationClip combatIdleAnim;
 
     [Header("Stats")]
     public CombatStats baseStats = new CombatStats(30, 10, 6, 7, 7, 1);
