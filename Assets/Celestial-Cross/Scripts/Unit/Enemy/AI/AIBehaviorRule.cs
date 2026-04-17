@@ -14,6 +14,12 @@ public class AIBehaviorRule
     public BehaviorType behavior = BehaviorType.Balanced;
     public AITargetPreference targetPreference = AITargetPreference.Closest;
 
+    [Header("Role & Class Targeting")]
+    [Tooltip("Role a priorizar quando targetPreference é PrioritizeRole.")]
+    public UnitRole preferredRole = UnitRole.Support;
+    [Tooltip("Class a priorizar quando targetPreference é PrioritizeClass.")]
+    public UnitClass preferredClass = UnitClass.Healer;
+
     // =============================
     // CONDIÇÕES DE ATIVAÇÃO
     // =============================

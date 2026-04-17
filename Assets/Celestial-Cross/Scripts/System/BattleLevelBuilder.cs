@@ -128,7 +128,23 @@ public class BattleLevelBuilder : MonoBehaviour
                 if (enemy.UnitData == null)
                     continue;
 
-                grid.SpawnUnitAt(enemyUnitMold, enemy.GridPosition, Team.Enemy, enemy.UnitData);
+                Unit spawnedUnit = grid.SpawnUnitAt(enemyUnitMold, enemy.GridPosition, Team.Enemy, enemy.UnitData);
+                
+                if (spawnedUnit != null)
+                {
+                    EnemyUnit eUnit = spawnedUnit as EnemyUnit;
+                    if (eUnit != null)
+                    {
+                        if (enemy.OverridePatternData != null)
+                        {
+                            eUnit.SetPatternData(enemy.OverridePatternData);
+                        }
+                        else if (enemy.OverrideBehaviorProfile != null)
+                        {
+                            eUnit.SetBehaviorProfile(enemy.OverrideBehaviorProfile);
+                        }
+                    }
+                }
             }
         }
     }

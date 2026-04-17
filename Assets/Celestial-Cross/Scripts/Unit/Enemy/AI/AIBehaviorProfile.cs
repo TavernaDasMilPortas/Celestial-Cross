@@ -26,6 +26,12 @@ public class AIBehaviorProfile : ScriptableObject
     [Tooltip("Preferência de alvo do fallback.")]
     public AITargetPreference fallbackTargetPreference = AITargetPreference.Closest;
 
+    [Tooltip("Role a priorizar caso o fallback seja PrioritizeRole.")]
+    public UnitRole fallbackPreferredRole = UnitRole.Tank;
+
+    [Tooltip("Classe a priorizar caso o fallback seja PrioritizeClass.")]
+    public UnitClass fallbackPreferredClass = UnitClass.Warrior;
+
     // =============================
     // API
     // =============================

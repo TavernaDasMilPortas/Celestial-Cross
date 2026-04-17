@@ -12,7 +12,26 @@ namespace CelestialCross.Gacha
     {
         [EnumToggleButtons]
         public GachaRewardType RewardType;
+
+#if UNITY_EDITOR
+        [ValueDropdown("GetAllowedRarities")]
+#endif
         public GachaRarity Rarity;
+
+#if UNITY_EDITOR
+        private IEnumerable<GachaRarity> GetAllowedRarities()
+        {
+            var parent = UnityEditor.Selection.activeObject as GachaBannerSO;
+            if (parent != null && parent.BasicProbabilities != null && parent.BasicProbabilities.Count > 0)
+            {
+                var list = new List<GachaRarity>();
+                foreach (var p in parent.BasicProbabilities) 
+                    list.Add(p.Rarity);
+                return list;
+            }
+            return (IEnumerable<GachaRarity>)global::System.Enum.GetValues(typeof(GachaRarity));
+        }
+#endif
         
         [ShowIf("RewardType", GachaRewardType.Unit)]
         public UnitData UnitData; // Se for Unit

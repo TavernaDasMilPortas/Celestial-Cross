@@ -98,6 +98,12 @@ public class PlacementManager : MonoBehaviour
 
         placementActionBar.ClearButtons();
         placementActionBar.GenerateButtonsForPlacement(ownedUnits, SelectUnitForPlacement);
+        
+        // 1- Pré-seleciona a primeira unidade do array automaticamente
+        if (ownedUnits.Count > 0)
+        {
+            SelectUnitForPlacement(ownedUnits[0]);
+        }
     }
 
     private void SelectUnitForPlacement(UnitData unitData)
@@ -224,8 +230,9 @@ public class PlacementManager : MonoBehaviour
         
         Debug.Log($"Unit '{unitData.displayName}' placement confirmed.");
         
-        // Verifica se todas as unidades já foram confirmadas para iniciar o combate automaticamente
-        if (confirmedUnits.Count >= totalUnitsToPlace)
+        // 2- Se todas as unidades estão no mapa e QUALQUER uma for confirmada, inicia.
+        // Ou se já confirmamos o número total necessário de unidades.
+        if (confirmedUnits.Count >= totalUnitsToPlace || placedUnitsDict.Count >= totalUnitsToPlace)
         {
             EndPlacementPhase();
         }

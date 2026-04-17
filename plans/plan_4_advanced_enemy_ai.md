@@ -13,6 +13,26 @@ Este plano descreve a refatoração e expansão do sistema de Inteligência Arti
 
 ## Passo a Passo da Implementação
 
+### Fase 0: Expansão dos Dados da Unidade (Role e Class)
+
+Para a IA (e o jogo em geral) ter um comportamento tático verdadeiro, precisamos de uma identificação universal e clara do que cada criatura faz. Essa **chave dupla** alimenta as prioridades de alvo da IA (Ex: Assassinos vão focar Magos primeiro, ou Tanques devem ficar na linha de frente).
+
+*   [ ] **Criar/Atualizar Enums na base do `UnitData`:**
+    *   `UnitRole` (**O Papel no Time**): 
+        *   `Attacker` (Atacante - Foco puro em causar dano ou abater alvos).
+        *   `Tank` (Tanque - Sobrevivência, trava de movimentação e redirecionamento de ameaça).
+        *   `Support` (Suporte - Utilitários, manter equipe viva ou manipular combate).
+    *   `UnitClass` (**A Classe / Como atua**): 
+        *   `Warrior` (Guerreiro - Dano de curtas distâncias consistente, aguenta pancada).
+        *   `Mage` (Mago - Danos em áreas vastas, alto custo de mana e baixa sobrevivência).
+        *   `Ranger` (Atirador - Ataques focados bem distantes).
+        *   `Assassin` (Assassino - Foca em matar suportes/magos alheios numa explosão).
+        *   `Healer` (Curandeiro - Mantém a sobrevivência direta resgatando HP).
+        *   `Buffer` (Potencializador - Concede vantagem tática como velocidade, escudos e +ataque).
+        *   `Hexer` (Amaldiçoador - Especializado em jogar debuffs, veneno, redução de defesa/velocidade).
+        *   `Summoner` (Invocador - Pode colocar obstáculos reais ou pets menores em campo).
+*   [ ] **Inclusão no ScriptableObject**: Garantir que cada `UnitData` tenha seus campos obrigatórios `Role` e `Class` expostos no Inspector.
+
 ### Fase 1: Refatoração do `AIBrain` e Integração com `Unit`
 
 Atualmente, o `AIBrain` busca ações via `GetComponents<UnitActionBase>()`. Vamos aprimorar isso para que o `AIBrain` atue como o "cérebro" verdadeiro, tendo acesso a todo o estado da unidade.
@@ -30,12 +50,11 @@ Jogos táticos exigem IAs que entendam o campo de batalha, fraquezas elementais 
 
 *   [ ] **Criar Estrutura de Condições (`AICondition`)**:
     *   Condições baseadas no próprio estado: `SelfHpBelowPercentage`, `HasStatusEffect`, `CooldownReady`.
-    *   Condições baseadas no ambiente/alvo: `TargetHpBelowPercentage`, `AdvantageousElementAvailable`, `AllyNeedsHealing`.
+    *   Condições baseadas no ambiente/alvo: `TargetHpBelowPercentage`, `AllyNeedsHealing`.
 *   [ ] **Criar Estrutura de Prioridades de Alvo (`AITargetingRule`)**:
-    *   `LowestHP`: Focar em unidades fracas.
-    *   `ElementalAdvantage`: Focar (ou evitar) com base em vantagens do sistema (Estilo *Summoners War*).
-    *   `ClosestUtility`: Focar Healers primeiro.
-    *   `Proximity`: Atacar o alvo mais próximo (padrão de agressão burra/zumbi).
+    *   `LowestHP`: Focar em unidades com a menor vida.
+    *   `PrioritizeRole`: Focar em inimigos perigosos ou frágeis (Ex: `Role == Support` ou `Class == Mage`).
+    *   `RoleProximity`: Tanques marcham para a frente para interceptar alvos na linha de frente.
 *   [ ] **Sistemas de Pesos (Utility AI)**:
     *   Modificar a avaliação de ações. Em vez de apenas verificar se pode usar, cada ação terá um escore calculado com base no `AIBehaviorProfile`. A ação com o maior escore final é executada.
 

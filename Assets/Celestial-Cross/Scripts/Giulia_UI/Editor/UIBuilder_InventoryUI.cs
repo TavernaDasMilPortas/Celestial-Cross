@@ -10,23 +10,79 @@ namespace CelestialCross.EditorArea {
         
         [MenuItem("Celestial Cross/UI Builders/Generate Rest Scene Layout (Inventory)")]
         public static void GenerateInventoryUI() {
-            GameObject selected = Selection.activeGameObject;
-            if (selected == null) {
-                Debug.LogWarning("Selecione o GameObject do InventoryUI na cena primeiro.");
-                return;
+            var canvas = Object.FindObjectOfType<Canvas>();
+            if (canvas == null) {
+                var canvasGO = new GameObject("Canvas", typeof(RectTransform), typeof(Canvas), typeof(UnityEngine.UI.CanvasScaler), typeof(UnityEngine.UI.GraphicRaycaster));
+                canvas = canvasGO.GetComponent<Canvas>();
+                canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+                var scaler = canvas.GetComponent<UnityEngine.UI.CanvasScaler>();
+                scaler.uiScaleMode = UnityEngine.UI.CanvasScaler.ScaleMode.ScaleWithScreenSize;
+                scaler.referenceResolution = new Vector2(1080f, 1920f);
             }
             
-            InventoryUI inventory = selected.GetComponent<InventoryUI>();
+            if (Object.FindObjectOfType<UnityEngine.EventSystems.EventSystem>() == null) {
+                new GameObject("EventSystem", typeof(UnityEngine.EventSystems.EventSystem), typeof(UnityEngine.EventSystems.StandaloneInputModule));
+            }
+
+            var restManager = Object.FindObjectOfType<RestSceneManager>();
+            if (restManager == null) {
+                var rmGO = new GameObject("RestSceneManager", typeof(RestSceneManager));
+                restManager = rmGO.GetComponent<RestSceneManager>();
+                restManager.mainCanvas = canvas;
+            }
+
+            InventoryUI inventory = Object.FindObjectOfType<InventoryUI>();
             if (inventory == null) {
-                Debug.LogWarning("O objeto selecionado não tem o componente InventoryUI.");
-                return;
+                var invGO = new GameObject("InventoryPanel", typeof(RectTransform), typeof(InventoryUI));
+                invGO.transform.SetParent(canvas.transform, false);
+                var rt = invGO.GetComponent<RectTransform>();
+                rt.anchorMin = Vector2.zero; rt.anchorMax = Vector2.one;
+                rt.offsetMin = rt.offsetMax = Vector2.zero;
+                inventory = invGO.GetComponent<InventoryUI>();
+                restManager.inventoryPanel = invGO;
             }
-            
+
+            EnsureBackToHubButton(restManager, canvas);
             ConfigureGrids(inventory);
             EnsureSplitLayout(inventory);
             
             EditorUtility.SetDirty(inventory);
-            Debug.Log("Rest Scene / InventoryUI estruturado com sucesso! Você pode curtir e testar.");
+            EditorUtility.SetDirty(restManager);
+            UnityEditor.SceneManagement.EditorSceneManager.MarkAllScenesDirty();
+            Debug.Log("Rest Scene / InventoryUI estruturado com sucesso e configurado (Botão Hub, Canvas, EventSystem, Manager)!");
+        }
+
+        private static void EnsureBackToHubButton(RestSceneManager rm, Canvas canvas) {
+            if (rm.backToHubButton != null) return;
+            
+            var go = new GameObject("Btn_BackToHub", typeof(RectTransform), typeof(Image), typeof(Button));
+            go.transform.SetParent(canvas.transform, false);
+            
+            var rt = (RectTransform)go.transform;
+            rt.anchorMin = new Vector2(0, 1);
+            rt.anchorMax = new Vector2(0, 1);
+            rt.pivot = new Vector2(0, 1);
+            rt.anchoredPosition = new Vector2(20, -20);
+            rt.sizeDelta = new Vector2(200, 60);
+
+            go.GetComponent<Image>().color = new Color(0.8f, 0.4f, 0.2f, 1f);
+            var btn = go.GetComponent<Button>();
+            rm.backToHubButton = btn;
+
+            var txtGo = new GameObject("Text", typeof(RectTransform), typeof(TextMeshProUGUI));
+            txtGo.transform.SetParent(go.transform, false);
+            var txtRt = (RectTransform)txtGo.transform;
+            txtRt.anchorMin = Vector2.zero; txtRt.anchorMax = Vector2.one;
+            txtRt.offsetMin = txtRt.offsetMax = Vector2.zero;
+
+            var tmp = txtGo.AddComponent<TextMeshProUGUI>();
+            tmp.text = "Voltar (Hub)";
+            tmp.color = Color.white;
+            tmp.fontSize = 24;
+            tmp.alignment = TextAlignmentOptions.Center;
+
+            // Ligar evento de persistência editor time
+            UnityEditor.Events.UnityEventTools.AddPersistentListener(btn.onClick, rm.GoToHubScene);
         }
         
 private static void ConfigureGrids(InventoryUI target)

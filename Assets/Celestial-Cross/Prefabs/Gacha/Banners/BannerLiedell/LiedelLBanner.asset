@@ -33,11 +33,11 @@ MonoBehaviour:
   - Rarity: 0
     BaseChance: 80
   - Rarity: 3
-    BaseChance: 15
+    BaseChance: 10
   - Rarity: 4
-    BaseChance: 4
+    BaseChance: 5
   - Rarity: 5
-    BaseChance: 1
+    BaseChance: 5
   TotalPool:
   - RewardType: 1
     Rarity: 0
@@ -56,8 +56,8 @@ MonoBehaviour:
     ItemStars: 3
     ArtifactRarity: 0
   - RewardType: 0
-    Rarity: 0
-    UnitData: {fileID: 0}
+    Rarity: 4
+    UnitData: {fileID: 11400000, guid: 642b786367762f940aded926f739f0ba, type: 2}
     PetSpeciesData: {fileID: 0}
     ArtifactSet: {fileID: 0}
     Weight: 1

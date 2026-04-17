@@ -3,6 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
+public enum UnitActionCategory
+{
+    Attack,       // Ataque
+    Movement,     // Deslocamento
+    Ability,      // Habilidade
+    Spell         // Magia
+}
+
 public abstract class UnitActionBase : MonoBehaviour, IUnitAction
 {
     protected Unit unit;
@@ -11,6 +19,11 @@ public abstract class UnitActionBase : MonoBehaviour, IUnitAction
     protected TargetSelector targetSelector;
 
     public string ActionName { get; set; }
+    public UnitActionCategory ActionCategory { get; set; } = UnitActionCategory.Ability; // Categoria da ação
+    
+    [Tooltip("Se verdadeiro, esta ação pula as regras de peso padrão e tem prioridade máxima (Ex: Especial de Chefe).")]
+    public bool IsAbsolutePriority { get; set; }
+
     public Sprite ActionIcon { get; set; }
     public string ActionDescription { get; set; }
     public virtual int Range { get; set; }

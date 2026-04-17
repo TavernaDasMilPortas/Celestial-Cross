@@ -17,32 +17,9 @@ MonoBehaviour:
   Stardust: 0
   StarMaps: 90
   OwnedUnits:
-  - {fileID: 11400000, guid: 90c9076b7a221204897b90b1a48cf69e, type: 2}
-  - {fileID: 11400000, guid: 8564d8cc1db64474688f6b86bb4030cf, type: 2}
-  - {fileID: 11400000, guid: 5af9220f407700142862eddd8b5c09b3, type: 2}
-  - {fileID: 11400000, guid: 72641cd8cb2e34644999ae2c586542b1, type: 2}
-  - {fileID: 11400000, guid: fa69a36d57941ab489ba54bce09874cd, type: 2}
-  - {fileID: 11400000, guid: a5a23d5665f7b934c8964520d4456532, type: 2}
-  - {fileID: 11400000, guid: 7da94d1672385fd4ab3565c7d31b3401, type: 2}
-  - {fileID: 11400000, guid: ee1511e1cec88744aaebc302ed407e8e, type: 2}
-  - {fileID: 11400000, guid: 0fc17fd16abb7074b97682cd8e2fd847, type: 2}
-  - {fileID: 11400000, guid: d983a73c1bb370e49bea0ae03095f7ef, type: 2}
-  - {fileID: 11400000, guid: 7d666864f6b1480439e141d9a007dcbb, type: 2}
-  - {fileID: 11400000, guid: b1aeb5d725201a641bc40f21512ddeae, type: 2}
-  - {fileID: 11400000, guid: 8ffe7de8de59ca34a896ebfe0f73d4f8, type: 2}
   - {fileID: 11400000, guid: 67628d77266bab446ba0b5274c2a9397, type: 2}
   - {fileID: 11400000, guid: 642b786367762f940aded926f739f0ba, type: 2}
-  - {fileID: 11400000, guid: 6107c25373ff10340a0740b28db3b26e, type: 2}
   - {fileID: 11400000, guid: ba1202906ae7a724cbf2492b1ec00a7a, type: 2}
   OwnedPets:
-  - {fileID: 11400000, guid: 992169e206295a442ba5afb83c9de1de, type: 2}
-  - {fileID: 11400000, guid: db86892950f887b4f89de5a3f4faa303, type: 2}
-  - {fileID: 11400000, guid: dc33a365684753c4fbb9069886e81710, type: 2}
-  - {fileID: 11400000, guid: 8bc82eb6baeb8bf4e8da36f6cdc97549, type: 2}
-  - {fileID: 11400000, guid: f4d8c0e03478b1d4aa233b167f0b36d5, type: 2}
-  - {fileID: 11400000, guid: 7bba04fb91889dc4189715d51ab5c0d9, type: 2}
-  - {fileID: 11400000, guid: 9a3d4c01c546e0e48889783c7238a9c6, type: 2}
-  - {fileID: 11400000, guid: fa95167bffae88940a4135d196adfaad, type: 2}
-  - {fileID: 11400000, guid: 9d077f0c1d99e7944b7c47e24bfeaac7, type: 2}
-  - {fileID: 11400000, guid: a3e22efbb24bc824f99528aa38fb1812, type: 2}
-  - {fileID: 11400000, guid: 9f42cee8184cdaa4b8cd4ad07df68288, type: 2}
+  - {fileID: 11400000, guid: 52c34e207dee2284f86e51d9d05b28fd, type: 2}
+  - {fileID: 11400000, guid: ca3587875a7b1d64bbb5e2585641ebca, type: 2}

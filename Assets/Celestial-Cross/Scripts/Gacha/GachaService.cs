@@ -76,11 +76,15 @@ namespace CelestialCross.Gacha
                     if (isTargetSupreme)
                     {
                         pityState.Lost5050 = false; // Garantiu
+                        pityState.SelectedSupremeChoice = ""; // Resetar a escolha (pool de foco do supreme)
                     }
                     else if (banner.HasEpitomizedPath)
                     {
                         pityState.Lost5050 = true; // Perdeu pro general pool
                     }
+                    
+                    // Reseta os dados focados caso tiremos Supreme independente
+                    pityState.PullsSinceLastSupreme = 0;
                 }
 
                 DispatchReward(account, rolledReward);
@@ -94,54 +98,114 @@ namespace CelestialCross.Gacha
 
         private GachaRarity DetermineRarity(GachaBannerSO banner, GachaPityState pity)
         {
-             // 1. Checagem do Hard Pity (Supremo Garantido)
+            if (banner.BasicProbabilities == null || banner.BasicProbabilities.Count == 0)
+            {
+                Debug.LogError("[Gacha] Banner não possui tabela de probabilidades!");
+                return GachaRarity.Base;
+            }
+
+            // Descobre qual é a menor raridade presente na tabela de probabilidades ativada neste banner
+            var sortedValidRarities = new List<GachaRarityProbability>(banner.BasicProbabilities);
+            sortedValidRarities.Sort((a, b) => a.Rarity.CompareTo(b.Rarity));
+            GachaRarity lowestTableRarity = sortedValidRarities[0].Rarity;
+
+            // 1. Checagem do Hard Pity (Supremo Garantido)
             if (pity.PullsSinceLastSupreme >= banner.HardPityThreshold)
-                return GachaRarity.Supreme;
+            {
+                // Verifica se Supremo está na tabela, senão ignora o pity
+                if (banner.BasicProbabilities.Exists(p => p.Rarity == GachaRarity.Supreme))
+                    return GachaRarity.Supreme;
+            }
 
-            // 2. Checagem do Guarantido 10 (Pelo menos um Uncommon+)
-            bool forceUncommonPlus = (pity.PullsSinceLastOverBase >= banner.GuaranteedAboveBaseEvery);
+            // 2. Checagem do Garantido (Pelo menos um acima da menor raridade listada na tabela)
+            bool forceAboveLowest = (pity.PullsSinceLastOverBase >= banner.GuaranteedAboveBaseEvery);
 
-            // 3. Checagem de Soft Pity e Sorteio Geral
-            float rand = Random.Range(0f, 100f);
-            float cumulative = 0f;
-            
-            // Soft Pity Ramp
+            // 3. Preparando o Sorteio Focado apenas nas Raridades presentes na Tabela
             float extraChance = 0f;
             if (pity.PullsSinceLastSupreme >= banner.SoftPityThreshold)
             {
                 int over = pity.PullsSinceLastSupreme - banner.SoftPityThreshold;
-                extraChance = over * 4.5f; // Exemplo de curva de soft pity
+                extraChance = over * 4.5f;
             }
 
+            // Precisamos somar o total válido de chances para esse tiro específico (evita erros se a chance não somar 100%)
+            float totalValidChance = 0f;
             foreach (var prob in banner.BasicProbabilities)
             {
+                if (forceAboveLowest && prob.Rarity == lowestTableRarity)
+                    continue; // Pula a pior raridade no tiro garantido
+
+                float c = prob.BaseChance;
+                if (prob.Rarity == GachaRarity.Supreme) c += extraChance;
+                totalValidChance += c;
+            }
+
+            // Se forçando 'AboveLowest' nos deixou sem opções (ex: um banner que só tem a raridade mais baixa)
+            if (totalValidChance <= 0f)
+            {
+                // Cai de volta para o padrão (ignora forceAboveLowest)
+                forceAboveLowest = false;
+                foreach (var prob in banner.BasicProbabilities)
+                {
+                    float c = prob.BaseChance;
+                    if (prob.Rarity == GachaRarity.Supreme) c += extraChance;
+                    totalValidChance += c;
+                }
+            }
+
+            // 4. Sorteio ajustado dentro apenas da Tabela de Probabilidades Validada
+            float rand = Random.Range(0f, totalValidChance);
+            float cumulative = 0f;
+            
+            foreach (var prob in banner.BasicProbabilities)
+            {
+                if (forceAboveLowest && prob.Rarity == lowestTableRarity)
+                    continue;
+
                 float currentChance = prob.BaseChance;
-                
                 if (prob.Rarity == GachaRarity.Supreme)
                     currentChance += extraChance;
-
-                if (forceUncommonPlus && prob.Rarity == GachaRarity.Base)
-                    continue; // Ignora Base se está no tiro garantido 10
 
                 cumulative += currentChance;
                 if (rand <= cumulative)
                     return prob.Rarity;
             }
 
-            return forceUncommonPlus ? GachaRarity.Uncommon : GachaRarity.Base;
+            // Fallback seguro usando sempre uma raridade validada da própria tabela
+            return forceAboveLowest && sortedValidRarities.Count > 1 
+                ? sortedValidRarities[1].Rarity // Pega a segunda pior raridade
+                : lowestTableRarity;
         }
 
         private GachaRewardEntry SelectRewardFromPool(GachaBannerSO banner, GachaRarity targetRarity, GachaPityState pity)
         {
             var validPool = banner.TotalPool.FindAll(x => x.Rarity == targetRarity);
             
+            // Nova Regra: Se a raridade foi Supreme e não há opções na TotalPool principal,
+            // tentamos sortear diretamente da pool de escolhas em destaque (SupremeChoices).
+            if (targetRarity == GachaRarity.Supreme && validPool.Count == 0 && banner.SupremeChoices != null && banner.SupremeChoices.Count > 0)
+            {
+                // Inclui todos os Supremes que estiverem na lista de destaques
+                validPool = banner.SupremeChoices.FindAll(x => x.Rarity == GachaRarity.Supreme);
+                
+                // Se esqueceram de colocar 'Supreme' na label lá, usa todas as SupremeChoices pra não quebrar
+                if (validPool.Count == 0)
+                    validPool = new List<GachaRewardEntry>(banner.SupremeChoices); 
+            }
+
             if (validPool.Count == 0)
                 throw new global::System.Exception($"Nao ha itens no banner {banner.BannerID} para a raridade {targetRarity}");
 
             // Se for Supreme + Tem Path + Perdeu 50/50 anterior
             if (targetRarity == GachaRarity.Supreme && banner.HasEpitomizedPath && pity.Lost5050 && !string.IsNullOrEmpty(pity.SelectedSupremeChoice))
             {
+                // Tenta achar na validPool, ou então olha na SupremeChoices caso no gacha rate-up não tenha mesclado.
                 var hardGuaranteed = validPool.Find(x => x.GetID() == pity.SelectedSupremeChoice);
+                if (hardGuaranteed == null && banner.SupremeChoices != null)
+                {
+                    hardGuaranteed = banner.SupremeChoices.Find(x => x.GetID() == pity.SelectedSupremeChoice);
+                }
+
                 if (hardGuaranteed != null) return hardGuaranteed;
             }
 

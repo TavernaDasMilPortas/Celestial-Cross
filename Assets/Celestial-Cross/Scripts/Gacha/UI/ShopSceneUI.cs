@@ -40,9 +40,15 @@ namespace CelestialCross.Gacha.UI
         [Header("Exchange/Câmbio Placeholder")]
         [SerializeField] private Button btnConvertStardustToStarMaps;
 
+        [Header("NavegaÃ§Ã£o")]
+        [SerializeField] private Button btnBackToHub;
+        [SerializeField] private string hubSceneName = "HubScene";
+
         private void Awake()
         {
             GachaService.Initialize();
+
+            if (btnBackToHub != null) btnBackToHub.onClick.AddListener(ReturnToHub);
 
             if (tabBannersBtn != null) tabBannersBtn.onClick.AddListener(() => SwitchTab(true));
             if (tabExchangeBtn != null) tabExchangeBtn.onClick.AddListener(() => SwitchTab(false));
@@ -189,5 +195,11 @@ namespace CelestialCross.Gacha.UI
         {
             Debug.Log("Pressionado botão Detalhes da Pool. (A ser implementado o Modal de Rates!)");
         }
-    }
+        private void ReturnToHub()
+        {
+            if (!string.IsNullOrEmpty(hubSceneName))
+            {
+                UnityEngine.SceneManagement.SceneManager.LoadScene(hubSceneName);
+            }
+        }    }
 }

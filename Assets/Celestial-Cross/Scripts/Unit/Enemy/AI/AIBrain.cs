@@ -12,10 +12,13 @@ public class AIBrain : MonoBehaviour
 {
     EnemyUnit enemy;
     GridMap gridMap;
+    
+    public Unit MyUnit { get; private set; }
 
     void Awake()
     {
         enemy = GetComponent<EnemyUnit>();
+        MyUnit = enemy;
     }
 
     void Start()
@@ -33,6 +36,9 @@ public class AIBrain : MonoBehaviour
     public void ExecuteTurn()
     {
         Debug.Log($"[AIBrain] Iniciando turno de {enemy.DisplayName}");
+
+        // 0) Processar Gatilhos Mágicos / Fases do Padrão
+        CheckPatternTriggers();
 
         AIBehaviorProfile profile = enemy.BehaviorProfile;
         if (profile == null)
@@ -53,6 +59,8 @@ public class AIBrain : MonoBehaviour
         BehaviorType behavior;
         AITargetPreference targetPref;
         float attackWeight, moveWeight;
+        UnitRole prefRole = UnitRole.Support;
+        UnitClass prefClass = UnitClass.Healer;
 
         if (activeRule != null)
         {
@@ -60,6 +68,8 @@ public class AIBrain : MonoBehaviour
             targetPref = activeRule.targetPreference;
             attackWeight = activeRule.attackWeight;
             moveWeight = activeRule.moveWeight;
+            prefRole = activeRule.preferredRole;
+            prefClass = activeRule.preferredClass;
             Debug.Log($"[AIBrain] Regra ativa: {activeRule.ruleName} (priority {activeRule.priority})");
         }
         else
@@ -68,6 +78,8 @@ public class AIBrain : MonoBehaviour
             targetPref = profile.fallbackTargetPreference;
             attackWeight = 1f;
             moveWeight = 1f;
+            prefRole = profile.fallbackPreferredRole;
+            prefClass = profile.fallbackPreferredClass;
             Debug.Log($"[AIBrain] Nenhuma regra ativa. Usando fallback: {behavior}");
         }
 
@@ -84,7 +96,8 @@ public class AIBrain : MonoBehaviour
         // 4) Avaliar todas as ações
         List<AIActionScore> scores = EvaluateAllActions(
             playerUnits, behavior, targetPref,
-            attackWeight, moveWeight, profile.randomnessFactor
+            attackWeight, moveWeight, profile.randomnessFactor,
+            prefRole, prefClass
         );
 
         if (scores.Count == 0)
@@ -109,7 +122,9 @@ public class AIBrain : MonoBehaviour
         AITargetPreference targetPref,
         float attackWeight,
         float moveWeight,
-        float randomness)
+        float randomness,
+        UnitRole prefRole,
+        UnitClass prefClass)
     {
         List<AIActionScore> scores = new();
 
@@ -124,7 +139,8 @@ public class AIBrain : MonoBehaviour
             {
                 var attackScores = EvaluateAttack(
                     i, attackAction, playerUnits,
-                    behavior, targetPref, attackWeight, randomness
+                    behavior, targetPref, attackWeight, randomness,
+                    prefRole, prefClass
                 );
                 scores.AddRange(attackScores);
             }
@@ -132,7 +148,8 @@ public class AIBrain : MonoBehaviour
             {
                 var moveScores = EvaluateMove(
                     i, moveAction, playerUnits,
-                    behavior, targetPref, moveWeight, randomness
+                    behavior, targetPref, moveWeight, randomness,
+                    prefRole, prefClass
                 );
                 scores.AddRange(moveScores);
             }
@@ -152,7 +169,9 @@ public class AIBrain : MonoBehaviour
         BehaviorType behavior,
         AITargetPreference targetPref,
         float weight,
-        float randomness)
+        float randomness,
+        UnitRole prefRole,
+        UnitClass prefClass)
     {
         List<AIActionScore> scores = new();
         int range = attackAction.Range;
@@ -165,7 +184,7 @@ public class AIBrain : MonoBehaviour
             if (dist > range)
                 continue;
 
-            float baseScore = CalculateTargetScore(target, targetPref, behavior);
+            float baseScore = CalculateTargetScore(target, targetPref, behavior, prefRole, prefClass);
 
             // Bônus por dano estimado
             float damageEstimate = Mathf.Max(1, enemy.Stats.attack + attackAction.Damage - target.Stats.defense);
@@ -174,6 +193,13 @@ public class AIBrain : MonoBehaviour
             // Bônus se pode matar
             if (target.Health != null && damageEstimate >= target.Health.CurrentHealth)
                 baseScore += 50f;
+
+            // Bônus DESTRUIDOR para Habilidades "Ultimate" do Chefe nesta fase
+            if (attackAction.IsAbsolutePriority)
+            {
+                baseScore += 1000000f; // Bypassa todo o peso normal, AI VAI focar nisto
+                Debug.Log($"[AIBrain/Priority] Prioridade Absoluta Ativada para {attackAction.ActionName} em {target.DisplayName}!");
+            }
 
             // Aplicar peso e aleatoriedade
             float finalScore = ApplyWeightAndRandomness(baseScore, weight, randomness);
@@ -201,7 +227,9 @@ public class AIBrain : MonoBehaviour
         BehaviorType behavior,
         AITargetPreference targetPref,
         float weight,
-        float randomness)
+        float randomness,
+        UnitRole prefRole,
+        UnitClass prefClass)
     {
         List<AIActionScore> scores = new();
         int range = moveAction.Range;
@@ -213,7 +241,7 @@ public class AIBrain : MonoBehaviour
             return scores;
 
         // Determinar o alvo preferido para guiar o movimento
-        Unit preferredTarget = SelectPreferredTarget(playerUnits, targetPref);
+        Unit preferredTarget = SelectPreferredTarget(playerUnits, targetPref, prefRole, prefClass);
 
         foreach (var tilePos in reachable)
         {
@@ -263,7 +291,7 @@ public class AIBrain : MonoBehaviour
     // TARGET PREFERENCE
     // =============================
 
-    float CalculateTargetScore(Unit target, AITargetPreference pref, BehaviorType behavior)
+    float CalculateTargetScore(Unit target, AITargetPreference pref, BehaviorType behavior, UnitRole prefRole, UnitClass prefClass)
     {
         float score = 0f;
 
@@ -292,12 +320,22 @@ public class AIBrain : MonoBehaviour
             case AITargetPreference.Random:
                 score = Random.Range(0f, 100f);
                 break;
+                
+            case AITargetPreference.PrioritizeRole:
+                score = (target.unitData != null && target.unitData.role == prefRole) ? 100f : 0f;
+                score += 50f - ChebyshevDistance(enemy.GridPosition, target.GridPosition); // tie-breaker distance
+                break;
+                
+            case AITargetPreference.PrioritizeClass:
+                score = (target.unitData != null && target.unitData.unitClass == prefClass) ? 100f : 0f;
+                score += 50f - ChebyshevDistance(enemy.GridPosition, target.GridPosition); // tie-breaker distance
+                break;
         }
 
         return score;
     }
 
-    Unit SelectPreferredTarget(List<Unit> playerUnits, AITargetPreference pref)
+    Unit SelectPreferredTarget(List<Unit> playerUnits, AITargetPreference pref, UnitRole prefRole, UnitClass prefClass)
     {
         if (playerUnits.Count == 0)
             return null;
@@ -314,6 +352,12 @@ public class AIBrain : MonoBehaviour
                 playerUnits.OrderByDescending(u => ChebyshevDistance(enemy.GridPosition, u.GridPosition)).First(),
             AITargetPreference.HighestAttack =>
                 playerUnits.OrderByDescending(u => u.Stats.attack).First(),
+            AITargetPreference.PrioritizeRole =>
+                playerUnits.OrderByDescending(u => u.unitData != null && u.unitData.role == prefRole ? 1 : 0)
+                           .ThenBy(u => ChebyshevDistance(enemy.GridPosition, u.GridPosition)).First(),
+            AITargetPreference.PrioritizeClass =>
+                playerUnits.OrderByDescending(u => u.unitData != null && u.unitData.unitClass == prefClass ? 1 : 0)
+                           .ThenBy(u => ChebyshevDistance(enemy.GridPosition, u.GridPosition)).First(),
             _ => playerUnits[Random.Range(0, playerUnits.Count)]
         };
     }
@@ -512,6 +556,38 @@ public class AIBrain : MonoBehaviour
         }
 
         return weighted;
+    }
+
+    // =============================
+    // PADRÕES DE CHEFE / TRANSIÇÕES
+    // =============================
+    void CheckPatternTriggers()
+    {
+        if (enemy.PatternData == null) return;
+        if (enemy.PatternData.phases == null || enemy.PatternData.phases.Count == 0) return;
+
+        float hpPercent = GetHpPercent();
+
+        // Passa por todas as fases não ativadas, da maior prioridade (menor HP) pra cima, 
+        // ou dependendo da ordem configurada no ScriptableObject.
+        foreach (var phase in enemy.PatternData.phases)
+        {
+            if (phase.hasTriggered) continue;
+
+            if (hpPercent <= phase.triggerHpBelowPercent)
+            {
+                Debug.Log($"[AIBrain] {enemy.DisplayName} alcançou < {phase.triggerHpBelowPercent}% de HP. Mudando para Fase Mágica: {phase.phaseName}!");
+                phase.hasTriggered = true;
+                
+                if (phase.newBehaviorProfile != null)
+                {
+                    enemy.SetBehaviorProfile(phase.newBehaviorProfile);
+                }
+                
+                // Opção: Pode tocar uma animação ou efeito de "Power Up" aqui no futuro
+                break; // Apenas trigamos uma fase por verificação
+            }
+        }
     }
 }
 

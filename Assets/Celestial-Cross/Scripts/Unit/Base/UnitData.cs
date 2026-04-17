@@ -5,6 +5,25 @@ using Celestial_Cross.Scripts.Abilities;
 using UnityEditor;
 #endif
 
+public enum UnitRole
+{
+    Attacker,   // Foco puro em causar dano
+    Tank,       // Sobrevivência, trava de movimentação e redirecionamento de ameaça
+    Support     // Utilitários, manter equipe viva ou manipular combate
+}
+
+public enum UnitClass
+{
+    Warrior,    // Dano de curtas distâncias consistente, aguenta pancada
+    Mage,       // Danos em áreas vastas, alto custo de mana e baixa sobrevivência
+    Ranger,     // Ataques focados bem distantes
+    Assassin,   // Foca em matar suportes/magos alheios numa explosão
+    Healer,     // Mantém a sobrevivência direta resgatando HP
+    Buffer,     // Concede vantagem tática como velocidade, escudos e +ataque
+    Hexer,      // Especializado em jogar debuffs, veneno, redução de defesa/velocidade
+    Summoner    // Pode colocar obstáculos reais ou pets menores em campo
+}
+
 [CreateAssetMenu(menuName = "Celestial Cross/Units/Unit Data")]
 public class UnitData : ScriptableObject
 {
@@ -12,6 +31,10 @@ public class UnitData : ScriptableObject
     private string unitID;
     public string UnitID => unitID;
     public string displayName;
+
+    [Header("Tactical Identity")]
+    public UnitRole role;
+    public UnitClass unitClass;
 
     [Header("UI & Visuals")]
     public Sprite icon;

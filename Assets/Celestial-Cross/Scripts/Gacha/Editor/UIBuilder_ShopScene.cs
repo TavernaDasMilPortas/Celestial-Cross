@@ -67,7 +67,11 @@ namespace CelestialCross.Gacha.Editor
             var mapsTxt = CreateText(topBar.transform, "StarMapsText", 24, new Vector2(0.4f, 0.2f), new Vector2(0.53f, 0.8f), new Color(0.2f, 0.8f, 1f));
             so.FindProperty("starMapsText").objectReferenceValue = mapsTxt.GetComponent<TextMeshProUGUI>();
 
-            CreateText(topBar.transform, "Loja e Invocações", 36, new Vector2(0.02f, 0.2f), new Vector2(0.3f, 0.8f), Color.yellow).GetComponent<TextMeshProUGUI>().alignment = TextAlignmentOptions.Left;
+            CreateText(topBar.transform, "Loja e InvocaÃ§Ãµes", 36, new Vector2(0.12f, 0.2f), new Vector2(0.3f, 0.8f), Color.yellow).GetComponent<TextMeshProUGUI>().alignment = TextAlignmentOptions.Left;
+
+            var backHubGo = CreateButton(topBar.transform, "Btn_BackToHub", new Vector2(0.01f, 0.2f), new Vector2(0.1f, 0.8f), "Hub", new Color(0.8f, 0.4f, 0.2f));
+            so.FindProperty("btnBackToHub").objectReferenceValue = backHubGo;
+            so.FindProperty("hubSceneName").stringValue = "HubScene";
 
             // ==========================================
             // 3. TABS
