@@ -24,10 +24,10 @@ public class PhaseMap : ScriptableObject
     [HideInInspector]
     public List<WalkableRow> walkableOverrides = new();
 
-    // ─── Camada 3: Sprite Override ────────────────────────────────────────────
-    [Title("Layer 3 — Sprite Overrides")]
+    // ─── Camada 3+: Sprite Overrides (Múltiplas Camadas) ─────────────────────
+    [Title("Layer 3+ — Sprite Overrides")]
     [HideInInspector]
-    public List<SpriteRow> spriteOverrides = new();
+    public List<SpriteLayer> spriteLayers = new List<SpriteLayer>();
 
     // ─── Unit Spawns ──────────────────────────────────────────────────────────
     [Title("Unit Spawns")]
@@ -59,6 +59,14 @@ public class PhaseMap : ScriptableObject
     }
 
     [System.Serializable]
+    public class SpriteLayer
+    {
+        public string name = "Nova Camada";
+        public bool isVisible = true;
+        public List<SpriteRow> rows = new();
+    }
+
+    [System.Serializable]
     public class UnitSpawnData
     {
         public GameObject unitPrefab;
@@ -81,11 +89,12 @@ public class PhaseMap : ScriptableObject
         return walkableOverrides[y].columns[x];
     }
 
-    public Sprite GetSpriteOverride(int x, int y)
+    public Sprite GetSpriteOverride(int layerIndex, int x, int y)
     {
-        if (y < 0 || y >= spriteOverrides.Count) return null;
-        if (x < 0 || x >= spriteOverrides[y].columns.Count) return null;
-        return spriteOverrides[y].columns[x];
+        if (layerIndex < 0 || layerIndex >= spriteLayers.Count) return null;
+        if (y < 0 || y >= spriteLayers[layerIndex].rows.Count) return null;
+        if (x < 0 || x >= spriteLayers[layerIndex].rows[y].columns.Count) return null;
+        return spriteLayers[layerIndex].rows[y].columns[x];
     }
 
     /// <summary>
@@ -115,13 +124,16 @@ public class PhaseMap : ScriptableObject
             while (row.columns.Count > newW) row.columns.RemoveAt(row.columns.Count - 1);
         }
 
-        // ── Camada 3 (Sprite overrides)
-        while (spriteOverrides.Count < newH) spriteOverrides.Add(new SpriteRow());
-        while (spriteOverrides.Count > newH) spriteOverrides.RemoveAt(spriteOverrides.Count - 1);
-        foreach (var row in spriteOverrides)
+        // ── Camadas de Sprites
+        foreach (var layer in spriteLayers)
         {
-            while (row.columns.Count < newW) row.columns.Add(null);
-            while (row.columns.Count > newW) row.columns.RemoveAt(row.columns.Count - 1);
+            while (layer.rows.Count < newH) layer.rows.Add(new SpriteRow());
+            while (layer.rows.Count > newH) layer.rows.RemoveAt(layer.rows.Count - 1);
+            foreach (var row in layer.rows)
+            {
+                while (row.columns.Count < newW) row.columns.Add(null);
+                while (row.columns.Count > newW) row.columns.RemoveAt(row.columns.Count - 1);
+            }
         }
     }
 }

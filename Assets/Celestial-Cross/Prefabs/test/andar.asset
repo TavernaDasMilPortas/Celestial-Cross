@@ -16,7 +16,10 @@ MonoBehaviour:
   abilityIcon: {fileID: 21300000, guid: 15b9e745d70d9f641b4a9ecb7b417e90, type: 3}
   abilityDescription: 
   displayRange: 1
+  abilityType: 1
   isPassive: 0
+  isPersistentCondition: 0
+  durationInTurns: 0
   effectSteps:
   - rid: 4999357954011168845
   modifierSteps: []
@@ -58,4 +61,5 @@ MonoBehaviour:
           targetFaction: 0
         AreaPattern: {fileID: 0}
         PreferredDirection: 0
+        AutoRotateArea: 0
         ManualRange: 1

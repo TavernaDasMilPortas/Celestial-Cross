@@ -31,11 +31,8 @@ namespace CelestialCross.Gacha.UI
         [SerializeField] private Button btnPull10;
         [SerializeField] private Button btnDetails;
 
-        [Header("Modal de Resultado")]
-        [SerializeField] private GameObject resultModal;
-        [SerializeField] private Transform resultGridContent;
-        [SerializeField] private GameObject resultItemPrefab;
-        [SerializeField] private Button resultCloseBtn;
+        [Header("Animação do Gacha")]
+        [SerializeField] private GachaAnimationController animationController;
 
         [Header("Exchange/Câmbio Placeholder")]
         [SerializeField] private Button btnConvertStardustToStarMaps;
@@ -57,12 +54,8 @@ namespace CelestialCross.Gacha.UI
             if (btnPull10 != null) btnPull10.onClick.AddListener(() => DoPull(10));
             if (btnDetails != null) btnDetails.onClick.AddListener(ShowBannerDetails);
 
-            if (resultCloseBtn != null) resultCloseBtn.onClick.AddListener(CloseResultModal);
-            
             if (btnConvertStardustToStarMaps != null) btnConvertStardustToStarMaps.onClick.AddListener(ConvertStardustToStarMap);
 
-            if (resultModal != null) resultModal.SetActive(false);
-            
             SwitchTab(true);
         }
 
@@ -126,46 +119,28 @@ namespace CelestialCross.Gacha.UI
 
             if (results != null && results.Count > 0)
             {
-                ShowResults(results);
+                if (btnPull1 != null) btnPull1.interactable = false;
+                if (btnPull10 != null) btnPull10.interactable = false;
+
+                if (animationController != null)
+                {
+                    animationController.PlayGachaSequence(results, () => OnAnimationFinished(results));
+                }
+                else
+                {
+                    // Fallback se não tiver gacha controller
+                    OnAnimationFinished(results);
+                }
             }
-            RefreshUI();
+            else
+            {
+                RefreshUI();
+            }
         }
 
-        private void ShowResults(List<GachaRewardEntry> results)
+        private void OnAnimationFinished(List<GachaRewardEntry> results)
         {
-            if (resultModal == null || resultGridContent == null || resultItemPrefab == null) return;
-
-            // Clear old Grid
-            foreach (Transform child in resultGridContent)
-            {
-                if (child.gameObject != resultItemPrefab)
-                    Destroy(child.gameObject);
-            }
-
-            foreach (var r in results)
-            {
-                var go = Instantiate(resultItemPrefab, resultGridContent);
-                go.SetActive(true);
-                var texts = go.GetComponentsInChildren<TextMeshProUGUI>();
-                
-                string nameShow = "Miss";
-                if (r.RewardType == GachaRewardType.Unit) nameShow = r.UnitData != null ? $"[Herói]\n{r.UnitData.displayName}" : $"[Herói]\n???";
-                if (r.RewardType == GachaRewardType.Pet) nameShow = r.PetSpeciesData != null ? $"[Pet]\n{r.PetSpeciesData.SpeciesName}" : $"[Pet]\n???";
-                if (r.RewardType == GachaRewardType.Artifact && r.ArtifactSet != null) nameShow = $"[Artefato]\n{r.ArtifactSet.setName}";
-
-                string rarityHex = "#FFFFFF";
-                if (r.Rarity == GachaRarity.Uncommon) rarityHex = "#00FF00";
-                if (r.Rarity == GachaRarity.Rare) rarityHex = "#0088FF";
-                if (r.Rarity == GachaRarity.Epic) rarityHex = "#8800FF";
-                if (r.Rarity == GachaRarity.Legendary) rarityHex = "#FFAA00";
-                if (r.Rarity == GachaRarity.Supreme) rarityHex = "#FF0000";
-
-                if (texts.Length > 0) texts[0].text = $"<color={rarityHex}>{nameShow}</color>";
-                if (texts.Length > 1) texts[1].text = r.Rarity.ToString();
-            }
-
-            resultModal.SetActive(true);
-            resultModal.transform.SetAsLastSibling();
+            RefreshUI();
         }
 
         private void ConvertStardustToStarMap()
@@ -183,12 +158,6 @@ namespace CelestialCross.Gacha.UI
             {
                 Debug.LogWarning("Sem Stardust suficiente (Requer 100)");
             }
-        }
-
-        private void CloseResultModal()
-        {
-            if (resultModal != null) resultModal.SetActive(false);
-            RefreshUI();
         }
 
         private void ShowBannerDetails()

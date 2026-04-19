@@ -23,7 +23,7 @@ Criar um novo script `GachaAnimationController.cs` (anexado ao `ShopSceneUI` ou 
      - Instancia 6 estrelas espalhadas.
    - *Como fazer o efeito de colagem*: A estrela nasce com `Scale = 2`, `Alpha = 0` e uma rotação Z aleatória (ex: -15 a 15 graus). Em 0.15s, ela vai para `Scale = 1`, `Alpha = 1` com easing de "OutBack" (para dar aquele soquinho elástico).
 
-## Fase 3: Pulsar e Revelar a Maior Raridade
+## Fase 3: Pulsar e Revelar a Maior   Raridade
 Ainda dentro da mesma Coroutine, depois que as estrelas estão coladas:
 1. **Pulso 1**: Todas as estrelas crescem para 1.2x e voltam para 1x (Delay rápido, som de sino leve).
 2. **Pulso 2**: Crescem para 1.2x e voltam para 1x (Delay rápido, som crescendo).
@@ -46,3 +46,5 @@ Após a revelação da cor:
    - Oculte o botão de Pull.
    - Chame: `animationController.PlayGachaSequence(results, OnAnimationFinished)`.
 2. O método `OnAnimationFinished` reabilita a UI (para que o jogador possa apertar o botão de fechar / continuar na janela final que mostrará o resumo das coisas que tirou, ou aproveitar o Canvas de selos colados como próprio popup de resultado).
+
+teste

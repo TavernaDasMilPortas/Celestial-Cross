@@ -82,6 +82,23 @@ public class GridTile : MonoBehaviour
         }
     }
 
+    public void AddSpriteLayer(Sprite sprite, int layerIndex)
+    {
+        if (visualSpriteRenderer == null || sprite == null) return;
+        
+        GameObject overlay = new GameObject($"SpriteLayer_{layerIndex}");
+        overlay.transform.SetParent(visualSpriteRenderer.transform.parent);
+        
+        // Match the base visual sprite transform exactly
+        overlay.transform.localPosition = visualSpriteRenderer.transform.localPosition + new Vector3(0, 0.001f * layerIndex, 0); // Reduced Y distance
+        overlay.transform.localRotation = visualSpriteRenderer.transform.localRotation;
+        overlay.transform.localScale = visualSpriteRenderer.transform.localScale;
+
+        SpriteRenderer sr = overlay.AddComponent<SpriteRenderer>();
+        sr.sprite = sprite;
+        sr.sortingOrder = layerIndex; // Ensure correct drawing order
+    }
+
     // ─────────────────────────────────────────────────────────────────────────
     // PUBLIC API — Visual State Flags
     // ─────────────────────────────────────────────────────────────────────────

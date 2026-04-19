@@ -143,40 +143,6 @@ namespace CelestialCross.Gacha.Editor
             contentExchange.SetActive(false);
 
             // ==========================================
-            // 6. GACHA RESULT MODAL
-            // ==========================================
-            GameObject resModal = new GameObject("GachaResultModal", typeof(RectTransform), typeof(Image));
-            resModal.transform.SetParent(rootUI.transform, false);
-            SetFullscreen(resModal);
-            resModal.GetComponent<Image>().color = new Color(0, 0, 0, 0.9f);
-            so.FindProperty("resultModal").objectReferenceValue = resModal;
-
-            CreateText(resModal.transform, "TitleTxt", 48, new Vector2(0, 0.85f), new Vector2(1, 0.95f), Color.yellow).GetComponent<TextMeshProUGUI>().text = "Sorte Grande!";
-
-            var btnCloseRes = CreateButton(resModal.transform, "Btn_CloseResult", new Vector2(0.4f, 0.05f), new Vector2(0.6f, 0.15f), "Continuar", new Color(0.3f, 0.3f, 0.3f));
-            so.FindProperty("resultCloseBtn").objectReferenceValue = btnCloseRes;
-
-            GameObject gridResult = new GameObject("ResultGridArea", typeof(RectTransform));
-            gridResult.transform.SetParent(resModal.transform, false);
-            SetAnchors(gridResult.GetComponent<RectTransform>(), 0.1f, 0.2f, 0.9f, 0.8f);
-            var glg = gridResult.AddComponent<GridLayoutGroup>();
-            glg.cellSize = new Vector2(150, 200); // Cards grandes verticais
-            glg.spacing = new Vector2(25, 25);
-            glg.startAxis = GridLayoutGroup.Axis.Horizontal;
-            glg.childAlignment = TextAnchor.MiddleCenter;
-            so.FindProperty("resultGridContent").objectReferenceValue = gridResult.transform;
-
-            GameObject resItemPrefab = new GameObject("GachaResultItem_Prefab", typeof(RectTransform), typeof(Image));
-            resItemPrefab.transform.SetParent(gridResult.transform, false);
-            resItemPrefab.GetComponent<Image>().color = new Color(0.15f, 0.15f, 0.2f, 1f); // Fundo da cartinha
-            CreateText(resItemPrefab.transform, "CardNameTxt", 20, new Vector2(0, 0.4f), new Vector2(1, 0.9f), Color.white);
-            CreateText(resItemPrefab.transform, "CardRarityTxt", 16, new Vector2(0, 0), new Vector2(1, 0.3f), Color.yellow);
-            so.FindProperty("resultItemPrefab").objectReferenceValue = resItemPrefab;
-            
-            resItemPrefab.SetActive(false);
-            resModal.SetActive(false);
-
-            // ==========================================
             // APPLY & SELECTION
             // ==========================================
             so.ApplyModifiedProperties();

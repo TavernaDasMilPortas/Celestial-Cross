@@ -33,11 +33,11 @@ MonoBehaviour:
   - Rarity: 0
     BaseChance: 80
   - Rarity: 3
-    BaseChance: 10
+    BaseChance: 14
   - Rarity: 4
     BaseChance: 5
   - Rarity: 5
-    BaseChance: 5
+    BaseChance: 1
   TotalPool:
   - RewardType: 1
     Rarity: 0

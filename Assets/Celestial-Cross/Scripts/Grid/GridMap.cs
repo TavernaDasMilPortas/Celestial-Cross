@@ -355,9 +355,21 @@ public class GridMap : MonoBehaviour
                 bool walkable = phaseMap.GetWalkable(x, y);
                 tile.ApplyWalkableOverride(walkable);
 
-                // ── Camada 3: sprite override (null = usa TileDefinition.defaultSprite) ──
-                Sprite spriteOverride = phaseMap.GetSpriteOverride(x, y);
-                tile.ApplySprite(spriteOverride != null ? spriteOverride : def.defaultSprite);
+                // ── Camada 3+: Múltiplos sprite overrides ──
+                Sprite baseSpriteOverride = phaseMap.spriteLayers.Count > 0 ? phaseMap.GetSpriteOverride(0, x, y) : null;
+                tile.ApplySprite(baseSpriteOverride != null ? baseSpriteOverride : def.defaultSprite);
+
+                // Sobreposições (Layers > 0)
+                for (int l = 1; l < phaseMap.spriteLayers.Count; l++)
+                {
+                    if (!phaseMap.spriteLayers[l].isVisible) continue;
+                    
+                    Sprite subSprite = phaseMap.GetSpriteOverride(l, x, y);
+                    if (subSprite != null)
+                    {
+                        tile.AddSpriteLayer(subSprite, l);
+                    }
+                }
 
                 tiles.Add(gridPos, tile);
             }

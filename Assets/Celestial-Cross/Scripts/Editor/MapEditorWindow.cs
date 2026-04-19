@@ -50,7 +50,7 @@ public class MapEditorWindow : OdinEditorWindow
 
     // ─── Layer Selection ──────────────────────────────────────────────────────
 
-    private enum EditLayer { TileType = 0, Walkable = 1, Sprite = 2 }
+    private enum EditLayer { TileType = 0, Walkable = 1, Sprite = 2, Preview = 3 }
 
     [BoxGroup("Layers", ShowLabel = false)]
     [HorizontalGroup("Layers/Row")]
@@ -64,6 +64,76 @@ public class MapEditorWindow : OdinEditorWindow
     [LabelText("Erase Mode"), LabelWidth(80), ToggleLeft]
     [ShowInInspector]
     private bool eraseMode = false;
+
+    // Sprite Layer Management
+    [BoxGroup("Layers")]
+    [ShowIf(nameof(IsLayerSprite))]
+    [HorizontalGroup("Layers/SpriteManage")]
+    [ValueDropdown(nameof(GetSpriteLayerDropdown))]
+    [LabelText("Target Layer")]
+    [ShowInInspector]
+    [OnValueChanged(nameof(OnLayerChanged))]
+    private int selectedSpriteLayerIndex = 0;
+
+    private IEnumerable<ValueDropdownItem<int>> GetSpriteLayerDropdown()
+    {
+        if (phaseMap == null || phaseMap.spriteLayers == null || phaseMap.spriteLayers.Count == 0) yield break;
+        for (int i = 0; i < phaseMap.spriteLayers.Count; i++)
+        {
+            var layer = phaseMap.spriteLayers[i];
+            string viz = layer.isVisible ? "👁" : "○";
+            yield return new ValueDropdownItem<int>($"[{i}] {layer.name} {viz}", i);
+        }
+    }
+
+    [BoxGroup("Layers")]
+    [ShowIf(nameof(IsLayerSprite))]
+    [HorizontalGroup("Layers/SpriteManage")]
+    [Button("+", ButtonSizes.Small)]
+    private void AddSpriteLayer()
+    {
+        if (phaseMap == null) return;
+        Undo.RecordObject(phaseMap, "Add Sprite Layer");
+        var newLayer = new PhaseMap.SpriteLayer() { name = "Layer " + phaseMap.spriteLayers.Count };
+        for (int y = 0; y < phaseMap.height; y++)
+        {
+            var row = new PhaseMap.SpriteRow();
+            for (int x = 0; x < phaseMap.width; x++) row.columns.Add(null);
+            newLayer.rows.Add(row);
+        }
+        phaseMap.spriteLayers.Add(newLayer);
+        selectedSpriteLayerIndex = phaseMap.spriteLayers.Count - 1;
+        EditorUtility.SetDirty(phaseMap);
+        Repaint();
+    }
+
+    [BoxGroup("Layers")]
+    [ShowIf(nameof(IsLayerSprite))]
+    [HorizontalGroup("Layers/SpriteManage")]
+    [Button("-", ButtonSizes.Small)]
+    private void RemoveSpriteLayer()
+    {
+        if (phaseMap == null || phaseMap.spriteLayers.Count <= 1) return;
+        if (!EditorUtility.DisplayDialog("Remover", "Excluir camada selecionada?", "Sim", "Não")) return;
+        Undo.RecordObject(phaseMap, "Remove Sprite Layer");
+        phaseMap.spriteLayers.RemoveAt(selectedSpriteLayerIndex);
+        if (selectedSpriteLayerIndex >= phaseMap.spriteLayers.Count) selectedSpriteLayerIndex = phaseMap.spriteLayers.Count - 1;
+        EditorUtility.SetDirty(phaseMap);
+        Repaint();
+    }
+
+    [BoxGroup("Layers")]
+    [ShowIf(nameof(IsLayerSprite))]
+    [HorizontalGroup("Layers/SpriteManage")]
+    [Button("👁", ButtonSizes.Small)]
+    private void ToggleSpriteLayerVisibility()
+    {
+        if (phaseMap == null || phaseMap.spriteLayers.Count == 0) return;
+        Undo.RecordObject(phaseMap, "Toggle Visibility");
+        phaseMap.spriteLayers[selectedSpriteLayerIndex].isVisible = !phaseMap.spriteLayers[selectedSpriteLayerIndex].isVisible;
+        EditorUtility.SetDirty(phaseMap);
+        Repaint();
+    }
 
     // ─── Palette (Layer 1 & 3) ────────────────────────────────────────────────
 
@@ -151,8 +221,11 @@ public class MapEditorWindow : OdinEditorWindow
     private void ClearAll()
     {
         if (phaseMap == null) return;
-        if (!EditorUtility.DisplayDialog("Limpar Mapa", "Isso apagará todos os dados das 3 camadas. Tem certeza?", "Sim, limpar", "Cancelar")) return;
+        if (!EditorUtility.DisplayDialog("Limpar Mapa", "Isso apagará todos os dados das camadas. Tem certeza?", "Sim, limpar", "Cancelar")) return;
         Undo.RecordObject(phaseMap, "Clear PhaseMap");
+        phaseMap.tiles.Clear();
+        phaseMap.walkableOverrides.Clear();
+        phaseMap.spriteLayers.Clear();
         phaseMap.Resize(phaseMap.width, phaseMap.height);
         EditorUtility.SetDirty(phaseMap);
         Repaint();
@@ -187,54 +260,57 @@ public class MapEditorWindow : OdinEditorWindow
         // 3. PAINTER AREA (Hybrid Manual Layout)
         // Reserve a single Rect for the entire painter area to avoid automatic GUILayout padding
         Rect bodyRect = GUILayoutUtility.GetRect(0, 0, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
-        if (bodyRect.height <= 0) return; // Wait for layout pass
-
-        // Sidebar Sub-Rect
-        Rect sidebarRect = new Rect(bodyRect.x, bodyRect.y, sidebarWidth, bodyRect.height);
-        
-        // Horizontal Handle Sub-Rect
-        Rect hHandleRect = new Rect(bodyRect.x + sidebarWidth, bodyRect.y, 4f, bodyRect.height);
-        
-        // Map Canvas Sub-Rect
-        float canvasX = hHandleRect.xMax;
-        Rect canvasViewportRect = new Rect(canvasX, bodyRect.y, bodyRect.width - (canvasX - bodyRect.x), bodyRect.height);
-
-        // A. Draw Sidebar
-        float legendH = 22f;
-        int thumbCols = Mathf.Max(1, Mathf.FloorToInt((sidebarWidth - 15f) / (ThumbSize + ThumbPad)));
-        bool showPalette = activeLayer == EditLayer.Sprite && spriteLibrary != null && spriteLibrary.Count > 0;
-        int paletteRows = showPalette ? Mathf.CeilToInt((float)spriteLibrary.Count / thumbCols) : 0;
-        float paletteH = showPalette ? (paletteRows * (ThumbSize + ThumbPad) + ThumbPad + 22f) : 0f;
-
-        sidebarScrollPos = GUI.BeginScrollView(sidebarRect, sidebarScrollPos, new Rect(0, 0, sidebarWidth - 15f, legendH + paletteH + 40f));
-        DrawLegend(new Rect(5, 5, sidebarWidth - 15f, legendH));
-        if (showPalette)
+        // Wait for layout pass (check against height > 0)
+        // Also note that early return inside OnGUI after layout breaks layout queues, avoid it by using an if instead.
+        if (bodyRect.height > 0)
         {
-            DrawSpritePalette(new Rect(5, 5 + legendH + 10, sidebarWidth - 15f, paletteH), thumbCols);
-        }
-        GUI.EndScrollView();
+            // Sidebar Sub-Rect
+            Rect sidebarRect = new Rect(bodyRect.x, bodyRect.y, sidebarWidth, bodyRect.height);
+            
+            // Horizontal Handle Sub-Rect
+            Rect hHandleRect = new Rect(bodyRect.x + sidebarWidth, bodyRect.y, 4f, bodyRect.height);
+            
+            // Map Canvas Sub-Rect
+            float canvasX = hHandleRect.xMax;
+            Rect canvasViewportRect = new Rect(canvasX, bodyRect.y, bodyRect.width - (canvasX - bodyRect.x), bodyRect.height);
 
-        // B. Draw Horizontal Handle
-        EditorGUI.DrawRect(hHandleRect, new Color(0.08f, 0.08f, 0.08f));
-        EditorGUIUtility.AddCursorRect(hHandleRect, MouseCursor.ResizeHorizontal);
-        if (e.type == EventType.MouseDown && hHandleRect.Contains(e.mousePosition)) isResizingSidebar = true;
-        if (isResizingSidebar && e.rawType == EventType.MouseUp) isResizingSidebar = false;
-        if (isResizingSidebar && e.type == EventType.MouseDrag)
-        {
-            sidebarWidth += e.delta.x;
-            sidebarWidth = Mathf.Clamp(sidebarWidth, 140f, position.width - 200f);
-            Repaint();
-        }
+            // A. Draw Sidebar
+            float legendH = 22f;
+            int thumbCols = Mathf.Max(1, Mathf.FloorToInt((sidebarWidth - 15f) / (ThumbSize + ThumbPad)));
+            bool showPalette = activeLayer == EditLayer.Sprite && spriteLibrary != null && spriteLibrary.Count > 0;
+            int paletteRows = showPalette ? Mathf.CeilToInt((float)spriteLibrary.Count / thumbCols) : 0;
+            float paletteH = showPalette ? (paletteRows * (ThumbSize + ThumbPad) + ThumbPad + 22f) : 0f;
 
-        // C. Draw Map Canvas
-        float gridW = phaseMap.width * (CellSize + CellPadding);
-        float gridH = phaseMap.height * (CellSize + CellPadding);
-        Rect gridContentRect = new Rect(0, 0, gridW, gridH);
-        
-        // Using false, false for scrollbars lets them appear only when needed
-        gridScrollPos = GUI.BeginScrollView(canvasViewportRect, gridScrollPos, gridContentRect, false, false);
-        DrawGrid(gridContentRect); // Drawn at (0,0) relative to scroll content
-        GUI.EndScrollView();
+            sidebarScrollPos = GUI.BeginScrollView(sidebarRect, sidebarScrollPos, new Rect(0, 0, sidebarWidth - 15f, legendH + paletteH + 40f));
+            DrawLegend(new Rect(5, 5, sidebarWidth - 15f, legendH));
+            if (showPalette)
+            {
+                DrawSpritePalette(new Rect(5, 5 + legendH + 10, sidebarWidth - 15f, paletteH), thumbCols);
+            }
+            GUI.EndScrollView();
+
+            // B. Draw Horizontal Handle
+            EditorGUI.DrawRect(hHandleRect, new Color(0.08f, 0.08f, 0.08f));
+            EditorGUIUtility.AddCursorRect(hHandleRect, MouseCursor.ResizeHorizontal);
+            if (e.type == EventType.MouseDown && hHandleRect.Contains(e.mousePosition)) isResizingSidebar = true;
+            if (isResizingSidebar && e.rawType == EventType.MouseUp) isResizingSidebar = false;
+            if (isResizingSidebar && e.type == EventType.MouseDrag)
+            {
+                sidebarWidth += e.delta.x;
+                sidebarWidth = Mathf.Clamp(sidebarWidth, 140f, position.width - 200f);
+                Repaint();
+            }
+
+            // C. Draw Map Canvas
+            float gridW = phaseMap.width * (CellSize + CellPadding);
+            float gridH = phaseMap.height * (CellSize + CellPadding);
+            Rect gridContentRect = new Rect(0, 0, gridW, gridH);
+            
+            // Using false, false for scrollbars lets them appear only when needed
+            gridScrollPos = GUI.BeginScrollView(canvasViewportRect, gridScrollPos, gridContentRect, false, false);
+            DrawGrid(gridContentRect); // Drawn at (0,0) relative to scroll content
+            GUI.EndScrollView();
+        }
     }
 
     private void DrawSpritePalette(Rect area, int columns)
@@ -332,6 +408,7 @@ public class MapEditorWindow : OdinEditorWindow
             case EditLayer.TileType: DrawTileTypeContent(r, x, y); break;
             case EditLayer.Walkable: DrawWalkableContent(r, x, y); break;
             case EditLayer.Sprite: DrawSpriteContent(r, x, y); break;
+            case EditLayer.Preview: DrawPreviewContent(r, x, y); break;
         }
         var style = new GUIStyle(EditorStyles.miniLabel) { fontSize = 7, alignment = TextAnchor.LowerRight, normal = { textColor = new Color(1, 1, 1, 0.2f) } };
         GUI.Label(r, $"{x},{y}", style);
@@ -340,6 +417,7 @@ public class MapEditorWindow : OdinEditorWindow
     private Color GetCellColor(int x, int y)
     {
         if (activeLayer == EditLayer.Walkable) return phaseMap.GetWalkable(x, y) ? new Color(0.2f, 0.5f, 0.2f) : new Color(0.6f, 0.15f, 0.15f);
+        if (activeLayer == EditLayer.Preview) return new Color(0.1f, 0.1f, 0.1f);
         int id = phaseMap.GetTileId(x, y);
         if (id < 0) return new Color(0.2f, 0.2f, 0.2f);
         var def = tileLibrary?.FirstOrDefault(d => d != null && d.id == id);
@@ -362,8 +440,32 @@ public class MapEditorWindow : OdinEditorWindow
 
     private void DrawSpriteContent(Rect r, int x, int y)
     {
-        Sprite s = phaseMap.GetSpriteOverride(x, y);
-        if (s != null) GUI.DrawTextureWithTexCoords(new Rect(r.x + 2, r.y + 2, r.width - 4, r.height - 4), s.texture, GetSpriteUV(s));
+        // When editing a specific sprite layer, draw TileType as faded background, and then the single layer or all layers?
+        // Let's just render the specific selected layer. Or better, render all visible layers, but dim unselected ones.
+        // Actually, rendering TileType in the background helps visualize.
+        DrawPreviewContent(r, x, y); // Simply re-use preview logic so they can see all layers while painting sprites!
+    }
+
+    private void DrawPreviewContent(Rect r, int x, int y)
+    {
+        // 1. Draw Base Tile Default Sprite first
+        DrawTileTypeContent(r, x, y);
+
+        // 2. Draw all visible Sprite Layers
+        if (phaseMap.spriteLayers != null)
+        {
+            for (int l = 0; l < phaseMap.spriteLayers.Count; l++)
+            {
+                if (!phaseMap.spriteLayers[l].isVisible) continue;
+                Sprite s = phaseMap.GetSpriteOverride(l, x, y);
+                if (s != null)
+                {
+                    GUI.DrawTextureWithTexCoords(new Rect(r.x + 2, r.y + 2, r.width - 4, r.height - 4), s.texture, GetSpriteUV(s));
+                }
+            }
+        }
+        
+        // 3. Highlight selected layer if we are in Sprite editing mode (optional visual aid, but a rect border might be enough later)
     }
 
     private static Rect GetSpriteUV(Sprite s)
@@ -385,7 +487,13 @@ public class MapEditorWindow : OdinEditorWindow
         Undo.RecordObject(phaseMap, "Paint");
         if (activeLayer == EditLayer.TileType) phaseMap.tiles[y].columns[x] = erase ? -1 : (selectedTileDef?.id ?? -1);
         else if (activeLayer == EditLayer.Walkable) phaseMap.walkableOverrides[y].columns[x] = erase;
-        else if (activeLayer == EditLayer.Sprite) phaseMap.spriteOverrides[y].columns[x] = erase ? null : selectedSprite;
+        else if (activeLayer == EditLayer.Sprite) 
+        {
+            if (phaseMap.spriteLayers != null && selectedSpriteLayerIndex >= 0 && selectedSpriteLayerIndex < phaseMap.spriteLayers.Count)
+            {
+                phaseMap.spriteLayers[selectedSpriteLayerIndex].rows[y].columns[x] = erase ? null : selectedSprite;
+            }
+        }
         EditorUtility.SetDirty(phaseMap);
         Repaint();
     }

@@ -12,6 +12,7 @@ namespace Celestial_Cross.Scripts.Abilities
         public Sprite abilityIcon;
         [TextArea] public string abilityDescription;
         public int displayRange = 1;
+        public AbilityType abilityType = AbilityType.Active;
         [Tooltip("Is this a passive ability? Passive abilities are not shown in the action bar.")]
         public bool isPassive = false;
 
