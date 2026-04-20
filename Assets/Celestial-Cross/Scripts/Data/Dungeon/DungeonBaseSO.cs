@@ -40,6 +40,10 @@ namespace CelestialCross.Data.Dungeon
         [Header("Dungeon Info")]
         public string DungeonName;
         [TextArea] public string Description;
+        
+        [Header("Gating")]
+        [Tooltip("ID do Node da Hist\uFFFDria necess\uFFFDrio para desbloquear esta masmorra")]
+        public string RequiredNodeID;
 
         [Header("Drop System (GENERICO)")]
         [Tooltip("Estas tabelas de loot globais rodam sempre que voc� vence QUALQUER fase desta masmorra.")]

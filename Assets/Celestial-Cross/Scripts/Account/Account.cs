@@ -31,8 +31,13 @@ public class Account
     public List<CelestialCross.Data.Pets.RuntimePetData> OwnedRuntimePets = new List<CelestialCross.Data.Pets.RuntimePetData>();
     public List<ArtifactInstanceData> OwnedArtifacts = new List<ArtifactInstanceData>();
     public List<UnitLoadout> UnitLoadouts = new List<UnitLoadout>();
+    
     [Header("Sistema de Gacha (Pity)")]
     public List<CelestialCross.Gacha.GachaPityState> GachaPityStates = new List<CelestialCross.Gacha.GachaPityState>();
+    
+    [Header("Progresso Hist\uFFFDria")]
+    public List<string> CompletedNodeIDs = new List<string>();
+
     [Header("Itens Gerais e Consum�veis")]
     public List<ItemQuantity> OwnedItems = new List<ItemQuantity>();
 
@@ -49,6 +54,7 @@ public class Account
         OwnedArtifacts = new List<ArtifactInstanceData>();
         UnitLoadouts = new List<UnitLoadout>();
         GachaPityStates = new List<CelestialCross.Gacha.GachaPityState>();
+        CompletedNodeIDs = new List<string>();
         OwnedItems = new List<ItemQuantity>();
     }
 
@@ -61,6 +67,7 @@ public class Account
         OwnedArtifacts ??= new List<ArtifactInstanceData>();
         UnitLoadouts ??= new List<UnitLoadout>();
         GachaPityStates ??= new List<CelestialCross.Gacha.GachaPityState>();
+        CompletedNodeIDs ??= new List<string>();
         OwnedItems ??= new List<ItemQuantity>();
 
         // Migrar units legacy
