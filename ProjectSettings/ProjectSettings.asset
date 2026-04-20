@@ -936,11 +936,11 @@ PlayerSettings:
   captureStartupLogs: {}
   activeInputHandler: 2
   windowsGamepadBackendHint: 0
-  cloudProjectId: 70e165e0-5c0c-4a28-8931-d50fccee3718
+  cloudProjectId: b2683e4f-c3f2-4e27-b7ca-d99a89c0f230
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: "Bichinhos M\xE1gicos"
-  organizationId: rnchagas12
+  projectName: CelestialCross
+  organizationId: rurex1324
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}

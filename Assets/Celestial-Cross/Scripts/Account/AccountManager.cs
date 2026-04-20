@@ -1,11 +1,19 @@
 using UnityEngine;
+using System;
 using System.IO;
 using global::System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using CelestialCross.Storage;
+using CelestialCross.Authentication;
 
 public class AccountManager : MonoBehaviour
 {
     public static AccountManager Instance { get; private set; }
+    
+    [Header("Sync Settings")]
+    [SerializeField] private bool useCloudSave = false;
+    [SerializeField] private string accountKey = "player_account";
 
     [Header("Bootstrap / Debug")]
     [SerializeField] private AccountBootstrapConfig bootstrapConfig;
@@ -14,7 +22,8 @@ public class AccountManager : MonoBehaviour
 
     public Account PlayerAccount { get; private set; }
 
-    private string savePath;
+    private IStorageProvider _localProvider;
+    private IStorageProvider _cloudProvider;
 
     private void Awake()
     {
@@ -27,55 +36,131 @@ public class AccountManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
-        savePath = Path.Combine(Application.persistentDataPath, "account.json");
-        LoadAccount();
+        _localProvider = new LocalStorageProvider();
+        _cloudProvider = new CloudStorageProvider();
     }
 
-    public void LoadAccount()
+    private async void Start()
+    {
+        if (useCloudSave)
+        {
+            if (AuthManager.Instance == null)
+            {
+                Debug.LogError("[AccountManager] AuthManager not found in scene!");
+                return;
+            }
+
+            await AuthManager.Instance.InitializeAndSignInAsync();
+        }
+        await LoadAndSyncAccountAsync();
+    }
+
+    public async Task LoadAndSyncAccountAsync()
     {
         if (useDebugProfile && debugProfile != null)
         {
-            PlayerAccount = new Account
-            {
-                Money = debugProfile.Money,
-                Energy = debugProfile.Energy,
-                Stardust = debugProfile.Stardust,
-                StarMaps = debugProfile.StarMaps,
-                OwnedUnitIDs = debugProfile.OwnedUnits.Select(u => u.UnitID).ToList(),
-                OwnedPetIDs = debugProfile.OwnedPets.Select(p => p.id).ToList()
-            };
-            PlayerAccount.EnsureInitialized(); // Migrates Units as well
-
-            Debug.Log($"Conta de DEBUG carregada: {debugProfile.name}");
+            LoadDebugAccount();
             return;
         }
 
-        if (File.Exists(savePath))
+        string localJson = await _localProvider.LoadAsync(accountKey);
+        string cloudJson = null;
+
+        if (useCloudSave && AuthManager.Instance != null && AuthManager.Instance.IsSignedIn)
         {
-            string json = File.ReadAllText(savePath);
-            PlayerAccount = JsonUtility.FromJson<Account>(json);
-            PlayerAccount?.EnsureInitialized();
-            Debug.Log("Conta do jogador carregada.");
+            cloudJson = await _cloudProvider.LoadAsync(accountKey);
+        }
+// ...
+
+        if (string.IsNullOrEmpty(localJson) && string.IsNullOrEmpty(cloudJson))
+        {
+            CreateNewAccount();
+            return;
+        }
+
+        // Resolução de Conflitos Simplificada
+        if (!string.IsNullOrEmpty(localJson) && !string.IsNullOrEmpty(cloudJson))
+        {
+            Account localAcc = JsonUtility.FromJson<Account>(localJson);
+            Account cloudAcc = JsonUtility.FromJson<Account>(cloudJson);
+
+            // Comparar LastSaveTime
+            DateTime localTime = DateTime.Parse(localAcc.LastSaveTime ?? DateTime.MinValue.ToString());
+            DateTime cloudTime = DateTime.Parse(cloudAcc.LastSaveTime ?? DateTime.MinValue.ToString());
+
+            if (cloudTime > localTime)
+            {
+                Debug.Log("Cloud save é mais recente. Usando Cloud.");
+                PlayerAccount = cloudAcc;
+            }
+            else
+            {
+                Debug.Log("Local save é mais recente ou igual. Usando Local.");
+                PlayerAccount = localAcc;
+            }
+        }
+        else if (!string.IsNullOrEmpty(cloudJson))
+        {
+            PlayerAccount = JsonUtility.FromJson<Account>(cloudJson);
         }
         else
         {
-            PlayerAccount = new Account();
-            Debug.Log("Nenhum save encontrado. Criando nova conta.");
+            PlayerAccount = JsonUtility.FromJson<Account>(localJson);
+        }
 
-            if (bootstrapConfig != null)
-            {
-                ApplyBootstrap(bootstrapConfig);
-                SaveAccount();
-            }
+        PlayerAccount?.EnsureInitialized();
+        // Sincroniza local se viemos da nuvem ou vice-versa
+        await SaveAccountAsync();
+    }
+
+    private void LoadDebugAccount()
+    {
+        PlayerAccount = new Account
+        {
+            Money = debugProfile.Money,
+            Energy = debugProfile.Energy,
+            Stardust = debugProfile.Stardust,
+            StarMaps = debugProfile.StarMaps,
+            OwnedUnitIDs = debugProfile.OwnedUnits.Select(u => u.UnitID).ToList(),
+            OwnedPetIDs = debugProfile.OwnedPets.Select(p => p.id).ToList()
+        };
+        PlayerAccount.EnsureInitialized();
+        Debug.Log($"Conta de DEBUG carregada: {debugProfile.name}");
+    }
+
+    private void CreateNewAccount()
+    {
+        PlayerAccount = new Account();
+        PlayerAccount.LastSaveTime = DateTime.Now.ToString();
+        Debug.Log("Nenhum save encontrado. Criando nova conta.");
+
+        if (bootstrapConfig != null)
+        {
+            ApplyBootstrap(bootstrapConfig);
+            _ = SaveAccountAsync();
         }
     }
 
-    public void SaveAccount()
+    public async Task SaveAccountAsync()
     {
+        if (PlayerAccount == null) return;
+        
+        PlayerAccount.LastSaveTime = DateTime.Now.ToString();
         string json = JsonUtility.ToJson(PlayerAccount, true);
-        File.WriteAllText(savePath, json);
-        Debug.Log("Conta do jogador salva em: " + savePath);
+
+        // Salva local sempre (cache)
+        await _localProvider.SaveAsync(accountKey, json);
+
+        // Salva na nuvem se habilitado
+        if (useCloudSave && AuthManager.Instance != null && AuthManager.Instance.IsSignedIn)
+        {
+            await _cloudProvider.SaveAsync(accountKey, json);
+        }
+
+        Debug.Log("Conta do jogador salva (Sync concluído).");
     }
+
+    public void SaveAccount() => _ = SaveAccountAsync();
 
     public void ApplyRewards(CelestialCross.Data.Dungeon.RuntimeReward reward)
     {

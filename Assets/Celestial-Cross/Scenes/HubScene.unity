@@ -298,6 +298,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1e732caadb85a24eb7b65d018ced12f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AccountManager
+  useCloudSave: 0
+  accountKey: player_account
   bootstrapConfig: {fileID: 0}
   debugProfile: {fileID: 11400000, guid: 2630c83ded303e24ca23dc9d17848f02, type: 2}
   useDebugProfile: 1
@@ -313,7 +315,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f19670d8e55328f43bfff250eccd8beb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CelestialCross.System.PetReleaseManager
-  ReleaseConfig: {fileID: 0}
+  ReleaseConfig: {fileID: 11400000, guid: d9e844c83b22f9d44a50e334ba6611f2, type: 2}
 --- !u!1 &165764874
 GameObject:
   m_ObjectHideFlags: 0
@@ -1312,14 +1314,17 @@ MonoBehaviour:
     dungeonCatalog: {fileID: 0}
     levelCatalog: {fileID: 11400000, guid: 822e1c3ae5228324b9fd612e4b4746dd, type: 2}
     diaryCatalog: {fileID: 0}
+    chapterCatalog: {fileID: 0}
   - categoryName: Masmorras
     dungeonCatalog: {fileID: 11400000, guid: b92c39d2b4b01de49b951d3bc8e6d993, type: 2}
     levelCatalog: {fileID: 0}
     diaryCatalog: {fileID: 0}
+    chapterCatalog: {fileID: 0}
   - categoryName: Diario
     dungeonCatalog: {fileID: 0}
     levelCatalog: {fileID: 0}
     diaryCatalog: {fileID: 11400000, guid: 442ec4405bde05e4a857a68eb249352d, type: 2}
+    chapterCatalog: {fileID: 0}
   moneyText: {fileID: 2026229559}
   energyText: {fileID: 165764876}
   mainPanel: {fileID: 199407390}

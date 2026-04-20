@@ -109,13 +109,13 @@ namespace CelestialCross.Gacha.UI
             }
         }
 
-        private void DoPull(int times)
+        private async void DoPull(int times)
         {
             if (availableBanners == null || availableBanners.Count == 0) return;
             var banner = availableBanners[currentBannerIndex];
             
             var acc = AccountManager.Instance.PlayerAccount;
-            var results = GachaService.Instance.PerformPulls(acc, banner, times);
+            var results = await GachaService.Instance.PerformPullsAsync(acc, banner, times);
 
             if (results != null && results.Count > 0)
             {

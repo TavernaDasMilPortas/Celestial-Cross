@@ -18,7 +18,15 @@ MonoBehaviour:
   RequiredChapter: {fileID: 0}
   RequiredUnitID: 
   IsDiaryChapter: 0
-  Nodes: []
+  Nodes:
+  - rid: 5231956167127990343
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 5231956167127990343
+      type: {class: DialogueStoryNode, ns: CelestialCross.Progression, asm: Assembly-CSharp}
+      data:
+        NodeID: 
+        Title: 
+        IsAutoPlay: 0
+        DialogueGraph: {fileID: 0}

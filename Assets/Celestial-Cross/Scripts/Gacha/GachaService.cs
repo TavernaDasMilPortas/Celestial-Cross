@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using CelestialCross.Data;
 
@@ -8,12 +9,21 @@ namespace CelestialCross.Gacha
     {
         public static GachaService Instance { get; private set; }
 
+        private IGachaProvider _provider;
+
         public static void Initialize()
         {
             if (Instance == null)
             {
                 Instance = new GachaService();
+                // Por padrão inicia local, pode ser trocado pelo CloudGachaProvider no futuro
+                Instance._provider = new LocalGachaProvider();
             }
+        }
+
+        public void SetProvider(IGachaProvider provider)
+        {
+            _provider = provider;
         }
 
         public GachaPityState GetPityState(Account account, string bannerId)
@@ -36,7 +46,13 @@ namespace CelestialCross.Gacha
             return true;
         }
 
-        public List<GachaRewardEntry> PerformPulls(Account account, GachaBannerSO banner, int times)
+        public async Task<List<GachaRewardEntry>> PerformPullsAsync(Account account, GachaBannerSO banner, int times)
+        {
+            if (_provider == null) Initialize();
+            return await _provider.PullAsync(account, banner, times);
+        }
+
+        public List<GachaRewardEntry> ExecutePullsInternal(Account account, GachaBannerSO banner, int times)
         {
             List<GachaRewardEntry> results = new List<GachaRewardEntry>();
             int totalCost = banner.CostPerPull * times;

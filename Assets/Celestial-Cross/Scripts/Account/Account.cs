@@ -16,8 +16,32 @@ public class ItemQuantity
 }
 
 [System.Serializable]
+public class UserSettings
+{
+    public float MasterVolume = 1.0f;
+    public float MusicVolume = 1.0f;
+    public float SFXVolume = 1.0f;
+    public string Language = "pt-BR";
+    public int QualityLevel = 2; // Medium
+    public bool ShowFPS = false;
+}
+
+[System.Serializable]
+public class UserProfile
+{
+    public string PlayerName = "Viajante";
+    public string BirthDate = ""; // Formato: YYYY-MM-DD
+    public string ProfileIconID = "default";
+    public int Level = 1;
+    public int Experience = 0;
+}
+
+[System.Serializable]
 public class Account
 {
+    public UserSettings Settings = new UserSettings();
+    public UserProfile Profile = new UserProfile();
+
     public int Money;
     public int Energy;
     public int Stardust;
@@ -35,10 +59,13 @@ public class Account
     [Header("Sistema de Gacha (Pity)")]
     public List<CelestialCross.Gacha.GachaPityState> GachaPityStates = new List<CelestialCross.Gacha.GachaPityState>();
     
-    [Header("Progresso Hist\uFFFDria")]
+    [Header("Progresso História")]
     public List<string> CompletedNodeIDs = new List<string>();
 
-    [Header("Itens Gerais e Consum�veis")]
+    [Header("Meta")]
+    public string LastSaveTime;
+
+    [Header("Itens Gerais e Consumíveis")]
     public List<ItemQuantity> OwnedItems = new List<ItemQuantity>();
 
     public Account()
@@ -60,6 +87,8 @@ public class Account
 
     public void EnsureInitialized()
     {
+        Settings ??= new UserSettings();
+        Profile ??= new UserProfile();
         OwnedUnitIDs ??= new List<string>();
         OwnedUnits ??= new List<CelestialCross.Data.RuntimeUnitData>();
         OwnedPetIDs ??= new List<string>();
