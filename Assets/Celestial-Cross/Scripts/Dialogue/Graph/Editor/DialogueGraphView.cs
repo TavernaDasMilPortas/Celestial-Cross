@@ -45,31 +45,33 @@ namespace CelestialCross.Dialogue.Graph.Editor
 
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
         {
-            evt.menu.AppendAction("Create Node/Speech Node", action => CreateNode("Speech Node"));
-            evt.menu.AppendAction("Create Node/Choice Node", action => CreateChoiceNode());
-            evt.menu.AppendAction("Create Node/Condition Node", action => CreateConditionNode());
-            evt.menu.AppendAction("Create Node/Action Node", action => CreateActionNode());
-            evt.menu.AppendAction("Create Node/End Node", action => CreateEndNode());
+            Vector2 mousePosition = viewTransform.matrix.inverse.MultiplyPoint(evt.localMousePosition);
+
+            evt.menu.AppendAction("Create Node/Speech Node", action => CreateNode("Speech Node", mousePosition));
+            evt.menu.AppendAction("Create Node/Choice Node", action => CreateChoiceNode(mousePosition));
+            evt.menu.AppendAction("Create Node/Condition Node", action => CreateConditionNode(mousePosition));
+            evt.menu.AppendAction("Create Node/Action Node", action => CreateActionNode(mousePosition));
+            evt.menu.AppendAction("Create Node/End Node", action => CreateEndNode(mousePosition));
         }
 
-        public void CreateChoiceNode()
+        public void CreateChoiceNode(Vector2 position = default)
         {
-            AddElement(CreateDialogueNode("Player Choices", NodeType.Choice));
+            AddElement(CreateDialogueNode("Player Choices", NodeType.Choice, position));
         }
 
-        public void CreateConditionNode()
+        public void CreateConditionNode(Vector2 position = default)
         {
-            AddElement(CreateDialogueNode("Condition Check", NodeType.Condition));
+            AddElement(CreateDialogueNode("Condition Check", NodeType.Condition, position));
         }
 
-        public void CreateActionNode()
+        public void CreateActionNode(Vector2 position = default)
         {
-            AddElement(CreateDialogueNode("Set Variable", NodeType.Action));
+            AddElement(CreateDialogueNode("Set Variable", NodeType.Action, position));
         }
 
-        public void CreateEndNode()
+        public void CreateEndNode(Vector2 position = default)
         {
-            AddElement(CreateDialogueNode("End Dialogue", NodeType.End));
+            AddElement(CreateDialogueNode("End Dialogue", NodeType.End, position));
         }
         public void ClearBlackboard()
         {
@@ -165,12 +167,12 @@ namespace CelestialCross.Dialogue.Graph.Editor
             return node.InstantiatePort(Orientation.Horizontal, portDirection, capacity, typeof(float)); // Arbitrary type
         }
 
-        public void CreateNode(string nodeName)
+        public void CreateNode(string nodeName, Vector2 position = default)
         {
-            AddElement(CreateDialogueNode(nodeName));
+            AddElement(CreateDialogueNode(nodeName, NodeType.Speech, position));
         }
 
-        public DialogueNode CreateDialogueNode(string nodeName, NodeType type = NodeType.Speech)
+        public DialogueNode CreateDialogueNode(string nodeName, NodeType type = NodeType.Speech, Vector2 position = default)
         {
             var dialogueNode = new DialogueNode
             {
@@ -206,7 +208,7 @@ namespace CelestialCross.Dialogue.Graph.Editor
 
             dialogueNode.RefreshExpandedState();
             dialogueNode.RefreshPorts();
-            dialogueNode.SetPosition(new Rect(Vector2.zero, DefaultNodeSize));
+            dialogueNode.SetPosition(new Rect(position, DefaultNodeSize));
 
             return dialogueNode;
         }
@@ -239,18 +241,27 @@ namespace CelestialCross.Dialogue.Graph.Editor
             spriteField.SetValueWithoutNotify(dialogueNode.characterSprite);
             dialogueNode.mainContainer.Add(spriteField);
 
-            // Button to add choice
-            var button = new Button(() => { AddChoicePort(dialogueNode); });
-            button.text = "New Choice";
-            dialogueNode.titleContainer.Add(button);
+            // Removemos o botão de escolhas múltiplas daqui, pois usaremos o Choice Node
+            var generatedPort = GeneratePort(dialogueNode, UnityEditor.Experimental.GraphView.Direction.Output);
+            generatedPort.portName = "Next";
+            dialogueNode.outputContainer.Add(generatedPort);
         }
 
         private void BuildConditionNode(DialogueNode dialogueNode)
         {
             dialogueNode.title = "Condition Check";
 
-            var varField = new TextField("Variable:");
+            var choices = ExposedProperties.Select(x => x.propertyName).ToList();
+            if (choices.Count == 0) choices.Add("No Variables");
+
+            var varField = new DropdownField("Variable:", choices, 0);
             varField.RegisterValueChangedCallback(evt => dialogueNode.variableName = evt.newValue);
+            varField.schedule.Execute(() => 
+            {
+                var currentVars = ExposedProperties.Select(x => x.propertyName).ToList();
+                if (currentVars.Count == 0) currentVars.Add("No Variables");
+                varField.choices = currentVars;
+            }).Every(1000); // Atualiza os choices de tempo em tempo caso mude no blackboard
             dialogueNode.mainContainer.Add(varField);
 
             var typeField = new EnumField("Type:", ConditionType.Equals);
@@ -268,6 +279,12 @@ namespace CelestialCross.Dialogue.Graph.Editor
         private void BuildChoiceNode(DialogueNode dialogueNode)
         {
             dialogueNode.title = "Player Choices";
+
+            // Botão para múltiplas portas de ENTRADA (conforme solicitado para facilitar visualização de loops)
+            var addInputBtn = new Button(() => { AddChoicePort(dialogueNode, "Input Route", UnityEditor.Experimental.GraphView.Direction.Input); });
+            addInputBtn.text = "+ Entrada";
+            dialogueNode.titleContainer.Add(addInputBtn);
+
             var button = new Button(() => { AddChoicePort(dialogueNode); });
             button.text = "Add Option";
             dialogueNode.titleContainer.Add(button);
@@ -277,8 +294,18 @@ namespace CelestialCross.Dialogue.Graph.Editor
         {
             dialogueNode.title = "Set Variable";
 
-            var varField = new TextField("Variable:");
+            var choices = ExposedProperties.Select(x => x.propertyName).ToList();
+            if (choices.Count == 0) choices.Add("No Variables");
+
+            var varField = new DropdownField("Variable:", choices, 0);
             varField.RegisterValueChangedCallback(evt => dialogueNode.variableName = evt.newValue);
+            varField.schedule.Execute(() => 
+            {
+                var currentVars = ExposedProperties.Select(x => x.propertyName).ToList();
+                if (currentVars.Count == 0) currentVars.Add("No Variables");
+                varField.choices = currentVars;
+            }).Every(1000); // Atualiza dinamicamente as variáveis disponíveis
+
             dialogueNode.mainContainer.Add(varField);
 
             var typeField = new EnumField("Operation:", ActionType.Set);
@@ -300,15 +327,19 @@ namespace CelestialCross.Dialogue.Graph.Editor
             // No outputs
         }
 
-        public void AddChoicePort(DialogueNode dialogueNode, string overriddenPortName = "")
+        public void AddChoicePort(DialogueNode dialogueNode, string overriddenPortName = "", UnityEditor.Experimental.GraphView.Direction direction = UnityEditor.Experimental.GraphView.Direction.Output)
         {
-            var generatedPort = GeneratePort(dialogueNode, UnityEditor.Experimental.GraphView.Direction.Output);
+            var generatedPort = GeneratePort(dialogueNode, direction, Port.Capacity.Multi);
 
             var oldLabel = generatedPort.contentContainer.Q<Label>("type");
             generatedPort.contentContainer.Remove(oldLabel);
 
-            var outputPortCount = dialogueNode.outputContainer.Query("connector").ToList().Count;
-            var choicePortName = string.IsNullOrEmpty(overriddenPortName) ? $"Choice {outputPortCount + 1}" : overriddenPortName;
+            var portCount = (direction == UnityEditor.Experimental.GraphView.Direction.Output) 
+                ? dialogueNode.outputContainer.Query("connector").ToList().Count 
+                : dialogueNode.inputContainer.Query("connector").ToList().Count - 1; // -1 to ignore default Input
+
+            var defaultName = (direction == UnityEditor.Experimental.GraphView.Direction.Output) ? $"Choice {portCount + 1}" : $"Route {portCount + 1}";
+            var choicePortName = string.IsNullOrEmpty(overriddenPortName) ? defaultName : overriddenPortName;
 
             var textField = new TextField
             {
@@ -318,30 +349,42 @@ namespace CelestialCross.Dialogue.Graph.Editor
             textField.RegisterValueChangedCallback(evt => generatedPort.portName = evt.newValue);
             generatedPort.contentContainer.Add(new Label("  "));
             generatedPort.contentContainer.Add(textField);
-            var deleteButton = new Button(() => RemovePort(dialogueNode, generatedPort))
+            var deleteButton = new Button(() => RemovePort(dialogueNode, generatedPort, direction))
             {
                 text = "X"
             };
             generatedPort.contentContainer.Add(deleteButton);
 
             generatedPort.portName = choicePortName;
-            dialogueNode.outputContainer.Add(generatedPort);
+
+            if (direction == UnityEditor.Experimental.GraphView.Direction.Output)
+                dialogueNode.outputContainer.Add(generatedPort);
+            else
+                dialogueNode.inputContainer.Add(generatedPort);
+
             dialogueNode.RefreshPorts();
             dialogueNode.RefreshExpandedState();
         }
 
-        private void RemovePort(DialogueNode dialogueNode, Port generatedPort)
+        private void RemovePort(DialogueNode dialogueNode, Port generatedPort, UnityEditor.Experimental.GraphView.Direction direction = UnityEditor.Experimental.GraphView.Direction.Output)
         {
-            var targetEdge = edges.ToList().Where(x => x.output == generatedPort);
+            var targetEdge = edges.ToList().Where(x => (direction == UnityEditor.Experimental.GraphView.Direction.Output) ? x.output == generatedPort : x.input == generatedPort);
 
             if (targetEdge.Any())
             {
                 var edge = targetEdge.First();
-                edge.input.Disconnect(edge);
-                RemoveElement(targetEdge.First());
+                if (direction == UnityEditor.Experimental.GraphView.Direction.Output)
+                    edge.input.Disconnect(edge);
+                else
+                    edge.output.Disconnect(edge);
+                RemoveElement(edge);
             }
 
-            dialogueNode.outputContainer.Remove(generatedPort);
+            if (direction == UnityEditor.Experimental.GraphView.Direction.Output)
+                dialogueNode.outputContainer.Remove(generatedPort);
+            else
+                dialogueNode.inputContainer.Remove(generatedPort);
+
             dialogueNode.RefreshPorts();
             dialogueNode.RefreshExpandedState();
         }
