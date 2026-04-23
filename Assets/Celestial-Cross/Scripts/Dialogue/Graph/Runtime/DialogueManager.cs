@@ -187,27 +187,123 @@ namespace CelestialCross.Dialogue.Manager
 
         private void CheckCondition()
         {
-            // Lógica de Blackboard simplificada
-            bool result = false;
             var prop = dialogueGraph.exposedProperties.FirstOrDefault(x => x.propertyName == _currentNode.variableName);
             
-            if (prop != null)
+            if (prop == null)
             {
-                // Implementar comparação real baseada no tipo (Int, Bool, String)
-                // Por agora, um placeholder True
-                result = true; 
+                Debug.LogWarning($"[DialogueManager] Variável '{_currentNode.variableName}' não encontrada no Blackboard.");
+                EndDialogue();
+                return;
             }
 
-            string targetPort = result ? "True" : "False";
-            var link = dialogueGraph.nodeLinks.FirstOrDefault(x => x.baseNodeGuid == _currentNode.guid && x.portName == targetPort);
-            
-            if (link != null) NavigateToNode(link.targetNodeGuid);
+            var links = dialogueGraph.nodeLinks.Where(x => x.baseNodeGuid == _currentNode.guid).ToList();
+            NodeLinkData matchingLink = null;
+            NodeLinkData defaultLink = null;
+
+            foreach (var link in links)
+            {
+                if (link.portName == "Default")
+                {
+                    defaultLink = link;
+                    continue;
+                }
+
+                switch (prop.type)
+                {
+                    case PropertyType.Bool:
+                        bool propBool = prop.propertyValue == "True" || prop.propertyValue == "true";
+                        if ((link.portName == "True" && propBool) || (link.portName == "False" && !propBool))
+                        {
+                            matchingLink = link;
+                        }
+                        break;
+
+                    case PropertyType.Int:
+                        int.TryParse(prop.propertyValue, out int propInt);
+                        // Parsear portName no formato "operador valor" (ex: "== 5", "< 10")
+                        var spaceIdx = link.portName.IndexOf(' ');
+                        if (spaceIdx > 0)
+                        {
+                            string op = link.portName.Substring(0, spaceIdx);
+                            int.TryParse(link.portName.Substring(spaceIdx + 1), out int targetInt);
+                            bool matches = false;
+                            switch (op)
+                            {
+                                case "==": matches = propInt == targetInt; break;
+                                case "!=": matches = propInt != targetInt; break;
+                                case "<":  matches = propInt < targetInt;  break;
+                                case ">":  matches = propInt > targetInt;  break;
+                                case "<=": matches = propInt <= targetInt; break;
+                                case ">=": matches = propInt >= targetInt; break;
+                            }
+                            if (matches) matchingLink = link;
+                        }
+                        break;
+
+                    default: // String — portName é o texto para comparar
+                        if (string.Equals(prop.propertyValue, link.portName, global::System.StringComparison.OrdinalIgnoreCase))
+                        {
+                            matchingLink = link;
+                        }
+                        break;
+                }
+
+                if (matchingLink != null) break;
+            }
+
+            var finalLink = matchingLink ?? defaultLink;
+
+            Debug.Log($"[DialogueManager] Condition: {prop.propertyName} ({prop.type}) = '{prop.propertyValue}' → Porta: '{finalLink?.portName ?? "NENHUMA"}'");
+
+            if (finalLink != null) NavigateToNode(finalLink.targetNodeGuid);
             else EndDialogue();
         }
 
         private void ExecuteAction()
         {
-            // Lógica de alterar variável do Blackboard
+            var prop = dialogueGraph.exposedProperties.FirstOrDefault(x => x.propertyName == _currentNode.variableName);
+            
+            if (prop != null)
+            {
+                string newValue = _currentNode.compareValue ?? "";
+
+                switch (_currentNode.actionType)
+                {
+                    case ActionType.Set:
+                        prop.propertyValue = newValue;
+                        break;
+
+                    case ActionType.Add:
+                        if (prop.type == PropertyType.Int)
+                        {
+                            int.TryParse(prop.propertyValue, out int current);
+                            int.TryParse(newValue, out int addAmount);
+                            prop.propertyValue = (current + addAmount).ToString();
+                        }
+                        else
+                        {
+                            prop.propertyValue += newValue; // Concatenar para strings
+                        }
+                        break;
+
+                    case ActionType.Subtract:
+                        if (prop.type == PropertyType.Int)
+                        {
+                            int.TryParse(prop.propertyValue, out int currentSub);
+                            int.TryParse(newValue, out int subAmount);
+                            prop.propertyValue = (currentSub - subAmount).ToString();
+                        }
+                        break;
+                }
+
+                Debug.Log($"[DialogueManager] Action: {prop.propertyName} = '{prop.propertyValue}' (via {_currentNode.actionType})");
+            }
+            else
+            {
+                Debug.LogWarning($"[DialogueManager] Variável '{_currentNode.variableName}' não encontrada no Blackboard.");
+            }
+
+            // Navegar para o próximo nó
             var link = dialogueGraph.nodeLinks.FirstOrDefault(x => x.baseNodeGuid == _currentNode.guid);
             if (link != null) NavigateToNode(link.targetNodeGuid);
             else EndDialogue();

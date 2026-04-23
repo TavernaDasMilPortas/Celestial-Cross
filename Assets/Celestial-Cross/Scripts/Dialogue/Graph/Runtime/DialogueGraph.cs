@@ -41,6 +41,9 @@ namespace CelestialCross.Dialogue.Graph
         public string conditionVariable;
         public string conditionValue;
         public ConditionType conditionType;
+        
+        // Portas de saída do Condition Node (salvas pelo nome para preservar operadores/valores)
+        public List<string> conditionPorts = new List<string>();
 
         // Dados de Ação (Set Variable)
         public string actionVariable;

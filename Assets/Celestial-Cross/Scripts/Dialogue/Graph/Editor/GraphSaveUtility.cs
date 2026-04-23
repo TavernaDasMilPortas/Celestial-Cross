@@ -35,7 +35,13 @@ namespace CelestialCross.Dialogue.Graph.Editor
 
             if (!SaveNodes(targetGraph)) return;
 
-            targetGraph.exposedProperties = _targetGraphView.ExposedProperties;
+            targetGraph.exposedProperties = _targetGraphView.ExposedProperties
+                .Select(p => new ExposedProperty 
+                { 
+                    propertyName = p.propertyName, 
+                    propertyValue = p.propertyValue, 
+                    type = p.type 
+                }).ToList();
 
             EditorUtility.SetDirty(targetGraph);
             AssetDatabase.SaveAssets();
@@ -43,8 +49,7 @@ namespace CelestialCross.Dialogue.Graph.Editor
 
         private bool SaveNodes(DialogueGraph dialogueGraph)
         {
-            if (!Edges.Any()) return true;
-
+            // Salvar links (conexões entre nós)
             var connectedSockets = Edges.Where(x => x.input.node != null).ToArray();
             for (var i = 0; i < connectedSockets.Count(); i++)
             {
@@ -59,9 +64,10 @@ namespace CelestialCross.Dialogue.Graph.Editor
                 });
             }
 
+            // Salvar dados de todos os nós (independentemente de edges)
             foreach (var dialogueNode in Nodes.Where(node => !node.entryPoint))
             {
-                dialogueGraph.nodeData.Add(new DialogueNodeData
+                var nodeDataEntry = new DialogueNodeData
                 {
                     guid = dialogueNode.guid,
                     nodeType = dialogueNode.nodeType,
@@ -72,8 +78,23 @@ namespace CelestialCross.Dialogue.Graph.Editor
                     compareValue = dialogueNode.compareValue,
                     conditionType = dialogueNode.conditionType,
                     actionType = dialogueNode.actionType,
+                    // Compatibilidade com campos legados
+                    conditionVariable = dialogueNode.variableName,
+                    conditionValue = dialogueNode.compareValue,
+                    actionVariable = dialogueNode.variableName,
+                    actionValue = dialogueNode.compareValue,
                     position = dialogueNode.GetPosition().position
-                });
+                };
+
+                // Salvar nomes das portas de condição (incluindo desconectadas)
+                if (dialogueNode.nodeType == NodeType.Condition)
+                {
+                    nodeDataEntry.conditionPorts = dialogueNode.outputContainer
+                        .Query<Port>().ToList()
+                        .Select(p => p.portName).ToList();
+                }
+
+                dialogueGraph.nodeData.Add(nodeDataEntry);
             }
 
             return true;
@@ -89,9 +110,9 @@ namespace CelestialCross.Dialogue.Graph.Editor
             }
 
             ClearGraph();
+            LoadExposedProperties();
             CreateNodes();
             ConnectNodes();
-            LoadExposedProperties();
         }
 
         private void LoadExposedProperties()
@@ -140,22 +161,63 @@ namespace CelestialCross.Dialogue.Graph.Editor
                     tempNode.mainContainer.Q<TextField>("dialogue-field")?.SetValueWithoutNotify(nodeData.dialogueText);
                     tempNode.mainContainer.Q<ObjectField>()?.SetValueWithoutNotify(nodeData.characterSprite);
                 }
-                else if (nodeData.nodeType == NodeType.Condition || nodeData.nodeType == NodeType.Action)
+                else if (nodeData.nodeType == NodeType.Condition)
                 {
-                    tempNode.mainContainer.Q<TextField>("Variable:")?.SetValueWithoutNotify(nodeData.variableName);
-                    tempNode.mainContainer.Q<TextField>("Value:")?.SetValueWithoutNotify(nodeData.compareValue);
-                    tempNode.mainContainer.Q<TextField>("Target Value:")?.SetValueWithoutNotify(nodeData.compareValue);
+                    // Restaurar seleção do dropdown de variável
+                    var dropdown = tempNode.mainContainer.Q<DropdownField>();
+                    if (dropdown != null && !string.IsNullOrEmpty(nodeData.variableName))
+                    {
+                        dropdown.SetValueWithoutNotify(nodeData.variableName);
+                    }
+                }
+                else if (nodeData.nodeType == NodeType.Action)
+                {
+                    // Restaurar seleção do dropdown de variável
+                    var dropdown = tempNode.mainContainer.Q<DropdownField>();
+                    if (dropdown != null && !string.IsNullOrEmpty(nodeData.variableName))
+                    {
+                        dropdown.SetValueWithoutNotify(nodeData.variableName);
+                    }
+
+                    // Restaurar o EnumField de operação
+                    var enumField = tempNode.mainContainer.Q<EnumField>();
+                    if (enumField != null)
+                    {
+                        enumField.SetValueWithoutNotify(nodeData.actionType);
+                    }
+
+                    // Reconstruir o campo de valor dinâmico
+                    var valueContainer = tempNode.mainContainer.Q<VisualElement>("action-value-container");
+                    if (valueContainer != null)
+                    {
+                        _targetGraphView.RebuildNodeValueFieldPublic(valueContainer, tempNode, true);
+                    }
                 }
 
                 _targetGraphView.AddElement(tempNode);
 
                 var nodePorts = _containerCache.nodeLinks.Where(x => x.baseNodeGuid == nodeData.guid).ToList();
                 
-                // Para Choice nodes, precisamos recriar as portas dinamicamente
+                // Restaurar portas dinâmicas baseado no tipo de nó
                 if (nodeData.nodeType == NodeType.Choice || nodeData.nodeType == NodeType.Speech)
                 {
-                    // Limpar portas padrão se necessário e adicionar as salvas
                     nodePorts.ForEach(x => _targetGraphView.AddChoicePort(tempNode, x.portName));
+                }
+                else if (nodeData.nodeType == NodeType.Condition)
+                {
+                    // Usar conditionPorts salvas (inclui portas desconectadas)
+                    var savedPorts = nodeData.conditionPorts != null && nodeData.conditionPorts.Count > 0
+                        ? nodeData.conditionPorts
+                        : nodePorts.Select(x => x.portName).ToList();
+                    
+                    if (savedPorts.Count > 0)
+                    {
+                        _targetGraphView.RestoreConditionPorts(tempNode, savedPorts);
+                    }
+                    else
+                    {
+                        _targetGraphView.RebuildConditionPorts(tempNode);
+                    }
                 }
 
                 tempNode.SetPosition(new Rect(nodeData.position, _targetGraphView.DefaultNodeSize));
