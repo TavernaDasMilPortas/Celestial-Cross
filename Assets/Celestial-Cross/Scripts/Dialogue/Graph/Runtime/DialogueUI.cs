@@ -57,6 +57,17 @@ namespace CelestialCross.Dialogue.Manager
 
         public void ShowChoices(List<string> choices, Action<int> onChoiceSelected)
         {
+            if (choiceButtonPrefab == null)
+            {
+                Debug.LogError("[DialogueUI] choiceButtonPrefab is not assigned in the Inspector!", this);
+                return;
+            }
+            if (choicesContainer == null)
+            {
+                Debug.LogError("[DialogueUI] choicesContainer is not assigned in the Inspector!", this);
+                return;
+            }
+
             mainDialoguePanel.SetActive(true); // Opcional: manter fundo da fala visível
             choicesPanel.SetActive(true);
             

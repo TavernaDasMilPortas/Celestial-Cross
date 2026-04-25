@@ -61,7 +61,9 @@ namespace CelestialCross.Dialogue.Graph.Editor
 
         public void CreateConditionNode(Vector2 position = default)
         {
-            AddElement(CreateDialogueNode("Condition Check", NodeType.Condition, position));
+            var node = CreateDialogueNode("Condition Check", NodeType.Condition, position);
+            RebuildConditionPorts(node);
+            AddElement(node);
         }
 
         public void CreateActionNode(Vector2 position = default)
@@ -100,29 +102,72 @@ namespace CelestialCross.Dialogue.Graph.Editor
             var field = new BlackboardField { text = property.propertyName, typeText = property.type.ToString() };
             container.Add(field);
 
-            var propertyValueField = new TextField("Value:")
-            {
-                value = localPropertyValue
-            };
-            propertyValueField.RegisterValueChangedCallback(evt =>
-            {
-                var index = ExposedProperties.FindIndex(x => x.propertyName == property.propertyName);
-                ExposedProperties[index].propertyValue = evt.newValue;
-            });
+            // Container para o campo de valor dinâmico
+            var valueContainer = new VisualElement();
+            valueContainer.name = "value-container";
 
             // Seletor de Tipo
             var typeField = new EnumField("Type:", property.type);
             typeField.RegisterValueChangedCallback(evt =>
             {
                 var index = ExposedProperties.FindIndex(x => x.propertyName == property.propertyName);
-                ExposedProperties[index].type = (PropertyType)evt.newValue;
-                field.typeText = evt.newValue.ToString();
+                if (index >= 0)
+                {
+                    ExposedProperties[index].type = (PropertyType)evt.newValue;
+                    field.typeText = evt.newValue.ToString();
+                    // Recriar o campo de valor baseado no novo tipo
+                    RebuildBlackboardValueField(valueContainer, property);
+                }
             });
 
             var sa = new BlackboardRow(field, new VisualElement());
             sa.Add(typeField);
-            sa.Add(propertyValueField);
+            sa.Add(valueContainer);
             Blackboard.Add(sa);
+
+            // Criar o campo de valor inicial
+            RebuildBlackboardValueField(valueContainer, property);
+        }
+
+        /// <summary>
+        /// Reconstrói o campo de valor no Blackboard baseado no PropertyType.
+        /// </summary>
+        private void RebuildBlackboardValueField(VisualElement container, ExposedProperty property)
+        {
+            container.Clear();
+
+            switch (property.type)
+            {
+                case PropertyType.Bool:
+                    bool boolVal = property.propertyValue == "True" || property.propertyValue == "true";
+                    var toggle = new Toggle("Value:") { value = boolVal };
+                    toggle.RegisterValueChangedCallback(evt =>
+                    {
+                        property.propertyValue = evt.newValue.ToString();
+                    });
+                    container.Add(toggle);
+                    break;
+
+                case PropertyType.Int:
+                    int intVal = 0;
+                    int.TryParse(property.propertyValue, out intVal);
+                    var intField = new IntegerField("Value:") { value = intVal };
+                    intField.RegisterValueChangedCallback(evt =>
+                    {
+                        property.propertyValue = evt.newValue.ToString();
+                    });
+                    container.Add(intField);
+                    break;
+
+                default: // String
+                    var textField = new TextField("Value:") { value = property.propertyValue ?? "" };
+                    textField.RegisterValueChangedCallback(evt =>
+                    {
+                        property.propertyValue = evt.newValue;
+                    });
+                    container.Add(textField);
+                    break;
+            }
         }
 
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
@@ -255,25 +300,264 @@ namespace CelestialCross.Dialogue.Graph.Editor
             if (choices.Count == 0) choices.Add("No Variables");
 
             var varField = new DropdownField("Variable:", choices, 0);
-            varField.RegisterValueChangedCallback(evt => dialogueNode.variableName = evt.newValue);
+            varField.RegisterValueChangedCallback(evt =>
+            {
+                dialogueNode.variableName = evt.newValue;
+                RebuildConditionPorts(dialogueNode);
+            });
             varField.schedule.Execute(() => 
             {
                 var currentVars = ExposedProperties.Select(x => x.propertyName).ToList();
                 if (currentVars.Count == 0) currentVars.Add("No Variables");
                 varField.choices = currentVars;
-            }).Every(1000); // Atualiza os choices de tempo em tempo caso mude no blackboard
+            }).Every(1000);
             dialogueNode.mainContainer.Add(varField);
 
-            var typeField = new EnumField("Type:", ConditionType.Equals);
-            typeField.RegisterValueChangedCallback(evt => dialogueNode.conditionType = (ConditionType)evt.newValue);
-            dialogueNode.mainContainer.Add(typeField);
+            // Botão para adicionar portas (visível apenas para Int/String)
+            var addBtn = new Button(() => AddNewConditionPort(dialogueNode))
+            {
+                text = "+ Condição",
+                name = "condition-add-btn"
+            };
+            dialogueNode.titleContainer.Add(addBtn);
+            // Portas serão criadas por RebuildConditionPorts ou RestoreConditionPorts
+        }
 
-            var valueField = new TextField("Target Value:");
-            valueField.RegisterValueChangedCallback(evt => dialogueNode.compareValue = evt.newValue);
-            dialogueNode.mainContainer.Add(valueField);
-            
-            AddChoicePort(dialogueNode, "True");
-            AddChoicePort(dialogueNode, "False");
+        /// <summary>
+        /// Reconstrói as portas de saída do Condition Node baseado no tipo da variável.
+        /// Chamado quando o usuário muda a variável selecionada ou ao criar um novo nó.
+        /// </summary>
+        public void RebuildConditionPorts(DialogueNode node)
+        {
+            ClearOutputPorts(node);
+
+            var selectedProp = ExposedProperties.FirstOrDefault(x => x.propertyName == node.variableName);
+            var propType = selectedProp?.type ?? PropertyType.Bool;
+
+            // Mostrar/esconder botão de adicionar baseado no tipo
+            var addBtn = node.titleContainer.Q<Button>("condition-add-btn");
+
+            switch (propType)
+            {
+                case PropertyType.Bool:
+                    AddConditionPortFixed(node, "True");
+                    AddConditionPortFixed(node, "False");
+                    if (addBtn != null) addBtn.style.display = DisplayStyle.None;
+                    break;
+
+                case PropertyType.Int:
+                    AddConditionPortInt(node, "==", 0);
+                    AddConditionPortFixed(node, "Default");
+                    if (addBtn != null)
+                    {
+                        addBtn.text = "+ Condição";
+                        addBtn.style.display = DisplayStyle.Flex;
+                    }
+                    break;
+
+                default: // String
+                    AddConditionPortString(node, "valor");
+                    AddConditionPortFixed(node, "Default");
+                    if (addBtn != null)
+                    {
+                        addBtn.text = "+ Match";
+                        addBtn.style.display = DisplayStyle.Flex;
+                    }
+                    break;
+            }
+
+            node.RefreshPorts();
+            node.RefreshExpandedState();
+        }
+
+        /// <summary>
+        /// Restaura portas de condição a partir de nomes salvos (usado durante o load).
+        /// </summary>
+        public void RestoreConditionPorts(DialogueNode node, List<string> portNames)
+        {
+            ClearOutputPorts(node);
+
+            var selectedProp = ExposedProperties.FirstOrDefault(x => x.propertyName == node.variableName);
+            var propType = selectedProp?.type ?? PropertyType.Bool;
+
+            // Mostrar/esconder botão de adicionar
+            var addBtn = node.titleContainer.Q<Button>("condition-add-btn");
+
+            foreach (var portName in portNames)
+            {
+                if (portName == "True" || portName == "False" || portName == "Default")
+                {
+                    AddConditionPortFixed(node, portName);
+                }
+                else if (propType == PropertyType.Int)
+                {
+                    // Parsear formato "== 5"
+                    var spaceIdx = portName.IndexOf(' ');
+                    if (spaceIdx > 0)
+                    {
+                        string op = portName.Substring(0, spaceIdx);
+                        int.TryParse(portName.Substring(spaceIdx + 1), out int val);
+                        AddConditionPortInt(node, op, val);
+                    }
+                    else
+                    {
+                        AddConditionPortFixed(node, portName);
+                    }
+                }
+                else // String
+                {
+                    AddConditionPortString(node, portName);
+                }
+            }
+
+            if (addBtn != null)
+            {
+                if (propType == PropertyType.Bool)
+                    addBtn.style.display = DisplayStyle.None;
+                else
+                {
+                    addBtn.text = propType == PropertyType.Int ? "+ Condição" : "+ Match";
+                    addBtn.style.display = DisplayStyle.Flex;
+                }
+            }
+
+            node.RefreshPorts();
+            node.RefreshExpandedState();
+        }
+
+        /// <summary>
+        /// Adiciona nova porta de condição baseado no tipo da variável atual.
+        /// </summary>
+        private void AddNewConditionPort(DialogueNode node)
+        {
+            var selectedProp = ExposedProperties.FirstOrDefault(x => x.propertyName == node.variableName);
+            var propType = selectedProp?.type ?? PropertyType.Bool;
+
+            if (propType == PropertyType.Bool) return; // Bool só tem True/False
+
+            if (propType == PropertyType.Int)
+            {
+                AddConditionPortInt(node, "==", 0, true);
+            }
+            else
+            {
+                AddConditionPortString(node, "", true);
+            }
+        }
+
+        /// <summary>
+        /// Limpa todas as portas de saída de um nó, desconectando edges.
+        /// </summary>
+        private void ClearOutputPorts(DialogueNode node)
+        {
+            var existingPorts = node.outputContainer.Query<Port>().ToList();
+            foreach (var port in existingPorts)
+            {
+                var connectedEdges = edges.ToList().Where(e => e.output == port).ToList();
+                foreach (var edge in connectedEdges)
+                {
+                    edge.input.Disconnect(edge);
+                    RemoveElement(edge);
+                }
+                node.outputContainer.Remove(port);
+            }
+        }
+
+        /// <summary>
+        /// Porta fixa sem campos editáveis (True, False, Default).
+        /// </summary>
+        public Port AddConditionPortFixed(DialogueNode node, string portName)
+        {
+            var port = GeneratePort(node, UnityEditor.Experimental.GraphView.Direction.Output, Port.Capacity.Single);
+            port.portName = portName;
+            node.outputContainer.Add(port);
+            return port;
+        }
+
+        /// <summary>
+        /// Porta de condição numérica com dropdown de operador e campo de valor.
+        /// Nome da porta = "{operador} {valor}" (ex: "== 5", "< 10")
+        /// </summary>
+        public Port AddConditionPortInt(DialogueNode node, string op = "==", int value = 0, bool insertBeforeDefault = false)
+        {
+            var port = GeneratePort(node, UnityEditor.Experimental.GraphView.Direction.Output, Port.Capacity.Single);
+
+            var oldLabel = port.contentContainer.Q<Label>("type");
+            if (oldLabel != null) port.contentContainer.Remove(oldLabel);
+
+            var operators = new List<string> { "==", "!=", "<", ">", "<=", ">="  };
+            int opIndex = operators.IndexOf(op);
+            if (opIndex < 0) opIndex = 0;
+
+            var opField = new DropdownField(operators, opIndex);
+            opField.style.width = 60;
+
+            var valField = new IntegerField() { value = value };
+            valField.style.width = 50;
+
+            port.portName = $"{op} {value}";
+
+            opField.RegisterValueChangedCallback(evt => port.portName = $"{evt.newValue} {valField.value}");
+            valField.RegisterValueChangedCallback(evt => port.portName = $"{opField.value} {evt.newValue}");
+
+            port.contentContainer.Add(new Label(" "));
+            port.contentContainer.Add(opField);
+            port.contentContainer.Add(valField);
+
+            var deleteBtn = new Button(() => RemovePort(node, port)) { text = "X" };
+            port.contentContainer.Add(deleteBtn);
+
+            if (insertBeforeDefault)
+            {
+                // Inserir antes da porta Default (ultimo elemento)
+                int insertIndex = node.outputContainer.childCount > 0 ? node.outputContainer.childCount - 1 : 0;
+                node.outputContainer.Insert(insertIndex, port);
+            }
+            else
+            {
+                node.outputContainer.Add(port);
+            }
+
+            node.RefreshPorts();
+            node.RefreshExpandedState();
+            return port;
+        }
+
+        /// <summary>
+        /// Porta de condição de texto com campo editável.
+        /// Nome da porta = texto digitado (ex: "sim", "não")
+        /// </summary>
+        public Port AddConditionPortString(DialogueNode node, string matchText = "", bool insertBeforeDefault = false)
+        {
+            var port = GeneratePort(node, UnityEditor.Experimental.GraphView.Direction.Output, Port.Capacity.Single);
+
+            var oldLabel = port.contentContainer.Q<Label>("type");
+            if (oldLabel != null) port.contentContainer.Remove(oldLabel);
+
+            var textField = new TextField { value = matchText };
+            textField.RegisterValueChangedCallback(evt => port.portName = evt.newValue);
+
+            port.portName = matchText;
+
+            port.contentContainer.Add(new Label("  "));
+            port.contentContainer.Add(textField);
+
+            var deleteBtn = new Button(() => RemovePort(node, port)) { text = "X" };
+            port.contentContainer.Add(deleteBtn);
+
+            if (insertBeforeDefault)
+            {
+                int insertIndex = node.outputContainer.childCount > 0 ? node.outputContainer.childCount - 1 : 0;
+                node.outputContainer.Insert(insertIndex, port);
+            }
+            else
+            {
+                node.outputContainer.Add(port);
+            }
+
+            node.RefreshPorts();
+            node.RefreshExpandedState();
+            return port;
         }
 
         private void BuildChoiceNode(DialogueNode dialogueNode)
@@ -297,28 +581,89 @@ namespace CelestialCross.Dialogue.Graph.Editor
             var choices = ExposedProperties.Select(x => x.propertyName).ToList();
             if (choices.Count == 0) choices.Add("No Variables");
 
+            var typeField = new EnumField("Operation:", dialogueNode.actionType);
+            typeField.RegisterValueChangedCallback(evt => dialogueNode.actionType = (ActionType)evt.newValue);
+
+            // Container para o campo de valor dinâmico
+            var valueContainer = new VisualElement();
+            valueContainer.name = "action-value-container";
+
             var varField = new DropdownField("Variable:", choices, 0);
-            varField.RegisterValueChangedCallback(evt => dialogueNode.variableName = evt.newValue);
+            varField.RegisterValueChangedCallback(evt =>
+            {
+                dialogueNode.variableName = evt.newValue;
+                RebuildNodeValueField(valueContainer, dialogueNode, true);
+            });
             varField.schedule.Execute(() => 
             {
                 var currentVars = ExposedProperties.Select(x => x.propertyName).ToList();
                 if (currentVars.Count == 0) currentVars.Add("No Variables");
                 varField.choices = currentVars;
-            }).Every(1000); // Atualiza dinamicamente as variáveis disponíveis
+            }).Every(1000);
 
             dialogueNode.mainContainer.Add(varField);
-
-            var typeField = new EnumField("Operation:", ActionType.Set);
-            typeField.RegisterValueChangedCallback(evt => dialogueNode.actionType = (ActionType)evt.newValue);
             dialogueNode.mainContainer.Add(typeField);
+            dialogueNode.mainContainer.Add(valueContainer);
 
-            var valueField = new TextField("Value:");
-            valueField.RegisterValueChangedCallback(evt => dialogueNode.compareValue = evt.newValue);
-            dialogueNode.mainContainer.Add(valueField);
+            // Inicializar o campo de valor com o tipo correto
+            RebuildNodeValueField(valueContainer, dialogueNode, true);
 
             var port = GeneratePort(dialogueNode, UnityEditor.Experimental.GraphView.Direction.Output);
             port.portName = "Next";
             dialogueNode.outputContainer.Add(port);
+        }
+
+        /// <summary>
+        /// Reconstrói o campo de valor nos nós de Condition/Action baseado no tipo da variável selecionada.
+        /// Público para ser acessado pelo GraphSaveUtility durante o carregamento.
+        /// </summary>
+        public void RebuildNodeValueFieldPublic(VisualElement container, DialogueNode node, bool isAction)
+        {
+            RebuildNodeValueField(container, node, isAction);
+        }
+
+        private void RebuildNodeValueField(VisualElement container, DialogueNode node, bool isAction)
+        {
+            container.Clear();
+
+            // Encontrar o tipo da variável selecionada
+            var selectedProp = ExposedProperties.FirstOrDefault(x => x.propertyName == node.variableName);
+            var propType = selectedProp?.type ?? PropertyType.String;
+
+            string label = isAction ? "Value:" : "Target Value:";
+
+            switch (propType)
+            {
+                case PropertyType.Bool:
+                    bool boolVal = node.compareValue == "True" || node.compareValue == "true";
+                    var toggle = new Toggle(label) { value = boolVal };
+                    toggle.RegisterValueChangedCallback(evt =>
+                    {
+                        node.compareValue = evt.newValue.ToString();
+                    });
+                    container.Add(toggle);
+                    break;
+
+                case PropertyType.Int:
+                    int intVal = 0;
+                    int.TryParse(node.compareValue, out intVal);
+                    var intField = new IntegerField(label) { value = intVal };
+                    intField.RegisterValueChangedCallback(evt =>
+                    {
+                        node.compareValue = evt.newValue.ToString();
+                    });
+                    container.Add(intField);
+                    break;
+
+                default: // String
+                    var textField = new TextField(label) { value = node.compareValue ?? "" };
+                    textField.RegisterValueChangedCallback(evt =>
+                    {
+                        node.compareValue = evt.newValue;
+                    });
+                    container.Add(textField);
+                    break;
+            }
         }
 
         private void BuildEndNode(DialogueNode dialogueNode)

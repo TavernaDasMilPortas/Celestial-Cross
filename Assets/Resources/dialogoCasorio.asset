@@ -1,0 +1,170 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10d30a4be252b63479f95c401df7180e, type: 3}
+  m_Name: dialogoCasorio
+  m_EditorClassIdentifier: Assembly-CSharp::CelestialCross.Dialogue.Graph.DialogueGraph
+  nodeLinks:
+  - baseNodeGuid: 889a2b9d-4256-41c1-bf59-f627817910c5
+    portName: Next
+    targetNodeGuid: 0f73dd2e-aa0c-44e4-b29e-d5f73bca0a70
+  - baseNodeGuid: 0f73dd2e-aa0c-44e4-b29e-d5f73bca0a70
+    portName: Next
+    targetNodeGuid: e860889d-fae5-4924-9db6-089057c82dfd
+  - baseNodeGuid: e860889d-fae5-4924-9db6-089057c82dfd
+    portName: Sim
+    targetNodeGuid: 68b91453-0697-4b8b-85db-4af588dbcf1e
+  - baseNodeGuid: e860889d-fae5-4924-9db6-089057c82dfd
+    portName: "N\xE3o"
+    targetNodeGuid: 720c5e11-327b-4836-a064-0296aa4a2d3e
+  - baseNodeGuid: 720c5e11-327b-4836-a064-0296aa4a2d3e
+    portName: Next
+    targetNodeGuid: 2d9a1060-a7d0-481f-9d26-69f50c751365
+  - baseNodeGuid: 81c555ec-6354-4ce4-86c5-a8ad5a44ee95
+    portName: Next
+    targetNodeGuid: bf09a275-7f7a-4e6b-9555-28eee56dd8f1
+  - baseNodeGuid: 17d7610e-6b28-4e92-b4b2-9d3015e51bb1
+    portName: Next
+    targetNodeGuid: bf09a275-7f7a-4e6b-9555-28eee56dd8f1
+  - baseNodeGuid: 2d9a1060-a7d0-481f-9d26-69f50c751365
+    portName: True
+    targetNodeGuid: 81c555ec-6354-4ce4-86c5-a8ad5a44ee95
+  - baseNodeGuid: 2d9a1060-a7d0-481f-9d26-69f50c751365
+    portName: False
+    targetNodeGuid: 17d7610e-6b28-4e92-b4b2-9d3015e51bb1
+  - baseNodeGuid: 68b91453-0697-4b8b-85db-4af588dbcf1e
+    portName: Next
+    targetNodeGuid: 2d9a1060-a7d0-481f-9d26-69f50c751365
+  nodeData:
+  - guid: 0f73dd2e-aa0c-44e4-b29e-d5f73bca0a70
+    nodeType: 1
+    position: {x: 332, y: 210}
+    speakerName: Pessoa 1
+    dialogueText: "oi voc\xEA me ama?"
+    characterSprite: {fileID: 0}
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: e860889d-fae5-4924-9db6-089057c82dfd
+    nodeType: 2
+    position: {x: 681, y: 254}
+    speakerName: 
+    dialogueText: 
+    characterSprite: {fileID: 0}
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 720c5e11-327b-4836-a064-0296aa4a2d3e
+    nodeType: 4
+    position: {x: 1069, y: 379}
+    speakerName: 
+    dialogueText: 
+    characterSprite: {fileID: 0}
+    choices: []
+    conditionVariable: Casamento
+    conditionValue: False
+    conditionType: 0
+    actionVariable: Casamento
+    actionValue: False
+    actionType: 0
+    variableName: Casamento
+    compareValue: False
+  - guid: 81c555ec-6354-4ce4-86c5-a8ad5a44ee95
+    nodeType: 1
+    position: {x: 1672, y: 171}
+    speakerName: Pessoa 1
+    dialogueText: "Ent\xE3o casa comigo"
+    characterSprite: {fileID: 0}
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: bf09a275-7f7a-4e6b-9555-28eee56dd8f1
+    nodeType: 5
+    position: {x: 2061, y: 309}
+    speakerName: 
+    dialogueText: 
+    characterSprite: {fileID: 0}
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 17d7610e-6b28-4e92-b4b2-9d3015e51bb1
+    nodeType: 1
+    position: {x: 1698, y: 361}
+    speakerName: Pessoa 2
+    dialogueText: Aff otario
+    characterSprite: {fileID: 0}
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 2d9a1060-a7d0-481f-9d26-69f50c751365
+    nodeType: 3
+    position: {x: 1347, y: 282}
+    speakerName: 
+    dialogueText: 
+    characterSprite: {fileID: 0}
+    choices: []
+    conditionVariable: Casamento
+    conditionValue: 
+    conditionType: 3
+    actionVariable: Casamento
+    actionValue: 
+    actionType: 0
+    variableName: Casamento
+    compareValue: 
+  - guid: 68b91453-0697-4b8b-85db-4af588dbcf1e
+    nodeType: 4
+    position: {x: 1069, y: 158}
+    speakerName: 
+    dialogueText: 
+    characterSprite: {fileID: 0}
+    choices: []
+    conditionVariable: Casamento
+    conditionValue: True
+    conditionType: 0
+    actionVariable: Casamento
+    actionValue: True
+    actionType: 0
+    variableName: Casamento
+    compareValue: True
+  exposedProperties:
+  - propertyName: Casamento
+    propertyValue: False
+    type: 2
