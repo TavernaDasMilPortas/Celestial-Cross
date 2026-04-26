@@ -12,6 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b74335336934364f92171120eea7025, type: 3}
   m_Name: estocada
   m_EditorClassIdentifier: Assembly-CSharp::Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO
+  abilityName: 
+  abilityIcon: {fileID: 0}
+  abilityDescription: 
+  displayRange: 0
+  isPassive: 0
   NodeLinks:
   - BaseNodeGuid: cc463600-dedd-4308-aa6e-9d61d4f82f84
     PortName: Out
@@ -35,21 +40,22 @@ MonoBehaviour:
   - Guid: cc463600-dedd-4308-aa6e-9d61d4f82f84
     NodeType: TriggerNode
     NodeTitle: Trigger Event
-    Position: {x: 357.6, y: 200}
+    Position: {x: 358, y: 200}
     JsonData: '{"trigger":0}'
     areaPattern: {fileID: 0}
   - Guid: 0bf3af8e-8206-4a5a-a7e3-d11379b2383f
     NodeType: DamageEffectNode
     NodeTitle: Damage Effect
-    Position: {x: 1191.2, y: 217.6}
+    Position: {x: 1191, y: 218}
     JsonData: '{"valueType":1,"amount":100,"baseAttribute":1,"scaleWithDistance":false,"distanceScaleFactor":0.10000000149011612}'
     areaPattern: {fileID: 0}
   - Guid: e76ca2e3-690c-47c6-93dc-415b8e59faaf
     NodeType: TargetNode
     NodeTitle: Targeting
-    Position: {x: 746.4, y: 200}
-    JsonData: '{"reusePrevious":false,"sourceType":0,"mode":1,"range":1,"multipleTargets":false,"maxTargets":1,"origin":1,"strategy":0,"attributeType":0,"factionType":0,"targetCount":1,"autoRotate":true,"areaPattern":{"instanceID":51798}}'
+    Position: {x: 746, y: 200}
+    JsonData: '{"reusePrevious":false,"sourceType":0,"mode":1,"range":1,"multipleTargets":false,"maxTargets":1,"origin":1,"strategy":0,"attributeType":0,"factionType":0,"targetCount":1,"autoRotate":true,"preferredDirection":0,"patternReferenceId":"","areaPattern":{"instanceID":51294}}'
     areaPattern: {fileID: 11400000, guid: 355229a7f5738f840b56c5210a05e669, type: 2}
+  Dependencies: []
   GeneratedDescription: "<b>--- DESCRI\xC7\xC3O AUTOM\xC1TICA ---</b>\r\n- Esta \xE9
     uma habilidade do tipo Active.\r\n- Escolhe manualmente m\xFAltiplos tiles em
     \xE1rea a um range de 1 a partir de Point.\r\n- Causa 100Percentage de Attack

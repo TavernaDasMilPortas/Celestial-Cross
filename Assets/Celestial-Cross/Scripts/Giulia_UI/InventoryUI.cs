@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
@@ -596,10 +596,10 @@ private void PopulateTab(int tabIndex)
         txt.enableWordWrapping = true;
         txt.raycastTarget = false;
 
-        // Tooltip logic: press and hold overrides unitStatsText temporarly or a dedicated panel
+        // Tooltip logic
         var trigger = btnGO.GetComponent<UnityEngine.EventSystems.EventTrigger>();
         var ptrDown = new UnityEngine.EventSystems.EventTrigger.Entry { eventID = UnityEngine.EventSystems.EventTriggerType.PointerDown };
-        string desc = string.IsNullOrEmpty(ability.abilityDescription) ? "Sem descriÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o" : ability.abilityDescription;
+        string desc = string.IsNullOrEmpty(ability.abilityDescription) ? "Sem descrição" : ability.abilityDescription;
         ptrDown.callback.AddListener((e) => {
             if (unitStatsText != null) unitStatsText.text = $"<b>{ability.abilityName}</b>\n<size=14>{desc}</size>";
         });
@@ -615,6 +615,43 @@ private void PopulateTab(int tabIndex)
         });
         trigger.triggers.Add(ptrUp);
         trigger.triggers.Add(ptrExit);
+    }
+
+    private void SpawnGraphButton(RectTransform parent, Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO graph)
+    {
+        var btnGO = new GameObject("GraphBtn", typeof(RectTransform), typeof(Image), typeof(UnityEngine.EventSystems.EventTrigger));
+        btnGO.transform.SetParent(parent, false);
+        var img = btnGO.GetComponent<Image>();
+        img.color = new Color(0.5f, 0.2f, 0.8f, 1f); // Purple for graphs
+        
+        var rt = (RectTransform)btnGO.transform;
+        rt.sizeDelta = new Vector2(100, 48);
+        
+        var txtGO = new GameObject("Text", typeof(RectTransform), typeof(TextMeshProUGUI));
+        txtGO.transform.SetParent(btnGO.transform, false);
+        var trt = (RectTransform)txtGO.transform;
+        trt.anchorMin = Vector2.zero; trt.anchorMax = Vector2.one;
+        trt.offsetMin = trt.offsetMax = Vector2.zero;
+        var txt = txtGO.GetComponent<TextMeshProUGUI>();
+        txt.fontSize = 12;
+        txt.alignment = TextAlignmentOptions.Center;
+        txt.text = string.IsNullOrEmpty(graph.abilityName) ? graph.name : graph.abilityName;
+        txt.enableWordWrapping = true;
+        txt.raycastTarget = false;
+
+        var trigger = btnGO.GetComponent<UnityEngine.EventSystems.EventTrigger>();
+        var ptrDown = new UnityEngine.EventSystems.EventTrigger.Entry { eventID = UnityEngine.EventSystems.EventTriggerType.PointerDown };
+        string desc = string.IsNullOrEmpty(graph.abilityDescription) ? "Habilidade de Grafo" : graph.abilityDescription;
+        ptrDown.callback.AddListener((e) => {
+            if (unitStatsText != null) unitStatsText.text = $"<b>{txt.text}</b>\n<size=14>{desc}</size>";
+        });
+        trigger.triggers.Add(ptrDown);
+
+        var ptrUp = new UnityEngine.EventSystems.EventTrigger.Entry { eventID = UnityEngine.EventSystems.EventTriggerType.PointerUp };
+        ptrUp.callback.AddListener((e) => {
+            if (unitStatsText != null) unitStatsText.text = defaultStatsText;
+        });
+        trigger.triggers.Add(ptrUp);
     }
 
     // --- Phase 3 & 4 Logics ---
@@ -713,10 +750,18 @@ private void PopulateTab(int tabIndex)
                         if (ab != null) SpawnAbilityButton(unitAbilitiesContainer, ab, false);
                     }
                 }
+                if (data.GetAbilityGraphs() != null)
+                {
+                    foreach (var graph in data.GetAbilityGraphs())
+                    {
+                        if (graph != null) SpawnGraphButton(unitAbilitiesContainer, graph);
+                    }
+                }
                 if (equippedPetSpecies != null)
                 {
                     if (equippedPetSpecies.PassiveSkills != null) foreach(var ab in equippedPetSpecies.PassiveSkills) if (ab != null) SpawnAbilityButton(unitAbilitiesContainer, ab, true);
                     if (equippedPetSpecies.ActiveSkills != null) foreach(var ab in equippedPetSpecies.ActiveSkills) if (ab != null) SpawnAbilityButton(unitAbilitiesContainer, ab, true);
+                    if (equippedPetSpecies.AbilityGraphs != null) foreach(var graph in equippedPetSpecies.AbilityGraphs) if (graph != null) SpawnGraphButton(unitAbilitiesContainer, graph);
                 }
             }
 

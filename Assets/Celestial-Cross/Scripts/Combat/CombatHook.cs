@@ -39,7 +39,9 @@ namespace CelestialCross.Combat
         public bool isCritical;
         public IUnitAction action; 
 
+        public int abilityLevel = 1;
         public global::System.Collections.Generic.Dictionary<string, float> Variables;
+        public global::System.Collections.Generic.Dictionary<string, int> loopCounters;
         public global::System.Collections.Generic.List<Celestial_Cross.Scripts.Abilities.Conditions.AbilityConditionData> conditionPool;
 
         public CombatContext(Unit source, Unit target = null, int amount = 0, IUnitAction action = null)
@@ -51,6 +53,7 @@ namespace CelestialCross.Combat
             this.amount = amount;
             this.action = action;
             this.Variables = new global::System.Collections.Generic.Dictionary<string, float>();
+            this.loopCounters = new global::System.Collections.Generic.Dictionary<string, int>();
             this.conditionPool = new global::System.Collections.Generic.List<Celestial_Cross.Scripts.Abilities.Conditions.AbilityConditionData>();
         }
     }

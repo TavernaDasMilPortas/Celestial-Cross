@@ -322,10 +322,14 @@ public abstract class Unit : MonoBehaviour
         foreach (var action in GetComponents<IUnitAction>()) Destroy(action as Component);
         var blueprints = unitData.GetAbilities();
         if (blueprints != null) foreach (var bp in blueprints) if (bp != null ) actions.Add(new BlueprintActionWrapper(this, bp));
+        
+        var graphs = unitData.GetAbilityGraphs();
+        if (graphs != null) foreach (var g in graphs) if (g != null) actions.Add(new GraphActionWrapper(this, g));
         if (petSpeciesData != null)
         {
             if (petSpeciesData.PassiveSkills != null) foreach (var pass in petSpeciesData.PassiveSkills) if (pass != null) actions.Add(new BlueprintActionWrapper(this, pass));
             if (petSpeciesData.ActiveSkills != null) foreach (var act in petSpeciesData.ActiveSkills) if (act != null) actions.Add(new BlueprintActionWrapper(this, act));
+            if (petSpeciesData.AbilityGraphs != null) foreach (var graph in petSpeciesData.AbilityGraphs) if (graph != null) actions.Add(new GraphActionWrapper(this, graph));
         }
         foreach (var definition in unitData.GetExecutableDefinitions()) {
             var component = gameObject.AddComponent(definition.GetType()) as IUnitAction;

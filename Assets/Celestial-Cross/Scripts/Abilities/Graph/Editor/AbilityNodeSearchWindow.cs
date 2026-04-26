@@ -31,6 +31,8 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor
                 new SearchTreeEntry(new GUIContent("Trigger Event")) { userData = typeof(TriggerNode), level = 2 },
                 new SearchTreeEntry(new GUIContent("Targeting")) { userData = typeof(TargetNode), level = 2 },
                 new SearchTreeEntry(new GUIContent("Branch (Conditional)")) { userData = typeof(ConditionalFlowNode), level = 2 },
+                new SearchTreeEntry(new GUIContent("Loop")) { userData = typeof(LoopNode), level = 2 },
+                new SearchTreeEntry(new GUIContent("Level Branch")) { userData = typeof(LevelBranchNode), level = 2 },
                 new SearchTreeEntry(new GUIContent("Duration / Expiry")) { userData = typeof(DurationNode), level = 2 },
 
                 new SearchTreeGroupEntry(new GUIContent("Effects"), 1),
@@ -42,6 +44,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor
                 new SearchTreeEntry(new GUIContent("Cleanse / Remove Status")) { userData = typeof(CleanseStatusNode), level = 2 },
                 new SearchTreeEntry(new GUIContent("VFX / Animation")) { userData = typeof(VfxNode), level = 2 },
                 new SearchTreeEntry(new GUIContent("Cost / Cooldown")) { userData = typeof(CostNode), level = 2 },
+                new SearchTreeEntry(new GUIContent("Variable Modifier")) { userData = typeof(VariableModifierNode), level = 2 },
 
                 new SearchTreeGroupEntry(new GUIContent("Conditions / Data"), 1),
                 new SearchTreeEntry(new GUIContent("Attribute Condition")) { userData = typeof(AttributeConditionNode), level = 2 },
@@ -67,6 +70,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor
                 {
                     _graphView.AddElement(node);
                     node.Initialize(Guid.NewGuid().ToString(), graphMousePosition);
+                    _graphView.HandleAutoVariableGeneration(node);
                     return true;
                 }
             }

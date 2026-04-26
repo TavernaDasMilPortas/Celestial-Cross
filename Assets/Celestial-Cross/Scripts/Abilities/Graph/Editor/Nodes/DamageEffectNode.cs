@@ -14,6 +14,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
         private EnumField baseAttributeDropdown;
         private Toggle scaleWithDistanceToggle;
         private FloatField distanceScaleFactorField;
+        private TextField variableReferenceField;
 
         private Celestial_Cross.Scripts.Abilities.Graph.Runtime.DamageNodeData nodeData = new Celestial_Cross.Scripts.Abilities.Graph.Runtime.DamageNodeData();
 
@@ -46,6 +47,11 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
             amountField.value = nodeData.amount;
             amountField.RegisterValueChangedCallback(evt => nodeData.amount = evt.newValue);
             extensionContainer.Add(amountField);
+
+            variableReferenceField = new TextField("Amount Var");
+            variableReferenceField.value = nodeData.variableReference;
+            variableReferenceField.RegisterValueChangedCallback(evt => nodeData.variableReference = evt.newValue);
+            extensionContainer.Add(variableReferenceField);
 
             baseAttributeDropdown = new EnumField("Base Attribute", AttributeCondition.AttributeType.Attack);
             baseAttributeDropdown.RegisterValueChangedCallback(evt => {
@@ -111,6 +117,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
                 nodeData = JsonUtility.FromJson<Celestial_Cross.Scripts.Abilities.Graph.Runtime.DamageNodeData>(json);
                 valueTypeDropdown.value = nodeData.valueType;
                 amountField.value = nodeData.amount;
+                variableReferenceField.value = nodeData.variableReference;
                 scaleWithDistanceToggle.value = nodeData.scaleWithDistance;
                 distanceScaleFactorField.value = nodeData.distanceScaleFactor;
                 UpdateDynamicFields();
@@ -123,6 +130,12 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
             var attr = (AttributeCondition.AttributeType)nodeData.baseAttribute;
             string typeText = nodeData.valueType == Celestial_Cross.Scripts.Abilities.ValueType.Flat ? "" : $" de {attr}";
             return $"Causa {nodeData.amount}{nodeData.valueType}{typeText} de dano{scaleText}.";
+        }
+
+        public void SetVariableReference(string varName)
+        {
+            nodeData.variableReference = varName;
+            if (variableReferenceField != null) variableReferenceField.value = varName;
         }
     }
 }

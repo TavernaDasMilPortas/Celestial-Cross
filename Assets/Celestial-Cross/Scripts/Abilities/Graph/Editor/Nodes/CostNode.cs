@@ -2,27 +2,18 @@ using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Celestial_Cross.Scripts.Abilities.Graph.Runtime;
 
 namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
 {
     public class CostNode : AbilityNode
     {
-        public enum ResourceType { Mana, Stamina, HP, ActionPoints, Cooldown }
-        public enum Timing { OnCast, OnHit }
+        private IntegerField manaField;
+        private TextField manaVarField;
+        private IntegerField staminaField;
+        private TextField staminaVarField;
 
-        private EnumField resourceDropdown;
-        private IntegerField amountField;
-        private EnumField timingDropdown;
-
-        [System.Serializable]
-        public class CostData
-        {
-            public ResourceType resource = ResourceType.Mana;
-            public int amount = 10;
-            public Timing timing = Timing.OnCast;
-        }
-
-        private CostData nodeData = new CostData();
+        private CostNodeData nodeData = new CostNodeData();
 
         public override void Initialize(string nodeGuid, Vector2 position)
         {
@@ -30,25 +21,29 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
             title = "Cost / Countdown";
             titleContainer.style.backgroundColor = new StyleColor(new Color(0.4f, 0.4f, 0.4f, 0.9f));
 
-            var inputPort = InstantiatePort(Orientation.Horizontal, UnityEditor.Experimental.GraphView.Direction.Input, Port.Capacity.Multi, typeof(float));
-            inputPort.portName = "In";
-            inputContainer.Add(inputPort);
+            var inPort = InstantiatePort(Orientation.Horizontal, UnityEditor.Experimental.GraphView.Direction.Input, Port.Capacity.Multi, typeof(float));
+            inPort.portName = "In";
+            inputContainer.Add(inPort);
 
-            var outputPort = InstantiatePort(Orientation.Horizontal, UnityEditor.Experimental.GraphView.Direction.Output, Port.Capacity.Single, typeof(float));
-            outputPort.portName = "Out";
-            outputContainer.Add(outputPort);
+            var outPort = InstantiatePort(Orientation.Horizontal, UnityEditor.Experimental.GraphView.Direction.Output, Port.Capacity.Single, typeof(float));
+            outPort.portName = "Out";
+            outputContainer.Add(outPort);
 
-            resourceDropdown = new EnumField("Resource", ResourceType.Mana);
-            resourceDropdown.RegisterValueChangedCallback(evt => nodeData.resource = (ResourceType)evt.newValue);
-            extensionContainer.Add(resourceDropdown);
+            manaField = new IntegerField("Mana Cost");
+            manaField.RegisterValueChangedCallback(evt => nodeData.manaCost = evt.newValue);
+            extensionContainer.Add(manaField);
 
-            amountField = new IntegerField("Amount");
-            amountField.RegisterValueChangedCallback(evt => nodeData.amount = evt.newValue);
-            extensionContainer.Add(amountField);
+            manaVarField = new TextField("Mana Var");
+            manaVarField.RegisterValueChangedCallback(evt => nodeData.manaVariable = evt.newValue);
+            extensionContainer.Add(manaVarField);
 
-            timingDropdown = new EnumField("Timing", Timing.OnCast);
-            timingDropdown.RegisterValueChangedCallback(evt => nodeData.timing = (Timing)evt.newValue);
-            extensionContainer.Add(timingDropdown);
+            staminaField = new IntegerField("Stamina Cost");
+            staminaField.RegisterValueChangedCallback(evt => nodeData.staminaCost = evt.newValue);
+            extensionContainer.Add(staminaField);
+
+            staminaVarField = new TextField("Stamina Var");
+            staminaVarField.RegisterValueChangedCallback(evt => nodeData.staminaVariable = evt.newValue);
+            extensionContainer.Add(staminaVarField);
 
             RefreshExpandedState();
             RefreshPorts();
@@ -59,10 +54,22 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
         public override void LoadFromJson(string json)
         {
             if (string.IsNullOrEmpty(json)) return;
-            nodeData = JsonUtility.FromJson<CostData>(json);
-            resourceDropdown.value = nodeData.resource;
-            amountField.value = nodeData.amount;
-            timingDropdown.value = nodeData.timing;
+            nodeData = JsonUtility.FromJson<CostNodeData>(json);
+            manaField.value = nodeData.manaCost;
+            manaVarField.value = nodeData.manaVariable;
+            staminaField.value = nodeData.staminaCost;
+            staminaVarField.value = nodeData.staminaVariable;
+        }
+
+        public override string GetDescription()
+        {
+            return $"Consome recursos ao ser executado.";
+        }
+
+        public void SetVariableReference(string manaVar, string staminaVar)
+        {
+            if (manaVar != null) { nodeData.manaVariable = manaVar; if (manaVarField != null) manaVarField.value = manaVar; }
+            if (staminaVar != null) { nodeData.staminaVariable = staminaVar; if (staminaVarField != null) staminaVarField.value = staminaVar; }
         }
     }
 }

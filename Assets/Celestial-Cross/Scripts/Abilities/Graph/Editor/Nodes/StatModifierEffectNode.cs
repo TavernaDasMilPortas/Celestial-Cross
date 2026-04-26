@@ -13,6 +13,11 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
         private VisualElement modifierListContainer;
         private Toggle scaleWithDistanceToggle;
         private FloatField distanceFactorField;
+        private TextField variableReferenceField;
+        
+        // Stack Fields
+        private Toggle canStackToggle;
+        private IntegerField maxStacksField;
 
         [System.Serializable]
         public class StatEntry
@@ -27,6 +32,9 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
             public List<StatEntry> modifiers = new List<StatEntry>();
             public bool scaleWithDistance;
             public float distanceScaleFactor = 0.1f;
+            public string variableReference;
+            public bool canStack = false;
+            public int maxStacks = 1;
         }
 
         private StatModData nodeData = new StatModData();
@@ -57,6 +65,23 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
 
             var addBtn = new Button(AddModifier) { text = "Add Stat Modifier" };
             extensionContainer.Add(addBtn);
+
+            variableReferenceField = new TextField("Buff Base Var");
+            variableReferenceField.value = nodeData.variableReference;
+            variableReferenceField.RegisterValueChangedCallback(evt => nodeData.variableReference = evt.newValue);
+            extensionContainer.Add(variableReferenceField);
+
+            canStackToggle = new Toggle("Can Stack");
+            canStackToggle.value = nodeData.canStack;
+            canStackToggle.RegisterValueChangedCallback(evt => {
+                nodeData.canStack = evt.newValue;
+                UpdateUI();
+            });
+            extensionContainer.Add(canStackToggle);
+
+            maxStacksField = new IntegerField("Max Stacks (0=Inf)");
+            maxStacksField.value = nodeData.maxStacks;
+            maxStacksField.RegisterValueChangedCallback(evt => nodeData.maxStacks = evt.newValue);
 
             scaleWithDistanceToggle = new Toggle("Scale With Distance");
             scaleWithDistanceToggle.RegisterValueChangedCallback(evt => {
@@ -119,6 +144,16 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
             {
                 if (extensionContainer.Contains(distanceFactorField)) extensionContainer.Remove(distanceFactorField);
             }
+
+            if (nodeData.canStack)
+            {
+                if (!extensionContainer.Contains(maxStacksField)) extensionContainer.Add(maxStacksField);
+            }
+            else
+            {
+                if (extensionContainer.Contains(maxStacksField)) extensionContainer.Remove(maxStacksField);
+            }
+
             RefreshExpandedState();
         }
 
@@ -134,7 +169,16 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
             
             scaleWithDistanceToggle.value = nodeData.scaleWithDistance;
             distanceFactorField.value = nodeData.distanceScaleFactor;
+            variableReferenceField.value = nodeData.variableReference;
+            canStackToggle.value = nodeData.canStack;
+            maxStacksField.value = nodeData.maxStacks;
             UpdateUI();
+        }
+
+        public void SetVariableReference(string varName)
+        {
+            nodeData.variableReference = varName;
+            if (variableReferenceField != null) variableReferenceField.value = varName;
         }
     }
 }

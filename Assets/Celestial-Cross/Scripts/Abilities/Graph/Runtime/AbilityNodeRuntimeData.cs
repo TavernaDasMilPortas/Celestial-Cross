@@ -21,6 +21,9 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
     {
         public AbilityType type;
         public int duration;
+        public bool canStack = false;
+        public int maxStacks = 1;
+        public bool isPersistent = false;
     }
 
     [Serializable]
@@ -38,7 +41,11 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
         public GraphFactionType factionType = GraphFactionType.Any; 
         public int targetCount = 1;
         public bool autoRotate = true;
+        public Direction preferredDirection = Direction.N;
+        public string patternReferenceId;
         public AreaPatternData areaPattern;
+        public string rangeVariable;
+        public string maxTargetsVariable;
     }
 
     [Serializable]
@@ -46,6 +53,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
     {
         public Celestial_Cross.Scripts.Abilities.ValueType valueType = Celestial_Cross.Scripts.Abilities.ValueType.Flat;
         public int amount = 10;
+        public string variableReference; // Se preenchido, usa o valor da variável
         public int baseAttribute = (int)AttributeCondition.AttributeType.Attack;
         public bool scaleWithDistance = false;
         public float distanceScaleFactor = 0.1f;
@@ -56,6 +64,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
     {
         public Celestial_Cross.Scripts.Abilities.ValueType valueType = Celestial_Cross.Scripts.Abilities.ValueType.Flat;
         public int amount = 10;
+        public string variableReference;
         public int baseAttribute = 0;
         public bool canCrit = true;
         public bool allowOverheal = false;
@@ -65,6 +74,40 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
     public class TriggerNodeData
     {
         public CombatHook trigger = CombatHook.OnManualCast;
+    }
+
+    // --- Logic & Flow ---
+
+    [Serializable]
+    public class LoopNodeData
+    {
+        public int iterations = 1;
+        public string iterationsVariable; // Opcional: usar uma variável para o número de iterações
+    }
+
+    [Serializable]
+    public class VariableModifierNodeData
+    {
+        public enum Operation { Set, Add, Multiply }
+        public string variableName;
+        public Operation operation = Operation.Set;
+        public float value;
+        public string valueVariableReference; // Opcional: usar outra variável como valor
+    }
+
+    [Serializable]
+    public class LevelBranchNodeData
+    {
+        public int levelCount = 3;
+    }
+
+    [Serializable]
+    public class CostNodeData
+    {
+        public int manaCost;
+        public string manaVariable;
+        public int staminaCost;
+        public string staminaVariable;
     }
 
     // --- Condições ---
@@ -111,6 +154,9 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
         public class StatEntry { public int statIndex; public float value; }
         public List<StatEntry> stats = new List<StatEntry>();
         public bool isBuff = true;
+        public string variableReference; // Multiplicador unificado ou base para os buffs
+        public bool canStack = false;
+        public int maxStacks = 1;
     }
 
     [Serializable]
@@ -126,13 +172,6 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
         public string vfxId;
         public bool attachToTarget;
         public float duration;
-    }
-
-    [Serializable]
-    public class CostNodeData
-    {
-        public int manaCost;
-        public int staminaCost;
     }
 
     [Serializable]

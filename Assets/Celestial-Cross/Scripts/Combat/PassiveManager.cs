@@ -2,6 +2,8 @@ using UnityEngine;
 using System.Collections.Generic;
 using CelestialCross.Combat;
 using Celestial_Cross.Scripts.Abilities;
+using Celestial_Cross.Scripts.Abilities.Graph;
+using Celestial_Cross.Scripts.Abilities.Graph.Runtime;
 using Celestial_Cross.Scripts.Combat.Execution;
 
 [RequireComponent(typeof(Unit))]
@@ -9,9 +11,12 @@ public class PassiveManager : MonoBehaviour
 {
     private Unit unit;
     
-    // Lista de condições temporárias durante a batalha
+    // Lista de condições baseadas em Graph durante a batalha
+    private readonly List<RuntimeGraphCondition> activeGraphConditions = new();
+    
+    // Lista de condições legacy baseadas em Blueprint durante a batalha
     private readonly List<RuntimeCondition> activeRuntimeConditions = new();
-    private HashSet<AbilityBlueprint> executingAbilities = new();
+    private HashSet<object> executingAbilities = new();
 
     [System.Serializable]
     private class RuntimeCondition
@@ -19,12 +24,31 @@ public class PassiveManager : MonoBehaviour
         public AbilityBlueprint blueprint;
         public bool isPersistent;
         public int remainingTurns;
+        public int stacks;
 
-        public RuntimeCondition(AbilityBlueprint blueprint, bool isPersistent, int remainingTurns)
+        public RuntimeCondition(AbilityBlueprint blueprint, bool isPersistent, int remainingTurns, int stacks = 1)
         {
             this.blueprint = blueprint;
             this.isPersistent = isPersistent;
             this.remainingTurns = remainingTurns;
+            this.stacks = stacks;
+        }
+    }
+
+    [System.Serializable]
+    private class RuntimeGraphCondition
+    {
+        public AbilityGraphSO graph;
+        public bool isPersistent;
+        public int remainingTurns;
+        public int stacks;
+
+        public RuntimeGraphCondition(AbilityGraphSO graph, bool isPersistent, int remainingTurns, int stacks = 1)
+        {
+            this.graph = graph;
+            this.isPersistent = isPersistent;
+            this.remainingTurns = remainingTurns;
+            this.stacks = stacks;
         }
     }
 
@@ -58,8 +82,6 @@ public class PassiveManager : MonoBehaviour
         if (TurnManager.Instance != null && TurnManager.Instance.CurrentUnit == unit)
         {
             TriggerHook(CombatHook.OnTurnEnd, new CombatContext(unit, unit));
-
-            // Decrementa duração de condições no fim do turno da unidade afetada.
             TickConditionsOnTurnEnd();
         }
     }
@@ -74,33 +96,38 @@ public class PassiveManager : MonoBehaviour
         if (unit == null) unit = GetComponent<Unit>();
         if (unit == null || unit.Data == null) return;
 
-        var abilities = new List<AbilityBlueprint>();
+        // --- 1. Legacy Blueprint passives ---
+        var blueprintAbilities = new List<AbilityBlueprint>();
         if (unit.Data.GetAbilities() != null)
-        {
-            abilities.AddRange(unit.Data.GetAbilities());
-        }
+            blueprintAbilities.AddRange(unit.Data.GetAbilities());
         if (unit.petSpeciesData != null)
         {
-            if (unit.petSpeciesData.PassiveSkills != null) abilities.AddRange(unit.petSpeciesData.PassiveSkills);
-            if (unit.petSpeciesData.ActiveSkills != null) abilities.AddRange(unit.petSpeciesData.ActiveSkills);
+            if (unit.petSpeciesData.PassiveSkills != null) blueprintAbilities.AddRange(unit.petSpeciesData.PassiveSkills);
+            if (unit.petSpeciesData.ActiveSkills != null) blueprintAbilities.AddRange(unit.petSpeciesData.ActiveSkills);
         }
         
         for (int i = 0; i < activeRuntimeConditions.Count; i++)
         {
             var cond = activeRuntimeConditions[i];
             if (cond?.blueprint != null)
-                abilities.Add(cond.blueprint);
+                blueprintAbilities.Add(cond.blueprint);
         }
 
-        foreach (var blueprint in abilities)
+        foreach (var blueprint in blueprintAbilities)
         {
-            if (blueprint != null)
+            if (blueprint == null) continue;
+            if (executingAbilities.Contains(blueprint)) continue;
+            executingAbilities.Add(blueprint);
+            try
             {
-                if (executingAbilities.Contains(blueprint)) continue;
-                executingAbilities.Add(blueprint);
-                try
-                {
-                // 1. Processamos as Modifiers síncronas (como buffs de atributos/danos que modificam o context flat)
+                int stacks = 1;
+                var runtimeCond = FindRuntimeCondition(blueprint);
+                if (runtimeCond != null) stacks = runtimeCond.stacks;
+                
+                if (context.Variables == null) context.Variables = new Dictionary<string, float>();
+                context.Variables["stacks"] = stacks;
+
+                // Modifiers síncronas
                 if (blueprint.modifiers != null)
                 {
                     foreach (var mod in blueprint.modifiers)
@@ -113,8 +140,7 @@ public class PassiveManager : MonoBehaviour
                     }
                 }
 
-                // 2. Processamos os EffectSteps vinculados a este hook sem invocar a Coroutine do Executor,
-                // de forma síncrona, usando o mesmo CombatContext passado para o PassiveManager!
+                // EffectSteps
                 if (blueprint.modifierSteps != null)
                 {
                     foreach (var step in blueprint.modifierSteps)
@@ -125,7 +151,7 @@ public class PassiveManager : MonoBehaviour
                         if (step.targetingStrategy != null)
                             targets = step.targetingStrategy.GetTargets(context);
                         else
-                            targets.Add(context.target ?? unit); // Default target ou self
+                            targets.Add(context.target ?? unit);
 
                         foreach (var target in targets)
                         {
@@ -137,28 +163,129 @@ public class PassiveManager : MonoBehaviour
 
                                 var originalTarget = context.target;
                                 context.target = target;
-                                
                                 effect.Execute(context);
-                                
                                 context.target = originalTarget;
                             }
                         }
                     }
                 }
-                }
-                finally
+
+                // Se o blueprint tiver um grafo, executá-lo também (legacy bridge)
+                if (blueprint.abilityGraph != null)
                 {
-                    executingAbilities.Remove(blueprint);
+                    ExecuteGraphForHook(blueprint.abilityGraph, hook, context, stacks);
                 }
+            }
+            finally
+            {
+                executingAbilities.Remove(blueprint);
+            }
+        }
+
+        // --- 2. Graph-based conditions (queimadura, veneno, etc) ---
+        for (int i = 0; i < activeGraphConditions.Count; i++)
+        {
+            var cond = activeGraphConditions[i];
+            if (cond?.graph == null) continue;
+            if (executingAbilities.Contains(cond.graph)) continue;
+
+            executingAbilities.Add(cond.graph);
+            try
+            {
+                if (context.Variables == null) context.Variables = new Dictionary<string, float>();
+                context.Variables["stacks"] = cond.stacks;
+
+                ExecuteGraphForHook(cond.graph, hook, context, cond.stacks);
+            }
+            finally
+            {
+                executingAbilities.Remove(cond.graph);
             }
         }
     }
+
+    private void ExecuteGraphForHook(AbilityGraphSO graph, CombatHook hook, CombatContext context, int stacks)
+    {
+        if (AbilityGraphInterpreter.Instance == null) return;
+        
+        // O Interpreter agora suporta iniciar a partir de TriggerNodes
+        StartCoroutine(AbilityGraphInterpreter.Instance.ExecuteGraphCoroutine(
+            context.source, graph, hook, null
+        ));
+    }
+
+    // --- Apply / Remove Condition (Graph-based) ---
+
+    public void ApplyGraphCondition(AbilityGraphSO conditionGraph, Unit source)
+    {
+        if (conditionGraph == null) return;
+        var context = new CombatContext(source, unit);
+
+        TriggerHook(CombatHook.OnBeforeApplyCondition, context);
+        if (source != null)
+        {
+            var sourcePassive = source.GetComponent<PassiveManager>();
+            sourcePassive?.TriggerHook(CombatHook.OnBeforeApplyCondition, context);
+        }
+
+        bool persistent = conditionGraph.GetIsPersistent() || conditionGraph.GetDuration() <= 0;
+        int duration = persistent ? 0 : conditionGraph.GetDuration();
+        bool canStack = conditionGraph.GetCanStack();
+        int maxStacks = conditionGraph.GetMaxStacks();
+
+        var existing = FindGraphCondition(conditionGraph);
+        if (existing != null)
+        {
+            existing.isPersistent = persistent;
+            existing.remainingTurns = duration;
+            if (canStack)
+            {
+                existing.stacks++;
+                if (maxStacks > 0 && existing.stacks > maxStacks)
+                    existing.stacks = maxStacks;
+            }
+        }
+        else
+        {
+            activeGraphConditions.Add(new RuntimeGraphCondition(conditionGraph, persistent, duration));
+        }
+
+        int currentStacks = existing != null ? existing.stacks : 1;
+        Debug.Log($"[PassiveManager] Aplicando condição (Graph): {conditionGraph.name} | Persistent: {persistent} | Turns: {duration} | Stacks: {currentStacks}");
+
+        TriggerHook(CombatHook.OnAfterApplyCondition, context);
+        if (source != null)
+        {
+            var sourcePassive = source.GetComponent<PassiveManager>();
+            sourcePassive?.TriggerHook(CombatHook.OnAfterApplyCondition, context);
+        }
+    }
+
+    public void RemoveGraphCondition(AbilityGraphSO conditionGraph)
+    {
+        var existing = FindGraphCondition(conditionGraph);
+        if (existing != null)
+            activeGraphConditions.Remove(existing);
+    }
+
+    private RuntimeGraphCondition FindGraphCondition(AbilityGraphSO graph)
+    {
+        if (graph == null) return null;
+        for (int i = 0; i < activeGraphConditions.Count; i++)
+        {
+            var cond = activeGraphConditions[i];
+            if (cond != null && cond.graph == graph)
+                return cond;
+        }
+        return null;
+    }
+
+    // --- Legacy Blueprint conditions ---
 
     public void ApplyCondition(AbilityBlueprint conditionBlueprint, Unit source)
     {
         var context = new CombatContext(source, unit);
 
-        // Hooks ANTES de aplicar a condição
         TriggerHook(CombatHook.OnBeforeApplyCondition, context);
         if (source != null)
         {
@@ -171,23 +298,27 @@ public class PassiveManager : MonoBehaviour
             bool persistent = conditionBlueprint.isPersistentCondition || conditionBlueprint.durationInTurns <= 0;
             int duration = persistent ? 0 : conditionBlueprint.durationInTurns;
 
-            // Atualiza existente ou adiciona nova
             var existing = FindRuntimeCondition(conditionBlueprint);
             if (existing != null)
             {
                 existing.isPersistent = persistent;
                 existing.remainingTurns = duration;
+                if (conditionBlueprint.canStack)
+                {
+                    existing.stacks++;
+                    if (conditionBlueprint.maxStacks > 0 && existing.stacks > conditionBlueprint.maxStacks)
+                        existing.stacks = conditionBlueprint.maxStacks;
+                }
             }
             else
             {
                 activeRuntimeConditions.Add(new RuntimeCondition(conditionBlueprint, persistent, duration));
             }
 
-            Debug.Log($"[PassiveManager] Aplicando condição (Blueprint): {conditionBlueprint.name} | Persistent: {persistent} | Turns: {duration}");
+            int currentStacks = existing != null ? existing.stacks : 1;
+            Debug.Log($"[PassiveManager] Aplicando condição (Blueprint): {conditionBlueprint.name} | Persistent: {persistent} | Turns: {duration} | Stacks: {currentStacks}");
         }
 
-
-        // Hooks DEPOIS de aplicar a condição
         TriggerHook(CombatHook.OnAfterApplyCondition, context);
         if (source != null)
         {
@@ -217,6 +348,26 @@ public class PassiveManager : MonoBehaviour
 
     private void TickConditionsOnTurnEnd()
     {
+        // Tick graph conditions
+        for (int i = activeGraphConditions.Count - 1; i >= 0; i--)
+        {
+            var cond = activeGraphConditions[i];
+            if (cond == null || cond.graph == null)
+            {
+                activeGraphConditions.RemoveAt(i);
+                continue;
+            }
+            if (cond.isPersistent) continue;
+
+            cond.remainingTurns--;
+            if (cond.remainingTurns <= 0)
+            {
+                Debug.Log($"[PassiveManager] Condição expirada (Graph): {cond.graph.name}");
+                activeGraphConditions.RemoveAt(i);
+            }
+        }
+
+        // Tick legacy blueprint conditions
         for (int i = activeRuntimeConditions.Count - 1; i >= 0; i--)
         {
             var cond = activeRuntimeConditions[i];
@@ -225,9 +376,7 @@ public class PassiveManager : MonoBehaviour
                 activeRuntimeConditions.RemoveAt(i);
                 continue;
             }
-
-            if (cond.isPersistent)
-                continue;
+            if (cond.isPersistent) continue;
 
             cond.remainingTurns--;
             if (cond.remainingTurns <= 0)
@@ -238,15 +387,3 @@ public class PassiveManager : MonoBehaviour
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-

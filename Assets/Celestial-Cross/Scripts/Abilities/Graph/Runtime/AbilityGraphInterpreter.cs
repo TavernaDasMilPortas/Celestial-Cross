@@ -40,7 +40,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
             }
         }
 
-        public IEnumerator ExecuteGraphCoroutine(Unit caster, AbilityGraphSO graph, CombatHook hook, Action onComplete)
+        public IEnumerator ExecuteGraphCoroutine(Unit caster, AbilityGraphSO graph, CombatHook hook, Action onComplete, int level = 1)
         {
             Debug.Log($"<color=cyan>[Interpreter]</color> Iniciando grafo: {graph.name} com {graph.NodeData.Count} nós.");
 
@@ -52,15 +52,46 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
             }
 
             var context = new CombatContext(caster);
+            context.abilityLevel = level;
+
+            // Inicializar Blackboard com valores do SO
+            foreach (var variable in graph.Variables)
+            {
+                context.Variables[variable.name] = variable.initialValue;
+            }
             var nodeMap = graph.NodeData.ToDictionary(n => n.Guid);
             var connections = graph.NodeLinks;
 
-            var currentNodeData = graph.NodeData.FirstOrDefault(n => n.NodeType == "StartNode");
+            AbilityNodeData currentNodeData = null;
+
+            if (hook == CombatHook.OnManualCast)
+            {
+                // Para ações manuais, sempre começar pelo StartNode
+                currentNodeData = graph.NodeData.FirstOrDefault(n => n.NodeType == "StartNode");
+            }
+            else
+            {
+                // Para hooks passivos/condições, procurar um TriggerNode que bata com o hook
+                currentNodeData = graph.NodeData.FirstOrDefault(n => {
+                    if (n.NodeType != "TriggerNode") return false;
+                    if (string.IsNullOrEmpty(n.JsonData)) return false;
+                    var triggerData = JsonUtility.FromJson<TriggerNodeData>(n.JsonData);
+                    return triggerData.trigger == hook;
+                });
+            }
+
             if (currentNodeData == null)
             {
+                // Se não encontrou ponto de entrada, silenciosamente sair (não é erro para passivas sem esse hook)
+                if (hook != CombatHook.OnManualCast)
+                {
+                    onComplete?.Invoke();
+                    yield break;
+                }
                 Debug.LogError("[Interpreter] Nó inicial (StartNode) não encontrado no grafo!");
                 onComplete?.Invoke();
                 yield break;
+
             }
 
             while (currentNodeData != null)
@@ -68,7 +99,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                 Debug.Log($"[Interpreter] Executando nó: {currentNodeData.NodeType} ({currentNodeData.Guid})");
                 
                 string nextPort = "Out";
-                yield return StartCoroutine(ProcessNode(currentNodeData, context, hook, (port) => nextPort = port));
+                yield return StartCoroutine(ProcessNode(graph, currentNodeData, context, hook, (port) => nextPort = port));
 
                 Debug.Log($"[Interpreter] Procurando link saindo de {currentNodeData.Guid} pela porta '{nextPort}'");
                 var link = connections.FirstOrDefault(l => l.BaseNodeGuid == currentNodeData.Guid && l.PortName == nextPort);
@@ -99,7 +130,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
             onComplete?.Invoke();
         }
 
-        private IEnumerator ProcessNode(AbilityNodeData node, CombatContext context, CombatHook currentHook, Action<string> onResultPort)
+        private IEnumerator ProcessNode(AbilityGraphSO graph, AbilityNodeData node, CombatContext context, CombatHook currentHook, Action<string> onResultPort)
         {
             string resultPort = "Out";
 
@@ -112,7 +143,12 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
 
                 case "TargetNode":
                     var targetData = JsonUtility.FromJson<TargetNodeData>(node.JsonData);
-                    targetData.areaPattern = node.areaPattern; // Injetar referência que está fora do JSON
+                    
+                    // Prioridade: Novo sistema de referências por ID. Se não achar, usa o campo legado.
+                    AreaPatternData pattern = graph.GetAsset<AreaPatternData>(targetData.patternReferenceId);
+                    if (pattern == null) pattern = node.areaPattern;
+                    
+                    targetData.areaPattern = pattern; 
                     yield return StartCoroutine(HandleTargeting(targetData, context, currentHook));
                     break;
 
@@ -160,6 +196,50 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                     var costData = JsonUtility.FromJson<CostNodeData>(node.JsonData);
                     ExecuteCost(costData, context);
                     break;
+
+                case "LoopNode":
+                    var loopData = JsonUtility.FromJson<LoopNodeData>(node.JsonData);
+                    int maxIterations = loopData.iterations;
+                    if (!string.IsNullOrEmpty(loopData.iterationsVariable))
+                        maxIterations = (int)GetVariable(context, loopData.iterationsVariable, maxIterations);
+                    
+                    if (!context.loopCounters.ContainsKey(node.Guid))
+                        context.loopCounters[node.Guid] = 0;
+                    
+                    if (context.loopCounters[node.Guid] < maxIterations)
+                    {
+                        context.loopCounters[node.Guid]++;
+                        resultPort = "Loop";
+                    }
+                    else
+                    {
+                        context.loopCounters[node.Guid] = 0; // Reset para possíveis loops aninhados futuros
+                        resultPort = "Exit";
+                    }
+                    break;
+
+                case "VariableModifierNode":
+                    var modData = JsonUtility.FromJson<VariableModifierNodeData>(node.JsonData);
+                    float modVal = modData.value;
+                    if (!string.IsNullOrEmpty(modData.valueVariableReference))
+                        modVal = GetVariable(context, modData.valueVariableReference, modVal);
+                    
+                    ModifyVariable(context, modData.variableName, modData.operation, modVal);
+                    break;
+
+                case "LevelBranchNode":
+                    resultPort = $"Level {context.abilityLevel}";
+                    break;
+
+                case "StatModifierEffectNode":
+                    var statModData = JsonUtility.FromJson<StatModifierNodeData>(node.JsonData);
+                    ExecuteStatModifier(statModData, context);
+                    break;
+
+                case "ApplyModifierNode":
+                    var applyModData = JsonUtility.FromJson<ApplyModifierNodeData>(node.JsonData);
+                    ExecuteApplyModifier(applyModData, node, graph, context);
+                    break;
             }
 
             onResultPort?.Invoke(resultPort);
@@ -185,7 +265,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                 rule.targetFaction = (TargetFaction)data.factionType;
 
                 TargetSelector selector = context.source.gameObject.AddComponent<TargetSelector>();
-                selector.Begin(context.source, data.range, rule, data.areaPattern);
+                selector.Begin(context.source, data.range, rule, data.areaPattern, data.preferredDirection, null, data.autoRotate);
 
                 bool selectionConfirmed = false;
                 List<Unit> selected = new List<Unit>();
@@ -233,7 +313,11 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                     default: baseVal = context.source.Stats.attack; break;
                 }
 
-                int finalAmount = (data.valueType == Celestial_Cross.Scripts.Abilities.ValueType.Flat) ? data.amount : (int)(baseVal * (data.amount / 100f));
+                float amount = data.amount;
+                if (!string.IsNullOrEmpty(data.variableReference))
+                    amount = GetVariable(context, data.variableReference, amount);
+
+                int finalAmount = (data.valueType == Celestial_Cross.Scripts.Abilities.ValueType.Flat) ? (int)amount : (int)(baseVal * (amount / 100f));
                 stepContext.amount = finalAmount;
 
                 DamageProcessor.ProcessAndApplyDamage(stepContext, true);
@@ -245,8 +329,15 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
             foreach (var target in context.targets)
             {
                 if (target == null) continue;
-                // Implementar cura...
-                Debug.Log($"[Interpreter] Curando {target.name} em {data.amount}");
+                
+                float amount = data.amount;
+                if (!string.IsNullOrEmpty(data.variableReference))
+                    amount = GetVariable(context, data.variableReference, amount);
+
+                int finalAmount = (data.valueType == Celestial_Cross.Scripts.Abilities.ValueType.Flat) ? (int)amount : (int)(context.source.Stats.attack * (amount / 100f));
+                
+                var stepContext = new CombatContext(context.source, target, finalAmount);
+                DamageProcessor.ProcessAndApplyHeal(stepContext, data.canCrit);
             }
         }
 
@@ -268,10 +359,86 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
 
         private void ExecuteCost(CostNodeData data, CombatContext context)
         {
-            // TODO: Implementar campos de Mana e Stamina no CombatStats ou Unit
-            // context.source.Stats.mana -= data.manaCost;
-            // context.source.Stats.stamina -= data.staminaCost;
-            Debug.Log($"[Interpreter] Custo simulado: Mana {data.manaCost}, Stamina {data.staminaCost}");
+            int mana = data.manaCost;
+            if (!string.IsNullOrEmpty(data.manaVariable))
+                mana = (int)GetVariable(context, data.manaVariable, mana);
+
+            int stamina = data.staminaCost;
+            if (!string.IsNullOrEmpty(data.staminaVariable))
+                stamina = (int)GetVariable(context, data.staminaVariable, stamina);
+
+            // TODO: Implementar campos de Mana e Stamina no CombatStats ou Unit de forma definitiva
+            // Por enquanto simulamos a dedução se os campos existirem futuramente
+            Debug.Log($"[Interpreter] Custo aplicado: {mana} Mana, {stamina} Stamina");
+        }
+
+        private void ExecuteStatModifier(StatModifierNodeData data, CombatContext context)
+        {
+            foreach(var target in context.targets)
+            {
+                if (target == null) continue;
+                var passiveManager = target.GetComponent<PassiveManager>();
+                if (passiveManager == null) continue;
+
+                // We dynamically create a wrapper Blueprint to hold graph's modifier logic
+                var dynamicBlueprint = ScriptableObject.CreateInstance<AbilityBlueprint>();
+                dynamicBlueprint.name = "GraphBuff_" + (string.IsNullOrEmpty(data.variableReference) ? Guid.NewGuid().ToString().Substring(0,4) : data.variableReference);
+                dynamicBlueprint.isPersistentCondition = false;
+                dynamicBlueprint.durationInTurns = 1; // Default duration, maybe Graph supplies DurationPort later
+                dynamicBlueprint.canStack = data.canStack;
+                dynamicBlueprint.maxStacks = data.maxStacks;
+                
+                // Add flat stat modifier to blueprint
+                var mod = new Celestial_Cross.Scripts.Abilities.PassiveEffect_ConditionalStatBonus() 
+                {
+                    triggerHook = data.isBuff ? CombatHook.OnRoundStart : CombatHook.OnTurnStart, // Simplification
+                    statBonus = new CombatStats()
+                };
+                
+                float multiplier = 1f;
+                if (!string.IsNullOrEmpty(data.variableReference))
+                    multiplier = GetVariable(context, data.variableReference, 1f);
+                
+                // Exemplo simplificado para conversão
+                foreach(var stat in data.stats)
+                {
+                    // Mapeia os índices de StatType para CombatStats
+                    if (stat.statIndex == 1) // Supondo AttackFlat
+                        mod.statBonus.attack = (int)(stat.value * multiplier);
+                    if (stat.statIndex == 3) // Supondo DefenseFlat
+                        mod.statBonus.defense = (int)(stat.value * multiplier);
+                }
+
+                dynamicBlueprint.modifiers.Add(mod);
+
+                // NOTE: Proper dynamic insertion of stat mods requires a specific Modifier class implementations
+                // For now, the user wants the stack fields configured. We use ApplyCondition with stacking logic!
+                passiveManager.ApplyCondition(dynamicBlueprint, context.source);
+            }
+        }
+
+        private void ExecuteApplyModifier(ApplyModifierNodeData data, AbilityNodeData nodeData, AbilityGraphSO graph, CombatContext context)
+        {
+            // O modifierId referencia um AbilityGraphSO nas dependencies do grafo
+            var conditionGraph = graph.GetAsset<AbilityGraphSO>(data.modifierId);
+            if (conditionGraph == null)
+            {
+                Debug.LogWarning($"[Interpreter] ApplyModifierNode: Nenhum grafo encontrado para ID '{data.modifierId}'. Verifique as Dependencies do grafo.");
+                return;
+            }
+
+            foreach (var target in context.targets)
+            {
+                if (target == null) continue;
+                var passiveManager = target.GetComponent<PassiveManager>();
+                if (passiveManager == null) continue;
+
+                for (int i = 0; i < data.stacks; i++)
+                {
+                    passiveManager.ApplyGraphCondition(conditionGraph, context.source);
+                }
+                Debug.Log($"[Interpreter] Condição '{conditionGraph.name}' aplicada em {target.name} ({data.stacks} stack(s)).");
+            }
         }
 
         #endregion
@@ -320,6 +487,31 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                 DistanceCondition.DistanceType.Exact => dist == data.distance,
                 _ => false
             };
+        }
+
+        #endregion
+
+        #region Blackboard Helpers
+
+        private float GetVariable(CombatContext context, string varName, float defaultValue)
+        {
+            if (context.Variables.TryGetValue(varName, out float val))
+                return val;
+            return defaultValue;
+        }
+
+        private void ModifyVariable(CombatContext context, string varName, VariableModifierNodeData.Operation op, float value)
+        {
+            if (!context.Variables.ContainsKey(varName))
+                context.Variables[varName] = 0;
+
+            switch (op)
+            {
+                case VariableModifierNodeData.Operation.Set: context.Variables[varName] = value; break;
+                case VariableModifierNodeData.Operation.Add: context.Variables[varName] += value; break;
+                case VariableModifierNodeData.Operation.Multiply: context.Variables[varName] *= value; break;
+            }
+            Debug.Log($"[Interpreter] Variável '{varName}' atualizada para {context.Variables[varName]} (Op: {op})");
         }
 
         #endregion

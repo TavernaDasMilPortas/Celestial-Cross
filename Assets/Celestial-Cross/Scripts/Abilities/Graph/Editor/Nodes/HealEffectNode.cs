@@ -13,6 +13,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
         private EnumField baseAttributeDropdown;
         private Toggle canCritToggle;
         private Toggle allowOverhealToggle;
+        private TextField variableReferenceField;
 
         private Celestial_Cross.Scripts.Abilities.Graph.Runtime.HealNodeData nodeData = new Celestial_Cross.Scripts.Abilities.Graph.Runtime.HealNodeData();
 
@@ -44,6 +45,11 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
             amountField.value = nodeData.amount;
             amountField.RegisterValueChangedCallback(evt => nodeData.amount = evt.newValue);
             extensionContainer.Add(amountField);
+
+            variableReferenceField = new TextField("Amount Var");
+            variableReferenceField.value = nodeData.variableReference;
+            variableReferenceField.RegisterValueChangedCallback(evt => nodeData.variableReference = evt.newValue);
+            extensionContainer.Add(variableReferenceField);
 
             baseAttributeDropdown = new EnumField("Base Attribute", ValueType.Flat); 
             baseAttributeDropdown.RegisterValueChangedCallback(evt => {
@@ -93,6 +99,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
                 nodeData = JsonUtility.FromJson<Celestial_Cross.Scripts.Abilities.Graph.Runtime.HealNodeData>(json);
                 valueTypeDropdown.value = nodeData.valueType;
                 amountField.value = nodeData.amount;
+                variableReferenceField.value = nodeData.variableReference;
                 canCritToggle.value = nodeData.canCrit;
                 allowOverhealToggle.value = nodeData.allowOverheal;
                 UpdateDynamicFields();
@@ -103,6 +110,12 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
         {
             string overhealText = nodeData.allowOverheal ? " (pode sobre-curar)" : "";
             return $"Cura {nodeData.amount}{nodeData.valueType} de vida{overhealText}.";
+        }
+
+        public void SetVariableReference(string varName)
+        {
+            nodeData.variableReference = varName;
+            if (variableReferenceField != null) variableReferenceField.value = varName;
         }
     }
 }

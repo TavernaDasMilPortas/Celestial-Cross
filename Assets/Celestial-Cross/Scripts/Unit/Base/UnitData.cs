@@ -52,11 +52,16 @@ public class UnitData : ScriptableObject
     [Tooltip("Lista de habilidades e passivas usando o novo sistema de Blueprints.")]
     public List<AbilityBlueprint> abilities = new();
 
+    [Header("Ability Graphs")]
+    [Tooltip("Lista de habilidades usando o sistema de Grafos.")]
+    public List<Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO> abilityGraphs = new();
+
     [Header("Actions (Native)")]
     [SerializeReference]
     public List<UnitActionData> nativeActions = new();
 
     public List<AbilityBlueprint> GetAbilities() => abilities;
+    public List<Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO> GetAbilityGraphs() => abilityGraphs;
 
     // Adaptado para Unit.cs - UnitActionContext se comunica com UnitActionData
     public IEnumerable<UnitActionData> GetExecutableDefinitions()

@@ -30,6 +30,10 @@ public class ActionBarUI : MonoBehaviour
             {
                 isClickable = !wrapper.Blueprint.isPassive;
             }
+            else if (action is Celestial_Cross.Scripts.Units.GraphActionWrapper graphWrapper)
+            {
+                isClickable = graphWrapper.Graph.IsActive;
+            }
 
             CreateButtonForAction(action, i, isClickable);
         }

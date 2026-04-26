@@ -1,5 +1,6 @@
 public enum AbilityType
 {
     Passive,
-    Active
+    Active,
+    Condition
 }

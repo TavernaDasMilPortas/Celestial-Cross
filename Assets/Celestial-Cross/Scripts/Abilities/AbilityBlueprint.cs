@@ -25,6 +25,13 @@ namespace Celestial_Cross.Scripts.Abilities
         public bool isPersistentCondition = false;
         [Tooltip("Duration in turns. 0 means infinite until cleansed.")]
         public int durationInTurns = 0;
+        
+        [Header("Stacking")]
+        [Tooltip("If true, applying this condition again will add a stack instead of just refreshing.")]
+        public bool canStack = false;
+        [Tooltip("Maximum number of stacks this condition can have. (0 = infinite)")]
+        [ShowIf("canStack")]
+        public int maxStacks = 1;
 
         [Header("Effects & Modifiers")]
         [Title("Active Effects", "Executed when the ability is manually cast.")]

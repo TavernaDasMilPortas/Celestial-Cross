@@ -27,6 +27,7 @@ public abstract class UnitActionBase : MonoBehaviour, IUnitAction
     public Sprite ActionIcon { get; set; }
     public string ActionDescription { get; set; }
     public virtual int Range { get; set; }
+    public virtual int Level { get; set; } = 1;
     public Vector2Int Target { get; set; }
     public virtual AreaPatternData GetAreaPattern() => null;
     public virtual string GetDetailStats() => "";

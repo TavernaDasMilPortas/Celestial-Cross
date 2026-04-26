@@ -15,6 +15,7 @@ namespace Celestial_Cross.Scripts.Units
         public string ActionDescription => Blueprint.abilityDescription;
         public int Range => Blueprint.displayRange;
 
+        public int Level { get; set; } = 1;
         public Vector2Int Target { get; set; }
 
         public event Action<ActionForecast> OnForecastUpdated;
