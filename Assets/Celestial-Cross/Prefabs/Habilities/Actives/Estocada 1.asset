@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2d40ee282d0c8984b934ffbbbb9c91f1, type: 3}
-  m_Name: Estocada
+  m_Name: Estocada 1
   m_EditorClassIdentifier: Assembly-CSharp::Celestial_Cross.Scripts.Abilities.AbilityBlueprint
   abilityName: Estocada
   abilityIcon: {fileID: 0}
@@ -18,26 +18,38 @@ MonoBehaviour:
   displayRange: 1
   abilityType: 1
   isPassive: 0
-  abilityGraph: {fileID: 11400000, guid: 588e2f904fd93b947b5f099c7c15288b, type: 2}
   isPersistentCondition: 0
   durationInTurns: 0
   effectSteps:
   - rid: 2614504980249575424
-  modifierSteps: []
+  modifierSteps:
+  - rid: 5231956278939484164
   modifiers: []
   references:
     version: 2
     RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
     - rid: 2614504980249575424
       type: {class: EffectStep, ns: Celestial_Cross.Scripts.Abilities, asm: Assembly-CSharp}
       data:
         trigger: 0
         reusePreviousTargets: 0
         targetingStrategy:
-          rid: 2614504980249575425
+          rid: 5231956278939484163
         effects:
         - rid: 2614504980249575426
-    - rid: 2614504980249575425
+    - rid: 2614504980249575426
+      type: {class: DamageEffectData, ns: Celestial_Cross.Scripts.Abilities, asm: Assembly-CSharp}
+      data:
+        conditions: []
+        requireAllConditions: 1
+        scaleWithDistance: 0
+        distanceScaleFactor: 0.1
+        valueType: 1
+        amount: 100
+        baseAttribute: 1
+    - rid: 5231956278939484163
       type: {class: ManualTargetingStrategy, ns: Celestial_Cross.Scripts.Abilities.Targeting, asm: Assembly-CSharp}
       data:
         RequiresManualSelection: 1
@@ -49,17 +61,15 @@ MonoBehaviour:
           maxTargets: 1
           canTargetSelf: 0
           targetFaction: 0
-        AreaPattern: {fileID: 11400000, guid: 355229a7f5738f840b56c5210a05e669, type: 2}
+        AreaPattern: {fileID: 0}
         PreferredDirection: 0
-        AutoRotateArea: 1
+        AutoRotateArea: 0
         ManualRange: 1
-    - rid: 2614504980249575426
-      type: {class: DamageEffectData, ns: Celestial_Cross.Scripts.Abilities, asm: Assembly-CSharp}
+    - rid: 5231956278939484164
+      type: {class: EffectStep, ns: Celestial_Cross.Scripts.Abilities, asm: Assembly-CSharp}
       data:
-        conditions: []
-        requireAllConditions: 1
-        scaleWithDistance: 0
-        distanceScaleFactor: 0.1
-        valueType: 1
-        amount: 100
-        baseAttribute: 1
+        trigger: 0
+        reusePreviousTargets: 0
+        targetingStrategy:
+          rid: -2
+        effects: []

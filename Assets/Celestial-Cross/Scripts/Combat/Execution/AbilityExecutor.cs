@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Celestial_Cross.Scripts.Abilities;
+using Celestial_Cross.Scripts.Abilities.Graph.Runtime;
 using CelestialCross.Combat;
 
 namespace Celestial_Cross.Scripts.Combat.Execution
@@ -70,6 +71,14 @@ namespace Celestial_Cross.Scripts.Combat.Execution
         private IEnumerator ExecuteBlueprintCoroutine(Unit caster, AbilityBlueprint blueprint, CombatHook currentHook, Action onComplete)
         {
             CombatLogger.Log($"<color=white>[AbilityExecutor]</color> Iniciando habilidade: <b>{blueprint.name}</b> (Hook: {currentHook})", LogCategory.Ability);
+
+            // Prioridade para o Sistema de Grafo
+            if (blueprint.abilityGraph != null && AbilityGraphInterpreter.Instance != null)
+            {
+                yield return StartCoroutine(AbilityGraphInterpreter.Instance.ExecuteGraphCoroutine(caster, blueprint.abilityGraph, currentHook, onComplete));
+                yield break;
+            }
+
             var context = new AbilityExecutionContext(caster, blueprint);
 
             // Determine which steps to execute based on the hook

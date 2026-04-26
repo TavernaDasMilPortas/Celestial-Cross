@@ -23,8 +23,8 @@ MonoBehaviour:
   walkableOverrides:
   - columns: 0101010101
   - columns: 0101010101
-  - columns: 0101000001
-  - columns: 0101000001
+  - columns: 0101010101
+  - columns: 0101010101
   - columns: 0101010101
   spriteLayers:
   - name: Layer 0
@@ -35,30 +35,30 @@ MonoBehaviour:
       - {fileID: -735588308, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
       - {fileID: -735588308, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
       - {fileID: -735588308, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
-      - {fileID: 1781723709, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
+      - {fileID: 0}
     - columns:
-      - {fileID: -359105617, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
-      - {fileID: -2005473662, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
-      - {fileID: -2005473662, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
-      - {fileID: -2005473662, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
-      - {fileID: 1913372010, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
     - columns:
-      - {fileID: -359105617, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
-      - {fileID: -2005473662, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
-      - {fileID: -2005473662, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
-      - {fileID: -2005473662, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
-      - {fileID: 1913372010, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
     - columns:
-      - {fileID: -359105617, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
-      - {fileID: -2005473662, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
-      - {fileID: -2005473662, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
-      - {fileID: -2005473662, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
-      - {fileID: 1913372010, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: -1662261976, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
+      - {fileID: 0}
     - columns:
       - {fileID: 356569212, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
-      - {fileID: -550428862, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
-      - {fileID: -550428862, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
-      - {fileID: -550428862, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
+      - {fileID: -1425292593, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
+      - {fileID: -1425292593, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
+      - {fileID: -1729962621, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
       - {fileID: -1662261976, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
   - name: Layer 1
     isVisible: 1
@@ -78,14 +78,14 @@ MonoBehaviour:
     - columns:
       - {fileID: 0}
       - {fileID: 0}
-      - {fileID: -1361478321, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
-      - {fileID: 248009399, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
+      - {fileID: 0}
+      - {fileID: 0}
       - {fileID: 0}
     - columns:
       - {fileID: 0}
       - {fileID: 0}
-      - {fileID: 1266435540, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
-      - {fileID: -2015861334, guid: 6d63191c8c3458649bbf120371049d1f, type: 3}
+      - {fileID: 0}
+      - {fileID: 0}
       - {fileID: 0}
     - columns:
       - {fileID: 0}

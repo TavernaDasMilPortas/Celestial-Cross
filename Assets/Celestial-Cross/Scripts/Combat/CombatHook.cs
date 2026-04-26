@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace CelestialCross.Combat
 {
@@ -34,6 +34,7 @@ namespace CelestialCross.Combat
     {
         public Unit source;      
         public Unit target;      
+        public global::System.Collections.Generic.List<Unit> targets;
         public int amount;       
         public bool isCritical;
         public IUnitAction action; 
@@ -45,6 +46,8 @@ namespace CelestialCross.Combat
         {
             this.source = source;
             this.target = target;
+            this.targets = new global::System.Collections.Generic.List<Unit>();
+            if (target != null) this.targets.Add(target);
             this.amount = amount;
             this.action = action;
             this.Variables = new global::System.Collections.Generic.Dictionary<string, float>();
