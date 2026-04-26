@@ -34,8 +34,8 @@
   <Project Path="Unity.Burst.Editor.csproj" />
   <Project Path="Unity.Mobile.AndroidLogcat.Editor.csproj" />
   <Project Path="Unity.Rider.Editor.csproj" />
-  <Project Path="Unity.VisualScripting.State.csproj" />
   <Project Path="Google.Play.Games.csproj" />
+  <Project Path="Unity.VisualScripting.State.csproj" />
   <Project Path="Unity.Notifications.csproj" />
   <Project Path="Unity.Services.Authentication.PlayerAccounts.Editor.csproj" />
   <Project Path="Unity.Services.Core.Configuration.Editor.csproj" />

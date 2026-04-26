@@ -56,5 +56,6 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "Bichinhos-Magicos.slnx"
+    "dotnet.defaultSolution": "Bichinhos-Magicos.slnx",
+    "markdown.validate.enabled": true
 }

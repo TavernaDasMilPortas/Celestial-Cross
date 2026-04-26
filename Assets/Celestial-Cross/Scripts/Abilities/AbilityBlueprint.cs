@@ -16,6 +16,10 @@ namespace Celestial_Cross.Scripts.Abilities
         [Tooltip("Is this a passive ability? Passive abilities are not shown in the action bar.")]
         public bool isPassive = false;
 
+        [Header("Node System (Optional)")]
+        [Tooltip("If assigned, the execution will use this graph instead of the steps below.")]
+        public Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO abilityGraph;
+
         [Header("Condition Settings")]
         [Tooltip("If true, this ability will be applied as a persistent condition on the target.")]
         public bool isPersistentCondition = false;

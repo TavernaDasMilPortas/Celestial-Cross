@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b74335336934364f92171120eea7025, type: 3}
+  m_Name: estocada
+  m_EditorClassIdentifier: Assembly-CSharp::Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO
+  NodeLinks:
+  - BaseNodeGuid: cc463600-dedd-4308-aa6e-9d61d4f82f84
+    PortName: Out
+    TargetNodeGuid: e76ca2e3-690c-47c6-93dc-415b8e59faaf
+    TargetPortName: In
+  - BaseNodeGuid: e76ca2e3-690c-47c6-93dc-415b8e59faaf
+    PortName: Out
+    TargetNodeGuid: 0bf3af8e-8206-4a5a-a7e3-d11379b2383f
+    TargetPortName: In
+  - BaseNodeGuid: 453d9709-c804-493d-a0e4-c834b88ba134
+    PortName: Out
+    TargetNodeGuid: cc463600-dedd-4308-aa6e-9d61d4f82f84
+    TargetPortName: In
+  NodeData:
+  - Guid: 453d9709-c804-493d-a0e4-c834b88ba134
+    NodeType: StartNode
+    NodeTitle: Start
+    Position: {x: 100, y: 200}
+    JsonData: '{"type":1,"duration":0}'
+    areaPattern: {fileID: 0}
+  - Guid: cc463600-dedd-4308-aa6e-9d61d4f82f84
+    NodeType: TriggerNode
+    NodeTitle: Trigger Event
+    Position: {x: 357.6, y: 200}
+    JsonData: '{"trigger":0}'
+    areaPattern: {fileID: 0}
+  - Guid: 0bf3af8e-8206-4a5a-a7e3-d11379b2383f
+    NodeType: DamageEffectNode
+    NodeTitle: Damage Effect
+    Position: {x: 1191.2, y: 217.6}
+    JsonData: '{"valueType":1,"amount":100,"baseAttribute":1,"scaleWithDistance":false,"distanceScaleFactor":0.10000000149011612}'
+    areaPattern: {fileID: 0}
+  - Guid: e76ca2e3-690c-47c6-93dc-415b8e59faaf
+    NodeType: TargetNode
+    NodeTitle: Targeting
+    Position: {x: 746.4, y: 200}
+    JsonData: '{"reusePrevious":false,"sourceType":0,"mode":1,"range":1,"multipleTargets":false,"maxTargets":1,"origin":1,"strategy":0,"attributeType":0,"factionType":0,"targetCount":1,"autoRotate":true,"areaPattern":{"instanceID":51798}}'
+    areaPattern: {fileID: 11400000, guid: 355229a7f5738f840b56c5210a05e669, type: 2}
+  GeneratedDescription: "<b>--- DESCRI\xC7\xC3O AUTOM\xC1TICA ---</b>\r\n- Esta \xE9
+    uma habilidade do tipo Active.\r\n- Escolhe manualmente m\xFAltiplos tiles em
+    \xE1rea a um range de 1 a partir de Point.\r\n- Causa 100Percentage de Attack
+    de dano.\r\n"
