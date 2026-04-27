@@ -47,6 +47,8 @@ namespace Celestial_Cross.Scripts.Abilities.Graph
         public bool GetCanStack() => GetStartNodeData().canStack;
         public int GetMaxStacks() => GetStartNodeData().maxStacks;
         public bool GetIsPersistent() => GetStartNodeData().isPersistent;
+        public bool GetIsBuff() => GetStartNodeData().isBuff;
+
 
         // --- Asset helpers ---
 

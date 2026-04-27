@@ -25,34 +25,42 @@ MonoBehaviour:
     PortName: Out
     TargetNodeGuid: cc463600-dedd-4308-aa6e-9d61d4f82f84
     TargetPortName: In
-  - BaseNodeGuid: e76ca2e3-690c-47c6-93dc-415b8e59faaf
-    PortName: Out
-    TargetNodeGuid: 4c403ad9-639f-4005-9835-506a471b096f
-    TargetPortName: Flow In
-  - BaseNodeGuid: 4c403ad9-639f-4005-9835-506a471b096f
-    PortName: Else / False
-    TargetNodeGuid: 0bf3af8e-8206-4a5a-a7e3-d11379b2383f
-    TargetPortName: In
-  - BaseNodeGuid: 4c403ad9-639f-4005-9835-506a471b096f
-    PortName: True 0
-    TargetNodeGuid: b029f7d1-f714-4121-9cd9-3fb2323407fb
-    TargetPortName: In
   - BaseNodeGuid: 87b25f68-957d-4bf1-b505-b0cd1f3a2c01
     PortName: Bool Out
     TargetNodeGuid: 4c403ad9-639f-4005-9835-506a471b096f
     TargetPortName: Cond 0
+  - BaseNodeGuid: 4c403ad9-639f-4005-9835-506a471b096f
+    PortName: True
+    TargetNodeGuid: a69b480b-7795-453d-b162-f784a5f94c88
+    TargetPortName: In
+  - BaseNodeGuid: a69b480b-7795-453d-b162-f784a5f94c88
+    PortName: Out
+    TargetNodeGuid: e738deaf-478e-46c2-96ca-910f54e4fd36
+    TargetPortName: In
+  - BaseNodeGuid: 4c403ad9-639f-4005-9835-506a471b096f
+    PortName: False
+    TargetNodeGuid: e738deaf-478e-46c2-96ca-910f54e4fd36
+    TargetPortName: In
+  - BaseNodeGuid: e76ca2e3-690c-47c6-93dc-415b8e59faaf
+    PortName: Out
+    TargetNodeGuid: dcff6735-13df-4227-87d0-f1a5f7c75480
+    TargetPortName: In
+  - BaseNodeGuid: dcff6735-13df-4227-87d0-f1a5f7c75480
+    PortName: Out
+    TargetNodeGuid: 4c403ad9-639f-4005-9835-506a471b096f
+    TargetPortName: Flow In
   NodeData:
   - Guid: 453d9709-c804-493d-a0e4-c834b88ba134
     NodeType: StartNode
     NodeTitle: Start
     Position: {x: 100, y: 200}
-    JsonData: '{"type":1,"duration":0,"canStack":false,"maxStacks":1,"isPersistent":false}'
+    JsonData: '{"type":1,"duration":0,"canStack":false,"maxStacks":1,"isPersistent":false,"isBuff":true}'
     areaPattern: {fileID: 0}
   - Guid: e76ca2e3-690c-47c6-93dc-415b8e59faaf
     NodeType: TargetNode
     NodeTitle: Targeting
     Position: {x: 648, y: 205}
-    JsonData: '{"reusePrevious":false,"sourceType":0,"mode":1,"range":1,"multipleTargets":false,"maxTargets":1,"origin":1,"strategy":0,"attributeType":0,"factionType":0,"targetCount":1,"autoRotate":true,"preferredDirection":0,"patternReferenceId":"","areaPattern":{"instanceID":51754},"rangeVariable":"","maxTargetsVariable":""}'
+    JsonData: '{"reusePrevious":false,"sourceType":0,"mode":1,"range":1,"multipleTargets":false,"maxTargets":1,"origin":1,"strategy":0,"attributeType":0,"factionType":0,"targetCount":1,"autoRotate":true,"preferredDirection":0,"patternReferenceId":"","areaPattern":{"instanceID":51728},"rangeVariable":"","maxTargetsVariable":""}'
     areaPattern: {fileID: 11400000, guid: 355229a7f5738f840b56c5210a05e669, type: 2}
   - Guid: cc463600-dedd-4308-aa6e-9d61d4f82f84
     NodeType: TriggerNode
@@ -66,32 +74,50 @@ MonoBehaviour:
     Position: {x: 1113, y: 354}
     JsonData: 
     areaPattern: {fileID: 0}
-  - Guid: 0bf3af8e-8206-4a5a-a7e3-d11379b2383f
-    NodeType: DamageEffectNode
-    NodeTitle: Damage Effect
-    Position: {x: 1426, y: 216}
-    JsonData: '{"valueType":1,"amount":100,"variableReference":"","baseAttribute":1,"scaleWithDistance":false,"distanceScaleFactor":0.10000000149011612}'
-    areaPattern: {fileID: 0}
   - Guid: 87b25f68-957d-4bf1-b505-b0cd1f3a2c01
     NodeType: SpeedAdvantageConditionNode
     NodeTitle: Speed Advantage
     Position: {x: 913, y: 517}
     JsonData: '{"requiredDifference":10,"greaterOrEqual":true}'
     areaPattern: {fileID: 0}
-  - Guid: b029f7d1-f714-4121-9cd9-3fb2323407fb
-    NodeType: HealEffectNode
-    NodeTitle: Heal Effect
-    Position: {x: 1431, y: 515}
-    JsonData: '{"valueType":0,"amount":10,"variableReference":"heal_amount_b029","baseAttribute":0,"canCrit":true,"allowOverheal":false}'
+  - Guid: a69b480b-7795-453d-b162-f784a5f94c88
+    NodeType: VariableModifierNode
+    NodeTitle: Modifier
+    Position: {x: 1471, y: 219}
+    JsonData: '{"variableName":"Damage","operation":1,"value":5.0,"valueVariableReference":""}'
+    areaPattern: {fileID: 0}
+  - Guid: e738deaf-478e-46c2-96ca-910f54e4fd36
+    NodeType: DamageEffectNode
+    NodeTitle: Damage Effect
+    Position: {x: 1763, y: 333}
+    JsonData: '{"valueType":1,"amount":100,"variableReference":"Damage","baseAttribute":1,"scaleWithDistance":false,"distanceScaleFactor":0.10000000149011612}'
+    areaPattern: {fileID: 0}
+  - Guid: dcff6735-13df-4227-87d0-f1a5f7c75480
+    NodeType: VariableModifierNode
+    NodeTitle: Modifier
+    Position: {x: 1093, y: 127}
+    JsonData: '{"variableName":"Damage","operation":0,"value":10.0,"valueVariableReference":""}'
     areaPattern: {fileID: 0}
   Dependencies: []
   Variables:
   - name: heal_amount_b029
     initialValue: 10
     description: 
+  - name: Damage
+    initialValue: 0
+    description: 
+  - name: dmg_amount_e738
+    initialValue: 10
+    description: 
+  - name: mana_cost_cfaf
+    initialValue: 5
+    description: 
+  - name: stamina_cost_cfaf
+    initialValue: 5
+    description: 
   MaxLevel: 1
   GeneratedDescription: "<b>--- DESCRI\xC7\xC3O AUTOM\xC1TICA ---</b>\r\n- Esta \xE9
     uma habilidade do tipo Active.\r\n- Escolhe manualmente m\xFAltiplos tiles em
-    \xE1rea a um range de 1 a partir de Point.\r\n  * Se for 'Else / False':\r\n 
-    - Causa 100Percentage de Attack de dano.\r\n  * Se for 'True 0':\r\n  - Cura
-    10Flat de vida.\r\n"
+    \xE1rea a um range de 1 a partir de Point.\r\n- Modifica 'Damage' (Set 10).\r\n 
+    * Se for 'True':\r\n  - Modifica 'Damage' (Add 5).\r\n  - Causa 100Percentage
+    de Attack de dano.\r\n  * Se for 'False':\r\n"

@@ -268,6 +268,35 @@ public class PassiveManager : MonoBehaviour
             activeGraphConditions.Remove(existing);
     }
 
+    public void RemoveAllPositiveConditions()
+    {
+        for (int i = activeGraphConditions.Count - 1; i >= 0; i--)
+        {
+            if (activeGraphConditions[i].graph.GetIsBuff())
+                activeGraphConditions.RemoveAt(i);
+        }
+        for (int i = activeRuntimeConditions.Count - 1; i >= 0; i--)
+        {
+            if (activeRuntimeConditions[i].blueprint.isBuff)
+                activeRuntimeConditions.RemoveAt(i);
+        }
+    }
+
+    public void RemoveAllNegativeConditions()
+    {
+        for (int i = activeGraphConditions.Count - 1; i >= 0; i--)
+        {
+            if (!activeGraphConditions[i].graph.GetIsBuff())
+                activeGraphConditions.RemoveAt(i);
+        }
+        for (int i = activeRuntimeConditions.Count - 1; i >= 0; i--)
+        {
+            if (!activeRuntimeConditions[i].blueprint.isBuff)
+                activeRuntimeConditions.RemoveAt(i);
+        }
+    }
+
+
     private RuntimeGraphCondition FindGraphCondition(AbilityGraphSO graph)
     {
         if (graph == null) return null;

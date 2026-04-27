@@ -24,7 +24,9 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
         public bool canStack = false;
         public int maxStacks = 1;
         public bool isPersistent = false;
+        public bool isBuff = true;
     }
+
 
     [Serializable]
     public class TargetNodeData
@@ -132,9 +134,41 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
     }
 
     [Serializable]
+    public class RangeConditionNodeData
+    {
+        public RangeCondition.RangeOrigin origin = RangeCondition.RangeOrigin.Caster;
+        public int range = 1;
+        public RangeCondition.UnitFilter filter = RangeCondition.UnitFilter.Both;
+        public int targetCount = 2;
+        public RangeCondition.Comparison comparison = RangeCondition.Comparison.GreaterOrEqual;
+    }
+
+    [Serializable]
     public class FactionConditionNodeData
     {
-        public GraphFactionType faction;
+        public AttributeCondition.TargetType target = AttributeCondition.TargetType.Target;
+        public FactionTarget faction = FactionTarget.Enemy;
+    }
+
+    [Serializable]
+    public class SpeedAdvantageConditionNodeData
+    {
+        public int requiredDifference = 10;
+        public bool greaterOrEqual = true;
+    }
+
+    [Serializable]
+    public class TurnOrderConditionNodeData
+    {
+        public TurnOrderCondition.OrderType type = TurnOrderCondition.OrderType.FirstInRound;
+        public int specificIndex = 0;
+    }
+
+    [Serializable]
+    public class CleanseStatusNodeData
+    {
+        public bool allPositive = false;
+        public bool allNegative = false;
     }
 
     // --- Efeitos ---
@@ -168,6 +202,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
 
     [Serializable]
     public class VfxNodeData
+
     {
         public string vfxId;
         public bool attachToTarget;
@@ -181,3 +216,4 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
         public float value;
     }
 }
+

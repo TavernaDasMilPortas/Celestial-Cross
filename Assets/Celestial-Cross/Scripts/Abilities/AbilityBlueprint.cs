@@ -15,6 +15,8 @@ namespace Celestial_Cross.Scripts.Abilities
         public AbilityType abilityType = AbilityType.Active;
         [Tooltip("Is this a passive ability? Passive abilities are not shown in the action bar.")]
         public bool isPassive = false;
+        public bool isBuff = true;
+
 
         [Header("Node System (Optional)")]
         [Tooltip("If assigned, the execution will use this graph instead of the steps below.")]

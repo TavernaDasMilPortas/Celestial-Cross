@@ -28,7 +28,6 @@ MonoBehaviour:
     effectAccuracy: 1
   abilities:
   - {fileID: 11400000, guid: 9886e0c37475c314fb3a4c2f6f3e9d23, type: 2}
-  - {fileID: 11400000, guid: 8a8e88ec2453aa14492886aad8a13aab, type: 2}
   abilityGraphs:
   - {fileID: 11400000, guid: 588e2f904fd93b947b5f099c7c15288b, type: 2}
   - {fileID: 11400000, guid: 1046e58697e467140b173faec1eef775, type: 2}

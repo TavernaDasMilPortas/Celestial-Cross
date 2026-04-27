@@ -163,11 +163,35 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                     break;
 
                 case "ConditionalFlowNode":
-                    // O Branch node em si não tem dados, ele apenas roteia
-                    // A lógica de decisão geralmente vem do nó anterior ou de um input de bool
-                    // No nosso sistema simples, o branch segue o resultado de uma condição conectada
-                    // MAS, se o nó for um Branch, ele precisa saber qual porta seguir.
-                    // Por simplicidade, vamos assumir que o Branch avalia o 'context' atual.
+                    // O usuário quer lógica AND: True se TODAS forem verdadeiras.
+                    // Procuramos todas as portas "Cond X" conectadas.
+                    bool allTrue = true;
+                    var condLinks = graph.NodeLinks.Where(l => l.TargetNodeGuid == node.Guid && l.TargetPortName.StartsWith("Cond")).ToList();
+                    
+                    if (condLinks.Count == 0)
+                    {
+                        // Se não tem condições, vamos para True? Ou False? 
+                        // Seguindo a lógica de "cumprimento de todas as condições", 0 condições = todas cumpridas.
+                        resultPort = "True";
+                    }
+                    else
+                    {
+                        foreach (var link in condLinks)
+                        {
+                            var sourceNode = graph.NodeData.FirstOrDefault(n => n.Guid == link.BaseNodeGuid);
+                            if (sourceNode != null)
+                            {
+                                string subResult = "False";
+                                yield return StartCoroutine(ProcessNode(graph, sourceNode, context, currentHook, (res) => subResult = res));
+                                if (subResult != "True" && subResult != "Bool Out")
+                                {
+                                    allTrue = false;
+                                    break;
+                                }
+                            }
+                        }
+                        resultPort = allTrue ? "True" : "False";
+                    }
                     break;
 
                 case "AttributeConditionNode":
@@ -180,6 +204,30 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                     var distCond = JsonUtility.FromJson<DistanceConditionNodeData>(node.JsonData);
                     bool distResult = EvaluateDistanceCondition(distCond, context);
                     resultPort = distResult ? "True" : "False";
+                    break;
+
+                case "RangeConditionNode":
+                    var rangeCond = JsonUtility.FromJson<RangeConditionNodeData>(node.JsonData);
+                    bool rangeResult = EvaluateRangeCondition(rangeCond, context);
+                    resultPort = rangeResult ? "True" : "False";
+                    break;
+
+                case "FactionConditionNode":
+                    var factionCond = JsonUtility.FromJson<FactionConditionNodeData>(node.JsonData);
+                    bool factionResult = EvaluateFactionCondition(factionCond, context);
+                    resultPort = factionResult ? "True" : "False";
+                    break;
+
+                case "SpeedAdvantageConditionNode":
+                    var speedCond = JsonUtility.FromJson<SpeedAdvantageConditionNodeData>(node.JsonData);
+                    bool speedResult = EvaluateSpeedAdvantageCondition(speedCond, context);
+                    resultPort = speedResult ? "True" : "False";
+                    break;
+
+                case "TurnOrderConditionNode":
+                    var turnCond = JsonUtility.FromJson<TurnOrderConditionNodeData>(node.JsonData);
+                    bool turnResult = EvaluateTurnOrderCondition(turnCond, context);
+                    resultPort = turnResult ? "True" : "False";
                     break;
 
                 case "MoveEffectNode":
@@ -196,6 +244,12 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                     var costData = JsonUtility.FromJson<CostNodeData>(node.JsonData);
                     ExecuteCost(costData, context);
                     break;
+
+                case "CleanseStatusNode":
+                    var cleanseData = JsonUtility.FromJson<CleanseStatusNodeData>(node.JsonData);
+                    ExecuteCleanse(cleanseData, context);
+                    break;
+
 
                 case "LoopNode":
                     var loopData = JsonUtility.FromJson<LoopNodeData>(node.JsonData);
@@ -346,11 +400,61 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
             foreach (var target in context.targets)
             {
                 if (target == null) continue;
-                // Implementar lógica de empurrão/puxão/teleporte...
-                Debug.Log($"[Interpreter] Movendo {target.name}: {data.moveType}");
+                
+                Vector2Int currentPos = target.GridPosition;
+                Vector2Int destination = currentPos;
+
+                Vector2Int direction = target.GridPosition - context.source.GridPosition;
+                if (direction == Vector2Int.zero) direction = Vector2Int.up;
+                direction = new Vector2Int(Mathf.Clamp(direction.x, -1, 1), Mathf.Clamp(direction.y, -1, 1));
+
+                switch (data.moveType)
+                {
+                    case MoveEffectNodeData.MoveType.Push:
+                        destination = currentPos + (direction * data.distance);
+                        break;
+                    case MoveEffectNodeData.MoveType.Pull:
+                        destination = currentPos - (direction * data.distance);
+                        break;
+                    case MoveEffectNodeData.MoveType.TeleportToTarget:
+                        if (context.targets.Count > 1) destination = context.targets[0].GridPosition;
+                        break;
+                    case MoveEffectNodeData.MoveType.TeleportBehindTarget:
+                        destination = target.GridPosition + direction;
+                        break;
+                    case MoveEffectNodeData.MoveType.DashToTarget:
+                        destination = target.GridPosition - direction;
+                        break;
+                }
+
+                // Validar destino no grid
+                GridMap gridMap = GridMap.Instance;
+                if (gridMap != null)
+                {
+                    // Garantir que o destino existe e não está ocupado (ou é o próprio target)
+                    var targetTile = gridMap.GetTile(destination);
+                    if (targetTile == null || (targetTile.IsOccupied && targetTile.OccupyingUnit != target))
+                    {
+                        // Procura o tile mais próximo válido no caminho se for empurrão/puxão
+                        // (Simplificação: apenas não move se o destino final for inválido)
+                        Debug.LogWarning($"[Interpreter] Destino de movimento {destination} inválido ou ocupado.");
+                        continue;
+                    }
+
+                    var oldTile = gridMap.GetTile(target.GridPosition);
+                    if (oldTile != null) { oldTile.IsOccupied = false; oldTile.OccupyingUnit = null; }
+
+                    target.GridPosition = destination;
+                    target.transform.position = gridMap.GridToWorld(destination);
+
+                    if (targetTile != null) { targetTile.IsOccupied = true; targetTile.OccupyingUnit = target; }
+                }
+
+                Debug.Log($"[Interpreter] Movendo {target.name}: {data.moveType} para {destination}");
             }
             yield return new WaitForSeconds(0.2f);
         }
+
 
         private void ExecuteVfx(VfxNodeData data, CombatContext context)
         {
@@ -489,7 +593,94 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
             };
         }
 
+        private bool EvaluateRangeCondition(RangeConditionNodeData data, CombatContext context)
+
+        {
+            Unit originUnit = (data.origin == RangeCondition.RangeOrigin.Caster) ? context.source : (context.targets.Count > 0 ? context.targets[0] : null);
+            if (originUnit == null) return false;
+
+            var allUnits = UnityEngine.Object.FindObjectsByType<Unit>(FindObjectsSortMode.None);
+            int foundCount = 0;
+
+            foreach (var u in allUnits)
+            {
+                if (u == null || u == originUnit) continue;
+
+                int dist = Mathf.Max(Mathf.Abs(originUnit.GridPosition.x - u.GridPosition.x), Mathf.Abs(originUnit.GridPosition.y - u.GridPosition.y));
+                if (dist > data.range) continue;
+
+                bool isAlly = u.Team == originUnit.Team;
+                bool matchesFilter = data.filter switch
+                {
+                    RangeCondition.UnitFilter.Allies => isAlly,
+                    RangeCondition.UnitFilter.Enemies => !isAlly,
+                    RangeCondition.UnitFilter.Both => true,
+                    _ => false
+                };
+
+                if (matchesFilter) foundCount++;
+            }
+
+            return data.comparison switch
+            {
+                RangeCondition.Comparison.GreaterOrEqual => foundCount >= data.targetCount,
+                RangeCondition.Comparison.LessOrEqual => foundCount <= data.targetCount,
+                RangeCondition.Comparison.Exact => foundCount == data.targetCount,
+                _ => false
+            };
+        }
+
+        private bool EvaluateFactionCondition(FactionConditionNodeData data, CombatContext context)
+        {
+            Unit unit = data.target == AttributeCondition.TargetType.Caster ? context.source : (context.targets.Count > 0 ? context.targets[0] : null);
+            if (unit == null) return false;
+
+            bool isAlly = unit.Team == context.source.Team;
+            return data.faction == FactionTarget.Ally ? isAlly : !isAlly;
+        }
+
+        private bool EvaluateSpeedAdvantageCondition(SpeedAdvantageConditionNodeData data, CombatContext context)
+        {
+            if (context.targets.Count == 0) return false;
+            Unit target = context.targets[0];
+            
+            int casterSpeed = context.source.Stats.speed;
+            int targetSpeed = target.Stats.speed;
+
+            if (data.greaterOrEqual)
+                return casterSpeed >= targetSpeed + data.requiredDifference;
+            
+            return Mathf.Abs(casterSpeed - targetSpeed) >= data.requiredDifference;
+        }
+
+        private bool EvaluateTurnOrderCondition(TurnOrderConditionNodeData data, CombatContext context)
+        {
+            if (TurnManager.Instance == null) return false;
+
+            if (data.type == TurnOrderCondition.OrderType.FirstInRound)
+            {
+                return context.source == TurnManager.Instance.RoundStartUnit;
+            }
+            
+            // SpecificIndex logic would go here if TurnManager supported it easily
+            return false;
+        }
+
+        private void ExecuteCleanse(CleanseStatusNodeData data, CombatContext context)
+        {
+            foreach (var target in context.targets)
+            {
+                if (target == null) continue;
+                var passiveManager = target.GetComponent<PassiveManager>();
+                if (passiveManager == null) continue;
+
+                if (data.allPositive) passiveManager.RemoveAllPositiveConditions();
+                if (data.allNegative) passiveManager.RemoveAllNegativeConditions();
+            }
+        }
+
         #endregion
+
 
         #region Blackboard Helpers
 
