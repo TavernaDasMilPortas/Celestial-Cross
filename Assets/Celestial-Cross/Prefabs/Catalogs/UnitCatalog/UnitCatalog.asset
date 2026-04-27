@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: UnitCatalog
   m_EditorClassIdentifier: Assembly-CSharp::UnitCatalog
   entries:
+  - unitData: {fileID: 11400000, guid: f70108c1193f43d41bcdd5cf43b523aa, type: 2}
+  - unitData: {fileID: 11400000, guid: 67628d77266bab446ba0b5274c2a9397, type: 2}
   - unitData: {fileID: 11400000, guid: 642b786367762f940aded926f739f0ba, type: 2}
   - unitData: {fileID: 11400000, guid: 6107c25373ff10340a0740b28db3b26e, type: 2}
-  - unitData: {fileID: 11400000, guid: 67628d77266bab446ba0b5274c2a9397, type: 2}
