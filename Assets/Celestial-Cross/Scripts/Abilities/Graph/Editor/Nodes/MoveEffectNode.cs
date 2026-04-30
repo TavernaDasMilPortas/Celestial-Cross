@@ -7,7 +7,8 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
 {
     public class MoveEffectNode : AbilityNode
     {
-        private Toggle moveTargetToggle;
+        private EnumField moveModeField;
+        private TextField rangeVariableField;
         private IntegerField rangeField;
         private Toggle manualDestToggle;
         private Toggle allowOccupiedToggle;
@@ -15,8 +16,9 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
         [System.Serializable]
         public class MoveNodeData
         {
-            public bool moveTarget = false;
+            public Celestial_Cross.Scripts.Abilities.Graph.Runtime.MoveEffectNodeData.MoveMode moveMode = Celestial_Cross.Scripts.Abilities.Graph.Runtime.MoveEffectNodeData.MoveMode.MoveCaster;
             public int range = 3;
+            public string rangeVariable;
             public bool manualDestination = true;
             public bool allowOccupiedTiles = false;
         }
@@ -39,15 +41,19 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
             outputContainer.Add(outputPort);
 
             // UI
-            moveTargetToggle = new Toggle("Move Target?");
-            moveTargetToggle.value = nodeData.moveTarget;
-            moveTargetToggle.RegisterValueChangedCallback(evt => nodeData.moveTarget = evt.newValue);
-            extensionContainer.Add(moveTargetToggle);
+            moveModeField = new EnumField("Move Mode", nodeData.moveMode);
+            moveModeField.RegisterValueChangedCallback(evt => nodeData.moveMode = (Celestial_Cross.Scripts.Abilities.Graph.Runtime.MoveEffectNodeData.MoveMode)evt.newValue);
+            extensionContainer.Add(moveModeField);
 
             rangeField = new IntegerField("Range");
             rangeField.value = nodeData.range;
             rangeField.RegisterValueChangedCallback(evt => nodeData.range = evt.newValue);
             extensionContainer.Add(rangeField);
+
+            rangeVariableField = new TextField("Range Var");
+            rangeVariableField.value = nodeData.rangeVariable;
+            rangeVariableField.RegisterValueChangedCallback(evt => nodeData.rangeVariable = evt.newValue);
+            extensionContainer.Add(rangeVariableField);
 
             manualDestToggle = new Toggle("Manual Destination?");
             manualDestToggle.value = nodeData.manualDestination;
@@ -69,8 +75,9 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
         {
             if (string.IsNullOrEmpty(json)) return;
             nodeData = JsonUtility.FromJson<MoveNodeData>(json);
-            moveTargetToggle.value = nodeData.moveTarget;
+            moveModeField.value = nodeData.moveMode;
             rangeField.value = nodeData.range;
+            rangeVariableField.value = nodeData.rangeVariable;
             manualDestToggle.value = nodeData.manualDestination;
             allowOccupiedToggle.value = nodeData.allowOccupiedTiles;
         }

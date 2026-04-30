@@ -163,6 +163,25 @@ public abstract class UnitActionBase : MonoBehaviour, IUnitAction
     {
         CameraController.Instance?.ResetFocus();
 
+        if (ActionCategory == UnitActionCategory.Movement)
+            unit.hasMovedThisTurn = true;
+        else
+            unit.hasActedThisTurn = true;
+
+        if (unit.hasMovedThisTurn && unit.hasActedThisTurn)
+        {
+            EndTurnProperly();
+        }
+        else
+        {
+            Debug.Log($"[UnitActionBase] Ação '{ActionName}' concluída. Unidade ainda pode {(unit.hasMovedThisTurn ? "agir" : "se mover")}.");
+            // Notificar PlayerController/UI para atualizar botões
+            PlayerController.Instance?.RefreshUI();
+        }
+    }
+
+    protected void EndTurnProperly()
+    {
         if (unit is EnemyUnit)
             TurnManager.Instance.EndTurn();
         else

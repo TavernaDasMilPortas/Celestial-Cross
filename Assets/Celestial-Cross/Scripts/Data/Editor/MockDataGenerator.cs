@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
 using Celestial_Cross.Scripts.Abilities;
@@ -49,7 +49,7 @@ namespace CelestialCross.Editor
                         step.targetingStrategy = new SingleTargetingStrategy();
                         
                         var heal = new Celestial_Cross.Scripts.Abilities.HealEffectData();
-                        heal.amount = 5;
+                        heal.multiplier = 0.05f; // 5% base
                         step.effects.Add(heal);
                     }
                     else 
@@ -60,13 +60,13 @@ namespace CelestialCross.Editor
                         if (blueprint.abilityName.Contains("Cura") || blueprint.abilityName.Contains("Divin") || blueprint.abilityName.Contains("Inspirador"))
                         {
                             var heal = new Celestial_Cross.Scripts.Abilities.HealEffectData();
-                            heal.amount = 30;
+                            heal.multiplier = 0.3f; // 30% base
                             step.effects.Add(heal);
                         }
                         else
                         {
                             var dmg = new Celestial_Cross.Scripts.Abilities.DamageEffectData();
-                            dmg.amount = blueprint.abilityName.Contains("Ultimate") ? 150 : 50;
+                            dmg.multiplier = blueprint.abilityName.Contains("Ultimate") ? 2.0f : 1.0f; // 200% ou 100%
                             step.effects.Add(dmg);
                         }
                     }

@@ -81,6 +81,16 @@ public class InventoryUI : MonoBehaviour
     public Button managePetButton;
     public PetManageModal petManageModal;
     
+    [Header("Leveling UI (Phase 1)")]
+    public TMP_Text unitLevelText;
+    public Image unitXPBar;
+    public TMP_Text unitXPText;
+
+    [Header("Constellation UI (Phase 2)")]
+    public Image[] constellationStars = new Image[6];
+    public Button constellationButton;
+    public TMP_Text insigniaCountText;
+    
     private CelestialCross.Artifacts.ArtifactInstanceData selectedArtifactToEquip;
     private RuntimePetData selectedPetInstance;
     private string selectedPetToEquipId;

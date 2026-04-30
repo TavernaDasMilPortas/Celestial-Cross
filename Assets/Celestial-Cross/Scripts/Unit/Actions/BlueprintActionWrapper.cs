@@ -64,7 +64,7 @@ namespace Celestial_Cross.Scripts.Units
                     if (fx is DamageEffectData dmg)
                     {
                         // Use the correctly qualified type if needed, but here we assume the correct one is in scope
-                        simulatedBaseDamage += dmg.amount;
+                        simulatedBaseDamage += dmg.GetBaseAmount(new CelestialCross.Combat.CombatContext(caster, lastTarget));
                     }
                 }
             }
@@ -93,10 +93,24 @@ namespace Celestial_Cross.Scripts.Units
             {
                 AbilityExecutor.Instance.ExecuteAbility(caster, Blueprint, CelestialCross.Combat.CombatHook.OnManualCast, () => {
                     CameraController.Instance?.ResetFocus();
-                    if (caster is global::EnemyUnit)
-                        TurnManager.Instance.EndTurn();
-                    else    
-                        PlayerController.Instance.EndTurn();
+                    
+                    // Lógica de Movimentação Gratuita
+                    if (Blueprint.abilityType == AbilityType.Active && Blueprint.abilitySubtype == AbilitySubtype.Movement)
+                        caster.hasMovedThisTurn = true;
+                    else
+                        caster.hasActedThisTurn = true;
+
+                    if (caster.hasMovedThisTurn && caster.hasActedThisTurn)
+                    {
+                        if (caster is global::EnemyUnit)
+                            TurnManager.Instance.EndTurn();
+                        else    
+                            PlayerController.Instance.EndTurn();
+                    }
+                    else
+                    {
+                        PlayerController.Instance?.RefreshUI();
+                    }
                 });
             }
             else

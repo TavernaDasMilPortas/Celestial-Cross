@@ -73,6 +73,8 @@ public class TurnManager : MonoBehaviour
         CurrentUnit = current;
         
         current.GetComponentInChildren<UnitVisualController>()?.SetCombatState(true);
+        current.hasMovedThisTurn = false;
+        current.hasActedThisTurn = false;
 
         Debug.Log($"[TurnManager] Turno de {current.DisplayName}");
 

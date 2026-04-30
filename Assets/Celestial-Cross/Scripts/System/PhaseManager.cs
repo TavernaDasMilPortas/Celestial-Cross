@@ -1,6 +1,7 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using CelestialCross.System;
 
 public class PhaseManager : MonoBehaviour
 {
@@ -68,27 +69,34 @@ public class PhaseManager : MonoBehaviour
         }
     }
 
-        private void EndPhase(Team winningTeam)
+    private void EndPhase(Team winningTeam)
     {
         CelestialCross.Data.Dungeon.RuntimeReward finalReward = null;
 
         if (winningTeam == Team.Player)
         {
-            Debug.Log("Fase concluída! Vitória do Jogador!");
+            Debug.Log("Fase concluÃ­da! VitÃ³ria do Jogador!");
             finalReward = GrantRewards();
         }
         else
         {
-            Debug.Log("Fase concluída! Derrota.");
+            Debug.Log("Fase concluÃ­da! Derrota.");
         }
 
         OnPhaseEnded?.Invoke(winningTeam);
 
         bool isVictory = winningTeam == Team.Player;
+        
+        Dictionary<string, XPGainResult> xpResults = null;
+        if (isVictory && finalReward != null && CelestialCross.Giulia_UI.VictoryRewardUI.Instance != null && CelestialCross.Giulia_UI.VictoryRewardUI.Instance.levelingConfig != null)
+        {
+            xpResults = XPDistributor.DistributeXP(finalReward.XP, playerUnits, CelestialCross.Giulia_UI.VictoryRewardUI.Instance.levelingConfig);
+        }
+
         if (finalReward != null)
         {
-            // Mostra a UI procedimental e só volta pro Hub depois do clique
-            CelestialCross.Giulia_UI.VictoryRewardUI.ShowVictoryUI(finalReward, () => 
+            // Mostra a UI procedimental e sÃ³ volta pro Hub depois do clique
+            CelestialCross.Giulia_UI.VictoryRewardUI.ShowVictoryUIWithXP(finalReward, xpResults, () => 
             {
                 if (!string.IsNullOrWhiteSpace(hubSceneName))
                     ReturnToHub();
@@ -97,7 +105,7 @@ public class PhaseManager : MonoBehaviour
         else if (!string.IsNullOrWhiteSpace(hubSceneName))
         {
             // Derrota ou sem erro/loot especial: Mostra ui de derrota vazia
-            CelestialCross.Giulia_UI.VictoryRewardUI.ShowVictoryUI(null, () => 
+            CelestialCross.Giulia_UI.VictoryRewardUI.ShowVictoryUIWithXP(null, null, () => 
             {
                 ReturnToHub();
             }, isVictory);
@@ -121,7 +129,7 @@ public class PhaseManager : MonoBehaviour
 
         var rewardToGrant = new CelestialCross.Data.Dungeon.RuntimeReward(baseReward);
 
-        // --- GERAÇÃO DE LOOT PROCEDURAL E DINÂMICO ---
+        // --- GERAÃ‡ÃƒO DE LOOT PROCEDURAL E DINÃ‚MICO ---
         if (GameFlowManager.Instance != null && GameFlowManager.Instance.SelectedDungeon != null && GameFlowManager.Instance.SelectedDungeonNode != null)
         {
             var dungeon = GameFlowManager.Instance.SelectedDungeon;
@@ -136,7 +144,7 @@ public class PhaseManager : MonoBehaviour
                 }
             }
 
-            // 2. Processar Drop Tables Específicos deste Andar (Nova Arquitetura)
+            // 2. Processar Drop Tables EspecÃ­ficos deste Andar (Nova Arquitetura)
             if (node.SpecificLootTables != null)
             {
                 foreach (var table in node.SpecificLootTables)
@@ -166,5 +174,3 @@ public class PhaseManager : MonoBehaviour
         return rewardToGrant;
     }
 }
-
-

@@ -20,10 +20,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
     public class StartNodeData
     {
         public AbilityType type;
-        public int duration;
-        public bool canStack = false;
-        public int maxStacks = 1;
-        public bool isPersistent = false;
+        public AbilitySubtype subtype;
         public bool isBuff = true;
     }
 
@@ -53,8 +50,6 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
     [Serializable]
     public class DamageNodeData
     {
-        public Celestial_Cross.Scripts.Abilities.ValueType valueType = Celestial_Cross.Scripts.Abilities.ValueType.Flat;
-        public int amount = 10;
         public string variableReference; // Se preenchido, usa o valor da variável
         public int baseAttribute = (int)AttributeCondition.AttributeType.Attack;
         public bool scaleWithDistance = false;
@@ -64,8 +59,6 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
     [Serializable]
     public class HealNodeData
     {
-        public Celestial_Cross.Scripts.Abilities.ValueType valueType = Celestial_Cross.Scripts.Abilities.ValueType.Flat;
-        public int amount = 10;
         public string variableReference;
         public int baseAttribute = 0;
         public bool canCrit = true;
@@ -176,9 +169,16 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
     [Serializable]
     public class MoveEffectNodeData
     {
-        public enum MoveType { Push, Pull, TeleportToTarget, TeleportBehindTarget, DashToTarget }
+        public enum MoveMode { MoveCaster, MoveTarget }
+        public MoveMode moveMode = MoveMode.MoveCaster;
+        public int range = 3;
+        public string rangeVariable;
+        public bool manualDestination = true;
+        public bool allowOccupiedTiles = false;
+        
+        // Mantemos legado para suporte básico ou futuras adições
+        public enum MoveType { Push, Pull, TeleportToTarget, DashToTarget }
         public MoveType moveType;
-        public int distance;
     }
 
     [Serializable]
@@ -198,6 +198,8 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
     {
         public string modifierId;
         public int stacks = 1;
+        public bool canStack = false;
+        public int maxStacks = 1;
     }
 
     [Serializable]
@@ -212,8 +214,8 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
     [Serializable]
     public class DurationNodeData
     {
-        public int durationType; 
-        public float value;
+        public Celestial_Cross.Scripts.Abilities.Modifiers.DurationType type = Celestial_Cross.Scripts.Abilities.Modifiers.DurationType.Turns;
+        public int value = 1;
     }
 }
 

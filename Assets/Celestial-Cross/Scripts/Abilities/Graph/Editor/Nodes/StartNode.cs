@@ -9,10 +9,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
     public class StartNode : AbilityNode
     {
         private EnumField abilityTypeDropdown;
-        private IntegerField durationField;
-        private Toggle canStackToggle;
-        private IntegerField maxStacksField;
-        private Toggle isPersistentToggle;
+        private EnumField abilitySubtypeDropdown;
 
         private Celestial_Cross.Scripts.Abilities.Graph.Runtime.StartNodeData nodeData = new Celestial_Cross.Scripts.Abilities.Graph.Runtime.StartNodeData();
 
@@ -37,30 +34,13 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
                 nodeData.type = (AbilityType)evt.newValue;
                 UpdateDynamicFields();
             });
-            
             extensionContainer.Add(abilityTypeDropdown);
 
-            // Campo dinâmico de Duração
-            durationField = new IntegerField("Duration (Turns)");
-            durationField.RegisterValueChangedCallback(evt => nodeData.duration = evt.newValue);
+            // Dropdown de Subtipo (Aparece se for Active)
+            abilitySubtypeDropdown = new EnumField("Subtype", AbilitySubtype.None);
+            abilitySubtypeDropdown.RegisterValueChangedCallback(evt => nodeData.subtype = (AbilitySubtype)evt.newValue);
+            extensionContainer.Add(abilitySubtypeDropdown);
 
-            // Persistent toggle
-            isPersistentToggle = new Toggle("Persistent (Infinite)");
-            isPersistentToggle.RegisterValueChangedCallback(evt => {
-                nodeData.isPersistent = evt.newValue;
-                UpdateDynamicFields();
-            });
-
-            // Stack toggle
-            canStackToggle = new Toggle("Can Stack");
-            canStackToggle.RegisterValueChangedCallback(evt => {
-                nodeData.canStack = evt.newValue;
-                UpdateDynamicFields();
-            });
-
-            // Max stacks field
-            maxStacksField = new IntegerField("Max Stacks (0=Inf)");
-            maxStacksField.RegisterValueChangedCallback(evt => nodeData.maxStacks = evt.newValue);
 
             UpdateDynamicFields();
 
@@ -70,54 +50,15 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
 
         private void UpdateDynamicFields()
         {
-            bool showConditionFields = (nodeData.type == AbilityType.Condition || nodeData.type == AbilityType.Passive);
-
-            // Duration: shown for Condition/Passive, hidden if isPersistent
-            if (showConditionFields && !nodeData.isPersistent)
+            if (nodeData.type == AbilityType.Active)
             {
-                if (!extensionContainer.Contains(durationField))
-                    extensionContainer.Add(durationField);
+                if (!extensionContainer.Contains(abilitySubtypeDropdown))
+                    extensionContainer.Add(abilitySubtypeDropdown);
             }
             else
             {
-                if (extensionContainer.Contains(durationField))
-                    extensionContainer.Remove(durationField);
-            }
-
-            // isPersistent: shown for Condition/Passive
-            if (showConditionFields)
-            {
-                if (!extensionContainer.Contains(isPersistentToggle))
-                    extensionContainer.Add(isPersistentToggle);
-            }
-            else
-            {
-                if (extensionContainer.Contains(isPersistentToggle))
-                    extensionContainer.Remove(isPersistentToggle);
-            }
-
-            // canStack: shown for Condition/Passive
-            if (showConditionFields)
-            {
-                if (!extensionContainer.Contains(canStackToggle))
-                    extensionContainer.Add(canStackToggle);
-            }
-            else
-            {
-                if (extensionContainer.Contains(canStackToggle))
-                    extensionContainer.Remove(canStackToggle);
-            }
-
-            // maxStacks: shown only if canStack is on
-            if (showConditionFields && nodeData.canStack)
-            {
-                if (!extensionContainer.Contains(maxStacksField))
-                    extensionContainer.Add(maxStacksField);
-            }
-            else
-            {
-                if (extensionContainer.Contains(maxStacksField))
-                    extensionContainer.Remove(maxStacksField);
+                if (extensionContainer.Contains(abilitySubtypeDropdown))
+                    extensionContainer.Remove(abilitySubtypeDropdown);
             }
 
             RefreshExpandedState();
@@ -134,10 +75,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
             {
                 nodeData = JsonUtility.FromJson<Celestial_Cross.Scripts.Abilities.Graph.Runtime.StartNodeData>(json);
                 abilityTypeDropdown.value = nodeData.type;
-                durationField.value = nodeData.duration;
-                isPersistentToggle.value = nodeData.isPersistent;
-                canStackToggle.value = nodeData.canStack;
-                maxStacksField.value = nodeData.maxStacks;
+                abilitySubtypeDropdown.value = nodeData.subtype;
                 UpdateDynamicFields();
             }
         }
@@ -145,11 +83,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
         public override string GetDescription()
         {
             string desc = $"Esta é uma habilidade do tipo {nodeData.type}.";
-            if (nodeData.type == AbilityType.Condition)
-            {
-                desc += nodeData.isPersistent ? " Persistente." : $" Duração: {nodeData.duration} turnos.";
-                if (nodeData.canStack) desc += $" Stacks: max {(nodeData.maxStacks == 0 ? "∞" : nodeData.maxStacks.ToString())}.";
-            }
+            if (nodeData.type == AbilityType.Active) desc += $" Subtipo: {nodeData.subtype}.";
             return desc;
         }
     }

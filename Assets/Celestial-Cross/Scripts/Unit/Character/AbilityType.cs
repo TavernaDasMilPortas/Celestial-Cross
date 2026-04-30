@@ -4,3 +4,12 @@ public enum AbilityType
     Active,
     Condition
 }
+
+public enum AbilitySubtype
+{
+    None,
+    Attack,
+    Movement,
+    Buff,
+    Debuff
+}

@@ -6,6 +6,7 @@ using CelestialCross.Artifacts;
 using CelestialCross.Data.Pets;
 using System.Collections.Generic;
 using CelestialCross.System;
+using System.Collections;
 
 namespace CelestialCross.Giulia_UI
 {
@@ -16,6 +17,7 @@ namespace CelestialCross.Giulia_UI
         [Header("Data Catalogs")]
         public ArtifactSetCatalog artifactSetCatalog;
         public PetCatalog petCatalog;
+        public LevelingConfig levelingConfig;
 
         [Header("Containers")]
         [SerializeField] private GameObject rootContainer;
@@ -34,7 +36,7 @@ namespace CelestialCross.Giulia_UI
         private global::System.Action onCloseCallback;
         private List<GameObject> spawnedItems = new List<GameObject>();
 
-        // === Modal F�sico (Inspector) ===
+        // === Modal Fsico (Inspector) ===
         [Header("Reward Details Modal")]
         [SerializeField] private GameObject detailsModal;
         [SerializeField] private TextMeshProUGUI modalTitle;
@@ -45,6 +47,10 @@ namespace CelestialCross.Giulia_UI
         
         private ArtifactInstanceData currentSelectedArtifact;
         private RuntimePetData currentSelectedPet;
+
+        [Header("XP Panel (Phase 1)")]
+        [SerializeField] private Transform xpSlotsPanel;
+        [SerializeField] private GameObject xpSlotPrefab;
 
         private void Awake()
         {
@@ -266,14 +272,24 @@ namespace CelestialCross.Giulia_UI
         {
             if (Instance == null)
             {
-                Debug.LogWarning("[VictoryRewardUI] Nenhuma inst�ncia encontrada. Fallback.");
+                Debug.LogWarning("[VictoryRewardUI] Nenhuma instncia encontrada. Fallback.");
                 onClose?.Invoke();
                 return;
             }
             Instance.SetupAndShow(reward, onClose, isVictory);
         }
 
-        private void SetupAndShow(RuntimeReward reward, global::System.Action onClose, bool isVictory)
+        public static void ShowVictoryUIWithXP(RuntimeReward reward, Dictionary<string, XPGainResult> xpResults, global::System.Action onClose, bool isVictory = true)
+        {
+            if (Instance == null)
+            {
+                onClose?.Invoke();
+                return;
+            }
+            Instance.SetupAndShow(reward, onClose, isVictory, xpResults);
+        }
+
+        private void SetupAndShow(RuntimeReward reward, global::System.Action onClose, bool isVictory, Dictionary<string, XPGainResult> xpResults = null)
         {
             this.onCloseCallback = onClose;
 
@@ -285,7 +301,7 @@ namespace CelestialCross.Giulia_UI
                 // filter explicitly by name to avoid hijacking my modal texts
                 if (t.name.Contains("Title") || t.text.Contains("VIT") || t.text.Contains("Vit") || t.text.Contains("DERROTA")) {
                     if (t.transform.parent != detailsModal.transform) {
-                        t.text = isVictory ? "VIT�RIA!" : "DERROTA...";
+                        t.text = isVictory ? "VITRIA!" : "DERROTA...";
                         t.color = isVictory ? Color.yellow : Color.red;
                     }
                 }
@@ -295,9 +311,17 @@ namespace CelestialCross.Giulia_UI
                 if (reward != null) {
                     moneyAndEnergyText.text = "Dinheiro: <color=#00FF00>+" + reward.Money + "</color>   Energia: <color=#00FFFF>+" + reward.Energy + "</color>";
                     if (reward.Stardust > 0) moneyAndEnergyText.text += "   Poeira: <color=#FFAA00>+" + reward.Stardust + "</color>";
+                    if (reward.XP > 0) moneyAndEnergyText.text += "   XP: <color=#00FFFF>+" + reward.XP + "</color>";
                 } else {
-                    moneyAndEnergyText.text = "Sorte na pr�xima!";
+                    moneyAndEnergyText.text = "Sorte na prxima!";
                 }
+            }
+
+            if (xpResults != null && xpSlotsPanel != null && xpSlotPrefab != null)
+            {
+                // Limpar slots antigos de XP se houver
+                foreach (Transform child in xpSlotsPanel) Destroy(child.gameObject);
+                StartCoroutine(AnimateXPBars(xpResults));
             }
 
             foreach (var go in spawnedItems)
@@ -328,21 +352,10 @@ namespace CelestialCross.Giulia_UI
                                 if (iconSprite != null)
                                 {
                                     Transform iconTransform = go.transform.Find("Icon");
-                                    if (iconTransform == null) {
-                                        // removido: delega ao prefab da carta
-                                        // removido: delega ao prefab da carta
-                                        // removido: delega ao prefab da carta
-                                        // removido: delega ao prefab da carta
-                                        // removido: delega ao prefab da carta
-                                        // removido: delega ao prefab da carta
-                                        // removido: delega ao prefab
-                                        // removido: delega ao prefab da carta
-                                    }
                                     if (iconTransform != null) {
                                         Image img = iconTransform.GetComponent<Image>();
                                         if (img != null) {
                                             img.sprite = iconSprite;
-                                            // removido: delega ao prefab
                                         }
                                         iconTransform.gameObject.SetActive(true);
                                         }
@@ -399,21 +412,10 @@ namespace CelestialCross.Giulia_UI
 
                         if (petIcon != null) {
                             Transform iconTransform = go.transform.Find("Icon");
-                            if (iconTransform == null) {
-                                // removido: delega ao prefab da carta
-                                // removido: delega ao prefab da carta
-                                // removido: delega ao prefab da carta
-                                // removido: delega ao prefab da carta
-                                // removido: delega ao prefab da carta
-                                // removido: delega ao prefab da carta
-                                // removido: delega ao prefab
-                                // removido: delega ao prefab da carta
-                            }
                             if (iconTransform != null) {
                                 Image img = iconTransform.GetComponent<Image>();
                                 if (img != null) {
                                     img.sprite = petIcon;
-                                    // removido: delega ao prefab
                                 }
                                 iconTransform.gameObject.SetActive(true);
                             }
@@ -443,12 +445,58 @@ namespace CelestialCross.Giulia_UI
             if (noArtifactsText != null)
                 noArtifactsText.gameObject.SetActive(!hasLoot);
         }
+
+        private IEnumerator AnimateXPBars(Dictionary<string, XPGainResult> results)
+        {
+            if (levelingConfig == null) yield break;
+
+            foreach (var kvp in results)
+            {
+                var result = kvp.Value;
+                var slot = Instantiate(xpSlotPrefab, xpSlotsPanel);
+                slot.SetActive(true);
+                
+                var levelTxt = slot.transform.Find("LevelText")?.GetComponent<TextMeshProUGUI>();
+                var barFill = slot.transform.Find("XP_Bar_BG/Fill")?.GetComponent<Image>();
+                var gainTxt = slot.transform.Find("GainText")?.GetComponent<TextMeshProUGUI>();
+
+                if (levelTxt != null) levelTxt.text = $"Lv. {result.oldLevel}";
+                if (gainTxt != null) gainTxt.text = $"+{result.xpGained} XP";
+                
+                if (barFill != null)
+                {
+                    float startXP = (float)(result.currentXP - result.xpGained);
+                    if (startXP < 0) startXP = 0;
+                    
+                    int xpToPrev = levelingConfig.GetXPForLevel(result.oldLevel);
+                    float startPercent = startXP / xpToPrev;
+                    float endPercent = (float)result.currentXP / result.xpToNextLevel;
+
+                    barFill.fillAmount = startPercent;
+
+                    float elapsed = 0;
+                    while (elapsed < 1.5f)
+                    {
+                        elapsed += Time.deltaTime;
+                        float t = elapsed / 1.5f;
+                        
+                        if (result.newLevel > result.oldLevel)
+                        {
+                            if (t < 0.5f) barFill.fillAmount = Mathf.Lerp(startPercent, 1f, t * 2f);
+                            else {
+                                barFill.fillAmount = Mathf.Lerp(0f, endPercent, (t - 0.5f) * 2f);
+                                if (levelTxt != null) levelTxt.text = $"Lv. {result.newLevel} <color=yellow>UP!</color>";
+                            }
+                        }
+                        else
+                        {
+                            barFill.fillAmount = Mathf.Lerp(startPercent, endPercent, t);
+                        }
+                        yield return null;
+                    }
+                    barFill.fillAmount = endPercent;
+                }
+            }
+        }
     }
 }
-
-
-
-
-
-
-

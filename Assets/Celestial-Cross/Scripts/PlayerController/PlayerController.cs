@@ -24,7 +24,8 @@ public class PlayerController : MonoBehaviour
         }
 
         activeUnit = unit;
-     
+        RefreshUI();
+      
         Debug.Log($"Turno de {unit.DisplayName}");
     }
 
@@ -119,9 +120,16 @@ public class PlayerController : MonoBehaviour
         return Direction.E; // Fallback
     }
 
+    public void RefreshUI()
+    {
+        // Encontrar o CombatUIManager ou ActionBarUI na cena
+        FindObjectOfType<ActionBarUI>()?.UpdateInteractability();
+    }
+
     public void EndTurn()
     {
         activeUnit = null;
+        FindObjectOfType<ActionBarUI>()?.ClearButtons();
         TurnManager.Instance.EndTurn();
     }
 }

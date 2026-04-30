@@ -144,12 +144,15 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                 case "TargetNode":
                     var targetData = JsonUtility.FromJson<TargetNodeData>(node.JsonData);
                     
-                    // Prioridade: Novo sistema de referências por ID. Se não achar, usa o campo legado.
                     AreaPatternData pattern = graph.GetAsset<AreaPatternData>(targetData.patternReferenceId);
                     if (pattern == null) pattern = node.areaPattern;
-                    
                     targetData.areaPattern = pattern; 
-                    yield return StartCoroutine(HandleTargeting(targetData, context, currentHook));
+
+                    int resolvedRange = targetData.range;
+                    if (!string.IsNullOrEmpty(targetData.rangeVariable))
+                        resolvedRange = (int)GetVariable(context, targetData.rangeVariable, resolvedRange);
+
+                    yield return StartCoroutine(HandleTargeting(targetData, context, currentHook, resolvedRange));
                     break;
 
                 case "DamageEffectNode":
@@ -287,7 +290,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
 
                 case "StatModifierEffectNode":
                     var statModData = JsonUtility.FromJson<StatModifierNodeData>(node.JsonData);
-                    ExecuteStatModifier(statModData, context);
+                    ExecuteStatModifier(statModData, node, graph, context);
                     break;
 
                 case "ApplyModifierNode":
@@ -302,15 +305,12 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
 
         #region Targeting Logic
 
-        private IEnumerator HandleTargeting(TargetNodeData data, CombatContext context, CombatHook currentHook)
+        private IEnumerator HandleTargeting(TargetNodeData data, CombatContext context, CombatHook currentHook, int resolvedRange)
         {
             if (data.reusePrevious && context.targets != null && context.targets.Count > 0) yield break;
 
             if (data.sourceType == GraphTargetSourceType.Manual && currentHook == CombatHook.OnManualCast)
             {
-                Debug.Log("[Interpreter] Iniciando Seleção Manual...");
-                
-                // Criar regra de targeting a partir dos dados do nó
                 TargetingRuleData rule = new TargetingRuleData();
                 rule.mode = data.mode == GraphTargetMode.Single ? TargetingMode.Unit : TargetingMode.Area;
                 rule.origin = data.origin == GraphTargetOrigin.Unit ? TargetOrigin.Unit : TargetOrigin.Point;
@@ -318,33 +318,39 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                 rule.maxTargets = data.maxTargets;
                 rule.targetFaction = (TargetFaction)data.factionType;
 
-                TargetSelector selector = context.source.gameObject.AddComponent<TargetSelector>();
-                selector.Begin(context.source, data.range, rule, data.areaPattern, data.preferredDirection, null, data.autoRotate);
-
-                bool selectionConfirmed = false;
-                List<Unit> selected = new List<Unit>();
-
-                Action<List<Unit>> onTargets = (targets) => { 
-                    selected = targets; 
-                    selectionConfirmed = true; 
-                };
-
-                selector.OnTargetsConfirmed += onTargets;
-
-                yield return new WaitUntil(() => selectionConfirmed);
-
-                selector.OnTargetsConfirmed -= onTargets;
-                context.targets = selected;
-                
-                UnityEngine.Object.Destroy(selector);
-                Debug.Log($"[Interpreter] Seleção manual finalizada: {context.targets.Count} alvos.");
+                yield return StartCoroutine(PerformManualTargeting(context.source, context.source, resolvedRange, rule, context, (units, points) => context.targets = units, data.areaPattern, data.autoRotate, data.preferredDirection));
             }
             else
             {
-                // Auto Strategy
-                context.targets = AutoTargetResolver.Resolve(context.source, data);
+                // Auto Strategy - Passamos o range resolvido
+                var dataCopy = data; 
+                dataCopy.range = resolvedRange;
+                context.targets = AutoTargetResolver.Resolve(context.source, dataCopy);
                 Debug.Log($"[Interpreter] Auto Targeting: {context.targets.Count} alvos encontrados.");
             }
+        }
+
+        private IEnumerator PerformManualTargeting(Unit source, Unit rangeOrigin, int range, TargetingRuleData rule, CombatContext context, Action<List<Unit>, List<Vector2Int>> onTargetsConfirmed, AreaPatternData pattern = null, bool autoRotate = false, Direction preferredDir = Direction.N, IEnumerable<GridTile> whitelist = null)
+        {
+            TargetSelector selector = source.gameObject.AddComponent<TargetSelector>();
+            selector.Begin(rangeOrigin, range, rule, pattern, preferredDir, whitelist, autoRotate);
+
+            bool selectionConfirmed = false;
+            List<Unit> selectedUnits = new List<Unit>();
+            List<Vector2Int> selectedPoints = new List<Vector2Int>();
+
+            Action<List<Unit>> onTargets = (targets) => { 
+                selectedUnits = targets; 
+                selectedPoints = selector.SelectedPoints.ToList();
+                selectionConfirmed = true; 
+            };
+
+            selector.OnTargetsConfirmed += onTargets;
+            yield return new WaitUntil(() => selectionConfirmed);
+            selector.OnTargetsConfirmed -= onTargets;
+
+            onTargetsConfirmed?.Invoke(selectedUnits, selectedPoints);
+            UnityEngine.Object.Destroy(selector);
         }
 
         #endregion
@@ -367,11 +373,11 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                     default: baseVal = context.source.Stats.attack; break;
                 }
 
-                float amount = data.amount;
+                float multiplier = 1.0f;
                 if (!string.IsNullOrEmpty(data.variableReference))
-                    amount = GetVariable(context, data.variableReference, amount);
+                    multiplier = GetVariable(context, data.variableReference, multiplier);
 
-                int finalAmount = (data.valueType == Celestial_Cross.Scripts.Abilities.ValueType.Flat) ? (int)amount : (int)(baseVal * (amount / 100f));
+                int finalAmount = Mathf.FloorToInt(baseVal * multiplier);
                 stepContext.amount = finalAmount;
 
                 DamageProcessor.ProcessAndApplyDamage(stepContext, true);
@@ -384,11 +390,20 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
             {
                 if (target == null) continue;
                 
-                float amount = data.amount;
-                if (!string.IsNullOrEmpty(data.variableReference))
-                    amount = GetVariable(context, data.variableReference, amount);
+                float baseVal = 0;
+                var attr = (AttributeCondition.AttributeType)data.baseAttribute;
+                switch(attr)
+                {
+                    case AttributeCondition.AttributeType.HP: baseVal = target.Health.MaxHealth; break;
+                    case AttributeCondition.AttributeType.Attack: baseVal = context.source.Stats.attack; break;
+                    default: baseVal = target.Health.MaxHealth; break;
+                }
 
-                int finalAmount = (data.valueType == Celestial_Cross.Scripts.Abilities.ValueType.Flat) ? (int)amount : (int)(context.source.Stats.attack * (amount / 100f));
+                float multiplier = 1.0f;
+                if (!string.IsNullOrEmpty(data.variableReference))
+                    multiplier = GetVariable(context, data.variableReference, multiplier);
+
+                int finalAmount = Mathf.FloorToInt(baseVal * multiplier);
                 
                 var stepContext = new CombatContext(context.source, target, finalAmount);
                 DamageProcessor.ProcessAndApplyHeal(stepContext, data.canCrit);
@@ -397,62 +412,92 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
 
         private IEnumerator ExecuteMove(MoveEffectNodeData data, CombatContext context)
         {
-            foreach (var target in context.targets)
+            List<Unit> subjects = new List<Unit>();
+            if (data.moveMode == MoveEffectNodeData.MoveMode.MoveCaster)
+                subjects.Add(context.source);
+            else
+                subjects.AddRange(context.targets);
+
+            int resolvedRange = data.range;
+            if (!string.IsNullOrEmpty(data.rangeVariable))
+                resolvedRange = (int)GetVariable(context, data.rangeVariable, resolvedRange);
+
+            foreach (var subject in subjects)
             {
-                if (target == null) continue;
-                
-                Vector2Int currentPos = target.GridPosition;
-                Vector2Int destination = currentPos;
+                if (subject == null) continue;
+                Vector2Int destination = subject.GridPosition;
 
-                Vector2Int direction = target.GridPosition - context.source.GridPosition;
-                if (direction == Vector2Int.zero) direction = Vector2Int.up;
-                direction = new Vector2Int(Mathf.Clamp(direction.x, -1, 1), Mathf.Clamp(direction.y, -1, 1));
-
-                switch (data.moveType)
+                if (data.manualDestination && AbilityExecutor.Instance != null)
                 {
-                    case MoveEffectNodeData.MoveType.Push:
-                        destination = currentPos + (direction * data.distance);
-                        break;
-                    case MoveEffectNodeData.MoveType.Pull:
-                        destination = currentPos - (direction * data.distance);
-                        break;
-                    case MoveEffectNodeData.MoveType.TeleportToTarget:
-                        if (context.targets.Count > 1) destination = context.targets[0].GridPosition;
-                        break;
-                    case MoveEffectNodeData.MoveType.TeleportBehindTarget:
-                        destination = target.GridPosition + direction;
-                        break;
-                    case MoveEffectNodeData.MoveType.DashToTarget:
-                        destination = target.GridPosition - direction;
-                        break;
+                    TargetingRuleData rule = new TargetingRuleData();
+                    rule.mode = TargetingMode.Area;
+                    rule.origin = TargetOrigin.Point;
+                    rule.allowMultiple = false;
+                    rule.maxTargets = 1;
+
+                    // Gerar whitelist se não permitir ocupados
+                    List<GridTile> whitelist = null;
+                    if (!data.allowOccupiedTiles && GridMap.Instance != null)
+                    {
+                        whitelist = GridMap.Instance.GetAllTiles().Where(t => t != null && t.IsWalkable && (!t.IsOccupied || t.OccupyingUnit == subject)).ToList();
+                    }
+
+                    Vector2Int selectedPoint = subject.GridPosition;
+                    yield return StartCoroutine(PerformManualTargeting(context.source, subject, resolvedRange, rule, context, (units, points) => {
+                        if (points.Count > 0) selectedPoint = points[0];
+                    }, null, false, Direction.N, whitelist));
+                    
+                    destination = selectedPoint;
+                }
+                else
+                {
+                    // Lógica Automática / Legado
+                    Vector2Int direction = subject.GridPosition - context.source.GridPosition;
+                    if (direction == Vector2Int.zero) direction = Vector2Int.up;
+                    direction = new Vector2Int(Mathf.Clamp(direction.x, -1, 1), Mathf.Clamp(direction.y, -1, 1));
+
+                    switch (data.moveType)
+                    {
+                        case MoveEffectNodeData.MoveType.Push:
+                            destination = subject.GridPosition + (direction * 1);
+                            break;
+                        case MoveEffectNodeData.MoveType.Pull:
+                            destination = subject.GridPosition - (direction * 1);
+                            break;
+                        case MoveEffectNodeData.MoveType.DashToTarget:
+                            if (context.targets.Count > 0)
+                                destination = context.targets[0].GridPosition - direction;
+                            break;
+                        case MoveEffectNodeData.MoveType.TeleportToTarget:
+                            if (context.targets.Count > 0)
+                                destination = context.targets[0].GridPosition;
+                            break;
+                    }
                 }
 
-                // Validar destino no grid
+                // Grid Move Logic
                 GridMap gridMap = GridMap.Instance;
                 if (gridMap != null)
                 {
-                    // Garantir que o destino existe e não está ocupado (ou é o próprio target)
                     var targetTile = gridMap.GetTile(destination);
-                    if (targetTile == null || (targetTile.IsOccupied && targetTile.OccupyingUnit != target))
+                    if (targetTile == null || (!data.allowOccupiedTiles && targetTile.IsOccupied && targetTile.OccupyingUnit != subject))
                     {
-                        // Procura o tile mais próximo válido no caminho se for empurrão/puxão
-                        // (Simplificação: apenas não move se o destino final for inválido)
-                        Debug.LogWarning($"[Interpreter] Destino de movimento {destination} inválido ou ocupado.");
+                        Debug.LogWarning($"[Interpreter] Movimento cancelado.");
                         continue;
                     }
 
-                    var oldTile = gridMap.GetTile(target.GridPosition);
+                    var oldTile = gridMap.GetTile(subject.GridPosition);
                     if (oldTile != null) { oldTile.IsOccupied = false; oldTile.OccupyingUnit = null; }
 
-                    target.GridPosition = destination;
-                    target.transform.position = gridMap.GridToWorld(destination);
+                    subject.GridPosition = destination;
+                    subject.transform.position = gridMap.GridToWorld(destination);
 
-                    if (targetTile != null) { targetTile.IsOccupied = true; targetTile.OccupyingUnit = target; }
+                    if (targetTile != null) { targetTile.IsOccupied = true; targetTile.OccupyingUnit = subject; }
                 }
 
-                Debug.Log($"[Interpreter] Movendo {target.name}: {data.moveType} para {destination}");
+                Debug.Log($"[Interpreter] {subject.name} movido para {destination}");
             }
-            yield return new WaitForSeconds(0.2f);
+            yield return new WaitForSeconds(0.1f);
         }
 
 
@@ -476,7 +521,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
             Debug.Log($"[Interpreter] Custo aplicado: {mana} Mana, {stamina} Stamina");
         }
 
-        private void ExecuteStatModifier(StatModifierNodeData data, CombatContext context)
+        private void ExecuteStatModifier(StatModifierNodeData data, AbilityNodeData node, AbilityGraphSO graph, CombatContext context)
         {
             foreach(var target in context.targets)
             {
@@ -517,6 +562,20 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
 
                 // NOTE: Proper dynamic insertion of stat mods requires a specific Modifier class implementations
                 // For now, the user wants the stack fields configured. We use ApplyCondition with stacking logic!
+
+                // BUSCAR DURAÇÃO DO DURATION NODE (se conectado)
+                var durationLink = graph.NodeLinks.FirstOrDefault(l => l.TargetNodeGuid == node.Guid && l.TargetPortName == "Duration");
+                if (durationLink != null)
+                {
+                    var durationNode = graph.NodeData.FirstOrDefault(n => n.Guid == durationLink.BaseNodeGuid);
+                    if (durationNode != null)
+                    {
+                        var durData = JsonUtility.FromJson<DurationNodeData>(durationNode.JsonData);
+                        dynamicBlueprint.durationInTurns = (int)durData.value;
+                        dynamicBlueprint.isPersistentCondition = (durData.type == Celestial_Cross.Scripts.Abilities.Modifiers.DurationType.Infinite);
+                    }
+                }
+
                 passiveManager.ApplyCondition(dynamicBlueprint, context.source);
             }
         }

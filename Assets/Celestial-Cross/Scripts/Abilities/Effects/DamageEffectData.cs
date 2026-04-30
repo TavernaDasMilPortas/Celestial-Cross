@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 using CelestialCross.Combat;
 using System.Collections.Generic;
@@ -10,8 +10,8 @@ namespace Celestial_Cross.Scripts.Abilities
     [Serializable]
     public class DamageEffectData : EffectData
     {
-        public ValueType valueType = ValueType.Flat;
-        public int amount = 10;
+        [Tooltip("Multiplicador percentual (1.0 = 100%) do atributo base.")]
+        public float multiplier = 1.0f;
 
         [Tooltip("If Percentage, base calculations on this attribute (HP, or Attack).")]
         public AttributeCondition.AttributeType baseAttribute = AttributeCondition.AttributeType.Attack;
@@ -26,8 +26,6 @@ namespace Celestial_Cross.Scripts.Abilities
 
         public int GetBaseAmount(CombatContext context)
         {
-            if (valueType == ValueType.Flat) return amount;
-
             float baseVal = 0;
             switch(baseAttribute)
             {
@@ -38,7 +36,7 @@ namespace Celestial_Cross.Scripts.Abilities
                 default: baseVal = context.source?.Stats.attack ?? 0; break;
             }
 
-            return Mathf.FloorToInt(baseVal * (amount / 100f));
+            return Mathf.FloorToInt(baseVal * multiplier);
         }
     }
 }

@@ -26,6 +26,9 @@ namespace Celestial_Cross.Scripts.Abilities.Graph
         public List<GraphVariable> Variables = new List<GraphVariable>();
         public int MaxLevel = 1;
 
+        [Header("AI Hints")]
+        public Celestial_Cross.Scripts.Units.Enemy.AI.AIAbilityHint aiHint;
+
         [TextArea(5, 15)]
         public string GeneratedDescription;
 
@@ -43,10 +46,55 @@ namespace Celestial_Cross.Scripts.Abilities.Graph
         public bool IsPassive => GetAbilityType() == AbilityType.Passive;
         public bool IsCondition => GetAbilityType() == AbilityType.Condition;
         public bool IsActive => GetAbilityType() == AbilityType.Active;
-        public int GetDuration() => GetStartNodeData().duration;
-        public bool GetCanStack() => GetStartNodeData().canStack;
-        public int GetMaxStacks() => GetStartNodeData().maxStacks;
-        public bool GetIsPersistent() => GetStartNodeData().isPersistent;
+        public int GetDuration() 
+        {
+            var node = NodeData.FirstOrDefault(n => n.NodeType == "DurationNode");
+            if (node != null && !string.IsNullOrEmpty(node.JsonData))
+            {
+                var data = JsonUtility.FromJson<DurationNodeData>(node.JsonData);
+                return (int)data.value;
+            }
+            return 0;
+        }
+
+        public bool GetCanStack() 
+        {
+            // Procura em StatModifier ou ApplyModifier
+            var node = NodeData.FirstOrDefault(n => n.NodeType == "StatModifierEffectNode" || n.NodeType == "ApplyModifierNode");
+            if (node != null && !string.IsNullOrEmpty(node.JsonData))
+            {
+                if (node.NodeType == "StatModifierEffectNode")
+                    return JsonUtility.FromJson<StatModifierNodeData>(node.JsonData).canStack;
+                else
+                    return JsonUtility.FromJson<ApplyModifierNodeData>(node.JsonData).canStack;
+            }
+            return false;
+        }
+
+        public int GetMaxStacks() 
+        {
+            var node = NodeData.FirstOrDefault(n => n.NodeType == "StatModifierEffectNode" || n.NodeType == "ApplyModifierNode");
+            if (node != null && !string.IsNullOrEmpty(node.JsonData))
+            {
+                if (node.NodeType == "StatModifierEffectNode")
+                    return JsonUtility.FromJson<StatModifierNodeData>(node.JsonData).maxStacks;
+                else
+                    return JsonUtility.FromJson<ApplyModifierNodeData>(node.JsonData).maxStacks;
+            }
+            return 1;
+        }
+
+        public bool GetIsPersistent() 
+        {
+            var node = NodeData.FirstOrDefault(n => n.NodeType == "DurationNode");
+            if (node != null && !string.IsNullOrEmpty(node.JsonData))
+            {
+                var data = JsonUtility.FromJson<DurationNodeData>(node.JsonData);
+                return data.type == Celestial_Cross.Scripts.Abilities.Modifiers.DurationType.Infinite;
+            }
+            return false;
+        }
+        
         public bool GetIsBuff() => GetStartNodeData().isBuff;
 
 

@@ -15,6 +15,7 @@ public abstract class Unit : MonoBehaviour
     public UnitData unitData { get; set; }
     public CelestialCross.Data.Pets.PetSpeciesSO petSpeciesData { get; set; }
     public CelestialCross.Data.Pets.RuntimePetData runtimePetData { get; set; }
+    public CelestialCross.Data.RuntimeUnitData runtimeUnitData { get; set; }
     
     [Header("Test/Debug Artifacts")]
     [SerializeField]
@@ -40,6 +41,9 @@ public abstract class Unit : MonoBehaviour
     [Header("Runtime Stats")]
     [SerializeField] protected CombatStats modifierStats = new CombatStats(0, 0, 0, 0, 0, 0);
 
+    public bool hasMovedThisTurn { get; set; }
+    public bool hasActedThisTurn { get; set; }
+
     // =========================
     // PROPERTIES
     // =========================
@@ -55,8 +59,9 @@ public abstract class Unit : MonoBehaviour
     {
         get
         {
+            int level = runtimeUnitData != null ? runtimeUnitData.Level : 1;
             CombatStats baseStats = unitData != null
-                ? unitData.baseStats
+                ? unitData.GetStatsAtLevel(level)
                 : new CombatStats(1, 0, 0, 0, 0, 0);
 
             if (runtimePetData != null)
@@ -228,6 +233,16 @@ public abstract class Unit : MonoBehaviour
 
             Debug.Log($"<color=green>[Unit Stats]</color> {DisplayName} combinou status com o pet <b>{(runtimePetData != null ? runtimePetData.DisplayName : petSpeciesData.SpeciesName)}</b>. Total -> HP: {MaxHealth} | Atk: {Stats.attack} | Def: {Stats.defense} | Spd: {Stats.speed} | Crit: {Stats.criticalChance}%");
         }
+
+        // Aplica passivas de constelação (Fase 2)
+        if (unitData != null && runtimeUnitData != null)
+        {
+            var constPassives = CelestialCross.System.ConstellationService.GetUnlockedPassives(unitData, runtimeUnitData.ConstellationLevel);
+            foreach (var graph in constPassives)
+            {
+                if (graph != null) PassiveManager?.ApplyGraphCondition(graph, this);
+            }
+        }
     }
 
     public void ConfigureArtifactsFromSaveData(List<ArtifactInstanceData> artifacts, ArtifactSetCatalog setCatalog)
@@ -319,7 +334,15 @@ public abstract class Unit : MonoBehaviour
     {
         if (unitData == null) { Debug.LogError($"[Unit] {name} não possui UnitData."); return; }
         actions.Clear();
-        foreach (var action in GetComponents<IUnitAction>()) Destroy(action as Component);
+        foreach (var action in GetComponents<IUnitAction>()) 
+        {
+            if (action is not WaitAction) Destroy(action as Component);
+        }
+        
+        var waitAction = GetComponent<WaitAction>();
+        if (waitAction == null) waitAction = gameObject.AddComponent<WaitAction>();
+        waitAction.MarkConfigured();
+        actions.Add(waitAction);
         var blueprints = unitData.GetAbilities();
         if (blueprints != null) foreach (var bp in blueprints) if (bp != null ) actions.Add(new BlueprintActionWrapper(this, bp));
         

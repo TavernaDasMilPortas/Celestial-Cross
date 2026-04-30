@@ -9,6 +9,8 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
     {
         private ObjectField modifierField;
         private EnumField applyTypeDropdown;
+        private Toggle canStackToggle;
+        private IntegerField maxStacksField;
 
         public enum ApplyType { Add, Remove, Refresh }
 
@@ -16,6 +18,8 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
         public class ApplyData
         {
             public ApplyType applyType = ApplyType.Add;
+            public bool canStack = false;
+            public int maxStacks = 1;
         }
 
         private ApplyData nodeData = new ApplyData();
@@ -43,8 +47,35 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
             applyTypeDropdown.RegisterValueChangedCallback(evt => nodeData.applyType = (ApplyType)evt.newValue);
             extensionContainer.Add(applyTypeDropdown);
 
+            canStackToggle = new Toggle("Can Stack");
+            canStackToggle.value = nodeData.canStack;
+            canStackToggle.RegisterValueChangedCallback(evt => {
+                nodeData.canStack = evt.newValue;
+                UpdateUI();
+            });
+            extensionContainer.Add(canStackToggle);
+
+            maxStacksField = new IntegerField("Max Stacks (0=Inf)");
+            maxStacksField.value = nodeData.maxStacks;
+            maxStacksField.RegisterValueChangedCallback(evt => nodeData.maxStacks = evt.newValue);
+
+            UpdateUI();
+
             RefreshExpandedState();
             RefreshPorts();
+        }
+
+        private void UpdateUI()
+        {
+            if (nodeData.canStack)
+            {
+                if (!extensionContainer.Contains(maxStacksField)) extensionContainer.Add(maxStacksField);
+            }
+            else
+            {
+                if (extensionContainer.Contains(maxStacksField)) extensionContainer.Remove(maxStacksField);
+            }
+            RefreshExpandedState();
         }
 
         public override string GetJsonData() => JsonUtility.ToJson(nodeData);
@@ -54,6 +85,9 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
             if (string.IsNullOrEmpty(json)) return;
             nodeData = JsonUtility.FromJson<ApplyData>(json);
             applyTypeDropdown.value = nodeData.applyType;
+            canStackToggle.value = nodeData.canStack;
+            maxStacksField.value = nodeData.maxStacks;
+            UpdateUI();
         }
     }
 }

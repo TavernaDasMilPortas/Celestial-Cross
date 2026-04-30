@@ -3,6 +3,7 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Celestial_Cross.Scripts.Abilities.Modifiers;
+using Celestial_Cross.Scripts.Abilities.Graph.Runtime;
 
 namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
 {
@@ -11,14 +12,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
         private EnumField durationTypeDropdown;
         private IntegerField valueField;
 
-        [System.Serializable]
-        public class DurationData
-        {
-            public DurationType type = DurationType.Turns;
-            public int value = 1;
-        }
-
-        private DurationData nodeData = new DurationData();
+        private DurationNodeData nodeData = new DurationNodeData();
 
         public override void Initialize(string nodeGuid, Vector2 position)
         {
@@ -66,7 +60,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
         public override void LoadFromJson(string json)
         {
             if (string.IsNullOrEmpty(json)) return;
-            nodeData = JsonUtility.FromJson<DurationData>(json);
+            nodeData = JsonUtility.FromJson<DurationNodeData>(json);
             durationTypeDropdown.value = nodeData.type;
             valueField.value = nodeData.value;
             UpdateUI();

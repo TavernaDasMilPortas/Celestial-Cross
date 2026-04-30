@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using UnityEngine;
 using Celestial_Cross.Scripts.Abilities.Graph;
 using Celestial_Cross.Scripts.Combat.Execution;
@@ -50,10 +51,32 @@ namespace Celestial_Cross.Scripts.Units
             {
                 AbilityExecutor.Instance.ExecuteGraph(caster, Graph, CombatHook.OnManualCast, () => {
                     CameraController.Instance?.ResetFocus();
-                    if (caster is global::EnemyUnit)
-                        TurnManager.Instance.EndTurn();
-                    else    
-                        PlayerController.Instance.EndTurn();
+
+                    // Obter subtipo do StartNode do Grafo
+                    var startNode = Graph.NodeData.FirstOrDefault(n => n.NodeType == "StartNode");
+                    AbilitySubtype subtype = AbilitySubtype.None;
+                    if (startNode != null) {
+                        var data = JsonUtility.FromJson<Celestial_Cross.Scripts.Abilities.Graph.Runtime.StartNodeData>(startNode.JsonData);
+                        subtype = data.subtype;
+                    }
+
+                    // Lógica de Movimentação Gratuita
+                    if (subtype == AbilitySubtype.Movement)
+                        caster.hasMovedThisTurn = true;
+                    else
+                        caster.hasActedThisTurn = true;
+
+                    if (caster.hasMovedThisTurn && caster.hasActedThisTurn)
+                    {
+                        if (caster is global::EnemyUnit)
+                            TurnManager.Instance.EndTurn();
+                        else    
+                            PlayerController.Instance.EndTurn();
+                    }
+                    else
+                    {
+                        PlayerController.Instance?.RefreshUI();
+                    }
                 }, Level);
             }
             else

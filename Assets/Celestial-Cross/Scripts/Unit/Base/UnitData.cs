@@ -47,6 +47,22 @@ public class UnitData : ScriptableObject
 
     [Header("Stats")]
     public CombatStats baseStats = new CombatStats(30, 10, 6, 7, 7, 1);
+    public CombatStats maxStats = new CombatStats(300, 100, 60, 70, 7, 1);
+    public int maxLevel = 60;
+
+    public CombatStats GetStatsAtLevel(int level)
+    {
+        if (maxLevel <= 1) return baseStats;
+        float factor = Mathf.Clamp01((float)(level - 1) / (maxLevel - 1));
+        return new CombatStats(
+            Mathf.RoundToInt(baseStats.health + (maxStats.health - baseStats.health) * factor),
+            Mathf.RoundToInt(baseStats.attack + (maxStats.attack - baseStats.attack) * factor),
+            Mathf.RoundToInt(baseStats.defense + (maxStats.defense - baseStats.defense) * factor),
+            Mathf.RoundToInt(baseStats.speed + (maxStats.speed - baseStats.speed) * factor),
+            Mathf.RoundToInt(baseStats.criticalChance + (maxStats.criticalChance - baseStats.criticalChance) * factor),
+            Mathf.RoundToInt(baseStats.effectAccuracy + (maxStats.effectAccuracy - baseStats.effectAccuracy) * factor)
+        );
+    }
 
     [Header("Abilities (Blueprints)")]
     [Tooltip("Lista de habilidades e passivas usando o novo sistema de Blueprints.")]
@@ -55,6 +71,10 @@ public class UnitData : ScriptableObject
     [Header("Ability Graphs")]
     [Tooltip("Lista de habilidades usando o sistema de Grafos.")]
     public List<Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO> abilityGraphs = new();
+
+    [Header("Constellation Passives")]
+    [Tooltip("Grafos passivos desbloqueados por nível de constelação (índice 0 = C1, até C6)")]
+    public List<Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO> constellationPassives = new();
 
     [Header("Actions (Native)")]
     [SerializeReference]

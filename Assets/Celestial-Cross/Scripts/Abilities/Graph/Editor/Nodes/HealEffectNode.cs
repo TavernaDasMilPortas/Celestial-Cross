@@ -3,13 +3,12 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Celestial_Cross.Scripts.Abilities.Graph.Runtime;
+using Celestial_Cross.Scripts.Abilities.Conditions;
 
 namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
 {
     public class HealEffectNode : AbilityNode
     {
-        private EnumField valueTypeDropdown;
-        private IntegerField amountField;
         private EnumField baseAttributeDropdown;
         private Toggle canCritToggle;
         private Toggle allowOverhealToggle;
@@ -34,19 +33,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
             outputContainer.Add(outputPort);
 
             // UI Elements
-            valueTypeDropdown = new EnumField("Value Type", Celestial_Cross.Scripts.Abilities.ValueType.Flat);
-            valueTypeDropdown.RegisterValueChangedCallback(evt => {
-                nodeData.valueType = (Celestial_Cross.Scripts.Abilities.ValueType)evt.newValue;
-                UpdateDynamicFields();
-            });
-            extensionContainer.Add(valueTypeDropdown);
-
-            amountField = new IntegerField("Amount");
-            amountField.value = nodeData.amount;
-            amountField.RegisterValueChangedCallback(evt => nodeData.amount = evt.newValue);
-            extensionContainer.Add(amountField);
-
-            variableReferenceField = new TextField("Amount Var");
+            variableReferenceField = new TextField("Multiplier Var");
             variableReferenceField.value = nodeData.variableReference;
             variableReferenceField.RegisterValueChangedCallback(evt => nodeData.variableReference = evt.newValue);
             extensionContainer.Add(variableReferenceField);
@@ -74,16 +61,8 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
 
         private void UpdateDynamicFields()
         {
-            if (nodeData.valueType == Celestial_Cross.Scripts.Abilities.ValueType.Percentage)
-            {
-                if (!extensionContainer.Contains(baseAttributeDropdown))
-                    extensionContainer.Insert(2, baseAttributeDropdown); 
-            }
-            else
-            {
-                if (extensionContainer.Contains(baseAttributeDropdown))
-                    extensionContainer.Remove(baseAttributeDropdown);
-            }
+            if (!extensionContainer.Contains(baseAttributeDropdown))
+                extensionContainer.Insert(0, baseAttributeDropdown); 
             RefreshExpandedState();
         }
 
@@ -97,8 +76,6 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
             if (!string.IsNullOrEmpty(json))
             {
                 nodeData = JsonUtility.FromJson<Celestial_Cross.Scripts.Abilities.Graph.Runtime.HealNodeData>(json);
-                valueTypeDropdown.value = nodeData.valueType;
-                amountField.value = nodeData.amount;
                 variableReferenceField.value = nodeData.variableReference;
                 canCritToggle.value = nodeData.canCrit;
                 allowOverhealToggle.value = nodeData.allowOverheal;
@@ -109,7 +86,8 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
         public override string GetDescription()
         {
             string overhealText = nodeData.allowOverheal ? " (pode sobre-curar)" : "";
-            return $"Cura {nodeData.amount}{nodeData.valueType} de vida{overhealText}.";
+            var attr = (AttributeCondition.AttributeType)nodeData.baseAttribute;
+            return $"Cura escalada pelo atributo {attr} multiplicado pela variável '{nodeData.variableReference}'{overhealText}.";
         }
 
         public void SetVariableReference(string varName)
