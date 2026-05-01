@@ -8,7 +8,6 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
     public class ConditionalFlowNode : AbilityNode
     {
         private List<Port> conditionPorts = new List<Port>();
-        private List<Port> truePorts = new List<Port>();
 
         public override void Initialize(string nodeGuid, Vector2 position)
         {
@@ -22,21 +21,25 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
             inputContainer.Add(inputPort);
 
             // Add Condition Button
-            var addBtn = new Button(AddBranch) { text = "Add Branch" };
+            var addBtn = new Button(AddConditionInput) { text = "Add Condition" };
             titleContainer.Add(addBtn);
 
-            // Default Else Port
-            var elsePort = InstantiatePort(Orientation.Horizontal, UnityEditor.Experimental.GraphView.Direction.Output, Port.Capacity.Single, typeof(float));
-            elsePort.portName = "Else / False";
-            outputContainer.Add(elsePort);
+            // Output Ports
+            var truePort = InstantiatePort(Orientation.Horizontal, UnityEditor.Experimental.GraphView.Direction.Output, Port.Capacity.Single, typeof(float));
+            truePort.portName = "True";
+            outputContainer.Add(truePort);
 
-            AddBranch(); // Start with one branch
+            var falsePort = InstantiatePort(Orientation.Horizontal, UnityEditor.Experimental.GraphView.Direction.Output, Port.Capacity.Single, typeof(float));
+            falsePort.portName = "False";
+            outputContainer.Add(falsePort);
+
+            AddConditionInput(); // Start with one condition
 
             RefreshExpandedState();
             RefreshPorts();
         }
 
-        private void AddBranch()
+        private void AddConditionInput()
         {
             int index = conditionPorts.Count;
             
@@ -46,18 +49,13 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
             inputContainer.Add(condPort);
             conditionPorts.Add(condPort);
 
-            // Output Flow Port for True case
-            var truePort = InstantiatePort(Orientation.Horizontal, UnityEditor.Experimental.GraphView.Direction.Output, Port.Capacity.Single, typeof(float));
-            truePort.portName = $"True {index}";
-            outputContainer.Add(truePort);
-            truePorts.Add(truePort);
-
             RefreshExpandedState();
             RefreshPorts();
         }
 
-        public override string GetJsonData() => ""; // No specific data yet, just ports
+        public override string GetJsonData() => ""; 
 
         public override void LoadFromJson(string json) { }
     }
 }
+

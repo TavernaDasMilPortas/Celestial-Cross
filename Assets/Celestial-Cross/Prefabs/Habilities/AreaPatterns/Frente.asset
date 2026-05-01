@@ -13,13 +13,12 @@ MonoBehaviour:
   m_Name: Frente
   m_EditorClassIdentifier: Assembly-CSharp::AreaPatternData
   width: 3
-  height: 4
+  height: 3
   originX: 1
   originY: 1
   canRotate: 1
   rotationType: 1
   diagonalPattern:
-  - cells: 000000
   - cells: 000000
   - cells: 000100
   - cells: 000001
@@ -27,7 +26,6 @@ MonoBehaviour:
   diagOriginX: 1
   diagOriginY: 1
   rows:
-  - cells: 000000
   - cells: 000000
   - cells: 000100
   - cells: 000100

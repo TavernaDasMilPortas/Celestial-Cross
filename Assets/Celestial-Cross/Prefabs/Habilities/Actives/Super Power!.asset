@@ -1,0 +1,78 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b74335336934364f92171120eea7025, type: 3}
+  m_Name: Super Power!
+  m_EditorClassIdentifier: Assembly-CSharp::Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO
+  abilityName: Superpower
+  abilityIcon: {fileID: 0}
+  abilityDescription: 
+  displayRange: 0
+  NodeLinks:
+  - BaseNodeGuid: c3e57a6a-bde6-4c22-a345-a295b9e0044f
+    PortName: Out
+    TargetNodeGuid: d9757948-c082-48ef-b4f5-55075764d226
+    TargetPortName: In
+  - BaseNodeGuid: d9757948-c082-48ef-b4f5-55075764d226
+    PortName: Level 1
+    TargetNodeGuid: ee7d8a2c-6a3c-4eb1-9ad0-2790166ade1c
+    TargetPortName: In
+  - BaseNodeGuid: ee7d8a2c-6a3c-4eb1-9ad0-2790166ade1c
+    PortName: Out
+    TargetNodeGuid: 944f8ceb-31d9-4f3d-92a8-441726e8bc85
+    TargetPortName: In
+  - BaseNodeGuid: 944f8ceb-31d9-4f3d-92a8-441726e8bc85
+    PortName: Out
+    TargetNodeGuid: 914b04e9-0a3f-4ce4-a55c-ee104aac1466
+    TargetPortName: In
+  NodeData:
+  - Guid: c3e57a6a-bde6-4c22-a345-a295b9e0044f
+    NodeType: StartNode
+    NodeTitle: Start
+    Position: {x: 100, y: 200}
+    JsonData: '{"type":0,"duration":0,"canStack":false,"maxStacks":1,"isPersistent":false,"isBuff":true}'
+    areaPattern: {fileID: 0}
+  - Guid: d9757948-c082-48ef-b4f5-55075764d226
+    NodeType: LevelBranchNode
+    NodeTitle: Level Branch
+    Position: {x: 322, y: 242}
+    JsonData: '{"levelCount":3}'
+    areaPattern: {fileID: 0}
+  - Guid: ee7d8a2c-6a3c-4eb1-9ad0-2790166ade1c
+    NodeType: TargetNode
+    NodeTitle: Targeting
+    Position: {x: 483, y: 234}
+    JsonData: '{"reusePrevious":false,"sourceType":1,"mode":0,"range":3,"multipleTargets":false,"maxTargets":1,"origin":0,"strategy":4,"attributeType":0,"factionType":2,"targetCount":1,"autoRotate":true,"preferredDirection":0,"patternReferenceId":"","areaPattern":{"instanceID":0},"rangeVariable":"","maxTargetsVariable":"max_targets_ee7d"}'
+    areaPattern: {fileID: 0}
+  - Guid: 944f8ceb-31d9-4f3d-92a8-441726e8bc85
+    NodeType: TriggerNode
+    NodeTitle: Trigger Event
+    Position: {x: 737, y: 284}
+    JsonData: '{"trigger":1}'
+    areaPattern: {fileID: 0}
+  - Guid: 914b04e9-0a3f-4ce4-a55c-ee104aac1466
+    NodeType: StatModifierEffectNode
+    NodeTitle: Stat Modifier
+    Position: {x: 1013, y: 259}
+    JsonData: '{"modifiers":[{"stat":2,"value":5.0}],"scaleWithDistance":false,"distanceScaleFactor":0.10000000149011612,"variableReference":"buff_base_914b","canStack":false,"maxStacks":1}'
+    areaPattern: {fileID: 0}
+  Dependencies: []
+  Variables:
+  - name: max_targets_ee7d
+    initialValue: 1
+    description: 
+  - name: buff_base_914b
+    initialValue: 1
+    description: 
+  MaxLevel: 1
+  GeneratedDescription: "<b>--- DESCRI\xC7\xC3O AUTOM\xC1TICA ---</b>\r\n- Esta \xE9
+    uma habilidade do tipo Passive.\r\n- Desvia o fluxo dependendo do n\xEDvel atual
+    da habilidade.\r\n- Seleciona automaticamente a si mesmo.\r\n"

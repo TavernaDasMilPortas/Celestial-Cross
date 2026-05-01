@@ -17,6 +17,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
         private IntegerField rangeField;
         private Toggle multipleTargetsToggle;
         private IntegerField maxTargetsField;
+        private TextField maxTargetsVarField;
         private ObjectField areaPatternField;
         private EnumField preferredDirectionDropdown;
         private Toggle autoRotateToggle;
@@ -73,6 +74,11 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
             rangeField.RegisterValueChangedCallback(evt => nodeData.range = evt.newValue);
             manualContainer.Add(rangeField);
 
+            var rangeVarField = new TextField("Range Var");
+            rangeVarField.value = nodeData.rangeVariable;
+            rangeVarField.RegisterValueChangedCallback(evt => nodeData.rangeVariable = evt.newValue);
+            manualContainer.Add(rangeVarField);
+
             multipleTargetsToggle = new Toggle("Multiple Targets");
             multipleTargetsToggle.value = nodeData.multipleTargets;
             multipleTargetsToggle.RegisterValueChangedCallback(evt => {
@@ -86,11 +92,16 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
             maxTargetsField.RegisterValueChangedCallback(evt => nodeData.maxTargets = evt.newValue);
             manualContainer.Add(maxTargetsField);
 
+            maxTargetsVarField = new TextField("Max Targets Var");
+            maxTargetsVarField.value = nodeData.maxTargetsVariable;
+            maxTargetsVarField.RegisterValueChangedCallback(evt => nodeData.maxTargetsVariable = evt.newValue);
+            manualContainer.Add(maxTargetsVarField);
+
             areaPatternField = new ObjectField("Area Pattern") { objectType = typeof(AreaPatternData) };
             areaPatternField.RegisterValueChangedCallback(evt => nodeData.areaPattern = (AreaPatternData)evt.newValue);
 
-            preferredDirectionDropdown = new EnumField("Preferred Dir", Direction.N); // Using global Direction enum
-            // TODO: nodeData.preferredDirection if needed
+            preferredDirectionDropdown = new EnumField("Preferred Dir", Direction.N);
+            preferredDirectionDropdown.RegisterValueChangedCallback(evt => nodeData.preferredDirection = (Direction)evt.newValue);
             
             autoRotateToggle = new Toggle("Auto Rotate");
             autoRotateToggle.RegisterValueChangedCallback(evt => nodeData.autoRotate = evt.newValue);
@@ -147,6 +158,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
 
             // Múltiplos alvos
             maxTargetsField.style.display = nodeData.multipleTargets ? DisplayStyle.Flex : DisplayStyle.None;
+            if (maxTargetsVarField != null) maxTargetsVarField.style.display = nodeData.multipleTargets ? DisplayStyle.Flex : DisplayStyle.None;
 
             // Dinâmica interna do Auto
             if (nodeData.strategy == GraphAutoStrategyType.LowestAttribute || nodeData.strategy == GraphAutoStrategyType.HighestAttribute)
@@ -197,6 +209,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
             maxTargetsField.value = nodeData.maxTargets;
             areaPatternField.value = nodeData.areaPattern;
             autoRotateToggle.value = nodeData.autoRotate;
+            preferredDirectionDropdown.value = nodeData.preferredDirection;
             originDropdown.value = nodeData.origin;
 
             // Auto
@@ -242,6 +255,14 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
         {
             nodeData.areaPattern = data.areaPattern;
             areaPatternField.value = nodeData.areaPattern;
+        }
+
+        public void SetVariableReference(string targetVar)
+        {
+            // Opcional: define qual das variaveis receberá prioridade ou usa ambas.  
+            // Usamos só param único pra simplificar se vindo da search window.
+            nodeData.maxTargetsVariable = targetVar;
+            if (maxTargetsVarField != null) maxTargetsVarField.value = targetVar;
         }
     }
 }

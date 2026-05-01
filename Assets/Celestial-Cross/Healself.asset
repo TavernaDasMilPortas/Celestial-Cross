@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b74335336934364f92171120eea7025, type: 3}
+  m_Name: Healself
+  m_EditorClassIdentifier: Assembly-CSharp::Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO
+  abilityName: 
+  abilityIcon: {fileID: 0}
+  abilityDescription: 
+  displayRange: 0
+  NodeLinks:
+  - BaseNodeGuid: a548dd9d-38d7-4cf2-a358-0d989eafd86c
+    PortName: Out
+    TargetNodeGuid: 52d12946-a621-4472-b7ff-d3157459dd81
+    TargetPortName: In
+  - BaseNodeGuid: 21901fdc-a367-4059-858c-1277a886c38a
+    PortName: Out
+    TargetNodeGuid: 5082a9c5-7025-4302-b0e6-7c517ac71924
+    TargetPortName: In
+  - BaseNodeGuid: 52d12946-a621-4472-b7ff-d3157459dd81
+    PortName: Level 1
+    TargetNodeGuid: 8ba43215-a356-4a60-81c7-639fea36ccca
+    TargetPortName: In
+  - BaseNodeGuid: 8ba43215-a356-4a60-81c7-639fea36ccca
+    PortName: Out
+    TargetNodeGuid: 21901fdc-a367-4059-858c-1277a886c38a
+    TargetPortName: In
+  NodeData:
+  - Guid: a548dd9d-38d7-4cf2-a358-0d989eafd86c
+    NodeType: StartNode
+    NodeTitle: Start
+    Position: {x: 237, y: 152}
+    JsonData: '{"type":0,"duration":0,"canStack":false,"maxStacks":1,"isPersistent":false}'
+    areaPattern: {fileID: 0}
+  - Guid: 8ba43215-a356-4a60-81c7-639fea36ccca
+    NodeType: TriggerNode
+    NodeTitle: Trigger Event
+    Position: {x: 630, y: 118}
+    JsonData: '{"trigger":0}'
+    areaPattern: {fileID: 0}
+  - Guid: 5082a9c5-7025-4302-b0e6-7c517ac71924
+    NodeType: HealEffectNode
+    NodeTitle: Heal Effect
+    Position: {x: 1171, y: 102}
+    JsonData: '{"valueType":0,"amount":10,"variableReference":"heal_amount_5082","baseAttribute":0,"canCrit":true,"allowOverheal":false}'
+    areaPattern: {fileID: 0}
+  - Guid: 52d12946-a621-4472-b7ff-d3157459dd81
+    NodeType: LevelBranchNode
+    NodeTitle: Level Branch
+    Position: {x: 468, y: 131}
+    JsonData: '{"levelCount":3}'
+    areaPattern: {fileID: 0}
+  - Guid: 21901fdc-a367-4059-858c-1277a886c38a
+    NodeType: TargetNode
+    NodeTitle: Targeting
+    Position: {x: 908, y: 123}
+    JsonData: '{"reusePrevious":false,"sourceType":1,"mode":1,"range":3,"multipleTargets":false,"maxTargets":1,"origin":0,"strategy":4,"attributeType":0,"factionType":2,"targetCount":1,"autoRotate":true,"preferredDirection":0,"patternReferenceId":"","areaPattern":{"instanceID":0},"rangeVariable":"","maxTargetsVariable":"max_targets_2190"}'
+    areaPattern: {fileID: 0}
+  Dependencies: []
+  Variables:
+  - name: max_targets_2190
+    initialValue: 1
+    description: 
+  - name: heal_amount_5082
+    initialValue: 10
+    description: 
+  MaxLevel: 1
+  GeneratedDescription: "<b>--- DESCRI\xC7\xC3O AUTOM\xC1TICA ---</b>\r\n- Esta \xE9
+    uma habilidade do tipo Passive.\r\n- Desvia o fluxo dependendo do n\xEDvel atual
+    da habilidade.\r\n- Seleciona automaticamente a si mesmo.\r\n- Cura 10Flat de
+    vida.\r\n"

@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cb249868a85523b4686441d22073799e, type: 3}
-  m_Name: New Unit Data
+  m_Name: Shanny
   m_EditorClassIdentifier: Assembly-CSharp::UnitData
   unitID: 704753636e58dab40b1e29a96fbcd4ee
   displayName: shanny

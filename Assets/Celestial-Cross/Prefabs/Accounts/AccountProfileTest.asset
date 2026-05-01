@@ -17,9 +17,7 @@ MonoBehaviour:
   Stardust: 0
   StarMaps: 90
   OwnedUnits:
-  - {fileID: 11400000, guid: 67628d77266bab446ba0b5274c2a9397, type: 2}
   - {fileID: 11400000, guid: 642b786367762f940aded926f739f0ba, type: 2}
-  - {fileID: 11400000, guid: ba1202906ae7a724cbf2492b1ec00a7a, type: 2}
   OwnedPets:
   - {fileID: 11400000, guid: 52c34e207dee2284f86e51d9d05b28fd, type: 2}
   - {fileID: 11400000, guid: ca3587875a7b1d64bbb5e2585641ebca, type: 2}

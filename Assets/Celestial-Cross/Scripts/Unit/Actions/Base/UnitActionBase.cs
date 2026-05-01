@@ -27,6 +27,7 @@ public abstract class UnitActionBase : MonoBehaviour, IUnitAction
     public Sprite ActionIcon { get; set; }
     public string ActionDescription { get; set; }
     public virtual int Range { get; set; }
+    public virtual int Level { get; set; } = 1;
     public Vector2Int Target { get; set; }
     public virtual AreaPatternData GetAreaPattern() => null;
     public virtual string GetDetailStats() => "";
@@ -162,6 +163,25 @@ public abstract class UnitActionBase : MonoBehaviour, IUnitAction
     {
         CameraController.Instance?.ResetFocus();
 
+        if (ActionCategory == UnitActionCategory.Movement)
+            unit.hasMovedThisTurn = true;
+        else
+            unit.hasActedThisTurn = true;
+
+        if (unit.hasMovedThisTurn && unit.hasActedThisTurn)
+        {
+            EndTurnProperly();
+        }
+        else
+        {
+            Debug.Log($"[UnitActionBase] Ação '{ActionName}' concluída. Unidade ainda pode {(unit.hasMovedThisTurn ? "agir" : "se mover")}.");
+            // Notificar PlayerController/UI para atualizar botões
+            PlayerController.Instance?.RefreshUI();
+        }
+    }
+
+    protected void EndTurnProperly()
+    {
         if (unit is EnemyUnit)
             TurnManager.Instance.EndTurn();
         else

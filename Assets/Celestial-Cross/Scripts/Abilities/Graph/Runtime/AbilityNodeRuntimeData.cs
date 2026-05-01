@@ -20,8 +20,10 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
     public class StartNodeData
     {
         public AbilityType type;
-        public int duration;
+        public AbilitySubtype subtype;
+        public bool isBuff = true;
     }
+
 
     [Serializable]
     public class TargetNodeData
@@ -38,14 +40,17 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
         public GraphFactionType factionType = GraphFactionType.Any; 
         public int targetCount = 1;
         public bool autoRotate = true;
+        public Direction preferredDirection = Direction.N;
+        public string patternReferenceId;
         public AreaPatternData areaPattern;
+        public string rangeVariable;
+        public string maxTargetsVariable;
     }
 
     [Serializable]
     public class DamageNodeData
     {
-        public Celestial_Cross.Scripts.Abilities.ValueType valueType = Celestial_Cross.Scripts.Abilities.ValueType.Flat;
-        public int amount = 10;
+        public string variableReference; // Se preenchido, usa o valor da variável
         public int baseAttribute = (int)AttributeCondition.AttributeType.Attack;
         public bool scaleWithDistance = false;
         public float distanceScaleFactor = 0.1f;
@@ -54,8 +59,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
     [Serializable]
     public class HealNodeData
     {
-        public Celestial_Cross.Scripts.Abilities.ValueType valueType = Celestial_Cross.Scripts.Abilities.ValueType.Flat;
-        public int amount = 10;
+        public string variableReference;
         public int baseAttribute = 0;
         public bool canCrit = true;
         public bool allowOverheal = false;
@@ -65,6 +69,40 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
     public class TriggerNodeData
     {
         public CombatHook trigger = CombatHook.OnManualCast;
+    }
+
+    // --- Logic & Flow ---
+
+    [Serializable]
+    public class LoopNodeData
+    {
+        public int iterations = 1;
+        public string iterationsVariable; // Opcional: usar uma variável para o número de iterações
+    }
+
+    [Serializable]
+    public class VariableModifierNodeData
+    {
+        public enum Operation { Set, Add, Multiply }
+        public string variableName;
+        public Operation operation = Operation.Set;
+        public float value;
+        public string valueVariableReference; // Opcional: usar outra variável como valor
+    }
+
+    [Serializable]
+    public class LevelBranchNodeData
+    {
+        public int levelCount = 3;
+    }
+
+    [Serializable]
+    public class CostNodeData
+    {
+        public int manaCost;
+        public string manaVariable;
+        public int staminaCost;
+        public string staminaVariable;
     }
 
     // --- Condições ---
@@ -89,9 +127,41 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
     }
 
     [Serializable]
+    public class RangeConditionNodeData
+    {
+        public RangeCondition.RangeOrigin origin = RangeCondition.RangeOrigin.Caster;
+        public int range = 1;
+        public RangeCondition.UnitFilter filter = RangeCondition.UnitFilter.Both;
+        public int targetCount = 2;
+        public RangeCondition.Comparison comparison = RangeCondition.Comparison.GreaterOrEqual;
+    }
+
+    [Serializable]
     public class FactionConditionNodeData
     {
-        public GraphFactionType faction;
+        public AttributeCondition.TargetType target = AttributeCondition.TargetType.Target;
+        public FactionTarget faction = FactionTarget.Enemy;
+    }
+
+    [Serializable]
+    public class SpeedAdvantageConditionNodeData
+    {
+        public int requiredDifference = 10;
+        public bool greaterOrEqual = true;
+    }
+
+    [Serializable]
+    public class TurnOrderConditionNodeData
+    {
+        public TurnOrderCondition.OrderType type = TurnOrderCondition.OrderType.FirstInRound;
+        public int specificIndex = 0;
+    }
+
+    [Serializable]
+    public class CleanseStatusNodeData
+    {
+        public bool allPositive = false;
+        public bool allNegative = false;
     }
 
     // --- Efeitos ---
@@ -99,9 +169,16 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
     [Serializable]
     public class MoveEffectNodeData
     {
-        public enum MoveType { Push, Pull, TeleportToTarget, TeleportBehindTarget, DashToTarget }
+        public enum MoveMode { MoveCaster, MoveTarget }
+        public MoveMode moveMode = MoveMode.MoveCaster;
+        public int range = 3;
+        public string rangeVariable;
+        public bool manualDestination = true;
+        public bool allowOccupiedTiles = false;
+        
+        // Mantemos legado para suporte básico ou futuras adições
+        public enum MoveType { Push, Pull, TeleportToTarget, DashToTarget }
         public MoveType moveType;
-        public int distance;
     }
 
     [Serializable]
@@ -111,6 +188,9 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
         public class StatEntry { public int statIndex; public float value; }
         public List<StatEntry> stats = new List<StatEntry>();
         public bool isBuff = true;
+        public string variableReference; // Multiplicador unificado ou base para os buffs
+        public bool canStack = false;
+        public int maxStacks = 1;
     }
 
     [Serializable]
@@ -118,10 +198,13 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
     {
         public string modifierId;
         public int stacks = 1;
+        public bool canStack = false;
+        public int maxStacks = 1;
     }
 
     [Serializable]
     public class VfxNodeData
+
     {
         public string vfxId;
         public bool attachToTarget;
@@ -129,16 +212,10 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
     }
 
     [Serializable]
-    public class CostNodeData
-    {
-        public int manaCost;
-        public int staminaCost;
-    }
-
-    [Serializable]
     public class DurationNodeData
     {
-        public int durationType; 
-        public float value;
+        public Celestial_Cross.Scripts.Abilities.Modifiers.DurationType type = Celestial_Cross.Scripts.Abilities.Modifiers.DurationType.Turns;
+        public int value = 1;
     }
 }
+

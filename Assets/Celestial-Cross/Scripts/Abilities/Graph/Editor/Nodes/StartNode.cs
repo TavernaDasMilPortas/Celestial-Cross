@@ -9,7 +9,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
     public class StartNode : AbilityNode
     {
         private EnumField abilityTypeDropdown;
-        private IntegerField durationField;
+        private EnumField abilitySubtypeDropdown;
 
         private Celestial_Cross.Scripts.Abilities.Graph.Runtime.StartNodeData nodeData = new Celestial_Cross.Scripts.Abilities.Graph.Runtime.StartNodeData();
 
@@ -34,12 +34,13 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
                 nodeData.type = (AbilityType)evt.newValue;
                 UpdateDynamicFields();
             });
-            
             extensionContainer.Add(abilityTypeDropdown);
 
-            // Campo dinâmico de Duração
-            durationField = new IntegerField("Duration (Turns)");
-            durationField.RegisterValueChangedCallback(evt => nodeData.duration = evt.newValue);
+            // Dropdown de Subtipo (Aparece se for Active)
+            abilitySubtypeDropdown = new EnumField("Subtype", AbilitySubtype.None);
+            abilitySubtypeDropdown.RegisterValueChangedCallback(evt => nodeData.subtype = (AbilitySubtype)evt.newValue);
+            extensionContainer.Add(abilitySubtypeDropdown);
+
 
             UpdateDynamicFields();
 
@@ -49,22 +50,17 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
 
         private void UpdateDynamicFields()
         {
-            if (nodeData.type == AbilityType.Passive /* assumindo que exista Condition ou similar, mas usando o q tem no AbilityType atual */) 
+            if (nodeData.type == AbilityType.Active)
             {
-                // Se for um tipo que requer duração, adicionamos o campo se não estiver na tela
-                if (!extensionContainer.Contains(durationField))
-                {
-                    extensionContainer.Add(durationField);
-                }
+                if (!extensionContainer.Contains(abilitySubtypeDropdown))
+                    extensionContainer.Add(abilitySubtypeDropdown);
             }
             else
             {
-                // Caso contrário removemos
-                if (extensionContainer.Contains(durationField))
-                {
-                    extensionContainer.Remove(durationField);
-                }
+                if (extensionContainer.Contains(abilitySubtypeDropdown))
+                    extensionContainer.Remove(abilitySubtypeDropdown);
             }
+
             RefreshExpandedState();
         }
 
@@ -79,14 +75,16 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
             {
                 nodeData = JsonUtility.FromJson<Celestial_Cross.Scripts.Abilities.Graph.Runtime.StartNodeData>(json);
                 abilityTypeDropdown.value = nodeData.type;
-                durationField.value = nodeData.duration;
+                abilitySubtypeDropdown.value = nodeData.subtype;
                 UpdateDynamicFields();
             }
         }
 
         public override string GetDescription()
         {
-            return $"Esta é uma habilidade do tipo {nodeData.type}.";
+            string desc = $"Esta é uma habilidade do tipo {nodeData.type}.";
+            if (nodeData.type == AbilityType.Active) desc += $" Subtipo: {nodeData.subtype}.";
+            return desc;
         }
     }
 }

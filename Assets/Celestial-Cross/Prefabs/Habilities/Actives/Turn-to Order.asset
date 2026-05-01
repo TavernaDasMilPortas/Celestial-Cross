@@ -1,0 +1,113 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b74335336934364f92171120eea7025, type: 3}
+  m_Name: Turn-to Order
+  m_EditorClassIdentifier: Assembly-CSharp::Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO
+  abilityName: Turn to order
+  abilityIcon: {fileID: 0}
+  abilityDescription: 
+  displayRange: 0
+  NodeLinks:
+  - BaseNodeGuid: 7e9e1dcb-cc18-4640-a912-46ac3e8e893c
+    PortName: Out
+    TargetNodeGuid: 524465bb-4cdf-4c7f-857e-3a5dbff76b77
+    TargetPortName: In
+  - BaseNodeGuid: 524465bb-4cdf-4c7f-857e-3a5dbff76b77
+    PortName: Level 1
+    TargetNodeGuid: 28670e15-d4e9-4912-a724-1b703f49672a
+    TargetPortName: In
+  - BaseNodeGuid: 2fc640fd-0752-476c-af3f-7511d6a4c305
+    PortName: Bool Out
+    TargetNodeGuid: d64ade86-9109-487b-8b5f-1536393f7988
+    TargetPortName: Cond 0
+  - BaseNodeGuid: 28670e15-d4e9-4912-a724-1b703f49672a
+    PortName: Out
+    TargetNodeGuid: 15107ca3-da0a-4913-8f74-0015fedb65a0
+    TargetPortName: In
+  - BaseNodeGuid: 15107ca3-da0a-4913-8f74-0015fedb65a0
+    PortName: Out
+    TargetNodeGuid: d64ade86-9109-487b-8b5f-1536393f7988
+    TargetPortName: Flow In
+  - BaseNodeGuid: d64ade86-9109-487b-8b5f-1536393f7988
+    PortName: True
+    TargetNodeGuid: ea57ff88-2195-4c60-bf35-a4544b054c9a
+    TargetPortName: In
+  - BaseNodeGuid: d64ade86-9109-487b-8b5f-1536393f7988
+    PortName: False
+    TargetNodeGuid: 968f8dab-a21d-469a-93c7-c2810ac811f5
+    TargetPortName: In
+  NodeData:
+  - Guid: 7e9e1dcb-cc18-4640-a912-46ac3e8e893c
+    NodeType: StartNode
+    NodeTitle: Start
+    Position: {x: 100, y: 200}
+    JsonData: '{"type":1,"duration":0,"canStack":false,"maxStacks":1,"isPersistent":false,"isBuff":true}'
+    areaPattern: {fileID: 0}
+  - Guid: 2fc640fd-0752-476c-af3f-7511d6a4c305
+    NodeType: DistanceConditionNode
+    NodeTitle: Distance & Faction
+    Position: {x: 745, y: 319}
+    JsonData: '{"checkType":1,"distanceValue":1,"checkFaction":false,"faction":1}'
+    areaPattern: {fileID: 0}
+  - Guid: 28670e15-d4e9-4912-a724-1b703f49672a
+    NodeType: TriggerNode
+    NodeTitle: Trigger Event
+    Position: {x: 483, y: 40}
+    JsonData: '{"trigger":0}'
+    areaPattern: {fileID: 0}
+  - Guid: 524465bb-4cdf-4c7f-857e-3a5dbff76b77
+    NodeType: LevelBranchNode
+    NodeTitle: Level Branch
+    Position: {x: 326, y: 213}
+    JsonData: '{"levelCount":3}'
+    areaPattern: {fileID: 0}
+  - Guid: 15107ca3-da0a-4913-8f74-0015fedb65a0
+    NodeType: TargetNode
+    NodeTitle: Targeting
+    Position: {x: 740, y: -154}
+    JsonData: '{"reusePrevious":false,"sourceType":0,"mode":1,"range":1,"multipleTargets":false,"maxTargets":1,"origin":1,"strategy":0,"attributeType":0,"factionType":2,"targetCount":1,"autoRotate":true,"preferredDirection":0,"patternReferenceId":"","areaPattern":{"instanceID":51728},"rangeVariable":"","maxTargetsVariable":"max_targets_1510"}'
+    areaPattern: {fileID: 11400000, guid: 355229a7f5738f840b56c5210a05e669, type: 2}
+  - Guid: ea57ff88-2195-4c60-bf35-a4544b054c9a
+    NodeType: DamageEffectNode
+    NodeTitle: Damage Effect
+    Position: {x: 1329, y: -3}
+    JsonData: '{"valueType":1,"amount":100,"variableReference":"dmg_amount_ea57","baseAttribute":1,"scaleWithDistance":false,"distanceScaleFactor":0.10000000149011612}'
+    areaPattern: {fileID: 0}
+  - Guid: 968f8dab-a21d-469a-93c7-c2810ac811f5
+    NodeType: DamageEffectNode
+    NodeTitle: Damage Effect
+    Position: {x: 1353, y: 233}
+    JsonData: '{"valueType":1,"amount":150,"variableReference":"dmg_amount_968f","baseAttribute":1,"scaleWithDistance":false,"distanceScaleFactor":0.10000000149011612}'
+    areaPattern: {fileID: 0}
+  - Guid: d64ade86-9109-487b-8b5f-1536393f7988
+    NodeType: ConditionalFlowNode
+    NodeTitle: Branch (Conditional)
+    Position: {x: 1052, y: 137}
+    JsonData: 
+    areaPattern: {fileID: 0}
+  Dependencies: []
+  Variables:
+  - name: dmg_amount_ea57
+    initialValue: 10
+    description: 
+  - name: dmg_amount_968f
+    initialValue: 10
+    description: 
+  - name: max_targets_1510
+    initialValue: 1
+    description: 
+  MaxLevel: 1
+  GeneratedDescription: "<b>--- DESCRI\xC7\xC3O AUTOM\xC1TICA ---</b>\r\n- Esta \xE9
+    uma habilidade do tipo Active.\r\n- Desvia o fluxo dependendo do n\xEDvel atual
+    da habilidade.\r\n- Escolhe manualmente m\xFAltiplos tiles em \xE1rea a um range
+    de 1 a partir de Point.\r\n  * Se for 'True':\r\n  - Causa 100Percentage de Attack
+    de dano.\r\n  * Se for 'False':\r\n  - Causa 150Percentage de Attack de dano.\r\n"

@@ -43,6 +43,12 @@ public class AIBehaviorRule
     [Range(0f, 2f)] public float moveWeight = 1f;
     [Range(0f, 2f)] public float abilityWeight = 1f;
 
+    [Header("Ability Category Weights")]
+    [Range(0f, 3f)] public float damageWeight = 1f;
+    [Range(0f, 3f)] public float healWeight = 1f;
+    [Range(0f, 3f)] public float buffWeight = 1f;
+    [Range(0f, 3f)] public float debuffWeight = 1f;
+
     // =============================
     // AVALIAÇÃO DE CONDIÇÕES
     // =============================

@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 public class ActionBarUI : MonoBehaviour
 {
@@ -30,6 +31,10 @@ public class ActionBarUI : MonoBehaviour
             {
                 isClickable = !wrapper.Blueprint.isPassive;
             }
+            else if (action is Celestial_Cross.Scripts.Units.GraphActionWrapper graphWrapper)
+            {
+                isClickable = graphWrapper.Graph.IsActive;
+            }
 
             CreateButtonForAction(action, i, isClickable);
         }
@@ -56,6 +61,46 @@ public class ActionBarUI : MonoBehaviour
         foreach (var btn in spawnedButtons)
         {
             btn.SetSelected(btn.Action == action);
+        }
+        UpdateInteractability();
+    }
+
+    public void UpdateInteractability()
+    {
+        if (currentUnit == null) return;
+
+        foreach (var btn in spawnedButtons)
+        {
+            // Se já agiu e a habilidade não é de movimento, desabilita.
+            // Se já moveu e a habilidade é de movimento, desabilita.
+            bool canUse = true;
+            
+            UnitActionCategory category = UnitActionCategory.Ability;
+            if (btn.Action is UnitActionBase baseAction) category = baseAction.ActionCategory;
+            // Para wrappers, precisamos inferir ou checar o subtipo.
+            else if (btn.Action is Celestial_Cross.Scripts.Units.BlueprintActionWrapper blueprintWrapper)
+            {
+                if (blueprintWrapper.Blueprint.abilitySubtype == AbilitySubtype.Movement) category = UnitActionCategory.Movement;
+            }
+            else if (btn.Action is Celestial_Cross.Scripts.Units.GraphActionWrapper graphWrapper)
+            {
+                var startNode = graphWrapper.Graph.NodeData.FirstOrDefault(n => n.NodeType == "StartNode");
+                if (startNode != null) {
+                    var data = JsonUtility.FromJson<Celestial_Cross.Scripts.Abilities.Graph.Runtime.StartNodeData>(startNode.JsonData);
+                    if (data.subtype == AbilitySubtype.Movement) category = UnitActionCategory.Movement;
+                }
+            }
+
+            if (category == UnitActionCategory.Movement)
+            {
+                if (currentUnit.hasMovedThisTurn) canUse = false;
+            }
+            else
+            {
+                if (currentUnit.hasActedThisTurn) canUse = false;
+            }
+
+            btn.SetInteractable(canUse);
         }
     }
 

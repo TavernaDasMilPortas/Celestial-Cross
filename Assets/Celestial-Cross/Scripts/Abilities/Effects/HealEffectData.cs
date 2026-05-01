@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 using CelestialCross.Combat;
 using System.Collections.Generic;
@@ -9,8 +9,8 @@ namespace Celestial_Cross.Scripts.Abilities
     [Serializable]
     public class HealEffectData : EffectData
     {
-        public ValueType valueType = ValueType.Flat;
-        public int amount = 10;
+        [Tooltip("Multiplicador percentual (1.0 = 100%) do atributo base.")]
+        public float multiplier = 1.0f;
 
         [Tooltip("If Percentage, base calculations on this attribute (usually MaxHP of target).")]
         public AttributeCondition.AttributeType baseAttribute = AttributeCondition.AttributeType.HP;
@@ -45,19 +45,13 @@ namespace Celestial_Cross.Scripts.Abilities
 
         public int GetBaseAmount(CombatContext context)
         {
-            float baseAmount = amount;
+            float baseVal = baseAttribute switch {
+                AttributeCondition.AttributeType.HP => context.target?.Health?.MaxHealth ?? 0,
+                AttributeCondition.AttributeType.Attack => context.source?.Stats.attack ?? 0,
+                _ => context.source?.Stats.attack ?? 0
+            };
 
-            if (valueType == ValueType.Percentage)
-            {
-                float baseVal = baseAttribute switch {
-                    AttributeCondition.AttributeType.HP => context.target?.Health?.MaxHealth ?? 0,
-                    AttributeCondition.AttributeType.Attack => context.source?.Stats.attack ?? 0,
-                    _ => context.source?.Stats.attack ?? 0
-                };
-                baseAmount = baseVal * (amount / 100f);
-            }
-
-            return Mathf.FloorToInt(baseAmount);
+            return Mathf.FloorToInt(baseVal * multiplier);
         }
     }
 }

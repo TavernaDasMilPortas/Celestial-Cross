@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using CelestialCross.Combat;
 
 namespace Celestial_Cross.Scripts.Combat.Execution
@@ -56,6 +56,41 @@ namespace Celestial_Cross.Scripts.Combat.Execution
             // 8. Hooks Pos-Dano
             context.source?.TriggerPassives(CombatHook.OnAfterDealDamage, context);
             context.target?.TriggerPassives(CombatHook.OnAfterTakeDamage, context);
+        }
+
+        public static void ProcessAndApplyHeal(CombatContext context, bool canCrit)
+        {
+            if (context.target == null || context.target.Health == null) return;
+
+            // 1. Hooks Pre-Cura
+            context.source?.TriggerPassives(CombatHook.OnBeforeDealHeal, context);
+            context.target?.TriggerPassives(CombatHook.OnBeforeTakeHeal, context);
+
+            int totalBase = context.amount;
+            float multiplier = 1.0f;
+
+            // 2. Critico
+            context.isCritical = false;
+            if (canCrit)
+            {
+                int critChance = context.source != null ? context.source.Stats.criticalChance : 0;
+                context.isCritical = Random.Range(0, 100) < critChance;
+            }
+
+            float healFloat = totalBase * multiplier;
+            if (context.isCritical) healFloat *= 1.5f; // Multiplicador de cura crítica fixo ou vindo do SO?
+
+            int finalHeal = Mathf.Max(0, Mathf.RoundToInt(healFloat));
+
+            string critText = context.isCritical ? " <color=green>(CRÍTICO!)</color>" : "";
+            CombatLogger.Log($"{context.source?.name} curou {context.target?.name} | Base: {totalBase} | Final: <b>{finalHeal}</b>{critText}", LogCategory.Damage);
+
+            // 3. Aplica na Vida
+            context.target.Health.Heal(finalHeal);
+
+            // 4. Hooks Pos-Cura
+            context.source?.TriggerPassives(CombatHook.OnAfterDealHeal, context);
+            context.target?.TriggerPassives(CombatHook.OnAfterTakeHeal, context);
         }
     }
 }

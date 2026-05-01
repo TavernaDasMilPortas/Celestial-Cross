@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 using Celestial_Cross.Scripts.Abilities;
 
@@ -50,6 +50,9 @@ namespace CelestialCross.Data.Pets
 
         [Tooltip("Habilidades passivas intrínsecas a esta espécie.")]
         public List<AbilityBlueprint> PassiveSkills = new List<AbilityBlueprint>();
+
+        [Tooltip("Habilidades via Grafo.")]
+        public List<Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO> AbilityGraphs = new List<Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO>();
 
         private void OnValidate()
         {

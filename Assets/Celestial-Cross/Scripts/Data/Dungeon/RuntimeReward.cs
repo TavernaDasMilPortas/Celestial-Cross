@@ -13,6 +13,7 @@ namespace CelestialCross.Data.Dungeon
         
         [Header("NOVO: Poeira Estelar")]
         public int Stardust;
+        public int XP;
 
         public List<ArtifactInstanceData> GeneratedArtifacts = new List<ArtifactInstanceData>();
         public List<RuntimePetData> GeneratedPets = new List<RuntimePetData>();
@@ -25,6 +26,7 @@ namespace CelestialCross.Data.Dungeon
             {
                 Money = basePackage.Money;
                 Energy = basePackage.Energy;
+                XP = basePackage.XP;
             }
         }
     }

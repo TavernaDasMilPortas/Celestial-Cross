@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 using Celestial_Cross.Scripts.Combat.Execution;
@@ -6,8 +6,8 @@ using Celestial_Cross.Scripts.Combat.Execution;
 public class AttackAction : UnitActionBase
 {
     public override int Range { get; set; }
-    public int Damage { get; set; }
-    public override string GetDetailStats() => "Dano: {Damage}";
+    public float DamageMultiplier { get; set; } = 1.0f;
+    public override string GetDetailStats() => $"Dano: {DamageMultiplier * 100}%";
     public TargetingRuleData TargetingRule { get; set; } = new TargetingRuleData();
     public AreaPatternData AreaPattern { get; set; }
     public override AreaPatternData GetAreaPattern() => AreaPattern;
@@ -22,7 +22,7 @@ public class AttackAction : UnitActionBase
 
     protected override void OnEnter()
     {
-        Debug.Log($"[AttackAction] {unit.DisplayName} | Range {Range} | Flat Bonus {Damage} | Mode {TargetingRule.mode}");
+        Debug.Log($"[AttackAction] {unit.DisplayName} | Range {Range} | Mult {DamageMultiplier} | Mode {TargetingRule.mode}");
 
         StartTargetSelection(Range, TargetingRule);
 
@@ -47,7 +47,7 @@ public class AttackAction : UnitActionBase
 
             for (int i = 0; i < hits; i++)
             {
-                var combatContext = new CelestialCross.Combat.CombatContext(unit, target, unit.Stats.attack + Damage);
+                var combatContext = new CelestialCross.Combat.CombatContext(unit, target, Mathf.FloorToInt(unit.Stats.attack * DamageMultiplier));
                 DamageProcessor.ProcessAndApplyDamage(combatContext, applyDefense: true);
             }
         }
@@ -69,13 +69,15 @@ public class AttackAction : UnitActionBase
         Unit lastTarget = targets.Last();
         if (lastTarget == null) return;
 
-        AttackResult sample = unit.CalculateAttack(lastTarget);
+        CombatStats tempStats = unit.Stats;
+        tempStats.attack = Mathf.FloorToInt(tempStats.attack * DamageMultiplier);
+        AttackResult sample = DamageModel.ResolveHit(tempStats, lastTarget.Stats);
 
         ActionForecast forecast = new ActionForecast
         {
             Source = unit,
             Target = lastTarget,
-            Damage = sample.damage + Damage,
+            Damage = sample.damage,
             IsCritical = sample.isCritical,
             AttackCount = unit.GetAttacksAgainst(lastTarget),
             CriticalChance = unit.Stats.criticalChance

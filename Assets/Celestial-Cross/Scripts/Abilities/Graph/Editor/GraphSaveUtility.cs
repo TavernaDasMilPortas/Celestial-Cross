@@ -129,6 +129,14 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor
             if (graphSO == null) return;
 
             ClearGraph();
+
+            if (graphSO.NodeData.Count == 0)
+            {
+                // Grafo vazio — semear com StartNode + LevelBranchNode
+                _targetGraphView.SeedDefaultNodes();
+                return;
+            }
+
             CreateNodes(graphSO);
             ConnectNodes(graphSO);
         }

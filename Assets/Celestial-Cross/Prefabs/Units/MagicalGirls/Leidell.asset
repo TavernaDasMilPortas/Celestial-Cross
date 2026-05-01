@@ -26,10 +26,11 @@ MonoBehaviour:
     speed: 7
     criticalChance: 7
     effectAccuracy: 1
-  abilities:
-  - {fileID: 11400000, guid: 9886e0c37475c314fb3a4c2f6f3e9d23, type: 2}
-  - {fileID: 11400000, guid: 8a8e88ec2453aa14492886aad8a13aab, type: 2}
-  - {fileID: 11400000, guid: 3111fed8ca0f51344a638d24953f0ef7, type: 2}
+  abilities: []
+  abilityGraphs:
+  - {fileID: 11400000, guid: 588e2f904fd93b947b5f099c7c15288b, type: 2}
+  - {fileID: 11400000, guid: 1046e58697e467140b173faec1eef775, type: 2}
+  - {fileID: 11400000, guid: 660a531ea1a9802449c71c3c4a89e403, type: 2}
   nativeActions: []
   references:
     version: 2

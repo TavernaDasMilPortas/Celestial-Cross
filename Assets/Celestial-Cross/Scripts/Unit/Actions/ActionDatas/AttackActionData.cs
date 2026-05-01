@@ -4,7 +4,7 @@ using UnityEngine;
 public class AttackActionData : UnitActionData
 {
     public int range = 1;
-    public int damage = 5;
+    public float damageMultiplier = 1.0f;
 
     [Header("Targeting")]
     public TargetingRuleData targeting = new TargetingRuleData();
@@ -29,13 +29,13 @@ public class AttackActionData : UnitActionData
 
         ConfigureBase(attack);
         attack.Range = range;
-        attack.Damage = damage;
+        attack.DamageMultiplier = damageMultiplier;
         attack.TargetingRule = targeting != null ? targeting.Clone() : new TargetingRuleData();
         attack.AreaPattern = areaPattern;
         attack.PreferredDirection = preferredDirection;
 
         attack.MarkConfigured();
 
-        Debug.Log($"[AttackActionData] Configure OK | Range={range} Damage={damage} Mode={targeting.mode}");
+        Debug.Log($"[AttackActionData] Configure OK | Range={range} DamageMult={damageMultiplier} Mode={targeting.mode}");
     }
 }

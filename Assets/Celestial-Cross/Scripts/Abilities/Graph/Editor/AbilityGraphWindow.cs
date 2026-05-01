@@ -58,6 +58,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor
             };
             _assetField.RegisterValueChangedCallback(evt => {
                 _currentGraphAsset = evt.newValue as AbilityGraphSO;
+                _graphView.SetGraphAsset(_currentGraphAsset);
             });
             toolbar.Add(_assetField);
 
@@ -89,6 +90,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor
                 return;
             }
 
+            _graphView.SetGraphAsset(_currentGraphAsset);
             GraphSaveUtility.GetInstance(_graphView).LoadGraph(_currentGraphAsset);
         }
 

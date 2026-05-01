@@ -24,6 +24,7 @@ public class MoveAction : UnitActionBase
     {
         base.Awake();
         gridMap = GridMap.Instance;
+        ActionCategory = UnitActionCategory.Movement;
     }
 
     // =========================
@@ -141,5 +142,7 @@ public class MoveAction : UnitActionBase
         GridTile destTile = gridMap.GetTile(destination);
         if (destTile != null)
             destTile.IsOccupied = true;
+
+        unit.hasMovedThisTurn = true;
     }
 }

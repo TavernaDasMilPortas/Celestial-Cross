@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Celestial_Cross.Scripts.Abilities;
+using Celestial_Cross.Scripts.Abilities.Graph;
 using Celestial_Cross.Scripts.Abilities.Graph.Runtime;
 using CelestialCross.Combat;
 
@@ -53,19 +54,44 @@ namespace Celestial_Cross.Scripts.Combat.Execution
                 
                 GridMap.Instance?.ResetAllTileVisuals();
                 OnTargetPreviewChanged?.Invoke(null, new List<Unit>());
-                CombatLogger.Log("Habilidade anterior abortada para iniciar nova a��o.", LogCategory.System);
+                CombatLogger.Log("Habilidade anterior abortada para iniciar nova ao.", LogCategory.System);
             }
         }
 
         public void ExecuteAbility(Unit caster, AbilityBlueprint blueprint, CombatHook currentHook = CombatHook.OnManualCast, Action onComplete = null)
         {
-            // Se for OnManualCast (clique do jogador), abortamos qualquer execu��o pendente
+            // Se for OnManualCast (clique do jogador), abortamos qualquer execuo pendente
             if (currentHook == CombatHook.OnManualCast)
             {
                 AbortCurrentAbility();
             }
 
             activeAbilityRoutine = StartCoroutine(ExecuteBlueprintCoroutine(caster, blueprint, currentHook, onComplete));
+        }
+
+        public void ExecuteGraph(Unit caster, AbilityGraphSO graph, CombatHook currentHook = CombatHook.OnManualCast, Action onComplete = null, int level = 1)
+        {
+            if (currentHook == CombatHook.OnManualCast)
+            {
+                AbortCurrentAbility();
+            }
+
+            activeAbilityRoutine = StartCoroutine(ExecuteGraphCoroutine(caster, graph, currentHook, onComplete, level));
+        }
+
+        private IEnumerator ExecuteGraphCoroutine(Unit caster, AbilityGraphSO graph, CombatHook currentHook, Action onComplete, int level = 1)
+        {
+            CombatLogger.Log($"<color=white>[AbilityExecutor]</color> Iniciando grafo: <b>{graph.name}</b> (Hook: {currentHook})", LogCategory.Ability);
+            
+            if (AbilityGraphInterpreter.Instance != null)
+            {
+                yield return StartCoroutine(AbilityGraphInterpreter.Instance.ExecuteGraphCoroutine(caster, graph, currentHook, onComplete, level));
+            }
+            else
+            {
+                Debug.LogError("[AbilityExecutor] AbilityGraphInterpreter não encontrado!");
+                onComplete?.Invoke();
+            }
         }
 
         private IEnumerator ExecuteBlueprintCoroutine(Unit caster, AbilityBlueprint blueprint, CombatHook currentHook, Action onComplete)

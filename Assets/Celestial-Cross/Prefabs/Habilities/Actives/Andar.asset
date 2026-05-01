@@ -1,0 +1,73 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b74335336934364f92171120eea7025, type: 3}
+  m_Name: Andar
+  m_EditorClassIdentifier: Assembly-CSharp::Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO
+  abilityName: Deslocar
+  abilityIcon: {fileID: 21300000, guid: 15b9e745d70d9f641b4a9ecb7b417e90, type: 3}
+  abilityDescription: 
+  displayRange: 0
+  NodeLinks:
+  - BaseNodeGuid: 5c253c56-a306-4223-a948-679ff1f2cf45
+    PortName: Out
+    TargetNodeGuid: 4c257af4-9b53-4bb6-a0b8-52c6d7ac8f92
+    TargetPortName: In
+  - BaseNodeGuid: 4c257af4-9b53-4bb6-a0b8-52c6d7ac8f92
+    PortName: Level 1
+    TargetNodeGuid: 360c1ed4-171b-448b-a302-73377c6557c0
+    TargetPortName: In
+  - BaseNodeGuid: 360c1ed4-171b-448b-a302-73377c6557c0
+    PortName: Out
+    TargetNodeGuid: d0ae0fb0-b8a6-4651-b18c-7ae897d9f81d
+    TargetPortName: In
+  NodeData:
+  - Guid: 5c253c56-a306-4223-a948-679ff1f2cf45
+    NodeType: StartNode
+    NodeTitle: Start
+    Position: {x: 100, y: 200}
+    JsonData: '{"type":1,"subtype":2,"isBuff":true}'
+    areaPattern: {fileID: 0}
+  - Guid: 4c257af4-9b53-4bb6-a0b8-52c6d7ac8f92
+    NodeType: LevelBranchNode
+    NodeTitle: Level Branch
+    Position: {x: 450, y: 200}
+    JsonData: '{"levelCount":3}'
+    areaPattern: {fileID: 0}
+  - Guid: 360c1ed4-171b-448b-a302-73377c6557c0
+    NodeType: TargetNode
+    NodeTitle: Targeting
+    Position: {x: 623, y: 191}
+    JsonData: '{"reusePrevious":false,"sourceType":1,"mode":0,"range":3,"multipleTargets":false,"maxTargets":1,"origin":1,"strategy":4,"attributeType":0,"factionType":2,"targetCount":1,"autoRotate":true,"preferredDirection":0,"patternReferenceId":"","areaPattern":{"instanceID":0},"rangeVariable":"","maxTargetsVariable":"max_targets_360c"}'
+    areaPattern: {fileID: 0}
+  - Guid: d0ae0fb0-b8a6-4651-b18c-7ae897d9f81d
+    NodeType: MoveEffectNode
+    NodeTitle: Move Effect
+    Position: {x: 916, y: 215}
+    JsonData: '{"moveMode":0,"range":2,"rangeVariable":"","manualDestination":true,"allowOccupiedTiles":false}'
+    areaPattern: {fileID: 0}
+  Dependencies: []
+  Variables:
+  - name: max_targets_360c
+    initialValue: 1
+    description: 
+  MaxLevel: 1
+  aiHint:
+    category: 0
+    basePriority: 50
+    cooldownTurns: 0
+    lowHPTargetBonus: 20
+    freshApplicationBonus: 15
+    targetsFriendlies: 0
+    estimatedValue: 10
+  GeneratedDescription: "<b>--- DESCRI\xC7\xC3O AUTOM\xC1TICA ---</b>\r\n- Esta \xE9
+    uma habilidade do tipo Active. Subtipo: Movement.\r\n- Desvia o fluxo dependendo
+    do n\xEDvel atual da habilidade.\r\n- Seleciona automaticamente a si mesmo.\r\n"
