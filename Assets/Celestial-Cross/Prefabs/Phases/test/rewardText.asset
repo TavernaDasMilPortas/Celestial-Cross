@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RewardPackage
   Money: 2
   Energy: 2
+  XP: 25000

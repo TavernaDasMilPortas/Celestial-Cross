@@ -217,6 +217,18 @@ public class PlacementManager : MonoBehaviour
             if (unit != null)
             {
                 unit.runtimePetData = runtimePetData;
+                
+                // --- ATRIBUIÇÃO DE RUNTIME DATA (Essencial para XP e Nível) ---
+                if (AccountManager.Instance != null && AccountManager.Instance.PlayerAccount != null)
+                {
+                    unit.runtimeUnitData = AccountManager.Instance.PlayerAccount.GetOwnedUnitRuntimeData(unitData.UnitID);
+                    if (unit.runtimeUnitData == null)
+                    {
+                        // Fallback: Se não existe no save (ex: debug), cria um temporário
+                        unit.runtimeUnitData = new CelestialCross.Data.RuntimeUnitData(unitData.UnitID, 1);
+                    }
+                }
+
                 placedUnitsDict[unitData] = unit;
             }
         }

@@ -48,12 +48,15 @@ public class UnitData : ScriptableObject
     [Header("Stats")]
     public CombatStats baseStats = new CombatStats(30, 10, 6, 7, 7, 1);
     public CombatStats maxStats = new CombatStats(300, 100, 60, 70, 7, 1);
-    public int maxLevel = 60;
 
-    public CombatStats GetStatsAtLevel(int level)
+    /// <summary>
+    /// Calcula os status baseados no nível atual, interpolando entre baseStats e maxStats.
+    /// O referenceMaxLevel define em qual nível a unidade atinge os maxStats (geralmente vindo do LevelingConfig).
+    /// </summary>
+    public CombatStats GetStatsAtLevel(int level, int referenceMaxLevel = 100)
     {
-        if (maxLevel <= 1) return baseStats;
-        float factor = Mathf.Clamp01((float)(level - 1) / (maxLevel - 1));
+        if (referenceMaxLevel <= 1) return baseStats;
+        float factor = Mathf.Clamp01((float)(level - 1) / (referenceMaxLevel - 1));
         return new CombatStats(
             Mathf.RoundToInt(baseStats.health + (maxStats.health - baseStats.health) * factor),
             Mathf.RoundToInt(baseStats.attack + (maxStats.attack - baseStats.attack) * factor),

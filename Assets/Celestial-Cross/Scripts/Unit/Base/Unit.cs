@@ -60,8 +60,10 @@ public abstract class Unit : MonoBehaviour
         get
         {
             int level = runtimeUnitData != null ? runtimeUnitData.Level : 1;
+            int refMaxLevel = (LevelingConfig.Instance != null) ? LevelingConfig.Instance.globalMaxLevel : 100;
+            
             CombatStats baseStats = unitData != null
-                ? unitData.GetStatsAtLevel(level)
+                ? unitData.GetStatsAtLevel(level, refMaxLevel)
                 : new CombatStats(1, 0, 0, 0, 0, 0);
 
             if (runtimePetData != null)
