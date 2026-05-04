@@ -246,4 +246,10 @@ public class Account
             if (loadout.RingID == artifactGuid) loadout.RingID = string.Empty;
         }
     }
+    public CelestialCross.Data.RuntimeUnitData GetOwnedUnitRuntimeData(string unitId)
+    {
+        EnsureInitialized();
+        return OwnedUnits.Find(u => u.UnitID == unitId);
+    }
 }
+

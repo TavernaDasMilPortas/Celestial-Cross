@@ -25,9 +25,10 @@ public static class XPDistributor
             unit.runtimeUnitData.CurrentXP += xpPerUnit;
 
             // Loop de Level Up
-            while (unit.runtimeUnitData.Level < unit.unitData.maxLevel)
+            int maxLevelForUnit = config.GetMaxLevelForStars(unit.runtimeUnitData.StarLevel);
+            while (unit.runtimeUnitData.Level < maxLevelForUnit)
             {
-                int needed = config.GetXPForLevel(unit.runtimeUnitData.Level);
+                int needed = config.GetXPForNextLevel(unit.runtimeUnitData.Level);
                 if (unit.runtimeUnitData.CurrentXP >= needed)
                 {
                     unit.runtimeUnitData.CurrentXP -= needed;
@@ -38,7 +39,7 @@ public static class XPDistributor
 
             result.newLevel = unit.runtimeUnitData.Level;
             result.currentXP = unit.runtimeUnitData.CurrentXP;
-            result.xpToNextLevel = config.GetXPForLevel(unit.runtimeUnitData.Level);
+            result.xpToNextLevel = config.GetXPForNextLevel(unit.runtimeUnitData.Level);
 
             results[unit.runtimeUnitData.UnitID] = result;
             

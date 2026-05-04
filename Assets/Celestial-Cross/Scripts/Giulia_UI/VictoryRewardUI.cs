@@ -17,6 +17,7 @@ namespace CelestialCross.Giulia_UI
         [Header("Data Catalogs")]
         public ArtifactSetCatalog artifactSetCatalog;
         public PetCatalog petCatalog;
+        public UnitCatalog unitCatalog;
         public LevelingConfig levelingConfig;
 
         [Header("Containers")]
@@ -297,30 +298,34 @@ namespace CelestialCross.Giulia_UI
                 rootContainer.SetActive(true);
 
             TMP_Text[] allTexts = rootContainer.GetComponentsInChildren<TMP_Text>();
-            foreach(var t in allTexts) {
-                // filter explicitly by name to avoid hijacking my modal texts
-                if (t.name.Contains("Title") || t.text.Contains("VIT") || t.text.Contains("Vit") || t.text.Contains("DERROTA")) {
-                    if (t.transform.parent != detailsModal.transform) {
-                        t.text = isVictory ? "VITRIA!" : "DERROTA...";
-                        t.color = isVictory ? Color.yellow : Color.red;
-                    }
-                }
+            // Update Title
+            var titleTxt = rootContainer.transform.Find("MainScrollView/Viewport/Content/ModalTitle")?.GetComponent<TextMeshProUGUI>();
+            if (titleTxt != null)
+            {
+                titleTxt.text = isVictory ? "VITÓRIA!" : "DERROTA...";
+                titleTxt.color = isVictory ? Color.yellow : Color.red;
             }
 
             if (moneyAndEnergyText != null) {
                 if (reward != null) {
-                    moneyAndEnergyText.text = "Dinheiro: <color=#00FF00>+" + reward.Money + "</color>   Energia: <color=#00FFFF>+" + reward.Energy + "</color>";
-                    if (reward.Stardust > 0) moneyAndEnergyText.text += "   Poeira: <color=#FFAA00>+" + reward.Stardust + "</color>";
-                    if (reward.XP > 0) moneyAndEnergyText.text += "   XP: <color=#00FFFF>+" + reward.XP + "</color>";
+                    string resList = $"- Dinheiro: <color=#00FF00>+{reward.Money}</color>\n";
+                    resList += $"- Energia: <color=#00FFFF>+{reward.Energy}</color>\n";
+                    if (reward.Stardust > 0) resList += $"- Poeira: <color=#FFAA00>+{reward.Stardust}</color>\n";
+                    if (reward.XP > 0) resList += $"- XP Equipe: <color=#00FFFF>+{reward.XP}</color>";
+                    moneyAndEnergyText.text = resList;
                 } else {
-                    moneyAndEnergyText.text = "Sorte na prxima!";
+                    moneyAndEnergyText.text = "Nenhum recurso obtido.";
                 }
             }
 
             if (xpResults != null && xpSlotsPanel != null && xpSlotPrefab != null)
             {
-                // Limpar slots antigos de XP se houver
-                foreach (Transform child in xpSlotsPanel) Destroy(child.gameObject);
+                // Limpar slots antigos de XP se houver (mas ignora o template se ele estiver no painel)
+                foreach (Transform child in xpSlotsPanel) 
+                {
+                    if (child.gameObject != xpSlotPrefab)
+                        Destroy(child.gameObject);
+                }
                 StartCoroutine(AnimateXPBars(xpResults));
             }
 
@@ -456,20 +461,28 @@ namespace CelestialCross.Giulia_UI
                 var slot = Instantiate(xpSlotPrefab, xpSlotsPanel);
                 slot.SetActive(true);
                 
-                var levelTxt = slot.transform.Find("LevelText")?.GetComponent<TextMeshProUGUI>();
-                var barFill = slot.transform.Find("XP_Bar_BG/Fill")?.GetComponent<Image>();
-                var gainTxt = slot.transform.Find("GainText")?.GetComponent<TextMeshProUGUI>();
+                // Buscar na estrutura nova: InfoColumn/LevelText e InfoColumn/XP_Bar_BG/Fill
+                var levelTxt = slot.transform.Find("InfoColumn/LevelText")?.GetComponent<TextMeshProUGUI>();
+                var barFill = slot.transform.Find("InfoColumn/XP_Bar_BG/Fill")?.GetComponent<Image>();
+                var iconImg = slot.transform.Find("UnitIcon")?.GetComponent<Image>();
 
-                if (levelTxt != null) levelTxt.text = $"Lv. {result.oldLevel}";
-                if (gainTxt != null) gainTxt.text = $"+{result.xpGained} XP";
+                // Set Unit Icon
+                if (iconImg != null && unitCatalog != null)
+                {
+                    var unitData = unitCatalog.GetUnitData(kvp.Key);
+                    if (unitData != null) iconImg.sprite = unitData.icon;
+                }
+
+                int xpToPrev = levelingConfig.GetXPForNextLevel(result.oldLevel);
+                int startXPVal = result.currentXP - result.xpGained;
+                if (startXPVal < 0) startXPVal = 0; // Simplificação para o primeiro nível
+
+                if (levelTxt != null) 
+                    levelTxt.text = $"Lv. {result.oldLevel} ({startXPVal}/{xpToPrev}) <color=yellow>+{result.xpGained} XP</color>";
                 
                 if (barFill != null)
                 {
-                    float startXP = (float)(result.currentXP - result.xpGained);
-                    if (startXP < 0) startXP = 0;
-                    
-                    int xpToPrev = levelingConfig.GetXPForLevel(result.oldLevel);
-                    float startPercent = startXP / xpToPrev;
+                    float startPercent = (float)startXPVal / xpToPrev;
                     float endPercent = (float)result.currentXP / result.xpToNextLevel;
 
                     barFill.fillAmount = startPercent;
@@ -482,18 +495,28 @@ namespace CelestialCross.Giulia_UI
                         
                         if (result.newLevel > result.oldLevel)
                         {
-                            if (t < 0.5f) barFill.fillAmount = Mathf.Lerp(startPercent, 1f, t * 2f);
+                            if (t < 0.5f) {
+                                barFill.fillAmount = Mathf.Lerp(startPercent, 1f, t * 2f);
+                            }
                             else {
-                                barFill.fillAmount = Mathf.Lerp(0f, endPercent, (t - 0.5f) * 2f);
-                                if (levelTxt != null) levelTxt.text = $"Lv. {result.newLevel} <color=yellow>UP!</color>";
+                                float t2 = (t - 0.5f) * 2f;
+                                barFill.fillAmount = Mathf.Lerp(0f, endPercent, t2);
+                                if (levelTxt != null) 
+                                    levelTxt.text = $"Lv. {result.newLevel} ({Mathf.RoundToInt(t2 * result.currentXP)}/{result.xpToNextLevel}) <color=#00FF00>LEVEL UP!</color>";
                             }
                         }
                         else
                         {
+                            float currentXPVal = Mathf.Lerp(startXPVal, result.currentXP, t);
                             barFill.fillAmount = Mathf.Lerp(startPercent, endPercent, t);
+                            if (levelTxt != null)
+                                levelTxt.text = $"Lv. {result.oldLevel} ({Mathf.RoundToInt(currentXPVal)}/{xpToPrev}) <color=yellow>+{result.xpGained} XP</color>";
                         }
                         yield return null;
                     }
+                    
+                    if (levelTxt != null)
+                        levelTxt.text = $"Lv. {result.newLevel} ({result.currentXP}/{result.xpToNextLevel}) <color=yellow>+{result.xpGained} XP</color>";
                     barFill.fillAmount = endPercent;
                 }
             }
