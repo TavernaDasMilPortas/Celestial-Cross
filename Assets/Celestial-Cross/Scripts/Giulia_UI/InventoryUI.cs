@@ -90,6 +90,7 @@ public class InventoryUI : MonoBehaviour
     public TMP_Text unitXPText;
 
     [Header("Constellation UI (Phase 2)")]
+    public ConstellationModal constellationModal;
     public Image[] constellationStars = new Image[6];
     public Button constellationButton;
     public TMP_Text insigniaCountText;
@@ -129,6 +130,9 @@ public class InventoryUI : MonoBehaviour
 
     void Start()
     {
+        if (unitCatalog == null)
+            Debug.LogWarning("InventoryUI: UnitCatalog não atribuído! A UI de Constelação e Detalhes pode não funcionar corretamente.");
+
         InitializeTabs();
         RegisterSwipe();
 
@@ -147,19 +151,22 @@ public class InventoryUI : MonoBehaviour
         SwitchToTab(0);
     }
 
-    private void OnConstellationUpgradeClicked()
+    public void OnConstellationUpgradeClicked()
     {
-        if (string.IsNullOrEmpty(selectingForUnitId)) return;
-        var account = AccountManager.Instance?.PlayerAccount;
-        if (account == null) return;
-
-        var runtimeData = account.GetOwnedUnitRuntimeData(selectingForUnitId);
-        if (runtimeData == null) return;
-
-        if (ConstellationService.TryUpgradeConstellation(runtimeData))
+        Debug.Log($"[InventoryUI] Botão de Constelação clicado para unidade: {selectingForUnitId}");
+        if (string.IsNullOrEmpty(selectingForUnitId))
         {
-            AccountManager.Instance.SaveAccount();
-            ShowUnitDetails(selectingForUnitId, account);
+            Debug.LogWarning("[InventoryUI] Nenhuma unidade selecionada!");
+            return;
+        }
+        
+        if (constellationModal != null)
+        {
+            constellationModal.Open(selectingForUnitId);
+        }
+        else
+        {
+            Debug.LogError("[InventoryUI] Referência do ConstellationModal está nula no Inspector!");
         }
     }
 
@@ -808,13 +815,8 @@ private void PopulateTab(int tabIndex)
                 // Clear old buttons
                 foreach (RectTransform child in unitAbilitiesContainer) Destroy(child.gameObject);
                 
-                if (data.GetAbilities() != null)
-                {
-                    foreach (var ab in data.GetAbilities())
-                    {
-                        if (ab != null) SpawnAbilityButton(unitAbilitiesContainer, ab, false);
-                    }
-                }
+                // As habilidades agora são mostradas via Grafos abaixo
+
                 if (data.GetAbilityGraphs() != null)
                 {
                     foreach (var graph in data.GetAbilityGraphs())

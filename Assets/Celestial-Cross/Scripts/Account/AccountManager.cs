@@ -243,14 +243,29 @@ public class AccountManager : MonoBehaviour
         }
     }
 
-    // Exemplo de como adicionar uma unidade à conta
+    // Adiciona uma unidade à conta ou concede insígnia se for duplicata
     public void AddUnitToAccount(string unitID)
     {
-        if (!PlayerAccount.OwnedUnitIDs.Contains(unitID))
+        if (PlayerAccount == null) return;
+
+        bool alreadyOwned = PlayerAccount.OwnedUnits.Exists(u => u.UnitID == unitID) || 
+                            PlayerAccount.OwnedUnitIDs.Contains(unitID);
+
+        if (!alreadyOwned)
         {
             PlayerAccount.OwnedUnitIDs.Add(unitID);
-            SaveAccount();
+            PlayerAccount.OwnedUnits.Add(new CelestialCross.Data.RuntimeUnitData(unitID, 4));
+            Debug.Log($"[AccountManager] Nova unidade adicionada: {unitID}");
         }
+        else
+        {
+            // Duplicata! Converte em insígnia para o sistema de constelação
+            string insigniaID = CelestialCross.System.ConstellationService.GetInsigniaItemID(unitID);
+            PlayerAccount.AddItem(insigniaID, 1);
+            Debug.Log($"[AccountManager] Duplicata de {unitID} convertida em 1 Insígnia Estelar.");
+        }
+        
+        SaveAccount();
     }
 
     // Exemplo de como adicionar um pet à conta

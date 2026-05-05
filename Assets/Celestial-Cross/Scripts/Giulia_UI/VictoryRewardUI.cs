@@ -455,70 +455,142 @@ namespace CelestialCross.Giulia_UI
         {
             if (levelingConfig == null) yield break;
 
+            var animators = new List<IEnumerator>();
+
             foreach (var kvp in results)
             {
                 var result = kvp.Value;
                 var slot = Instantiate(xpSlotPrefab, xpSlotsPanel);
                 slot.SetActive(true);
                 
-                // Buscar na estrutura nova: InfoColumn/LevelText e InfoColumn/XP_Bar_BG/Fill
                 var levelTxt = slot.transform.Find("InfoColumn/LevelText")?.GetComponent<TextMeshProUGUI>();
                 var barFill = slot.transform.Find("InfoColumn/XP_Bar_BG/Fill")?.GetComponent<Image>();
                 var iconImg = slot.transform.Find("UnitIcon")?.GetComponent<Image>();
 
-                // Set Unit Icon
                 if (iconImg != null && unitCatalog != null)
                 {
                     var unitData = unitCatalog.GetUnitData(kvp.Key);
                     if (unitData != null) iconImg.sprite = unitData.icon;
                 }
 
-                int xpToPrev = levelingConfig.GetXPForNextLevel(result.oldLevel);
-                int startXPVal = result.currentXP - result.xpGained;
-                if (startXPVal < 0) startXPVal = 0; // Simplificação para o primeiro nível
+                animators.Add(AnimateSingleXPBar(result, levelTxt, barFill));
+            }
 
-                if (levelTxt != null) 
-                    levelTxt.text = $"Lv. {result.oldLevel} ({startXPVal}/{xpToPrev}) <color=yellow>+{result.xpGained} XP</color>";
+            var coroutines = new List<Coroutine>();
+            foreach (var anim in animators)
+            {
+                coroutines.Add(StartCoroutine(anim));
+            }
+
+            foreach(var c in coroutines) {
+                yield return c;
+            }
+        }
+
+        private IEnumerator AnimateSingleXPBar(XPGainResult result, TextMeshProUGUI levelTxt, Image barFill)
+        {
+            float totalAnimationTime = 1.5f;
+            
+            int currentAnimLevel = result.oldLevel;
+            int currentSimXP = result.oldXP;
+            int xpRemainingToAnim = result.xpGained;
+            
+            if (xpRemainingToAnim == 0)
+            {
+                int xpToNext = levelingConfig.GetXPForNextLevel(currentAnimLevel);
+                if (barFill != null) barFill.fillAmount = xpToNext > 0 ? (float)currentSimXP / xpToNext : 1f;
+                if (levelTxt != null) levelTxt.text = $"Lv. {currentAnimLevel} ({currentSimXP}/{xpToNext}) <color=yellow>+0 XP</color>";
+                yield break;
+            }
+
+            while (xpRemainingToAnim > 0)
+            {
+                int xpToNext = levelingConfig.GetXPForNextLevel(currentAnimLevel);
                 
-                if (barFill != null)
+                // If max level reached
+                if (xpToNext == 0)
                 {
-                    float startPercent = (float)startXPVal / xpToPrev;
-                    float endPercent = (float)result.currentXP / result.xpToNextLevel;
+                    if (barFill != null) barFill.fillAmount = 1f;
+                    if (levelTxt != null) levelTxt.text = $"Lv. {currentAnimLevel} (MAX) <color=yellow>+{result.xpGained} XP</color>";
+                    yield break;
+                }
 
-                    barFill.fillAmount = startPercent;
-
+                int xpNeededForLevelUp = xpToNext - currentSimXP;
+                
+                if (xpRemainingToAnim >= xpNeededForLevelUp)
+                {
+                    // Level Up animation segment
+                    float portion = (float)xpNeededForLevelUp / result.xpGained;
+                    float timeForThisSegment = totalAnimationTime * portion;
+                    if (timeForThisSegment < 0.1f) timeForThisSegment = 0.1f;
+                    
                     float elapsed = 0;
-                    while (elapsed < 1.5f)
+                    float startFill = (float)currentSimXP / xpToNext;
+                    while (elapsed < timeForThisSegment)
                     {
                         elapsed += Time.deltaTime;
-                        float t = elapsed / 1.5f;
+                        float t = elapsed / timeForThisSegment;
                         
-                        if (result.newLevel > result.oldLevel)
-                        {
-                            if (t < 0.5f) {
-                                barFill.fillAmount = Mathf.Lerp(startPercent, 1f, t * 2f);
-                            }
-                            else {
-                                float t2 = (t - 0.5f) * 2f;
-                                barFill.fillAmount = Mathf.Lerp(0f, endPercent, t2);
-                                if (levelTxt != null) 
-                                    levelTxt.text = $"Lv. {result.newLevel} ({Mathf.RoundToInt(t2 * result.currentXP)}/{result.xpToNextLevel}) <color=#00FF00>LEVEL UP!</color>";
-                            }
-                        }
-                        else
-                        {
-                            float currentXPVal = Mathf.Lerp(startXPVal, result.currentXP, t);
-                            barFill.fillAmount = Mathf.Lerp(startPercent, endPercent, t);
-                            if (levelTxt != null)
-                                levelTxt.text = $"Lv. {result.oldLevel} ({Mathf.RoundToInt(currentXPVal)}/{xpToPrev}) <color=yellow>+{result.xpGained} XP</color>";
+                        if (barFill != null) barFill.fillAmount = Mathf.Lerp(startFill, 1f, t);
+                        if (levelTxt != null) {
+                            int displayXP = Mathf.RoundToInt(Mathf.Lerp(currentSimXP, xpToNext, t));
+                            levelTxt.text = $"Lv. {currentAnimLevel} ({displayXP}/{xpToNext}) <color=yellow>+{result.xpGained} XP</color>";
                         }
                         yield return null;
                     }
                     
-                    if (levelTxt != null)
-                        levelTxt.text = $"Lv. {result.newLevel} ({result.currentXP}/{result.xpToNextLevel}) <color=yellow>+{result.xpGained} XP</color>";
-                    barFill.fillAmount = endPercent;
+                    if (barFill != null) barFill.fillAmount = 1f;
+                    
+                    currentAnimLevel++;
+                    xpRemainingToAnim -= xpNeededForLevelUp;
+                    currentSimXP = 0;
+                    
+                    if (levelTxt != null) levelTxt.text = $"Lv. {currentAnimLevel} (0/{levelingConfig.GetXPForNextLevel(currentAnimLevel)}) <color=#00FF00>LEVEL UP!</color>";
+                    if (barFill != null) barFill.fillAmount = 0f;
+                    
+                    yield return new WaitForSeconds(0.2f);
                 }
+                else
+                {
+                    // Partial fill animation segment
+                    float portion = (float)xpRemainingToAnim / result.xpGained;
+                    float timeForThisSegment = totalAnimationTime * portion;
+                    if (timeForThisSegment < 0.1f) timeForThisSegment = 0.1f;
+                    
+                    int targetXP = currentSimXP + xpRemainingToAnim;
+                    
+                    float elapsed = 0;
+                    float startFill = (float)currentSimXP / xpToNext;
+                    float endFill = (float)targetXP / xpToNext;
+                    
+                    while (elapsed < timeForThisSegment)
+                    {
+                        elapsed += Time.deltaTime;
+                        float t = elapsed / timeForThisSegment;
+                        
+                        if (barFill != null) barFill.fillAmount = Mathf.Lerp(startFill, endFill, t);
+                        if (levelTxt != null) {
+                            int displayXP = Mathf.RoundToInt(Mathf.Lerp(currentSimXP, targetXP, t));
+                            levelTxt.text = $"Lv. {currentAnimLevel} ({displayXP}/{xpToNext}) <color=yellow>+{result.xpGained} XP</color>";
+                        }
+                        yield return null;
+                    }
+                    
+                    currentSimXP = targetXP;
+                    xpRemainingToAnim = 0;
+                }
+            }
+            
+            // Final explicit state ensurement
+            if (barFill != null) {
+                int finalXPToNext = levelingConfig.GetXPForNextLevel(result.newLevel);
+                if (finalXPToNext > 0)
+                    barFill.fillAmount = (float)result.currentXP / finalXPToNext;
+                else
+                    barFill.fillAmount = 1f;
+            }
+            if (levelTxt != null) {
+                levelTxt.text = $"Lv. {result.newLevel} ({result.currentXP}/{result.xpToNextLevel}) <color=yellow>+{result.xpGained} XP</color>";
             }
         }
     }

@@ -212,17 +212,17 @@ public abstract class Unit : MonoBehaviour
         // Garante que passivas de set (artefatos) estejam ativas no PassiveManager.
         ApplyArtifactSetPassives();
         
-        // Aplica passivas de habilidades inatas da classe/unidade ao PassiveManager
+        // Aplica passivas de habilidades inatas (Via Grafos)
         if (unitData != null)
         {
-            var blueprints = unitData.GetAbilities();
-            if (blueprints != null)
+            var graphs = unitData.GetAbilityGraphs();
+            if (graphs != null)
             {
-                foreach (var bp in blueprints)
+                foreach (var g in graphs)
                 {
-                    if (bp != null && (bp.isPassive || (bp.modifiers != null && bp.modifiers.Count > 0)))
+                    if (g != null && g.IsPassive)
                     {
-                        PassiveManager?.ApplyCondition(bp, this);
+                        PassiveManager?.ApplyGraphCondition(g, this);
                     }
                 }
             }
@@ -343,10 +343,10 @@ public abstract class Unit : MonoBehaviour
         
         var waitAction = GetComponent<WaitAction>();
         if (waitAction == null) waitAction = gameObject.AddComponent<WaitAction>();
-        waitAction.MarkConfigured();
+        // waitAction.MarkConfigured(); // Comentado se não necessário
         actions.Add(waitAction);
-        var blueprints = unitData.GetAbilities();
-        if (blueprints != null) foreach (var bp in blueprints) if (bp != null ) actions.Add(new BlueprintActionWrapper(this, bp));
+        
+        // As habilidades agora vêm exclusivamente de Grafos ou Definições executáveis
         
         var graphs = unitData.GetAbilityGraphs();
         if (graphs != null) foreach (var g in graphs) if (g != null) actions.Add(new GraphActionWrapper(this, g));

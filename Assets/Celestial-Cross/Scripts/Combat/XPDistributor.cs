@@ -21,6 +21,7 @@ public static class XPDistributor
             XPGainResult result = new XPGainResult();
             result.xpGained = xpPerUnit;
             result.oldLevel = unit.runtimeUnitData.Level;
+            result.oldXP = unit.runtimeUnitData.CurrentXP;
             
             unit.runtimeUnitData.CurrentXP += xpPerUnit;
 
@@ -55,6 +56,7 @@ public class XPGainResult
 {
     public int xpGained;
     public int oldLevel;
+    public int oldXP;
     public int newLevel;
     public int currentXP;
     public int xpToNextLevel;
