@@ -56,7 +56,7 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "Celestial-Cross.slnx",
+    "dotnet.defaultSolution": "Bichinhos-Magicos.slnx",
     "markdown.validate.enabled": true,
     "editor.accessibilitySupport": "auto"
 }

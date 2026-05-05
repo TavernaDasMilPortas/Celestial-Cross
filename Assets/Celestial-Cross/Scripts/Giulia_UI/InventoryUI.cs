@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using CelestialCross.Giulia_UI;
 using CelestialCross.Data.Pets;
+using CelestialCross.System;
+
 
 /// <summary>
 /// (Fase 2) UI de inventÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡rio modular com 3 abas (Unidades, Pets, Artefatos).
@@ -18,6 +20,7 @@ public class InventoryUI : MonoBehaviour
     public UnitCatalog unitCatalog;
     public PetCatalog petCatalog;
     public ArtifactSetCatalog artifactSetCatalog;
+    public LevelingConfig levelingConfig;
 
     [Header("Abas")]
     [Tooltip("Arrastar as 3 InventoryTab (Unidades, Pets, Artefatos) na ordem")]
@@ -137,8 +140,27 @@ public class InventoryUI : MonoBehaviour
 
         WireUpFixedButtons();
         
+        if (constellationButton != null)
+            constellationButton.onClick.AddListener(OnConstellationUpgradeClicked);
+        
         RefreshAllTabs();
         SwitchToTab(0);
+    }
+
+    private void OnConstellationUpgradeClicked()
+    {
+        if (string.IsNullOrEmpty(selectingForUnitId)) return;
+        var account = AccountManager.Instance?.PlayerAccount;
+        if (account == null) return;
+
+        var runtimeData = account.GetOwnedUnitRuntimeData(selectingForUnitId);
+        if (runtimeData == null) return;
+
+        if (ConstellationService.TryUpgradeConstellation(runtimeData))
+        {
+            AccountManager.Instance.SaveAccount();
+            ShowUnitDetails(selectingForUnitId, account);
+        }
     }
 
     private void WireUpFixedButtons()
@@ -678,11 +700,44 @@ private void PopulateTab(int tabIndex)
 
         var loadout = account.GetLoadoutForUnit(unitId);
         
+        var runtimeData = account.GetOwnedUnitRuntimeData(unitId);
+        if (runtimeData == null)
+        {
+            // Se não encontrar runtime data, cria um default
+            runtimeData = new CelestialCross.Data.RuntimeUnitData(unitId, 1);
+        }
+
+        // Update Level UI
+        if (unitLevelText != null) unitLevelText.text = $"Lv. {runtimeData.Level}";
+        if (unitXPBar != null && levelingConfig != null)
+        {
+            int xpToNext = levelingConfig.GetXPForNextLevel(runtimeData.Level);
+            unitXPBar.fillAmount = (float)runtimeData.CurrentXP / xpToNext;
+            if (unitXPText != null) unitXPText.text = $"{runtimeData.CurrentXP} / {xpToNext}";
+        }
+
+        // Update Constellation UI
+        if (constellationStars != null)
+        {
+            for (int i = 0; i < constellationStars.Length; i++)
+            {
+                if (constellationStars[i] != null)
+                    constellationStars[i].color = i < runtimeData.ConstellationLevel ? Color.yellow : Color.gray;
+            }
+        }
+        if (insigniaCountText != null)
+        {
+            string insigniaID = ConstellationService.GetInsigniaItemID(unitId);
+            int count = account.GetItemCount(insigniaID);
+            insigniaCountText.text = $"Insígnias: {count}";
+        }
+
         if (data != null && unitStatsText != null && unitIconImage != null)
         {
             unitIconImage.sprite = data.icon;
             
-            var baseStats = data.baseStats;
+            int refMaxLevel = (levelingConfig != null) ? levelingConfig.globalMaxLevel : 100;
+            var baseStats = data.GetStatsAtLevel(runtimeData.Level, refMaxLevel);
             RuntimePetData equippedPet = null;
             CelestialCross.Data.Pets.PetSpeciesSO equippedPetSpecies = null;
             if (loadout != null && !string.IsNullOrEmpty(loadout.PetID))

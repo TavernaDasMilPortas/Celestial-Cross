@@ -19,95 +19,100 @@ namespace CelestialCross.EditorArea
             }
 
             Undo.RecordObject(victoryUI, "Generate XP Panel");
+            GenerateXPPanelInTarget(victoryUI.transform.Find("RootContainer") ?? victoryUI.transform);
+        }
 
+        public static void GenerateXPPanelInTarget(Transform targetParent)
+        {
+            VictoryRewardUI victoryUI = Object.FindObjectOfType<VictoryRewardUI>();
+            
             // 1. Container para o Painel de XP
-            GameObject panelGO = new GameObject("XP_Panel", typeof(RectTransform), typeof(Image), typeof(HorizontalLayoutGroup));
-            panelGO.transform.SetParent(victoryUI.transform.Find("RootContainer") ?? victoryUI.transform, false);
+            GameObject panelGO = new GameObject("XP_Panel", typeof(RectTransform), typeof(VerticalLayoutGroup));
+            panelGO.transform.SetParent(targetParent, false);
             
             RectTransform panelRT = panelGO.GetComponent<RectTransform>();
-            panelRT.anchorMin = new Vector2(0.1f, 0.2f);
-            panelRT.anchorMax = new Vector2(0.9f, 0.45f);
+            panelRT.anchorMin = new Vector2(0, 0);
+            panelRT.anchorMax = new Vector2(1, 0);
             panelRT.offsetMin = panelRT.offsetMax = Vector2.zero;
 
-            Image panelImg = panelGO.GetComponent<Image>();
-            panelImg.color = new Color(0, 0, 0, 0.5f);
+            VerticalLayoutGroup vlg = panelGO.GetComponent<VerticalLayoutGroup>();
+            vlg.spacing = 10;
+            vlg.childAlignment = TextAnchor.UpperCenter;
+            vlg.childControlWidth = true;
+            vlg.childControlHeight = true;
+            vlg.childForceExpandWidth = true;
+            vlg.childForceExpandHeight = false;
 
-            HorizontalLayoutGroup hlg = panelGO.GetComponent<HorizontalLayoutGroup>();
-            hlg.spacing = 20;
-            hlg.childAlignment = TextAnchor.MiddleCenter;
-            hlg.childControlWidth = true;
-            hlg.childControlHeight = true;
-            hlg.childForceExpandWidth = true;
-            hlg.childForceExpandHeight = true;
-            hlg.padding = new RectOffset(20, 20, 10, 10);
-
-            // 2. Prefab do Slot (Vamos criar um GameObject temporário para servir de base se não houver prefab)
+            // 2. Prefab do Slot
             GameObject slotTemplate = CreateSlotTemplate(panelGO.transform);
             
-            // Linkar no VictoryUI
-            var serializedUI = new SerializedObject(victoryUI);
-            serializedUI.FindProperty("xpSlotsPanel").objectReferenceValue = panelRT;
-            serializedUI.FindProperty("xpSlotPrefab").objectReferenceValue = slotTemplate;
-            serializedUI.ApplyModifiedProperties();
+            if (victoryUI != null)
+            {
+                var serializedUI = new SerializedObject(victoryUI);
+                serializedUI.FindProperty("xpSlotsPanel").objectReferenceValue = panelRT;
+                serializedUI.FindProperty("xpSlotPrefab").objectReferenceValue = slotTemplate;
+                serializedUI.ApplyModifiedProperties();
+            }
 
-            // Esconder o template (o VictoryUI vai instanciar em runtime)
             slotTemplate.SetActive(false);
-
-            Debug.Log("Victory XP Panel gerado e vinculado com sucesso!");
+            Debug.Log("Victory XP Panel gerado e vinculado!");
         }
 
         private static GameObject CreateSlotTemplate(Transform parent)
         {
-            GameObject slot = new GameObject("XP_Slot_Template", typeof(RectTransform), typeof(Image), typeof(VerticalLayoutGroup));
+            GameObject slot = new GameObject("XP_Slot_Template", typeof(RectTransform), typeof(HorizontalLayoutGroup));
             slot.transform.SetParent(parent, false);
             
-            Image bg = slot.GetComponent<Image>();
-            bg.color = new Color(1, 1, 1, 0.1f);
+            HorizontalLayoutGroup hlg = slot.GetComponent<HorizontalLayoutGroup>();
+            hlg.spacing = 30;
+            hlg.childAlignment = TextAnchor.MiddleLeft;
+            hlg.childControlWidth = true;
+            hlg.childControlHeight = false;
+            hlg.childForceExpandWidth = true;
+            hlg.padding = new RectOffset(20, 20, 10, 10);
 
-            VerticalLayoutGroup vlg = slot.GetComponent<VerticalLayoutGroup>();
-            vlg.spacing = 5;
-            vlg.childAlignment = TextAnchor.MiddleCenter;
-            vlg.childControlWidth = true;
-            vlg.childControlHeight = false;
-            vlg.childForceExpandWidth = true;
-            vlg.padding = new RectOffset(10, 10, 10, 10);
-
-            // Ícone
+            // 1. Coluna 1: Ícone
             GameObject iconGO = new GameObject("UnitIcon", typeof(RectTransform), typeof(Image));
             iconGO.transform.SetParent(slot.transform, false);
-            iconGO.GetComponent<RectTransform>().sizeDelta = new Vector2(80, 80);
+            var iconRT = iconGO.GetComponent<RectTransform>();
+            iconRT.sizeDelta = new Vector2(120, 120);
             iconGO.GetComponent<Image>().preserveAspect = true;
 
-            // Nome/Nível
-            GameObject levelGO = new GameObject("LevelText", typeof(RectTransform), typeof(TextMeshProUGUI));
-            levelGO.transform.SetParent(slot.transform, false);
-            var levelTxt = levelGO.GetComponent<TextMeshProUGUI>();
-            levelTxt.fontSize = 18;
-            levelTxt.alignment = TextAlignmentOptions.Center;
-            levelTxt.text = "Lv. 1";
+            // 2. Coluna 2: Informações (Vertical)
+            GameObject infoGO = new GameObject("InfoColumn", typeof(RectTransform), typeof(VerticalLayoutGroup));
+            infoGO.transform.SetParent(slot.transform, false);
+            var vlg = infoGO.GetComponent<VerticalLayoutGroup>();
+            vlg.spacing = 10;
+            vlg.childAlignment = TextAnchor.UpperLeft;
+            vlg.childControlWidth = true;
+            vlg.childForceExpandWidth = true;
 
-            // Barra de XP
+            // Nível + XP (Top Row)
+            GameObject levelGO = new GameObject("LevelText", typeof(RectTransform), typeof(TextMeshProUGUI));
+            levelGO.transform.SetParent(infoGO.transform, false);
+            var levelTxt = levelGO.GetComponent<TextMeshProUGUI>();
+            levelTxt.fontSize = 36;
+            levelTxt.text = "Lv. 1 (0/100) +10 XP";
+            levelTxt.alignment = TextAlignmentOptions.Left;
+
+            // Barra de XP (Bottom Row)
             GameObject barGO = new GameObject("XP_Bar_BG", typeof(RectTransform), typeof(Image));
-            barGO.transform.SetParent(slot.transform, false);
-            barGO.GetComponent<RectTransform>().sizeDelta = new Vector2(150, 15);
-            barGO.GetComponent<Image>().color = Color.black;
+            barGO.transform.SetParent(infoGO.transform, false);
+            barGO.GetComponent<RectTransform>().sizeDelta = new Vector2(400, 24);
+            barGO.GetComponent<Image>().color = new Color(0, 0, 0, 0.7f);
 
             GameObject fillGO = new GameObject("Fill", typeof(RectTransform), typeof(Image));
             fillGO.transform.SetParent(barGO.transform, false);
             RectTransform fillRT = fillGO.GetComponent<RectTransform>();
             fillRT.anchorMin = Vector2.zero;
-            fillRT.anchorMax = new Vector2(0.5f, 1); // 50% inicial
+            fillRT.anchorMax = new Vector2(0.5f, 1);
             fillRT.offsetMin = fillRT.offsetMax = Vector2.zero;
-            fillGO.GetComponent<Image>().color = Color.cyan;
+            fillGO.GetComponent<Image>().color = new Color(0, 0.8f, 1f, 1f);
 
-            // Texto de Ganho (+XP)
+            // GainText (Oculto ou usado dentro do LevelText)
             GameObject gainGO = new GameObject("GainText", typeof(RectTransform), typeof(TextMeshProUGUI));
             gainGO.transform.SetParent(slot.transform, false);
-            var gainTxt = gainGO.GetComponent<TextMeshProUGUI>();
-            gainTxt.fontSize = 14;
-            gainTxt.color = Color.yellow;
-            gainTxt.alignment = TextAlignmentOptions.Center;
-            gainTxt.text = "+0 XP";
+            gainGO.SetActive(false); // Não usamos mais como objeto separado, mas mantemos a ref pro script se precisar
 
             return slot;
         }
