@@ -33,13 +33,9 @@ MonoBehaviour:
     speed: 70
     criticalChance: 7
     effectAccuracy: 1
-  abilities:
-  - {fileID: 11400000, guid: c8f7cb11c924edc4caa09636660fec77, type: 2}
-  - {fileID: 11400000, guid: 30c35df7a6ad23e40af5183e3aa01ff8, type: 2}
   abilityGraphs:
   - {fileID: 11400000, guid: 660a531ea1a9802449c71c3c4a89e403, type: 2}
-  constellationLayout: {fileID: 11400000, guid: 8d54d8cf96fd93740beba09d54fd05b5, type: 2}
-  constellationPassives: []
+  constellationConfig: {fileID: 11400000, guid: 895416b1fbffaab44ab31b2f8bbc2f06, type: 2}
   nativeActions: []
   references:
     version: 2

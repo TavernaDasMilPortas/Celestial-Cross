@@ -88,6 +88,7 @@ namespace CelestialCross.Giulia_UI.Editor
 
             rootScript.btnFilterAll = CreateFilterBtn(filtersPanel.transform, "All").GetComponent<Button>();
             rootScript.btnFilterPetSouls = CreateFilterBtn(filtersPanel.transform, "Pet Souls").GetComponent<Button>();
+            rootScript.btnFilterInsignias = CreateFilterBtn(filtersPanel.transform, "Insígnias").GetComponent<Button>();
 
             // --- Bottom (Grid Container) ---
             GameObject bottomPanel = new GameObject("BottomGridPanel", typeof(RectTransform), typeof(ScrollRect), typeof(Image));

@@ -12,5 +12,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5c1368f4560c69469ae8681624338f9, type: 3}
   m_Name: NewConstellationConfig
   m_EditorClassIdentifier: Assembly-CSharp::CelestialCross.Data.ConstellationConfigSO
-  stars: []
+  stars:
+  - starName: Estrela 1
+    position: {x: 2, y: -100}
+    passiveGraph: {fileID: 0}
+    customDescription: 
+  - starName: Estrela 2
+    position: {x: -98, y: 1}
+    passiveGraph: {fileID: 0}
+    customDescription: 
+  - starName: Estrela 3
+    position: {x: 99, y: 0}
+    passiveGraph: {fileID: 0}
+    customDescription: 
+  - starName: Estrela 4
+    position: {x: 0, y: 96}
+    passiveGraph: {fileID: 0}
+    customDescription: 
+  - starName: Estrela 5
+    position: {x: 0, y: 170}
+    passiveGraph: {fileID: 0}
+    customDescription: 
+  - starName: Estrela 6
+    position: {x: -1, y: 235}
+    passiveGraph: {fileID: 0}
+    customDescription: 
   connectionIndices: 

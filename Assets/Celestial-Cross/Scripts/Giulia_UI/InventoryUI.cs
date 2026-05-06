@@ -753,16 +753,6 @@ private void PopulateTab(int tabIndex)
                 if (equippedPet != null && petCatalog != null)
                 {
                     equippedPetSpecies = petCatalog.GetPetSpecies(equippedPet.SpeciesID);
-                    if (equippedPetSpecies != null)
-                    {
-                        // Adding simple pet stats to base stats manually 
-                        baseStats.health += equippedPet.Health;
-                        baseStats.attack += equippedPet.Attack;
-                        baseStats.defense += equippedPet.Defense;
-                        baseStats.speed += equippedPet.Speed;
-                        baseStats.criticalChance = Mathf.Clamp(baseStats.criticalChance + equippedPet.CriticalChance, 0, 100);
-                        baseStats.effectAccuracy = Mathf.Clamp(baseStats.effectAccuracy + equippedPet.EffectAccuracy, 0, 100);
-                    }
                 }
             }
 
@@ -787,27 +777,36 @@ private void PopulateTab(int tabIndex)
                 }
             }
 
-            int finalHealth = (int)Mathf.Round(data.baseStats.health * (1f + (hP / 100f)) + hF);
-            int finalAttack = (int)Mathf.Round(data.baseStats.attack * (1f + (aP / 100f)) + aF);
-            int finalDefense = (int)Mathf.Round(data.baseStats.defense * (1f + (dP / 100f)) + dF);
+            int finalHealth = (int)Mathf.Round(baseStats.health * (1f + (hP / 100f)) + hF);
+            int finalAttack = (int)Mathf.Round(baseStats.attack * (1f + (aP / 100f)) + aF);
+            int finalDefense = (int)Mathf.Round(baseStats.defense * (1f + (dP / 100f)) + dF);
+            int finalSpeed = (int)Mathf.Round(baseStats.speed + spdF);
+            int finalCrit = Mathf.Clamp((int)Mathf.Round(baseStats.criticalChance + crF), 0, 100);
+            int finalAcc = Mathf.Clamp((int)Mathf.Round(baseStats.effectAccuracy + eaf), 0, 100);
             
             if (equippedPet != null && equippedPetSpecies != null)
             {
                 finalHealth += equippedPet.Health;
                 finalAttack += equippedPet.Attack;
                 finalDefense += equippedPet.Defense;
+                finalSpeed += equippedPet.Speed;
+                finalCrit = Mathf.Clamp(finalCrit + equippedPet.CriticalChance, 0, 100);
+                finalAcc = Mathf.Clamp(finalAcc + equippedPet.EffectAccuracy, 0, 100);
             }
             
-            int finalSpeed = (int)Mathf.Round(baseStats.speed + spdF);
-            int finalCrit = Mathf.Clamp((int)Mathf.Round(baseStats.criticalChance + crF), 0, 100);
-            int finalAcc = Mathf.Clamp((int)Mathf.Round(baseStats.effectAccuracy + eaf), 0, 100);
+            int roundedBaseHealth = Mathf.RoundToInt(baseStats.health);
+            int roundedBaseAttack = Mathf.RoundToInt(baseStats.attack);
+            int roundedBaseDefense = Mathf.RoundToInt(baseStats.defense);
+            int roundedBaseSpeed = Mathf.RoundToInt(baseStats.speed);
+            int roundedBaseCrit = Mathf.RoundToInt(baseStats.criticalChance);
+            int roundedBaseAcc = Mathf.RoundToInt(baseStats.effectAccuracy);
 
-            string healthText = finalHealth > data.baseStats.health ? $"<color=#00ff00>{finalHealth}</color> <color=#aaaaaa>({data.baseStats.health} +{finalHealth - data.baseStats.health})</color>" : finalHealth.ToString();
-            string attackText = finalAttack > data.baseStats.attack ? $"<color=#00ff00>{finalAttack}</color> <color=#aaaaaa>({data.baseStats.attack} +{finalAttack - data.baseStats.attack})</color>" : finalAttack.ToString();
-            string defenseText = finalDefense > data.baseStats.defense ? $"<color=#00ff00>{finalDefense}</color> <color=#aaaaaa>({data.baseStats.defense} +{finalDefense - data.baseStats.defense})</color>" : finalDefense.ToString();
-            string speedText = finalSpeed > data.baseStats.speed ? $"<color=#00ff00>{finalSpeed}</color> <color=#aaaaaa>({data.baseStats.speed} +{finalSpeed - data.baseStats.speed})</color>" : finalSpeed.ToString();
-            string critText = finalCrit > data.baseStats.criticalChance ? $"<color=#00ff00>{finalCrit}%</color> <color=#aaaaaa>({data.baseStats.criticalChance}% +{finalCrit - data.baseStats.criticalChance}%)</color>" : $"{finalCrit}%";
-            string accText = finalAcc > data.baseStats.effectAccuracy ? $"<color=#00ff00>{finalAcc}%</color> <color=#aaaaaa>({data.baseStats.effectAccuracy}% +{finalAcc - data.baseStats.effectAccuracy}%)</color>" : $"{finalAcc}%";
+            string healthText = finalHealth > roundedBaseHealth ? $"<color=#00ff00>{finalHealth}</color> <color=#aaaaaa>({roundedBaseHealth} +{finalHealth - roundedBaseHealth})</color>" : finalHealth.ToString();
+            string attackText = finalAttack > roundedBaseAttack ? $"<color=#00ff00>{finalAttack}</color> <color=#aaaaaa>({roundedBaseAttack} +{finalAttack - roundedBaseAttack})</color>" : finalAttack.ToString();
+            string defenseText = finalDefense > roundedBaseDefense ? $"<color=#00ff00>{finalDefense}</color> <color=#aaaaaa>({roundedBaseDefense} +{finalDefense - roundedBaseDefense})</color>" : finalDefense.ToString();
+            string speedText = finalSpeed > roundedBaseSpeed ? $"<color=#00ff00>{finalSpeed}</color> <color=#aaaaaa>({roundedBaseSpeed} +{finalSpeed - roundedBaseSpeed})</color>" : finalSpeed.ToString();
+            string critText = finalCrit > roundedBaseCrit ? $"<color=#00ff00>{finalCrit}%</color> <color=#aaaaaa>({roundedBaseCrit}% +{finalCrit - roundedBaseCrit}%)</color>" : $"{finalCrit}%";
+            string accText = finalAcc > roundedBaseAcc ? $"<color=#00ff00>{finalAcc}%</color> <color=#aaaaaa>({roundedBaseAcc}% +{finalAcc - roundedBaseAcc}%)</color>" : $"{finalAcc}%";
 
             string abilitiesList = "Nenhuma habilidade";
             if (unitAbilitiesContainer != null)
