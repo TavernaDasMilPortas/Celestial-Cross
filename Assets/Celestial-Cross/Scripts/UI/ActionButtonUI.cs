@@ -8,13 +8,14 @@ public class ActionButtonUI : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     [SerializeField] private Image iconImage;
     [SerializeField] private Image selectionImage;
     [SerializeField] private Button button;
+    [SerializeField] private TextMeshProUGUI nameText;
 
     public IUnitAction Action => action;
     private IUnitAction action;
     private int actionIndex;
     private bool isClickable = true;
 
-    private float holdTime = 0.4f;
+    private float holdTime = 0.15f;
     private float timer;
     private bool isHolding;
     private bool modalShown;
@@ -30,6 +31,11 @@ public class ActionButtonUI : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         }
 
         if (selectionImage != null) selectionImage.gameObject.SetActive(false);
+
+        if (nameText != null && unitData != null)
+        {
+            nameText.text = unitData.displayName;
+        }
 
         if (button != null)
         {
@@ -48,6 +54,11 @@ public class ActionButtonUI : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         if (iconImage != null && action.ActionIcon != null)
         {
             iconImage.sprite = action.ActionIcon;
+        }
+
+        if (nameText != null && action != null)
+        {
+            nameText.text = action.ActionName;
         }
 
         if (selectionImage != null) selectionImage.gameObject.SetActive(false);
