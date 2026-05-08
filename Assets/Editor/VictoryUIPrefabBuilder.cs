@@ -7,7 +7,7 @@ namespace CelestialCross.EditorScripts
 {
     public class VictoryUIPrefabBuilder : EditorWindow
     {
-        [MenuItem("Celestial Cross/UI Builders/Generate Victory UI Templates")]
+        [MenuItem("Celestial Cross/UI Builders/Components/Victory UI Templates")]
         public static void GenerateTemplates()
         {
             // Busca um Canvas na cena, ou cria um se não existir

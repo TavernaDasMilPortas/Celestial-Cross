@@ -7,7 +7,7 @@ namespace CelestialCross.UI.Builders
 {
     public class HubUIBuilder
     {
-        [MenuItem("Celestial Cross/UI Builders/Generate Hub Navigation UI")]
+        [MenuItem("Celestial Cross/UI Builders/Screens/Hub Navigation UI")]
         public static void GenerateHubUI()
         {
             // 1. Setup Canvas

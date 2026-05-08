@@ -8,7 +8,7 @@ namespace CelestialCross.EditorArea
 {
     public static class UIBuilder_VictoryXPPanel
     {
-        [MenuItem("Celestial Cross/UI Builders/Generate Victory XP Panel")]
+        [MenuItem("Celestial Cross/UI Builders/Components/Victory XP Panel")]
         public static void GenerateXPPanel()
         {
             VictoryRewardUI victoryUI = Object.FindObjectOfType<VictoryRewardUI>();

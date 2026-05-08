@@ -16,7 +16,7 @@ MonoBehaviour:
   displayName: Leidell
   role: 0
   unitClass: 0
-  icon: {fileID: 21300000, guid: 818165bbcf8b25a40ba19a9fc51a2e52, type: 3}
+  icon: {fileID: 21300000, guid: 6c0f467186696f64ea6f117122847d44, type: 3}
   idleAnim: {fileID: 7400000, guid: de85580ac2d51814d847dc42f019654c, type: 2}
   combatIdleAnim: {fileID: 7400000, guid: 6a891e9c3911e3f4e9260b004818be17, type: 2}
   baseStats:
@@ -33,13 +33,11 @@ MonoBehaviour:
     speed: 70
     criticalChance: 7
     effectAccuracy: 1
-  abilities: []
   abilityGraphs:
   - {fileID: 11400000, guid: 588e2f904fd93b947b5f099c7c15288b, type: 2}
   - {fileID: 11400000, guid: 1046e58697e467140b173faec1eef775, type: 2}
   - {fileID: 11400000, guid: 660a531ea1a9802449c71c3c4a89e403, type: 2}
-  constellationLayout: {fileID: 11400000, guid: 8d54d8cf96fd93740beba09d54fd05b5, type: 2}
-  constellationPassives: []
+  constellationConfig: {fileID: 0}
   nativeActions: []
   references:
     version: 2

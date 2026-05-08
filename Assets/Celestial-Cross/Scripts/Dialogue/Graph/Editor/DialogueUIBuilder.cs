@@ -7,7 +7,7 @@ namespace CelestialCross.Dialogue.Editor
 {
     public class DialogueUIBuilder : EditorWindow
     {
-        [MenuItem("Celestial Cross/UI/Build Dialogue UI Scene")]
+        [MenuItem("Celestial Cross/UI Builders/Screens/Dialogue UI Scene")]
         public static void BuildUI()
         {
             // 1. Criar Canvas se não existir
