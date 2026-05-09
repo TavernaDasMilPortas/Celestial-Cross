@@ -1,4 +1,4 @@
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEditor.Experimental.GraphView;
@@ -12,7 +12,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor
         private AbilityGraphSO _currentGraphAsset;
         private ObjectField _assetField;
 
-        [MenuItem("Celestial Cross/Ability Graph Editor")]
+        [MenuItem("Celestial Cross/Editors/Ability Graph Editor")]
         public static void OpenWindow()
         {
             var window = GetWindow<AbilityGraphWindow>();
@@ -94,7 +94,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor
             GraphSaveUtility.GetInstance(_graphView).LoadGraph(_currentGraphAsset);
         }
 
-        // Método para abrir a janela já carregando um asset (útil para double-click)
+        // MÃ©todo para abrir a janela jÃ¡ carregando um asset (Ãºtil para double-click)
         public static void OpenWithAsset(AbilityGraphSO asset)
         {
             var window = GetWindow<AbilityGraphWindow>();
@@ -105,3 +105,4 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor
         }
     }
 }
+

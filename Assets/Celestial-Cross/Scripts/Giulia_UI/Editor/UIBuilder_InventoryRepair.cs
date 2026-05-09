@@ -8,7 +8,7 @@ namespace CelestialCross.EditorArea
 {
     public static class UIBuilder_InventoryRepair
     {
-        [MenuItem("Celestial Cross/UI Builders/Repair & Force Link All Systems")]
+        [MenuItem("Celestial Cross/UI Builders/Utils/Repair & Force Link All Systems")]
         public static void RepairInventoryUI()
         {
             InventoryUI inventory = Object.FindObjectOfType<InventoryUI>();

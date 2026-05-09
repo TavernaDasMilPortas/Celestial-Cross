@@ -9,7 +9,7 @@ namespace CelestialCross.Giulia_UI.Editor
 {
     public class UIBuilder_VictoryModalComplete
     {
-        [MenuItem("Celestial Cross/UI Builders/Generate Victory Modal Complete")]
+        [MenuItem("Celestial Cross/UI Builders/Modals/Victory Modal Complete")]
         public static void BuildModal()
         {
             Canvas canvas = Object.FindFirstObjectByType<Canvas>();

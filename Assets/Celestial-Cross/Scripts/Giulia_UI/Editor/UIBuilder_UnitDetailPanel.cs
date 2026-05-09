@@ -7,7 +7,7 @@ namespace CelestialCross.EditorArea
 {
     public static class UIBuilder_UnitDetailPanel
     {
-        [MenuItem("Celestial Cross/UI Builders/Overhaul Unit Detail Panel (Level & Constellation)")]
+        [MenuItem("Celestial Cross/UI Builders/Components/Unit Detail Panel Overhaul")]
         public static void OverhaulDetailPanel()
         {
             InventoryUI inventory = Object.FindObjectOfType<InventoryUI>();
