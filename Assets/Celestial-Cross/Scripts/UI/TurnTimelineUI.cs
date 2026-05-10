@@ -25,14 +25,36 @@ public class TurnTimelineUI : MonoBehaviour
     private bool isDragging = false;
     private List<GameObject> activePortraits = new();
 
+    private void Awake()
+    {
+        TurnManager.OnRoundStarted += HandleRoundStarted;
+
+        // Começa escondido
+        if (drawerPanel != null)
+        {
+            drawerPanel.gameObject.SetActive(false);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        TurnManager.OnRoundStarted -= HandleRoundStarted;
+    }
+
     private void Start()
     {
         if (toggleDrawerButton != null)
         {
-            toggleDrawerButton.onClick.AddListener(ToggleDrawer);
-
-            EventTrigger trigger = toggleDrawerButton.gameObject.AddComponent<EventTrigger>();
+            // Remove o botão para que ele não capture eventos de clique que podem travar o drag
+            // No entanto, mantemos ele como objeto visual ou trocamos por uma imagem se necessário.
+            // Para garantir o drag, vamos adicionar o EventTrigger ao toggleDrawerButton.
             
+            EventTrigger trigger = toggleDrawerButton.gameObject.GetComponent<EventTrigger>();
+            if (trigger == null) trigger = toggleDrawerButton.gameObject.AddComponent<EventTrigger>();
+            
+            // Limpa triggers antigos para evitar duplicatas manuais
+            trigger.triggers.Clear();
+
             var beginDragEntry = new EventTrigger.Entry { eventID = EventTriggerType.BeginDrag };
             beginDragEntry.callback.AddListener((data) => { OnBeginDragDrawer((PointerEventData)data); });
             trigger.triggers.Add(beginDragEntry);
@@ -44,6 +66,19 @@ public class TurnTimelineUI : MonoBehaviour
             var endDragEntry = new EventTrigger.Entry { eventID = EventTriggerType.EndDrag };
             endDragEntry.callback.AddListener((data) => { OnEndDragDrawer((PointerEventData)data); });
             trigger.triggers.Add(endDragEntry);
+
+            // Importante: Buttons podem bloquear o drag se o clique for detectado primeiro.
+            // Para permitir o drag sem o clique atrapalhar, vamos habilitar o botão
+            // mas garantir que ele aceite o início do drag.
+            toggleDrawerButton.enabled = true; 
+        }
+    }
+
+    private void HandleRoundStarted(int round)
+    {
+        if (round == 1 && drawerPanel != null)
+        {
+            drawerPanel.gameObject.SetActive(true);
         }
     }
 
@@ -79,17 +114,22 @@ public class TurnTimelineUI : MonoBehaviour
             Vector3 endPos = openPositionRef.position;
             Vector3 dir = (endPos - startPos).normalized;
             
+            // Projeta a posição do mouse na linha entre Fechado e Aberto
             Vector3 projectedPos = startPos + Vector3.Project(worldPoint - startPos, dir);
             
             float totalDist = Vector3.Distance(startPos, endPos);
-            float projDistFromStart = Vector3.Distance(startPos, projectedPos);
-            float projDistFromEnd = Vector3.Distance(endPos, projectedPos);
+            float currentDistFromStart = Vector3.Dot(projectedPos - startPos, dir);
             
-            if (projDistFromStart > totalDist) projectedPos = endPos;
-            else if (projDistFromEnd > totalDist) projectedPos = startPos;
-            else if (Vector3.Dot(dir, projectedPos - startPos) < 0) projectedPos = startPos;
+            // Limita a posição para não sair do range [startPos, endPos]
+            if (currentDistFromStart < 0) projectedPos = startPos;
+            else if (currentDistFromStart > totalDist) projectedPos = endPos;
             
             drawerPanel.position = projectedPos;
+
+            // Atualiza isDrawerOpen em tempo real para o Update não lutar contra o drag
+            float distToOpen = Vector3.Distance(drawerPanel.position, openPositionRef.position);
+            float distToClosed = Vector3.Distance(drawerPanel.position, closedPositionRef.position);
+            isDrawerOpen = distToOpen <= distToClosed;
         }
     }
 
