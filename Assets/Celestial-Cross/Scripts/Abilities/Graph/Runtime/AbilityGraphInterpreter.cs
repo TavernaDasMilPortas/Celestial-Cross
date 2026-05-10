@@ -489,8 +489,16 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                     var oldTile = gridMap.GetTile(subject.GridPosition);
                     if (oldTile != null) { oldTile.IsOccupied = false; oldTile.OccupyingUnit = null; }
 
-                    subject.GridPosition = destination;
-                    subject.transform.position = gridMap.GridToWorld(destination);
+                    var moveAction = subject.GetComponent<MoveAction>();
+                    if (moveAction != null)
+                    {
+                        yield return StartCoroutine(moveAction.MoveRoutine(destination));
+                    }
+                    else
+                    {
+                        subject.GridPosition = destination;
+                        subject.transform.position = gridMap.GridToWorld(destination);
+                    }
 
                     if (targetTile != null) { targetTile.IsOccupied = true; targetTile.OccupyingUnit = subject; }
                 }
@@ -800,3 +808,4 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
         }
     }
 }
+// refresh

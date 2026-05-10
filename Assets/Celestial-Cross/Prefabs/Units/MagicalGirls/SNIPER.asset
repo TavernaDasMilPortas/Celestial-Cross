@@ -35,6 +35,7 @@ MonoBehaviour:
     effectAccuracy: 1
   abilityGraphs:
   - {fileID: 11400000, guid: 660a531ea1a9802449c71c3c4a89e403, type: 2}
+  - {fileID: 11400000, guid: b5885353a0969bd48b7186452da3dda5, type: 2}
   constellationConfig: {fileID: 11400000, guid: 895416b1fbffaab44ab31b2f8bbc2f06, type: 2}
   nativeActions: []
   references:

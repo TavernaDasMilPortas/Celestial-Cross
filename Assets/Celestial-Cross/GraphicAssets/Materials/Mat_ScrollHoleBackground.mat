@@ -24,7 +24,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _DetailTex:
-        m_Texture: {fileID: 2800000, guid: 69fcdee7970da37439e423c6e15da857, type: 3}
+        m_Texture: {fileID: 2800000, guid: 2422cf388adea53469fed23a44c78ae5, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -32,14 +32,14 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MaskTex:
-        m_Texture: {fileID: 2800000, guid: 4ea7502c5832c5342b626c9b64fd3e72, type: 3}
+        m_Texture: {fileID: 2800000, guid: 8fc3cb8ab248d3f4a8c78435679dab0a, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
     - _ColorMask: 15
-    - _ScrollSpeedX: 0.1
-    - _ScrollSpeedY: 0.1
+    - _ScrollSpeedX: 0.05
+    - _ScrollSpeedY: 0.05
     - _Stencil: 0
     - _StencilComp: 8
     - _StencilOp: 0

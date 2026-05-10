@@ -5,6 +5,8 @@ using TMPro;
 public class UnitPanelUI : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI nameText;
+    [SerializeField] private Color allyColor = Color.cyan;
+    [SerializeField] private Color enemyColor = Color.red;
     [SerializeField] private TextMeshProUGUI hpText;
     [SerializeField] private TextMeshProUGUI speedText;
     [SerializeField] private Image petIconImage;
@@ -26,7 +28,11 @@ public class UnitPanelUI : MonoBehaviour
         currentUnit = unit;
 
         if (nameText != null)
+        {
             nameText.text = currentUnit.DisplayName;
+            bool isAlly = currentUnit.Team == Team.Player;
+            nameText.color = isAlly ? allyColor : enemyColor;
+        }
             
         if (speedText != null)
             speedText.text = $"Spd: {currentUnit.Speed}";
