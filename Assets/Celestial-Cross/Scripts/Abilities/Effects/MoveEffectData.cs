@@ -111,8 +111,16 @@ namespace Celestial_Cross.Scripts.Abilities.Effects
                     var oldTile = gridMap.GetTile(unitToMove.GridPosition);
                     if (oldTile != null) { oldTile.IsOccupied = false; oldTile.OccupyingUnit = null; }
 
-                    unitToMove.GridPosition = destination;
-                    unitToMove.transform.position = new Vector3(destination.x, unitToMove.transform.position.y, destination.y);
+                    var moveAction = unitToMove.GetComponent<MoveAction>();
+                    if (moveAction != null)
+                    {
+                        yield return unitToMove.StartCoroutine(moveAction.MoveRoutine(destination));
+                    }
+                    else
+                    {
+                        unitToMove.GridPosition = destination;
+                        unitToMove.transform.position = new Vector3(destination.x, unitToMove.transform.position.y, destination.y);
+                    }
 
                     var newTile = gridMap.GetTile(destination);
                     if (newTile != null) { newTile.IsOccupied = true; newTile.OccupyingUnit = unitToMove; }

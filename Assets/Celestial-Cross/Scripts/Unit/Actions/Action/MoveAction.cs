@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -126,23 +127,81 @@ public class MoveAction : UnitActionBase
     // Nota: O TargetSelector cuida do highlight original, mas o MoveAction 
     // pode ter lógica específica aqui se necessário.
 
-    void MoveUnit(Vector2Int destination)
+    public void MoveUnit(Vector2Int destination)
     {
+        // Se já houver um movimento em curso no mesmo objeto, paramos para evitar conflitos
+        StopAllCoroutines(); 
+        StartCoroutine(MoveRoutine(destination));
+    }
+
+    public IEnumerator MoveRoutine(Vector2Int destination)
+    {
+        if (gridMap == null) gridMap = GridMap.Instance;
+        
         GridTile current = gridMap.GetTile(unit.GridPosition);
         if (current != null)
+        {
             current.IsOccupied = false;
+            current.OccupyingUnit = null;
+        }
+
+        Vector2Int start = unit.GridPosition;
+        Vector3 startWorldPos = unit.transform.position;
+        
+        // Coordenadas de destino reais do mundo
+        Vector3 finalWorldPos = gridMap.GridToWorld(destination);
+        finalWorldPos.y = startWorldPos.y;
+
+        // Determina os pontos do "L" no mundo
+        Vector3 cornerWorldPos = gridMap.GridToWorld(new Vector2Int(destination.x, start.y));
+        cornerWorldPos.y = startWorldPos.y;
+        
+        float speed = 4f;
+
+        Debug.Log($"[MoveAction] {unit.name} animando de {startWorldPos} para {finalWorldPos} via {cornerWorldPos}");
+
+        // Move para o corner (X)
+        if (Vector3.Distance(unit.transform.position, cornerWorldPos) > 0.01f)
+        {
+            yield return StartCoroutine(AnimateToWorld(cornerWorldPos, speed));
+        }
+
+        // Move para o destino (Y)
+        if (Vector3.Distance(unit.transform.position, finalWorldPos) > 0.01f)
+        {
+            yield return StartCoroutine(AnimateToWorld(finalWorldPos, speed));
+        }
 
         unit.GridPosition = destination;
-        unit.transform.position = new Vector3(
-            unit.GridPosition.x,
-            0f,
-            unit.GridPosition.y
-        );
+        unit.transform.position = finalWorldPos;
 
         GridTile destTile = gridMap.GetTile(destination);
         if (destTile != null)
+        {
             destTile.IsOccupied = true;
+            destTile.OccupyingUnit = unit;
+        }
 
         unit.hasMovedThisTurn = true;
     }
+
+    IEnumerator AnimateToWorld(Vector3 targetPos, float speed)
+    {
+        Vector3 startPos = unit.transform.position;
+        float distance = Vector3.Distance(startPos, targetPos);
+        if (distance < 0.01f) yield break;
+
+        float elapsed = 0;
+        float duration = distance / speed;
+
+        while (elapsed < duration)
+        {
+            unit.transform.position = Vector3.Lerp(startPos, targetPos, elapsed / duration);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        unit.transform.position = targetPos;
+    }
 }
+// force world-based L move
