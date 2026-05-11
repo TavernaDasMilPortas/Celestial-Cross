@@ -16,6 +16,7 @@ public abstract class Unit : MonoBehaviour
     public CelestialCross.Data.Pets.PetSpeciesSO petSpeciesData { get; set; }
     public CelestialCross.Data.Pets.RuntimePetData runtimePetData { get; set; }
     public CelestialCross.Data.RuntimeUnitData runtimeUnitData { get; set; }
+    public CelestialCross.UnitVisuals.PetVisualController petVisual { get; private set; }
     
     [Header("Test/Debug Artifacts")]
     [SerializeField]
@@ -234,6 +235,24 @@ public abstract class Unit : MonoBehaviour
             if (petSpeciesData.PassiveSkills != null) { foreach(var pass in petSpeciesData.PassiveSkills) { if (pass != null) PassiveManager?.ApplyCondition(pass, this); } }
 
             Debug.Log($"<color=green>[Unit Stats]</color> {DisplayName} combinou status com o pet <b>{(runtimePetData != null ? runtimePetData.DisplayName : petSpeciesData.SpeciesName)}</b>. Total -> HP: {MaxHealth} | Atk: {Stats.attack} | Def: {Stats.defense} | Spd: {Stats.speed} | Crit: {Stats.criticalChance}%");
+
+            // Instancia o visual do Pet se houver Prefab
+            if (petSpeciesData.CombatPrefab != null)
+            {
+                var petObj = Instantiate(petSpeciesData.CombatPrefab, transform);
+                petVisual = petObj.GetComponent<CelestialCross.UnitVisuals.PetVisualController>();
+                if (petVisual == null) petVisual = petObj.AddComponent<CelestialCross.UnitVisuals.PetVisualController>();
+                
+                petVisual.Setup(transform, petSpeciesData.CombatOffset, petSpeciesData.CombatScale);
+                
+                // Sincroniza o flip inicial
+                var unitVisual = GetComponentInChildren<UnitVisualController>();
+                if (unitVisual != null)
+                {
+                    var sr = unitVisual.GetComponent<SpriteRenderer>();
+                    if (sr != null) petVisual.FaceDirection(sr.flipX);
+                }
+            }
         }
 
         // Aplica passivas de constelação (Fase 2)

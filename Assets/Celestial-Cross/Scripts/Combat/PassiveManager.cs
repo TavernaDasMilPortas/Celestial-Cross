@@ -135,6 +135,7 @@ public class PassiveManager : MonoBehaviour
                         {
                             CombatLogger.Log($"<color=cyan>[PassiveManager]</color> {gameObject.name}: Passiva <b>{blueprint.name}</b> ativada no hook {hook} (Modifier)", LogCategory.Passive);
                             mod.ApplyModifier(context);
+                            CheckAndTriggerPetVisual(blueprint);
                         }
                     }
                 }
@@ -164,6 +165,7 @@ public class PassiveManager : MonoBehaviour
                                 context.target = target;
                                 effect.Execute(context);
                                 context.target = originalTarget;
+                                CheckAndTriggerPetVisual(blueprint);
                             }
                         }
                     }
@@ -412,6 +414,22 @@ public class PassiveManager : MonoBehaviour
                 Debug.Log($"[PassiveManager] Condição expirada: {cond.blueprint.name}");
                 activeRuntimeConditions.RemoveAt(i);
             }
+        }
+    }
+
+    private void CheckAndTriggerPetVisual(AbilityBlueprint blueprint)
+    {
+        if (unit == null || unit.petVisual == null || unit.petSpeciesData == null) return;
+        
+        // Verifica se o blueprint pertence ao pet
+        bool isPetBlueprint = false;
+        if (unit.petSpeciesData.PassiveSkills != null && unit.petSpeciesData.PassiveSkills.Contains(blueprint)) isPetBlueprint = true;
+        if (!isPetBlueprint && unit.petSpeciesData.ActiveSkills != null && unit.petSpeciesData.ActiveSkills.Contains(blueprint)) isPetBlueprint = true;
+
+        if (isPetBlueprint)
+        {
+            unit.petVisual.PlaySkill();
+            Debug.Log($"[PassiveManager] Pet Animation Triggered by Blueprint {blueprint.name}");
         }
     }
 }

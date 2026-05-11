@@ -13,6 +13,16 @@ namespace CelestialCross.Data.Pets
         public string SpeciesName;
         public Sprite Icon;
 
+        [Header("Visuals (Combat)")]
+        [Tooltip("Prefab do Pet que aparecerá no combate.")]
+        public GameObject CombatPrefab;
+        
+        [Tooltip("Offset visual em relação ao dono no mesmo tile.")]
+        public Vector3 CombatOffset = new Vector3(0, 0.5f, 0);
+
+        [Tooltip("Escala visual do pet no combate.")]
+        public Vector3 CombatScale = Vector3.one;
+
         [Header("Status Ranges (Limites por Level e Estrela)")]
         [Tooltip("Vida Base Mínima num roll ruim")]
         public float MinBaseHealth;

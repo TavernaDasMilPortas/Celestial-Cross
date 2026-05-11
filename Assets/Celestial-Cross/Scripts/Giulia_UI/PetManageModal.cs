@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
@@ -68,6 +68,14 @@ namespace CelestialCross.Giulia_UI
             string activeSkill = speciesData != null && speciesData.PassiveSkills != null && speciesData.PassiveSkills.Count > 0 
                 ? $"<color=#ffffaa>{speciesData.PassiveSkills[0].abilityName}</color>\n" 
                 : "";
+            
+            if (speciesData != null && speciesData.AbilityGraphs != null)
+            {
+                foreach (var graph in speciesData.AbilityGraphs)
+                {
+                    if (graph != null) activeSkill += $"<color=#aaffaa>{(string.IsNullOrEmpty(graph.abilityName) ? graph.name : graph.abilityName)}</color>\n";
+                }
+            }
 
             detailsText.text = baseInfo + statsInfo + activeSkill;
 

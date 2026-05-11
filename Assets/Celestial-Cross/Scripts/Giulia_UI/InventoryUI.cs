@@ -1072,6 +1072,7 @@ private void PopulateTab(int tabIndex)
             {
                 if (speciesData.PassiveSkills != null) foreach (var ab in speciesData.PassiveSkills) if (ab != null) { details += $"<color=#ffffaa>{ab.abilityName}</color>\n<size=16>{ab.abilityDescription}</size>\n"; }
                 if (speciesData.ActiveSkills != null) foreach (var ab in speciesData.ActiveSkills) if (ab != null) { details += $"<color=#ffffaa>{ab.abilityName}</color>\n<size=16>{ab.abilityDescription}</size>\n"; }
+                if (speciesData.AbilityGraphs != null) foreach (var graph in speciesData.AbilityGraphs) if (graph != null) { details += $"<color=#aaffaa>{(string.IsNullOrEmpty(graph.abilityName) ? graph.name : graph.abilityName)}</color>\n<size=16>{graph.abilityDescription}</size>\n"; }
             }
             else
             {

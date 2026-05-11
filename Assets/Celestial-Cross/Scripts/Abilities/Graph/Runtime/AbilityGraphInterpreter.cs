@@ -134,6 +134,9 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
         {
             string resultPort = "Out";
 
+            // Tenta disparar a animação do pet se o nó for um efeito ou algo "produtivo" (não condicional)
+            CheckAndTriggerPetAnimation(graph, node, context);
+
             switch (node.NodeType)
             {
                 case "TriggerNode":
@@ -770,6 +773,32 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                 case VariableModifierNodeData.Operation.Multiply: context.Variables[varName] *= value; break;
             }
             Debug.Log($"[Interpreter] Variável '{varName}' atualizada para {context.Variables[varName]} (Op: {op})");
+        }
+
+        #endregion
+
+        #region Pet Animation Helpers
+
+        private void CheckAndTriggerPetAnimation(AbilityGraphSO graph, AbilityNodeData node, CombatContext context)
+        {
+            if (context.hasTriggeredPetAnimation || context.source == null || context.source.petVisual == null) return;
+            if (context.source.petSpeciesData == null || context.source.petSpeciesData.AbilityGraphs == null) return;
+
+            // Só dispara se o grafo pertencer ao pet
+            if (!context.source.petSpeciesData.AbilityGraphs.Contains(graph)) return;
+
+            // Lista de nós que "confirmam" que a habilidade foi ativada (efeitos, vfx, etc)
+            string[] triggerNodes = { 
+                "DamageEffectNode", "HealEffectNode", "MoveEffectNode", "VfxNode", 
+                "StatModifierEffectNode", "ApplyModifierNode", "CleanseStatusNode", "CostNode" 
+            };
+
+            if (triggerNodes.Contains(node.NodeType))
+            {
+                context.hasTriggeredPetAnimation = true;
+                context.source.petVisual.PlaySkill();
+                Debug.Log($"[Interpreter] Pet Animation Triggered for {context.source.DisplayName} by node {node.NodeType}");
+            }
         }
 
         #endregion
