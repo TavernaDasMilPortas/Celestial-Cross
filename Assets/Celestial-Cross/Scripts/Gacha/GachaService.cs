@@ -249,6 +249,9 @@ namespace CelestialCross.Gacha
                 if (existingUnit != null)
                 {
                     existingUnit.Fragments += 20; // Repetido ganha fragmentos
+                    string insigniaID = CelestialCross.System.ConstellationService.GetInsigniaItemID(unitID);
+                    account.AddItem(insigniaID, 1);
+                    Debug.Log($"[GachaService] Duplicata de {unitID} recebida na pool. Adicionada 1 Insígnia Estelar e 20 fragmentos.");
                 }
                 else
                 {

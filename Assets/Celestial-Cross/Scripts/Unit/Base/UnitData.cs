@@ -67,23 +67,19 @@ public class UnitData : ScriptableObject
         );
     }
 
-    [Header("Abilities (Blueprints)")]
-    [Tooltip("Lista de habilidades e passivas usando o novo sistema de Blueprints.")]
-    public List<AbilityBlueprint> abilities = new();
 
     [Header("Ability Graphs")]
     [Tooltip("Lista de habilidades usando o sistema de Grafos.")]
     public List<Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO> abilityGraphs = new();
 
-    [Header("Constellation Passives")]
-    [Tooltip("Grafos passivos desbloqueados por nível de constelação (índice 0 = C1, até C6)")]
-    public List<Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO> constellationPassives = new();
+    [Header("Constellation")]
+    [Tooltip("Configuração completa da constelação (Formato + Habilidades).")]
+    public CelestialCross.Data.ConstellationConfigSO constellationConfig;
 
     [Header("Actions (Native)")]
     [SerializeReference]
     public List<UnitActionData> nativeActions = new();
 
-    public List<AbilityBlueprint> GetAbilities() => abilities;
     public List<Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO> GetAbilityGraphs() => abilityGraphs;
 
     // Adaptado para Unit.cs - UnitActionContext se comunica com UnitActionData

@@ -8,7 +8,7 @@ namespace CelestialCross.Dialogue.Editor
 {
     public class HubDiaryUIBuilder
     {
-        [MenuItem("Celestial Cross/Dialogue/Update Hub with Diary Catalog")]
+        [MenuItem("Celestial Cross/Utils/Update Hub with Diary Catalog")]
         public static void UpdateHub()
         {
             // 1. Achar o HubSceneController

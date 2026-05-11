@@ -96,10 +96,9 @@ public class PassiveManager : MonoBehaviour
         if (unit == null) unit = GetComponent<Unit>();
         if (unit == null || unit.Data == null) return;
 
-        // --- 1. Legacy Blueprint passives ---
+        // --- 1. Legacy Blueprint passives (Só mantemos se vierem de Pets ou Condições) ---
         var blueprintAbilities = new List<AbilityBlueprint>();
-        if (unit.Data.GetAbilities() != null)
-            blueprintAbilities.AddRange(unit.Data.GetAbilities());
+        // unit.Data.GetAbilities() removido (Refatoração para Grafos)
         if (unit.petSpeciesData != null)
         {
             if (unit.petSpeciesData.PassiveSkills != null) blueprintAbilities.AddRange(unit.petSpeciesData.PassiveSkills);

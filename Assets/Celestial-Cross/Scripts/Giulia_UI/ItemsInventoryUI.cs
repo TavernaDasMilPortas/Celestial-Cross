@@ -20,10 +20,11 @@ namespace CelestialCross.Giulia_UI
         [Header("Filtros (Abas Internas)")]
         public Button btnFilterAll;
         public Button btnFilterPetSouls;
-        // Adicione mais bot√µes (Consum√≠veis, Materiais, etc) no futuro
+        public Button btnFilterInsignias;
+        // Adicione mais botıes (ConsumÌveis, Materiais, etc) no futuro
 
         // Filtro Atual
-        public enum ItemFilter { All, PetSouls }
+        public enum ItemFilter { All, PetSouls, Insignias }
         private ItemFilter currentFilter = ItemFilter.All;
 
         // Item que foi clicado
@@ -45,6 +46,11 @@ namespace CelestialCross.Giulia_UI
             if(btnFilterPetSouls != null)
             {
                 btnFilterPetSouls.onClick.AddListener(() => SetFilter(ItemFilter.PetSouls));
+            }
+
+            if(btnFilterInsignias != null)
+            {
+                btnFilterInsignias.onClick.AddListener(() => SetFilter(ItemFilter.Insignias));
             }
         }
 
@@ -95,46 +101,60 @@ namespace CelestialCross.Giulia_UI
                 return true;
 
             if (filter == ItemFilter.PetSouls)
-                return itemId.StartsWith("soul_"); // A l√≥gica que criamos no PetReleaseManager
+                return itemId.StartsWith("soul_"); // A lÛgica que criamos no PetReleaseManager
+
+            if (filter == ItemFilter.Insignias)
+                return itemId.StartsWith("insignia_");
 
             return true;
         }
 
         private void CreateItemSlot(ItemQuantity item)
-{
-    if (itemSlotPrefab == null) return;
-    GameObject slotGo = Instantiate(itemSlotPrefab, gridContainer);
-    slotGo.SetActive(true);
-    Image bg = slotGo.GetComponent<Image>();
-    if (bg != null && bg.color == Color.white) bg.color = new Color(0.2f, 0.2f, 0.2f, 1f);
-    string itemNameText = item.ItemID;
-    if (item.ItemID.StartsWith("soul_")) {
-        string speciesName = item.ItemID.Replace("soul_", "");
-        if (speciesName.Length > 1) speciesName = char.ToUpper(speciesName[0]) + speciesName.Substring(1);
-        itemNameText = "Fragmento de\n" + speciesName;
-    }
-    TMP_Text quantityText = slotGo.GetComponentInChildren<TMP_Text>();
-    if (quantityText != null) {
-        quantityText.color = Color.white;
-        quantityText.alignment = TextAlignmentOptions.Center;
-        quantityText.text = itemNameText + "\n<color=#ffff00>x" + item.Quantity + "</color>";
-    }
-    Button btn = slotGo.GetComponent<Button>();
-    if (btn != null) btn.onClick.AddListener(() => { OnItemSelected(item); });
-}
+        {
+            if (itemSlotPrefab == null) return;
+            GameObject slotGo = Instantiate(itemSlotPrefab, gridContainer);
+            slotGo.SetActive(true);
+            Image bg = slotGo.GetComponent<Image>();
+            if (bg != null && bg.color == Color.white) bg.color = new Color(0.2f, 0.2f, 0.2f, 1f);
+            
+            string itemNameText = item.ItemID;
+            if (item.ItemID.StartsWith("soul_")) {
+                string speciesName = item.ItemID.Replace("soul_", "");
+                if (speciesName.Length > 1) speciesName = char.ToUpper(speciesName[0]) + speciesName.Substring(1);
+                itemNameText = "Fragmento de\n" + speciesName;
+            } else if (item.ItemID.StartsWith("insignia_")) {
+                string unitName = item.ItemID.Replace("insignia_", "");
+                if (unitName.Length > 1) unitName = char.ToUpper(unitName[0]) + unitName.Substring(1);
+                itemNameText = "InsÌgnia de\n" + unitName;
+            }
+            
+            TMP_Text quantityText = slotGo.GetComponentInChildren<TMP_Text>();
+            if (quantityText != null) {
+                quantityText.color = Color.white;
+                quantityText.alignment = TextAlignmentOptions.Center;
+                quantityText.text = itemNameText + "\n<color=#ffff00>x" + item.Quantity + "</color>";
+            }
+            
+            Button btn = slotGo.GetComponent<Button>();
+            if (btn != null) btn.onClick.AddListener(() => { OnItemSelected(item); });
+        }
 
-private void OnItemSelected(ItemQuantity item)
+        private void OnItemSelected(ItemQuantity item)
         {
             currentSelectedItem = item;
 
             if (selectedItemNameText != null)
             {
-                // Limpar string t√©cnica (ex: "soul_poring" -> "Poring (Pet Soul)")
                 string displayName = item.ItemID;
                 if (item.ItemID.StartsWith("soul_"))
                 {
                     string speciesName = item.ItemID.Replace("soul_", "");
                     displayName = char.ToUpper(speciesName[0]) + speciesName.Substring(1) + " (Pet Soul)";
+                }
+                else if (item.ItemID.StartsWith("insignia_"))
+                {
+                    string unitName = item.ItemID.Replace("insignia_", "");
+                    displayName = char.ToUpper(unitName[0]) + unitName.Substring(1) + " (InsÌgnia Estelar)";
                 }
 
                 selectedItemNameText.text = displayName;
@@ -146,12 +166,14 @@ private void OnItemSelected(ItemQuantity item)
             if (selectedItemDescriptionText != null)
             {
                 if (item.ItemID.StartsWith("soul_"))
-                    selectedItemDescriptionText.text = "Material obtido ao soltar esta esp√©cie de pet. Pode ser usado no futuro para evoluir suas habilidades exclusivas.";
+                    selectedItemDescriptionText.text = "Material obtido ao soltar esta espÈcie de pet. Pode ser usado no futuro para evoluir suas habilidades exclusivas.";
+                else if (item.ItemID.StartsWith("insignia_"))
+                    selectedItemDescriptionText.text = "Material obtido ao adquirir uma cÛpia repetida deste personagem. Pode ser usado na aba do personagem para aprimorar sua ConstelaÁ„o e desbloquear habilidades passivas.";
                 else
-                    selectedItemDescriptionText.text = "Nenhuma descri√ß√£o dispon√≠vel.";
+                    selectedItemDescriptionText.text = "Nenhuma descriÁ„o disponÌvel.";
             }
 
-            // √çcone: A ser preenchido quando houver cat√°logos
+            // Õcone: A ser preenchido quando houver cat·logos
             // if (selectedItemIcon != null) { ... }
         }
 
@@ -165,4 +187,3 @@ private void OnItemSelected(ItemQuantity item)
         }
     }
 }
-

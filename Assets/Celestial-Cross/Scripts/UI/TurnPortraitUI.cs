@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class TurnPortraitUI : MonoBehaviour
 {
@@ -8,7 +9,13 @@ public class TurnPortraitUI : MonoBehaviour
     [SerializeField] private Color playerColor = Color.blue;
     [SerializeField] private Color enemyColor = Color.red;
 
-    public void Setup(Unit unit)
+    [Header("Turn Visuals")]
+    [SerializeField] private Sprite[] placeSprites;
+    [SerializeField] private TMP_Text turnOrderText;
+    [SerializeField] private Image textBackgroundImage; // A imagem que fica atrás do texto
+
+    // Use default turnOrder = 1 to not break existing scripts immediately
+    public void Setup(Unit unit, int turnOrder = 1)
     {
         if (unit == null) return;
 
@@ -21,6 +28,19 @@ public class TurnPortraitUI : MonoBehaviour
         {
             bool isPlayer = unit is Pet || unit.CompareTag("Player") || unit.Team == Team.Player;
             backgroundImage.color = isPlayer ? playerColor : enemyColor;
+        }
+
+        // Sorteia um fundinho para trás do texto
+        if (textBackgroundImage != null && placeSprites != null && placeSprites.Length > 0)
+        {
+            int rnd = Random.Range(0, placeSprites.Length);
+            textBackgroundImage.sprite = placeSprites[rnd];
+        }
+
+        // Apply Text formating
+        if (turnOrderText != null)
+        {
+            turnOrderText.text = $"#{turnOrder}";
         }
     }
 }

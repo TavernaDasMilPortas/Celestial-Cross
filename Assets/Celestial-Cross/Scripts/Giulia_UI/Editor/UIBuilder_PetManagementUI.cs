@@ -8,7 +8,7 @@ namespace CelestialCross.Editor
 {
     public class UIBuilder_PetManagementUI : EditorWindow
     {
-        [MenuItem("Celestial Cross/UI Builders/Update Inventory for Pet Management")]
+        [MenuItem("Celestial Cross/UI Builders/Utils/Update Inventory for Pet Management")]
         public static void ShowWindow()
         {
             var window = GetWindow<UIBuilder_PetManagementUI>("Pet UI Builder");

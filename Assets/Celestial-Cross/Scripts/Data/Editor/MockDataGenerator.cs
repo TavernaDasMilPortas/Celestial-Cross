@@ -177,7 +177,7 @@ namespace CelestialCross.Editor
                 unit.baseStats = unitStats[i];
                 unit.icon = GenerateColoredSprite(unitColors[i], $"Icon_Unit_{i}");
                 
-                unit.abilities = new List<AbilityBlueprint> { passiva, ativa1, ativa2 };
+                // unit.abilities = new List<AbilityBlueprint> { passiva, ativa1, ativa2 }; // Removido (Refatoração para Grafos)
 
                 AssetDatabase.CreateAsset(unit, $"{UnitsPath}/Unit_{i}.asset");
             }
