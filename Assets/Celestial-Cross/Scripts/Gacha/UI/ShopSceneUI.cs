@@ -124,7 +124,7 @@ namespace CelestialCross.Gacha.UI
 
                 if (animationController != null)
                 {
-                    animationController.PlayGachaSequence(results, () => OnAnimationFinished(results));
+                    animationController.PlayGachaSequence(results, banner.pullVisualConfig, () => OnAnimationFinished(results));
                 }
                 else
                 {

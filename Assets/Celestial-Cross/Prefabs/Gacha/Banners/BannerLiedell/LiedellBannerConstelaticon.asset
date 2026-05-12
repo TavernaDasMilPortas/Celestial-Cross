@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a595f06e60efd5a4790c269d569b8275, type: 3}
+  m_Name: LiedellBannerConstelaticon
+  m_EditorClassIdentifier: Assembly-CSharp::CelestialCross.Data.BannerPullVisualConfigSO
+  pullPositions:
+  - positionName: Pull 1
+    position: {x: -0.00000047683716, y: -861.85565}
+    delayToShow: 0
+  - positionName: Pull 2
+    position: {x: 2.8571444, y: -697.42834}
+    delayToShow: 0.1
+  - positionName: Pull 3
+    position: {x: 2.8571405, y: -378.9999}
+    delayToShow: 0.2
+  - positionName: Pull 4
+    position: {x: -257, y: -533.0003}
+    delayToShow: 0.3
+  - positionName: Pull 5
+    position: {x: 256.14285, y: -530.8574}
+    delayToShow: 0.4
+  - positionName: Pull 6
+    position: {x: 3.7142859, y: -165.57144}
+    delayToShow: 0.5
+  - positionName: Pull 7
+    position: {x: 0.8571429, y: 121.14283}
+    delayToShow: 0.6
+  - positionName: Pull 8
+    position: {x: 130.71423, y: 255.71419}
+    delayToShow: 0.7
+  - positionName: Pull 9
+    position: {x: -124.571396, y: 355.85712}
+    delayToShow: 0.8
+  - positionName: Pull 10
+    position: {x: 0, y: 543.9999}
+    delayToShow: 0.90000004
+  connectionIndices: 

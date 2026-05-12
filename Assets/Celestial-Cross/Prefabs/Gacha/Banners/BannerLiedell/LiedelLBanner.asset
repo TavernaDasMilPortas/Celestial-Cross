@@ -16,6 +16,7 @@ MonoBehaviour:
   BannerName: Liedel
   BannerSplashArt: {fileID: 21300000, guid: 171580878dc9f9043ac9929348b8e850, type: 3}
   CostPerPull: 1
+  pullVisualConfig: {fileID: 11400000, guid: db3860f4120b12c4fb3da57cffbe7cbd, type: 2}
   SoftPityThreshold: 70
   HardPityThreshold: 90
   GuaranteedAboveBaseEvery: 10

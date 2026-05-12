@@ -92,6 +92,9 @@ namespace CelestialCross.Gacha
         public Sprite BannerSplashArt;
         public int CostPerPull = 1; // Quantos 'Mapas das Estrelas' custa 1 tiro
         
+        [Tooltip("Configuração visual das estrelas ao realizar um pull de 10.")]
+        public CelestialCross.Data.BannerPullVisualConfigSO pullVisualConfig;
+        
         [Header("Sistema de Garantia (Pity)")]
         [Tooltip("Quantos tiros antes da chance do supremo começar a escalar (Soft)")]
         public int SoftPityThreshold = 70;

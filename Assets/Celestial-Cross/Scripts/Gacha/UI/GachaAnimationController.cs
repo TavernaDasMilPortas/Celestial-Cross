@@ -15,6 +15,8 @@ namespace CelestialCross.Gacha.UI
         public GameObject backgroundPanel;
         public Transform stickerSpawnArea; 
         public Transform stampsSpawnArea;
+        [Tooltip("Objeto que será ativado DEPOIS do flash branco.")]
+        public GameObject objectToActivateAfterFlash;
         public CanvasGroup whiteFlashPanel;
 
         [Title("Prefabs")]
@@ -34,12 +36,22 @@ namespace CelestialCross.Gacha.UI
         public Button btnContinue;
         public Button btnSkip;
 
+        [Title("Animation Settings")]
+        public enum LineDrawDirection { OldToNew, NewToOld }
+        [Tooltip("Direção do preenchimento da linha nas constelações")]
+        public LineDrawDirection lineDirection = LineDrawDirection.OldToNew;
+        [Tooltip("Se ativo, as estrelas realizarão fade-in lentamente acompanhando a chegada da linha")]
+        public bool fadeInStars = true;
+        [Tooltip("Tempo total (em segundos) que a constelação inteira leva para ser desenhada")]
+        public float totalConstellationTime = 2.0f;
+
         private AudioSource audioSource;
         private global::System.Action onSequenceFinished;
         private List<GameObject> activeStickers = new List<GameObject>();
         private List<GameObject> activeLines = new List<GameObject>();
         private List<GameObject> activeStamps = new List<GameObject>();
         private List<GachaRewardEntry> currentResults;
+        private CelestialCross.Data.BannerPullVisualConfigSO activeBannerConfig;
         private bool isFinished = false;
 
         private Vector2[] constellationPositions = new Vector2[]
@@ -59,9 +71,10 @@ namespace CelestialCross.Gacha.UI
             if (btnSkip) btnSkip.onClick.AddListener(SkipAnimation);
         }
 
-        public void PlayGachaSequence(List<GachaRewardEntry> results, global::System.Action onFinished)
+        public void PlayGachaSequence(List<GachaRewardEntry> results, CelestialCross.Data.BannerPullVisualConfigSO bannerConfig, global::System.Action onFinished)
         {
             this.currentResults = results;
+            this.activeBannerConfig = bannerConfig;
             this.onSequenceFinished = onFinished;
             this.isFinished = false;
             
@@ -72,6 +85,7 @@ namespace CelestialCross.Gacha.UI
             if (whiteFlashPanel) { whiteFlashPanel.alpha = 0; whiteFlashPanel.gameObject.SetActive(false); }
             if (stickerSpawnArea) stickerSpawnArea.gameObject.SetActive(true);
             if (stampsSpawnArea) stampsSpawnArea.gameObject.SetActive(false);
+            if (objectToActivateAfterFlash) objectToActivateAfterFlash.SetActive(false);
             
             ClearBoard();
             StartCoroutine(SequenceRoutine());
@@ -83,33 +97,110 @@ namespace CelestialCross.Gacha.UI
             GachaRewardEntry bestReward = currentResults.OrderByDescending(r => (int)r.Rarity).First();
             Color bestColor = GetRarityColor(bestReward.Rarity);
 
-            // Phase 1: Spawn da Constelacao
+            // Phase 1: Spawn da Constelacao (Em branco)
+            // Mapeando posições
+            List<Vector2> spawnedPositions = new List<Vector2>();
+            
+            float stepDelay = totalConstellationTime / Mathf.Max(1, pullCount);
+
             for (int i = 0; i < pullCount; i++)
             {
                 var reward = currentResults[i];
-                Vector2 pos = pullCount <= 1 ? Vector2.zero : constellationPositions[i % constellationPositions.Length];
-                
-                yield return StartCoroutine(SpawnSticker(pos, bestColor));
-                
-                if (i > 0) {
-                    var prevPos = pullCount <= 1 ? Vector2.zero : constellationPositions[(i-1) % constellationPositions.Length];
-                    DrawLine(prevPos, pos, new Color(1,1,1, 0.4f));
+                Vector2 pos = Vector2.zero;
+
+                if (pullCount > 1) 
+                {
+                    if (activeBannerConfig != null && activeBannerConfig.pullPositions.Count > i)
+                    {
+                        pos = activeBannerConfig.pullPositions[i].position;
+                    }
+                    else
+                    {
+                        pos = constellationPositions[i % constellationPositions.Length];
+                    }
                 }
-                yield return new WaitForSeconds(0.15f);
+                
+                spawnedPositions.Add(pos);
+
+                float waitTime = stepDelay;
+
+                // Iniciar animação das linhas vindo das estrelas anteriores para esta
+                if (pullCount > 1)
+                {
+                    float lineAnimDuration = waitTime > 0 ? waitTime : 0.15f;
+                    
+                    // Se o FadeInStars ligado, nascemos a Estrela junto com o começo da trajetória da linha (mas não a primeira, que não tem linha chegando)
+                    if (fadeInStars && i > 0)
+                    {
+                        StartCoroutine(SpawnSticker(pos, Color.white, lineAnimDuration));
+                    }
+                    
+                    if (activeBannerConfig != null && activeBannerConfig.connectionIndices != null && activeBannerConfig.connectionIndices.Length > 0)
+                    {
+                        // Checar se a estrela atual (i) conecta com alguma já spawnada (j < i)
+                        for (int c = 0; c < activeBannerConfig.connectionIndices.Length; c += 2)
+                        {
+                            int idx1 = activeBannerConfig.connectionIndices[c];
+                            int idx2 = activeBannerConfig.connectionIndices[c+1];
+                            
+                            if ((idx1 == i && idx2 < i) || (idx2 == i && idx1 < i))
+                            {
+                                int otherIdx = (idx1 == i) ? idx2 : idx1;
+                                StartCoroutine(DrawLineAnimated(spawnedPositions[otherIdx], pos, lineAnimDuration));
+                            }
+                        }
+                    }
+                    else if (i > 0) 
+                    {
+                        // Fallback (liga em sequencia)
+                        StartCoroutine(DrawLineAnimated(spawnedPositions[i-1], pos, lineAnimDuration));
+                    }
+                }
+
+                if (waitTime > 0 && pullCount > 1 && i > 0)
+                {
+                    yield return new WaitForSeconds(waitTime);
+                }
+                
+                // Dispara o SpawnSticker se o fadeIn estiver desligado (comportamento original ao fim do trajeto da linha),  
+                // ou se for a primeiríssima estrela gerada, ou se for Single Pull
+                if (!fadeInStars || pullCount == 1 || i == 0)
+                {
+                    yield return StartCoroutine(SpawnSticker(pos, Color.white, 0.15f));
+                }
             }
 
-            yield return new WaitForSeconds(0.3f);
+            yield return new WaitForSeconds(0.4f);
 
-            // Phase 2: Pulso Inicial
+            // Phase 2: Transição para a cor do Tier Máximo
+            PlaySound(sfxClimax);
+            if (climaxParticles != null) climaxParticles.Play();
+            
+            float colorTransitionTime = 0.5f;
+            float tColor = 0;
+            while (tColor < colorTransitionTime)
+            {
+                tColor += Time.deltaTime;
+                float pct = tColor / colorTransitionTime;
+                foreach (var st in activeStickers)
+                {
+                    if (st != null)
+                    {
+                        var img = st.GetComponent<Image>();
+                        if (img) img.color = Color.Lerp(Color.white, bestColor, pct);
+                    }
+                }
+                yield return null;
+            }
+
+            yield return new WaitForSeconds(0.5f);
+
+            // Phase 3: Piscam e revelam o tier de cada item
             PlaySound(sfxSinoLight);
             yield return StartCoroutine(PulseAllStickers(1.15f, 0.2f));
             
             PlaySound(sfxCrescendo);
             yield return StartCoroutine(PulseAllStickers(1.25f, 0.2f));
-
-            // Phase 3: Climax e Cores nas Estrelas
-            PlaySound(sfxClimax);
-            if (climaxParticles != null) climaxParticles.Play();
 
             yield return StartCoroutine(FinalRevealColors(1.5f, 0.5f));
 
@@ -144,6 +235,8 @@ namespace CelestialCross.Gacha.UI
                 if (stampsSpawnArea) stampsSpawnArea.gameObject.SetActive(true);
             }
 
+            if (objectToActivateAfterFlash) objectToActivateAfterFlash.SetActive(true);
+
             // Phase 5: Spawn dos Selos/Stamps um por um
             var sortedResults = currentResults.OrderBy(r => (int)r.Rarity).ToList();
             for (int i = 0; i < sortedResults.Count; i++)
@@ -152,17 +245,20 @@ namespace CelestialCross.Gacha.UI
                 float delayAntesDeColar = (reward.Rarity >= GachaRarity.Epic) ? 0.6f : 0.1f;
                 yield return new WaitForSeconds(delayAntesDeColar);
                 
-                Vector2 gridPos = GetGridPos(i, sortedResults.Count);
-                yield return StartCoroutine(SpawnStamp(reward, gridPos));
+                yield return StartCoroutine(SpawnStamp(reward));
             }
 
             FinishSequenceVisuals();
         }
 
-        private IEnumerator SpawnSticker(Vector2 pos, Color initColor)
+        private IEnumerator SpawnSticker(Vector2 pos, Color initColor, float fadeDuration = 0.15f)
         {
             var sticker = Instantiate(starStickerPrefab, stickerSpawnArea);
             var rect = sticker.GetComponent<RectTransform>();
+            
+            // Forçamos a âncora a ficar extamente no meio para que a posição do SO reflita puramente do centro da tela para fora (igual ao nosso Editor)
+            rect.anchorMin = new Vector2(0.5f, 0.5f);
+            rect.anchorMax = new Vector2(0.5f, 0.5f);
             rect.anchoredPosition = pos;
             
             sticker.transform.localScale = Vector3.one * 2f;
@@ -180,12 +276,15 @@ namespace CelestialCross.Gacha.UI
             activeStickers.Add(sticker);
 
             float t = 0;
-            while(t < 0.15f)
+            while(t < fadeDuration)
             {
                 t += Time.deltaTime;
-                float pct = t / 0.15f;
-                float scale = 2f - Mathf.Sin(pct * Mathf.PI * 0.5f);
+                float pct = t / fadeDuration;
+                
+                // Se a duracao for longa (como no uso junto da linha), evita o bounce enorme q daria no scale e mantem normal
+                float scale = fadeDuration > 0.2f ? Mathf.Lerp(0f, 1f, pct) : (2f - Mathf.Sin(pct * Mathf.PI * 0.5f));
                 sticker.transform.localScale = Vector3.one * scale;
+                
                 if (img != null) { Color c = initColor; c.a = pct; img.color = c; }
                 yield return null;
             }
@@ -193,13 +292,16 @@ namespace CelestialCross.Gacha.UI
             PlaySound(sfxSlap);
         }
 
-        private IEnumerator SpawnStamp(GachaRewardEntry reward, Vector2 pos)
+        private IEnumerator SpawnStamp(GachaRewardEntry reward)
         {
             var stamp = Instantiate(prizeStampPrefab, stampsSpawnArea);
             var rect = stamp.GetComponent<RectTransform>();
-            rect.anchoredPosition = pos;
+            
+            // O componente Layout Group no objeto 'stampsSpawnArea' cuidará do positionamento,
+            // então não usamos mais rect.anchoredPosition.
             
             stamp.transform.localScale = Vector3.one * 2f;
+            stamp.transform.localRotation = Quaternion.Euler(0, 0, Random.Range(-5f, 5f));
             stamp.transform.localRotation = Quaternion.Euler(0, 0, Random.Range(-5f, 5f));
             
             activeStamps.Add(stamp);
@@ -242,23 +344,50 @@ namespace CelestialCross.Gacha.UI
             }
         }
 
-        private void DrawLine(Vector2 start, Vector2 end, Color color)
+        private IEnumerator DrawLineAnimated(Vector2 start, Vector2 end, float duration)
         {
-            if (uiLinePrefab == null) return;
+            if (uiLinePrefab == null) yield break;
+
+            if (lineDirection == LineDrawDirection.NewToOld)
+            {
+                Vector2 temp = start;
+                start = end;
+                end = temp;
+            }
+
             GameObject line = Instantiate(uiLinePrefab, stickerSpawnArea);
             line.transform.SetAsFirstSibling();
             
             RectTransform rect = line.GetComponent<RectTransform>();
+            
+            // Forçamos o Pivot para o canto esquerdo da linha (X=0), assim, 
+            // quando a largura crescer via sizeDelta, ela esticará unicamente na direção do alvo
+            rect.pivot = new Vector2(0f, 0.5f);
+            
             rect.anchoredPosition = start;
             Vector2 dir = end - start;
-            rect.sizeDelta = new Vector2(dir.magnitude, 4f);
+            float finalMagnitude = dir.magnitude;
+            
+            rect.sizeDelta = new Vector2(0f, 4f);
             float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
             rect.localRotation = Quaternion.Euler(0, 0, angle);
             
-            var img = line.GetComponent<Image>();
-            if(img) img.color = color;
+            // Cor/Material agora pertencem exclusivamente ao Prefab, comentado acesso forçado
+            // var img = line.GetComponent<Image>();
+            // if(img) img.color = color;
             
             activeLines.Add(line);
+
+            if (duration <= 0) duration = 0.1f;
+            
+            float t = 0;
+            while(t < duration)
+            {
+                t += Time.deltaTime;
+                rect.sizeDelta = new Vector2(Mathf.Lerp(0, finalMagnitude, t / duration), 4f);
+                yield return null;
+            }
+            rect.sizeDelta = new Vector2(finalMagnitude, 4f);
         }
 
         private IEnumerator PulseAllStickers(float maxScale, float duration)
@@ -311,16 +440,16 @@ namespace CelestialCross.Gacha.UI
             if (whiteFlashPanel) { whiteFlashPanel.alpha = 0f; whiteFlashPanel.gameObject.SetActive(false); }
             if (stickerSpawnArea) stickerSpawnArea.gameObject.SetActive(false);
             if (stampsSpawnArea) stampsSpawnArea.gameObject.SetActive(true);
+            if (objectToActivateAfterFlash) objectToActivateAfterFlash.SetActive(true);
 
             var sortedResults = currentResults.OrderBy(r => (int)r.Rarity).ToList();
             for (int i = 0; i < sortedResults.Count; i++)
             {
                 var reward = sortedResults[i];
-                Vector2 pos = GetGridPos(i, sortedResults.Count);
                 
                 var stamp = Instantiate(prizeStampPrefab, stampsSpawnArea);
                 var rect = stamp.GetComponent<RectTransform>();
-                rect.anchoredPosition = pos;
+                
                 stamp.transform.localScale = Vector3.one;
                 
                 var img = stamp.GetComponent<Image>();
@@ -396,19 +525,6 @@ namespace CelestialCross.Gacha.UI
                 case GachaRarity.Supreme: return new Color(1f, 0.2f, 0.2f);
                 default: return Color.white;
             }
-        }
-
-        private Vector2 GetGridPos(int index, int total)
-        {
-            if (total <= 1) return Vector2.zero;
-            int cols = total <= 5 ? total : 5;
-            int row = index / cols;
-            int col = index % cols;
-            float spacingX = 140f;
-            float spacingY = -160f;
-            float startX = -((cols-1) * spacingX) / 2f;
-            float startY = (total > 5) ? 80f : 0f;
-            return new Vector2(startX + (col * spacingX), startY + (row * spacingY));
         }
 
         private void ClearBoard() { 
