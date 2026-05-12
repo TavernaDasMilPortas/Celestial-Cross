@@ -35,6 +35,9 @@ public class PlayerController : MonoBehaviour
             activeUnit.SelectAction(index);
     }
 
+    private Vector2 _pointerDownPos;
+    private const float DRAG_THRESHOLD = 40f;
+
     void Update()
     {
         if (activeUnit == null)
@@ -45,8 +48,34 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha1)) activeUnit.SelectAction(1);
         if (Input.GetKeyDown(KeyCode.Alpha2)) activeUnit.SelectAction(2);
 
-        // Em dispositivos mobile, só atualizamos o alvo ao ocorrer um toque/clique
-        if (Input.GetMouseButtonDown(0) || Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
+        bool isClick = false;
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            _pointerDownPos = Input.mousePosition;
+        }
+        else if (Input.GetMouseButtonUp(0))
+        {
+            if (Vector2.Distance(_pointerDownPos, Input.mousePosition) < DRAG_THRESHOLD)
+                isClick = true;
+        }
+
+        if (Input.touchCount > 0)
+        {
+            Touch t = Input.GetTouch(0);
+            if (t.phase == TouchPhase.Began)
+            {
+                _pointerDownPos = t.position;
+                isClick = false;
+            }
+            else if (t.phase == TouchPhase.Ended)
+            {
+                if (Vector2.Distance(_pointerDownPos, t.position) < DRAG_THRESHOLD)
+                    isClick = true;
+            }
+        }
+
+        if (isClick)
         {
             UpdateTargeting();
         }

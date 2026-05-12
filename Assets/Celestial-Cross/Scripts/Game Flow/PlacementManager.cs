@@ -56,6 +56,11 @@ public class PlacementManager : MonoBehaviour
     {
         var spawnTiles = GridMap.Instance.GetAllTiles().Where(t => t.IsPlayerSpawnZone).Select(t => t.GridPosition).ToList();
         GridMap.Instance.HighlightArea(spawnTiles);
+        
+        if (CameraController.Instance != null && spawnTiles.Count > 0)
+        {
+            CameraController.Instance.FrameGridPositions(spawnTiles);
+        }
     }
 
     private void Update()
@@ -120,20 +125,54 @@ public class PlacementManager : MonoBehaviour
         Debug.Log($"Selected '{unitData.displayName}' for placement.");
     }
 
+    private Vector2 pointerDownPos;
+
+    // Increase threshold to prevent small jitters during drag from counting as clicks
+    private float dragThreshold = 40f;
+
     private void HandlePlacementInput()
     {
-        bool inputDetected = false;
+        bool isClick = false;
 
+        // Mouse click detection (with threshold for drag)
         if (Input.GetMouseButtonDown(0))
         {
-            inputDetected = true;
+            pointerDownPos = Input.mousePosition;
         }
-        else if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
+        else if (Input.GetMouseButtonUp(0))
         {
-            inputDetected = true;
+            if (Vector2.Distance(pointerDownPos, Input.mousePosition) < dragThreshold)
+            {
+                isClick = true;
+            }
         }
 
-        if (!inputDetected) return;
+        // Touch click detection
+        if (Input.touchCount > 0)
+        {
+            Touch touch = Input.GetTouch(0);
+            if (touch.phase == TouchPhase.Began)
+            {
+                pointerDownPos = touch.position;
+                isClick = false; // Reset mouse click if touch is active to prevent double trigger
+            }
+            else if (touch.phase == TouchPhase.Ended)
+            {
+                if (Vector2.Distance(pointerDownPos, touch.position) < dragThreshold)
+                {
+                    isClick = true;
+                }
+            }
+        }
+
+        // If the user was dragging the camera, we should ignore the click
+        if (CameraController.Instance != null && CameraController.Instance.cameraMode == CameraController.CameraMode.Free)
+        {
+            // Extra safety: you can't click to place if you dragged enough to trigger free mode
+            // unless distance is very tight. Let's just rely on the distance limit.
+        }
+
+        if (!isClick) return;
 
         Vector2Int gridPos = GridMap.Instance.GetMouseGridPosition();
         if (gridPos.x != -1 && gridPos.y != -1)

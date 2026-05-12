@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class CameraController : MonoBehaviour
 {
@@ -73,6 +74,29 @@ public class CameraController : MonoBehaviour
     public float verticalCenterOffset = 1f; // Sobe um pouco o foco dos pés para o corpo
 
     // =========================
+    // DRAG STATE
+    // =========================
+
+    /// <summary>
+    /// Distância mínima (em pixels) que o dedo/mouse precisa arrastar antes de iniciar o drag.
+    /// Evita conflito com toques de seleção de unidades.
+    /// </summary>
+    [Header("Drag")]
+    public float dragThresholdPixels = 15f;
+
+    // Touch drag state
+    bool isTouchDragging;
+    Vector2 touchDragStartScreenPos;
+
+    // Mouse drag state (para testes no Editor)
+    bool isMouseDragging;
+    Vector3 mouseDragStartScreenPos;
+
+    // Direções de arrasto no plano XZ, calculadas uma vez na Start
+    Vector3 dragRight;
+    Vector3 dragForward;
+
+    // =========================
     // UNITY
     // =========================
 
@@ -102,19 +126,29 @@ public class CameraController : MonoBehaviour
         transform.rotation = Quaternion.Euler(cameraRotation);
 
         targetProjectedPoint = ProjectCameraToPlane(transform.position);
+        originalZoom = targetZoom;
 
         cam.nearClipPlane = Mathf.Max(cam.nearClipPlane, 0.3f);
+
+        // Pre-calcula as direções de arrasto no plano XZ.
+        // Usa a rotação Y da câmera para definir "right" e "forward" no ground plane,
+        // ignorando o pitch (ângulo X) que causa problemas quando é muito inclinado (ex: 75°).
+        float yaw = cameraRotation.y * Mathf.Deg2Rad;
+        dragRight   = new Vector3(Mathf.Cos(yaw), 0f, -Mathf.Sin(yaw));
+        dragForward = new Vector3(Mathf.Sin(yaw), 0f,  Mathf.Cos(yaw));
     }
 
     void Update()
     {
         HandleKeyboard();
 
+        // Always check drags. If drag happened, it will set CameraMode.Free automatically
+        HandleDrag();
+        HandleMouseDrag();
+
         switch (cameraMode)
         {
             case CameraMode.Free:
-                HandleDrag();
-                HandleMouseDrag();
                 HandleZoom();
                 HandleMouseZoom();
                 break;
@@ -143,54 +177,104 @@ public class CameraController : MonoBehaviour
     }
 
     // =========================
-    // INPUT (FREE MODE)
+    // INPUT (FREE/DRAG)
     // =========================
 
     void HandleDrag()
     {
         if (Input.touchCount != 1)
+        {
+            isTouchDragging = false;
             return;
+        }
 
         Touch touch = Input.GetTouch(0);
+
+        // Início do toque: registra posição e aguarda threshold
+        if (touch.phase == TouchPhase.Began)
+        {
+            isTouchDragging = false;
+            touchDragStartScreenPos = touch.position;
+            return;
+        }
+
+        // Fim do toque: reseta estado
+        if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
+        {
+            isTouchDragging = false;
+            return;
+        }
+
         if (touch.phase != TouchPhase.Moved)
             return;
 
+        // Verifica threshold antes de considerar como drag
+        if (!isTouchDragging)
+        {
+            float distFromStart = Vector2.Distance(touch.position, touchDragStartScreenPos);
+            if (distFromStart < dragThresholdPixels)
+                return;
+
+            isTouchDragging = true;
+
+            if (cameraMode == CameraMode.FollowUnit)
+                EnableFreeCamera(true);
+        }
+
         Vector2 delta = touch.deltaPosition;
+        if (delta.sqrMagnitude < 0.1f) return;
 
-        Vector3 right = cam.transform.right;
-        Vector3 forward = cam.transform.forward;
-
-        right.y = 0f;
-        forward.y = 0f;
-
-        right.Normalize();
-        forward.Normalize();
-
+        // Usa as direções pré-calculadas no plano XZ (independente do pitch da câmera)
         Vector3 move =
-            (-right * delta.x + -forward * delta.y) * dragSpeed;
+            (-dragRight * delta.x + -dragForward * delta.y) * dragSpeed;
 
         targetProjectedPoint += move;
     }
 
     void HandleMouseDrag()
     {
-        if (!Input.GetMouseButton(1)) // Clique direito
+        // Qualquer botão do mouse pode arrastar a câmera (esquerdo, direito, meio).
+        // O threshold de pixels evita conflito com cliques de seleção.
+        bool anyButton = Input.GetMouseButton(0) || Input.GetMouseButton(1) || Input.GetMouseButton(2);
+
+        if (!anyButton)
+        {
+            isMouseDragging = false;
             return;
+        }
+
+        // Início do arrasto: registra posição inicial
+        if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1) || Input.GetMouseButtonDown(2))
+        {
+            isMouseDragging = false;
+            mouseDragStartScreenPos = Input.mousePosition;
+            return;
+        }
+
+        // Verifica threshold antes de iniciar o arrasto de fato
+        if (!isMouseDragging)
+        {
+            float distFromStart = Vector3.Distance(Input.mousePosition, mouseDragStartScreenPos);
+            if (distFromStart < dragThresholdPixels)
+                return;
+
+            isMouseDragging = true;
+
+            if (cameraMode == CameraMode.FollowUnit)
+                EnableFreeCamera(true);
+        }
 
         float mouseX = Input.GetAxis("Mouse X");
         float mouseY = Input.GetAxis("Mouse Y");
 
-        Vector3 right = cam.transform.right;
-        Vector3 forward = cam.transform.forward;
-
-        right.y = 0f;
-        forward.y = 0f;
-        right.Normalize();
-        forward.Normalize();
+        if (Mathf.Abs(mouseX) < 0.001f && Mathf.Abs(mouseY) < 0.001f)
+            return;
 
         // Sensibilidade do mouse baseada no zoom para ser consistente
         float sensitivity = cam.orthographicSize * 0.1f;
-        Vector3 move = (-right * mouseX + -forward * mouseY) * sensitivity;
+
+        // Usa as direções pré-calculadas no plano XZ
+        Vector3 move = (-dragRight * mouseX + -dragForward * mouseY) * sensitivity;
 
         targetProjectedPoint += move;
     }
@@ -250,30 +334,52 @@ public class CameraController : MonoBehaviour
         if (bounds == null || cam == null || bounds.bottomLeft == null || bounds.topRight == null)
             return;
 
-        float orthoHeight = cam.orthographicSize;
-        float orthoWidth = orthoHeight * cam.aspect;
-
-        // Limites estritos do mapa (sem padding externo para não mostrar o vazio)
         float minMapX = bounds.bottomLeft.position.x;
         float maxMapX = bounds.topRight.position.x;
         float minMapZ = bounds.bottomLeft.position.z;
         float maxMapZ = bounds.topRight.position.z;
 
-        float clampedX, clampedZ;
+        float mapWidth = maxMapX - minMapX;
+        float mapDepth = maxMapZ - minMapZ;
 
-        // Se o mapa for menor que a tela no eixo X, centraliza no mapa
-        if (maxMapX - minMapX < orthoWidth * 2f)
-            clampedX = (minMapX + maxMapX) / 2f;
-        else
-            clampedX = Mathf.Clamp(targetProjectedPoint.x, minMapX + orthoWidth, maxMapX - orthoWidth);
+        // Calcula metade da viewport visível em unidades de mundo.
+        float halfHeight = cam.orthographicSize;
+        float halfWidth = cam.orthographicSize * cam.aspect;
 
-        // Se o mapa for menor que a tela no eixo Z, centraliza no mapa
-        if (maxMapZ - minMapZ < orthoHeight * 2f)
-            clampedZ = (minMapZ + maxMapZ) / 2f;
-        else
-            clampedZ = Mathf.Clamp(targetProjectedPoint.z, minMapZ + orthoHeight, maxMapZ - orthoHeight);
+        float pitchRad = cameraRotation.x * Mathf.Deg2Rad;
+        float sinPitch = Mathf.Sin(pitchRad);
+        float extentZ = (sinPitch > 0.01f) ? halfHeight / sinPitch : halfHeight;
+        float extentX = halfWidth;
+
+        // Calcula os limites para o ponto focal (targetProjectedPoint)
+        // Se o mapa for menor que a viewport, o 'limite' deve ser o centro do mapa
+        float minX, maxX, minZ, maxZ;
+
+        if (mapWidth > extentX * 2f) {
+            minX = minMapX + extentX - edgePadding;
+            maxX = maxMapX - extentX + edgePadding;
+        } else {
+            minX = maxX = (minMapX + maxMapX) * 0.5f;
+        }
+
+        if (mapDepth > extentZ * 2f) {
+            minZ = minMapZ + extentZ - edgePadding;
+            maxZ = maxMapZ - extentZ + edgePadding;
+        } else {
+            minZ = maxZ = (minMapZ + maxMapZ) * 0.5f;
+        }
+
+        float clampedX = Mathf.Clamp(targetProjectedPoint.x, minX, maxX);
+        float clampedZ = Mathf.Clamp(targetProjectedPoint.z, minZ, maxZ);
 
         targetProjectedPoint = new Vector3(clampedX, 0f, clampedZ);
+        
+        // Opcional: Impedir que o targetZoom seja tão grande que ultrapasse muito o mapa
+        float maxPossibleZoomX = (mapWidth * 0.5f) / cam.aspect;
+        float maxPossibleZoomZ = (mapDepth * 0.5f) * sinPitch;
+        float zoomLimit = Mathf.Max(maxPossibleZoomX, maxPossibleZoomZ, maxZoom);
+        
+        targetZoom = Mathf.Clamp(targetZoom, minZoom, zoomLimit);
     }
 
     void ApplyMovement()
@@ -323,6 +429,39 @@ public class CameraController : MonoBehaviour
     // PUBLIC API
     // =========================
 
+    public void FrameGridPositions(IEnumerable<Vector2Int> gridPositions)
+    {
+        if (gridPositions == null) return;
+
+        bool hasBounds = false;
+        Bounds bounds = new Bounds(Vector3.zero, Vector3.zero);
+
+        foreach (var pos in gridPositions)
+        {
+            Vector3 worldPos = GridMap.Instance.GridToWorld(pos);
+            if (!hasBounds)
+            {
+                bounds = new Bounds(worldPos, Vector3.zero);
+                hasBounds = true;
+            }
+            else
+            {
+                bounds.Encapsulate(worldPos);
+            }
+        }
+
+        if (hasBounds)
+        {
+            targetProjectedPoint = bounds.center;
+            
+            float maxExtent = Mathf.Max(bounds.size.x, bounds.size.z);
+            float paddedExtent = maxExtent * 0.5f + edgePadding * 2f;
+            
+            targetZoom = Mathf.Clamp(paddedExtent, minZoom, maxZoom * 1.25f);
+            cameraMode = CameraMode.Free;
+        }
+    }
+
     public void Follow(Unit unit)
     {
         if (unit == null) return;
@@ -358,19 +497,25 @@ public class CameraController : MonoBehaviour
             return;
         }
 
-        targetedAction = action;
-        
-        // Salva estado anterior para poder voltar
-        if (cameraMode != CameraMode.Free || targetedAction == null)
+        // Foca na unidade dona da ação
+        if (followTarget != null)
+        {
+            targetProjectedPoint = followTarget.transform.position + Vector3.forward * verticalCenterOffset;
+        }
+
+        // Só salva o estado original se não estivermos já focados em uma ação
+        if (targetedAction == null)
         {
             originalZoom = targetZoom;
             originalMode = cameraMode;
         }
 
+        targetedAction = action;
+
         // Se o alcance for grande, precisamos de uma visão mais ampla ou livre
         if (action.Range >= 4)
         {
-            targetZoom = Mathf.Max(targetZoom, 10f); // Zoom out mínimo para ver a ação
+            targetZoom = Mathf.Clamp(Mathf.Max(targetZoom, 10f), minZoom, maxZoom); 
             
             if (action.Range >= 7)
             {
@@ -394,23 +539,23 @@ public class CameraController : MonoBehaviour
     // DEBUG
     // =========================
 
-void OnDrawGizmos()
-{
-    if (!Application.isPlaying)
-        return;
-
-    // ponto desejado (antes do clamp)
-    Gizmos.color = Color.blue;
-    Gizmos.DrawSphere(targetProjectedPoint, 0.25f);
-
-    if (bounds != null)
+    void OnDrawGizmos()
     {
-        Vector3 clamped =
-            bounds.ClampProjectedPoint(targetProjectedPoint);
+        if (!Application.isPlaying)
+            return;
 
-        Gizmos.color = Color.red;
-        Gizmos.DrawSphere(clamped, 0.3f);
+        // ponto desejado (antes do clamp)
+        Gizmos.color = Color.blue;
+        Gizmos.DrawSphere(targetProjectedPoint, 0.25f);
+
+        if (bounds != null)
+        {
+            Vector3 clamped =
+                bounds.ClampProjectedPoint(targetProjectedPoint);
+
+            Gizmos.color = Color.red;
+            Gizmos.DrawSphere(clamped, 0.3f);
+        }
     }
-}
 
 }
