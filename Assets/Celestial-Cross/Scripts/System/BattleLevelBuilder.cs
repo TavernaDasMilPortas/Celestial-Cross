@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class BattleLevelBuilder : MonoBehaviour
@@ -43,8 +44,10 @@ public class BattleLevelBuilder : MonoBehaviour
         var phaseMap = flow.SelectedLevel.PhaseMap;
         if (phaseMap != null)
         {
+            Debug.Log($"[BattleLevelBuilder] Iniciando build. Level='{flow.SelectedLevel.name}', PhaseMap={phaseMap.width}x{phaseMap.height}, grid atual='{grid.name}'.");
             grid.phaseMap = phaseMap;
             grid.Generate();
+            Debug.Log($"[BattleLevelBuilder] Grid.Generate() finalizado. Tiles lógicos disponíveis no GridMap: {grid.GetAllTiles().Count()}.");
         }
         else
         {
@@ -54,6 +57,8 @@ public class BattleLevelBuilder : MonoBehaviour
 
         // Aguarda um frame para garantir que o grid foi totalmente construído
         yield return null;
+
+        Debug.Log($"[BattleLevelBuilder] Pós-frame de build. GridMap.Instance={(GridMap.Instance != null ? GridMap.Instance.name : "null")}, PhaseMap={grid.phaseMap?.name ?? "null"}, tiles={grid.GetAllTiles().Count()}.");
 
         if (clearExistingUnits)
         {
@@ -67,6 +72,7 @@ public class BattleLevelBuilder : MonoBehaviour
         // Inicia a fase de posicionamento do jogador
         if (placementManager != null)
         {
+            Debug.Log($"[BattleLevelBuilder] Iniciando PlacementPhase com {grid.GetAllTiles().Count()} tiles e {flow.SelectedLevel?.PhaseMap?.unitSpawns?.Count ?? 0} spawns configurados.");
             placementManager.OnPlacementEnded += HandlePlacementEnded;
             placementManager.StartPlacementPhase();
         }

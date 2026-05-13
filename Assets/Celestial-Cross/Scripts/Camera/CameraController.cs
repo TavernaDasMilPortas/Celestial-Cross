@@ -49,7 +49,15 @@ public class CameraController : MonoBehaviour
 
     [Header("Zoom")]
     public float zoomSpeed = 0.1f;
-    public float minZoom = 5f;
+    public bool autoConfigZoom = true; // Auto ajusta com base no tamanho do mapa
+    public float initialTilesToSee = 4f; // Tamanho do grid que a câmera vai tentar focar no início
+    
+    [Tooltip("Tamanho fixo do tile (em metros). Deixe o Reference Tile vazio se preferir configurar o tamanho por esse número.")]
+    public float tileSizeOverride = 1f; 
+    
+    [Tooltip("Tile de referência para calcular o tamanho real. Se vazio, usa o TileSizeOverride.")]
+    public GameObject referenceTile;
+    public float minZoom = 2f;
     public float maxZoom = 12f;
 
     // =========================
@@ -70,7 +78,7 @@ public class CameraController : MonoBehaviour
     Plane mapPlane = new(Vector3.up, Vector3.zero);
 
     [Header("Clamping & Framing")]
-    public float edgePadding = 1f;
+    public float edgePadding = 0f;
     public float verticalCenterOffset = 1f; // Sobe um pouco o foco dos pés para o corpo
 
     // =========================
@@ -124,6 +132,8 @@ public class CameraController : MonoBehaviour
         targetZoom = cam.orthographicSize;
 
         transform.rotation = Quaternion.Euler(cameraRotation);
+        
+        StartCoroutine(DelayedSetupZoom());
 
         targetProjectedPoint = ProjectCameraToPlane(transform.position);
         originalZoom = targetZoom;
@@ -138,6 +148,21 @@ public class CameraController : MonoBehaviour
         dragForward = new Vector3(Mathf.Sin(yaw), 0f,  Mathf.Cos(yaw));
     }
 
+    System.Collections.IEnumerator DelayedSetupZoom()
+    {
+        yield return new WaitForEndOfFrame();
+
+        float calculatedTileSize = ResolveLogicalTileSize();
+        float referenceTileSize = ResolveReferenceTileSize();
+
+        Debug.Log($"[Camera] Tamanho métrico do tile lógico usado no zoom: {calculatedTileSize}. Referência visual={(referenceTile != null ? referenceTile.name : "tileSizeOverride")}, tile visual medido={referenceTileSize}");
+
+        if (autoConfigZoom && bounds != null)
+        {
+            SetupAutoZoom(calculatedTileSize);
+        }
+    }
+
     void Update()
     {
         HandleKeyboard();
@@ -149,13 +174,13 @@ public class CameraController : MonoBehaviour
         switch (cameraMode)
         {
             case CameraMode.Free:
-                HandleZoom();
-                HandleMouseZoom();
+                // HandleZoom();
+                // HandleMouseZoom();
                 break;
 
             case CameraMode.FollowUnit:
                 HandleFollow();
-                HandleMouseZoom();
+                // HandleMouseZoom();
                 break;
         }
 
@@ -334,25 +359,54 @@ public class CameraController : MonoBehaviour
         if (bounds == null || cam == null || bounds.bottomLeft == null || bounds.topRight == null)
             return;
 
-        float minMapX = bounds.bottomLeft.position.x;
-        float maxMapX = bounds.topRight.position.x;
-        float minMapZ = bounds.bottomLeft.position.z;
-        float maxMapZ = bounds.topRight.position.z;
+        // Com tileExtensao os limites do mapa consideram a extremidade externa do quadrado do último tile
+        float minMapX = bounds.bottomLeft.position.x - bounds.tileExtensao;
+        float maxMapX = bounds.topRight.position.x + bounds.tileExtensao;
+        float minMapZ = bounds.bottomLeft.position.z - bounds.tileExtensao;
+        float maxMapZ = bounds.topRight.position.z + bounds.tileExtensao;
 
-        // Clampa o ponto focal para que ele não saia da área do mapa + edgePadding.
-        // Isso permite navegar livremente por mapas pequenos sem travar os eixos no centro.
-        float minX = minMapX - edgePadding;
-        float maxX = maxMapX + edgePadding;
-        float minZ = minMapZ - edgePadding;
-        float maxZ = maxMapZ + edgePadding;
+        // Calcula a extenção visível da camera no plano do mapa
+        float camHalfHeight = targetZoom / Mathf.Sin(cameraRotation.x * Mathf.Deg2Rad);
+        // Quando usamos Render Texture 1:1, a câmera orográfica na targetTexture tem o formato real de `pixelWidth / pixelHeight`. 
+        // Idealmente a Render Texture é quadrada, então aspect == 1.
+        float currentAspect = cam.targetTexture != null 
+                            ? (float)cam.targetTexture.width / cam.targetTexture.height 
+                            : cam.aspect;
+                            
+        float camHalfWidth = targetZoom * currentAspect;
+        
+        // Garante que o zoom máximo NUNCA seja tão grande que a câmera veja além do mapa.
+        float mapWidth = maxMapX - minMapX;
+        float mapHeight = maxMapZ - minMapZ;
+        
+        // Se quisermos que a câmera preencha no máximo o menor eixo do mapa...
+        float maxAllowedZoomByWidth = (mapWidth / 2f) / currentAspect;
+        float maxAllowedZoomByHeight = (mapHeight / 2f) * Mathf.Sin(cameraRotation.x * Mathf.Deg2Rad);
+        
+        // Usa o menor dos dois limites lógicos para garantir que ele caiba nos dois eixos (se quiser limitar estrito)
+        float maxGlobalZoom = Mathf.Min(maxAllowedZoomByWidth, maxAllowedZoomByHeight);
+        
+        // Assegura que o targetZoom nunca ultrapassa esse limite de mapa (e aplica sua const de maxZoom)
+        float currentAllowedMaxZoom = Mathf.Min(maxZoom, maxGlobalZoom);
+        targetZoom = Mathf.Clamp(targetZoom, minZoom, currentAllowedMaxZoom);
+
+        // Recalcular as extensões pós clamp de zoom de segurança
+        camHalfHeight = targetZoom / Mathf.Sin(cameraRotation.x * Mathf.Deg2Rad);
+        camHalfWidth = targetZoom * currentAspect;
+
+        float minX = minMapX + camHalfWidth - edgePadding;
+        float maxX = maxMapX - camHalfWidth + edgePadding;
+        float minZ = minMapZ + camHalfHeight - edgePadding;
+        float maxZ = maxMapZ - camHalfHeight + edgePadding;
+
+        // Limita normalmente. Com o math novo, minX < maxX SEMPRE debaixo dos bounds normais do mapa.
+        if (minX > maxX) minX = maxX = (minMapX + maxMapX) / 2f;
+        if (minZ > maxZ) minZ = maxZ = (minMapZ + maxMapZ) / 2f;
 
         float clampedX = Mathf.Clamp(targetProjectedPoint.x, minX, maxX);
         float clampedZ = Mathf.Clamp(targetProjectedPoint.z, minZ, maxZ);
 
         targetProjectedPoint = new Vector3(clampedX, 0f, clampedZ);
-        
-        // Mantém a limitação de zoom máximo para não afastar demais
-        targetZoom = Mathf.Clamp(targetZoom, minZoom, maxZoom);
     }
 
     void ApplyMovement()
@@ -385,22 +439,220 @@ public class CameraController : MonoBehaviour
         );
     }
 
-    // =========================
-    // UTIL
-    // =========================
-
-    Vector3 ProjectCameraToPlane(Vector3 camPos)
+    void SetupAutoZoom(float calculatedTileSize)
     {
-        Ray ray = new Ray(camPos, cam.transform.forward);
-        if (mapPlane.Raycast(ray, out float dist))
-            return ray.GetPoint(dist);
+        float logicalTileSize = ResolveLogicalTileSize();
+        float minMapX = bounds.bottomLeft.position.x - bounds.tileExtensao;
+        float maxMapX = bounds.topRight.position.x + bounds.tileExtensao;
+        float minMapZ = bounds.bottomLeft.position.z - bounds.tileExtensao;
+        float maxMapZ = bounds.topRight.position.z + bounds.tileExtensao;
 
-        return camPos;
+        float mapWidth = maxMapX - minMapX + (edgePadding * 2);
+        float mapHeight = maxMapZ - minMapZ + (edgePadding * 2);
+
+        float currentAspect = cam.targetTexture != null 
+                            ? (float)cam.targetTexture.width / cam.targetTexture.height 
+                            : cam.aspect;
+
+        float maxAllowedZoomByWidth = (mapWidth / 2f) / currentAspect;
+        float maxAllowedZoomByHeight = (mapHeight / 2f) * Mathf.Sin(cameraRotation.x * Mathf.Deg2Rad);
+
+        // O zoom onde a camera abrange o mapa inteiro
+        float globalMapZoom = Mathf.Min(maxAllowedZoomByWidth, maxAllowedZoomByHeight);
+        
+        maxZoom = globalMapZoom;
+        minZoom = 1.5f; // Limite mínimo fixo pra evitar que a conta abaixo travasse tudo por ser muito restrita
+
+        // -- Configura o zoom inicial para englobar "initialTilesToSee" --
+        float zoomTargetSize = initialTilesToSee * logicalTileSize; 
+        
+        float targetZoomForTargetWidth = (zoomTargetSize / 2f) / currentAspect;
+        float targetZoomForTargetHeight = (zoomTargetSize / 2f) * Mathf.Sin(cameraRotation.x * Mathf.Deg2Rad);
+        
+        float defaultInitialZoom = Mathf.Max(targetZoomForTargetWidth, targetZoomForTargetHeight);
+        
+        // Debug pra entendermos o que rolou no cálculo:
+        Debug.Log($"[Camera] Mapa: {mapWidth}x{mapHeight}. Zoom Global Máximo é {maxZoom}. A visão de {initialTilesToSee} tiles (tile lógico={logicalTileSize}) mediu Zoom de {defaultInitialZoom}");
+
+        // Começa com a visão configurada (mas garantido de não ultrapassar os limites do mapa inteiro)
+        targetZoom = Mathf.Clamp(defaultInitialZoom, minZoom, maxZoom);
+        cam.orthographicSize = targetZoom;
+
+        float gridTileSize = ResolveLogicalTileSize();
+
+        Vector3 finalCenter = GetBestSpawnFramingCenter(gridTileSize);
+        if (finalCenter == Vector3.zero && (GridMap.Instance == null || GridMap.Instance.phaseMap == null))
+        {
+            finalCenter = new Vector3((minMapX + maxMapX) / 2f, 0f, (minMapZ + maxMapZ) / 2f);
+        }
+
+        float finalCenterX = Mathf.Round(finalCenter.x / gridTileSize) * gridTileSize;
+        float finalCenterZ = Mathf.Round(finalCenter.z / gridTileSize) * gridTileSize;
+
+        targetProjectedPoint = new Vector3(finalCenterX, 0f, finalCenterZ);
+        SnapToTarget();
+        // Calcula quantos tiles estão realmente sendo mostrados na tela após o clamp
+        float shownWidth = (targetZoom * currentAspect * 2f) / logicalTileSize;
+        float shownHeight = ((targetZoom / Mathf.Sin(cameraRotation.x * Mathf.Deg2Rad)) * 2f) / logicalTileSize;
+        Debug.Log($"[Camera] Visão Resultante: Mostrando {shownWidth:F1} tiles de largura e {shownHeight:F1} tiles de altura/profundidade na tela.");
+
+        // TESTE VISUAL: Apenas calcula e informa quantos tiles ficam dentro da visão inicial.
+        StartCoroutine(HighlightVisibleTilesTest(shownWidth, shownHeight, logicalTileSize));
     }
 
-    // =========================
-    // PUBLIC API
-    // =========================
+    float ResolveReferenceTileSize()
+    {
+        float calculatedTileSize = tileSizeOverride;
+
+        if (referenceTile != null)
+        {
+            Collider col = referenceTile.GetComponentInChildren<Collider>();
+            if (col != null)
+                calculatedTileSize = col.bounds.size.x;
+            else
+            {
+                Renderer rend = referenceTile.GetComponentInChildren<Renderer>();
+                if (rend != null)
+                    calculatedTileSize = rend.bounds.size.x;
+            }
+        }
+
+        return calculatedTileSize;
+    }
+
+    float ResolveLogicalTileSize()
+    {
+        if (GridMap.Instance != null && GridMap.Instance.tileSize > 0f)
+            return GridMap.Instance.tileSize;
+
+        return ResolveReferenceTileSize();
+    }
+
+    bool TryGetVisibleWorldRect(out Vector3 camCenter, out float halfWidthReal, out float halfHeightReal)
+    {
+        camCenter = Vector3.zero;
+        halfWidthReal = 0f;
+        halfHeightReal = 0f;
+
+        if (cam == null)
+            return false;
+
+        Vector3[] screenCorners = new Vector3[] {
+            new Vector3(0f, 0f, 0f),
+            new Vector3(cam.pixelWidth, 0f, 0f),
+            new Vector3(0f, cam.pixelHeight, 0f),
+            new Vector3(cam.pixelWidth, cam.pixelHeight, 0f)
+        };
+
+        Vector3[] worldCorners = new Vector3[4];
+        for (int i = 0; i < 4; i++)
+        {
+            Ray r = cam.ScreenPointToRay(screenCorners[i]);
+            if (mapPlane.Raycast(r, out float d))
+                worldCorners[i] = r.GetPoint(d);
+            else
+                worldCorners[i] = targetProjectedPoint;
+        }
+
+        float minX = Mathf.Min(worldCorners[0].x, worldCorners[1].x, worldCorners[2].x, worldCorners[3].x);
+        float maxX = Mathf.Max(worldCorners[0].x, worldCorners[1].x, worldCorners[2].x, worldCorners[3].x);
+        float minZ = Mathf.Min(worldCorners[0].z, worldCorners[1].z, worldCorners[2].z, worldCorners[3].z);
+        float maxZ = Mathf.Max(worldCorners[0].z, worldCorners[1].z, worldCorners[2].z, worldCorners[3].z);
+
+        camCenter = new Vector3((minX + maxX) / 2f, 0f, (minZ + maxZ) / 2f);
+        halfWidthReal = (maxX - minX) / 2f;
+        halfHeightReal = (maxZ - minZ) / 2f;
+        return true;
+    }
+
+    System.Collections.IEnumerator HighlightVisibleTilesTest(float shownWidth, float shownHeight, float calculatedTileSize)
+    {
+        yield return new WaitForSeconds(0.5f); // Espera um pouquinho pro mapa construir o visual todo
+
+        if (!TryGetVisibleWorldRect(out Vector3 camCenter, out float halfWidthReal, out float halfHeightReal))
+        {
+            Debug.LogWarning("[Camera Visual Test] Não foi possível calcular o retângulo visível da câmera.");
+            yield break;
+        }
+
+        float tileSizeToUse = ResolveLogicalTileSize();
+        if (GridMap.Instance != null)
+            tileSizeToUse = GridMap.Instance.tileSize;
+
+        int countedTiles = 0;
+
+        if (GridMap.Instance == null || GridMap.Instance.phaseMap == null || bounds == null || bounds.bottomLeft == null || bounds.topRight == null)
+        {
+            Debug.LogWarning($"[Camera Visual Test] Faltam dependências para a contagem lógica. GridMap={(GridMap.Instance != null ? GridMap.Instance.name : "null")}, PhaseMap={(GridMap.Instance != null && GridMap.Instance.phaseMap != null ? GridMap.Instance.phaseMap.name : "null")}, CameraBounds={(bounds != null ? bounds.name : "null")}");
+            yield break;
+        }
+
+        int minGridX = Mathf.RoundToInt(bounds.bottomLeft.position.x / tileSizeToUse);
+        int maxGridX = Mathf.RoundToInt(bounds.topRight.position.x / tileSizeToUse);
+        int minGridZ = Mathf.RoundToInt(bounds.bottomLeft.position.z / tileSizeToUse);
+        int maxGridZ = Mathf.RoundToInt(bounds.topRight.position.z / tileSizeToUse);
+
+        float visibleMinX = camCenter.x - halfWidthReal;
+        float visibleMaxX = camCenter.x + halfWidthReal;
+        float visibleMinZ = camCenter.z - halfHeightReal;
+        float visibleMaxZ = camCenter.z + halfHeightReal;
+
+        for (int z = minGridZ; z <= maxGridZ; z++)
+        {
+            for (int x = minGridX; x <= maxGridX; x++)
+            {
+                Vector3 tileCenter = new Vector3(x * tileSizeToUse, 0f, z * tileSizeToUse);
+                float tileMinX = tileCenter.x - (tileSizeToUse * 0.5f);
+                float tileMaxX = tileCenter.x + (tileSizeToUse * 0.5f);
+                float tileMinZ = tileCenter.z - (tileSizeToUse * 0.5f);
+                float tileMaxZ = tileCenter.z + (tileSizeToUse * 0.5f);
+
+                bool intersectsX = tileMaxX >= visibleMinX && tileMinX <= visibleMaxX;
+                bool intersectsZ = tileMaxZ >= visibleMinZ && tileMinZ <= visibleMaxZ;
+
+                if (!intersectsX || !intersectsZ)
+                    continue;
+
+                countedTiles++;
+            }
+        }
+
+        Debug.Log($"[Camera Visual Test] Centro da Câmera (Foco): {camCenter}. TilePrefab={(referenceTile != null ? referenceTile.name : "tileSizeOverride")}. TileSize={tileSizeToUse}. Área Limite X: {halfWidthReal}, Z: {halfHeightReal}. Tiles lógicos contados={countedTiles}.");
+    }
+
+    Vector3 GetBestSpawnFramingCenter(float tileSize)
+    {
+        if (GridMap.Instance == null || GridMap.Instance.phaseMap == null)
+            return Vector3.zero;
+
+        bool hasSpawnTiles = false;
+        float minX = float.MaxValue;
+        float maxX = float.MinValue;
+        float minZ = float.MaxValue;
+        float maxZ = float.MinValue;
+
+        foreach (var tile in GridMap.Instance.GetAllTiles())
+        {
+            if (tile == null || !tile.IsPlayerSpawnZone)
+                continue;
+
+            Vector3 worldPos = GridMap.Instance.GridToWorld(tile.GridPosition);
+            float half = tileSize * 0.5f;
+
+            minX = Mathf.Min(minX, worldPos.x - half);
+            maxX = Mathf.Max(maxX, worldPos.x + half);
+            minZ = Mathf.Min(minZ, worldPos.z - half);
+            maxZ = Mathf.Max(maxZ, worldPos.z + half);
+            hasSpawnTiles = true;
+        }
+
+        if (!hasSpawnTiles)
+            return Vector3.zero;
+
+        Vector3 spawnCenter = new Vector3((minX + maxX) / 2f, 0f, (minZ + maxZ) / 2f);
+        Debug.Log($"[Camera] Enquadramento de spawn calculado. Center={spawnCenter}, BoundsX=[{minX}, {maxX}], BoundsZ=[{minZ}, {maxZ}]");
+        return spawnCenter;
+    }
 
     public void FrameGridPositions(IEnumerable<Vector2Int> gridPositions)
     {
@@ -506,6 +758,20 @@ public class CameraController : MonoBehaviour
         targetZoom = originalZoom;
         cameraMode = originalMode;
         Debug.Log("[CameraController] Foco da ação resetado.");
+    }
+
+    // =========================
+    // UTIL
+    // =========================
+
+    Vector3 ProjectCameraToPlane(Vector3 camPos)
+    {
+        Ray ray = new Ray(camPos, transform.forward);
+        if (mapPlane.Raycast(ray, out float dist))
+        {
+            return ray.GetPoint(dist);
+        }
+        return camPos;
     }
 
     // =========================

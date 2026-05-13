@@ -56,11 +56,8 @@ public class PlacementManager : MonoBehaviour
     {
         var spawnTiles = GridMap.Instance.GetAllTiles().Where(t => t.IsPlayerSpawnZone).Select(t => t.GridPosition).ToList();
         GridMap.Instance.HighlightArea(spawnTiles);
-        
-        if (CameraController.Instance != null && spawnTiles.Count > 0)
-        {
-            CameraController.Instance.FrameGridPositions(spawnTiles);
-        }
+
+        Debug.Log($"[PlacementManager] Spawn zones destacadas. Total={spawnTiles.Count}. A câmera não será enquadrada nesses tiles.");
     }
 
     private void Update()
@@ -281,6 +278,8 @@ public class PlacementManager : MonoBehaviour
         
         Debug.Log($"Unit '{unitData.displayName}' placement confirmed.");
         
+        CelestialCross.Tutorial.TutorialManager.Instance?.NotifyUnitPlaced(unitData);
+
         // 2- Se todas as unidades estão no mapa e QUALQUER uma for confirmada, inicia.
         // Ou se já confirmamos o número total necessário de unidades.
         if (confirmedUnits.Count >= totalUnitsToPlace || placedUnitsDict.Count >= totalUnitsToPlace)

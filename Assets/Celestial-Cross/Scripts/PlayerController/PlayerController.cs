@@ -43,6 +43,9 @@ public class PlayerController : MonoBehaviour
         if (activeUnit == null)
             return;
 
+        if (CelestialCross.Tutorial.TutorialManager.Instance != null && CelestialCross.Tutorial.TutorialManager.Instance.IsActive)
+            return;
+
         // Seleção de ações (teclas numéricas)
         if (Input.GetKeyDown(KeyCode.Alpha0)) activeUnit.SelectAction(0);
         if (Input.GetKeyDown(KeyCode.Alpha1)) activeUnit.SelectAction(1);
@@ -160,5 +163,24 @@ public class PlayerController : MonoBehaviour
         activeUnit = null;
         FindObjectOfType<ActionBarUI>()?.ClearButtons();
         TurnManager.Instance.EndTurn();
+    }
+
+    // ==========================================
+    // TUTORIAL HELPERS
+    // ==========================================
+
+    public void TutorialForceSelectAction(int index)
+    {
+        if (activeUnit != null) activeUnit.SelectAction(index);
+    }
+
+    public void TutorialForceTargetTile(Vector2Int gridPos)
+    {
+        if (activeUnit != null && activeUnit.CurrentAction != null)
+        {
+            activeUnit.CurrentAction.Target = gridPos;
+            // Notifica o tutorial se estiver esperando por isso
+            CelestialCross.Tutorial.TutorialManager.Instance?.NotifyTargetConfirmed();
+        }
     }
 }

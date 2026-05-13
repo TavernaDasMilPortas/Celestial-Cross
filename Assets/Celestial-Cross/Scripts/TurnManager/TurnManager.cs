@@ -89,6 +89,18 @@ public class TurnManager : MonoBehaviour
         OnQueueChanged?.Invoke(turnQueue);
         OnTurnStarted?.Invoke(current);
 
+        if (CelestialCross.Tutorial.TutorialManager.Instance != null && CelestialCross.Tutorial.TutorialManager.Instance.IsActive)
+        {
+            CelestialCross.Tutorial.TutorialManager.Instance.NotifyTurnEnded();
+            // No tutorial, o fluxo é controlado manualmente ou por condições específicas.
+            // Se for o turno do player, o TutorialManager vai guiá-lo.
+            if (current is Pet)
+            {
+                PlayerController.Instance.StartTurn(current);
+            }
+            return; 
+        }
+
         if (current is EnemyUnit enemy)
         {
             AIBrain brain = enemy.GetComponent<AIBrain>();

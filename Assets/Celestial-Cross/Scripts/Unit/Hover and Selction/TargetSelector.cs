@@ -234,7 +234,12 @@ public class TargetSelector : MonoBehaviour
         if (!Input.GetMouseButtonDown(0))
             return;
 
-        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        Ray ray;
+        if (RenderTextureInputManager.Instance != null)
+            ray = RenderTextureInputManager.Instance.GetRay(Input.mousePosition);
+        else
+            ray = cam.ScreenPointToRay(Input.mousePosition);
+
         if (!Physics.Raycast(ray, out RaycastHit hit))
             return;
 
@@ -495,7 +500,7 @@ public class TargetSelector : MonoBehaviour
     {
         ClearAreaPreview();
 
-        if (targetingRule.mode != TargetingMode.Area || areaPattern == null)
+        if (targetingRule == null || targetingRule.mode != TargetingMode.Area || areaPattern == null)
             return;
 
         if (GridMap.Instance == null)

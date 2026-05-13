@@ -435,6 +435,9 @@ public abstract class Unit : MonoBehaviour
 
     public AttackResult CalculateAttack(Unit target)
     {
+        if (CelestialCross.Tutorial.TutorialMockCombat.ShouldMock)
+            return CelestialCross.Tutorial.TutorialMockCombat.GetMockedResult();
+
         if (target == null) return new AttackResult(Stats.attack, false);
         return DamageModel.ResolveHit(Stats, target.Stats);
     }
