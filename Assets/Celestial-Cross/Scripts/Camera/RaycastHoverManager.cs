@@ -20,7 +20,15 @@ public class RaycastHoverManager : MonoBehaviour
         if (RenderTextureInputManager.Instance == null)
             return;
 
-        Ray ray = RenderTextureInputManager.Instance.GetRay(Input.mousePosition);
+        if (!RenderTextureInputManager.Instance.TryGetRay(Input.mousePosition, out Ray ray))
+        {
+            if (currentHover != null)
+            {
+                currentHover.ManualMouseExit();
+                currentHover = null;
+            }
+            return;
+        }
         
         if (Physics.Raycast(ray, out RaycastHit hit))
         {

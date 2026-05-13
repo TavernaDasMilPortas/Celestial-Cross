@@ -15,6 +15,7 @@ public class PlacementManager : MonoBehaviour
 
     [Header("UI")]
     [SerializeField] private ActionBarUI placementActionBar;
+    [SerializeField] private SwipeDetector swipeDetector;
 
     private UnitData selectedUnitToPlace;
     private Dictionary<UnitData, Unit> placedUnitsDict = new Dictionary<UnitData, Unit>();
@@ -33,6 +34,9 @@ public class PlacementManager : MonoBehaviour
         {
             Instance = this;
         }
+
+        if (swipeDetector == null)
+            swipeDetector = FindFirstObjectByType<SwipeDetector>();
         
 #if UNITY_EDITOR
         if (petCatalog == null)
@@ -123,25 +127,35 @@ public class PlacementManager : MonoBehaviour
     }
 
     private Vector2 pointerDownPos;
+    private bool pointerDownValid;
 
     // Increase threshold to prevent small jitters during drag from counting as clicks
     private float dragThreshold = 40f;
 
     private void HandlePlacementInput()
     {
+        if (swipeDetector != null && (swipeDetector.IsSwipeInProgress || swipeDetector.WasSwipeConsumed))
+        {
+            Debug.Log("[PlacementManager] Input de placement ignorado porque um swipe está em andamento ou acabou de ser consumido.");
+            return;
+        }
+
         bool isClick = false;
 
         // Mouse click detection (with threshold for drag)
         if (Input.GetMouseButtonDown(0))
         {
+            pointerDownValid = RenderTextureInputManager.Instance == null || RenderTextureInputManager.Instance.IsScreenPointOverExclusiveRenderTarget(Input.mousePosition);
             pointerDownPos = Input.mousePosition;
         }
         else if (Input.GetMouseButtonUp(0))
         {
-            if (Vector2.Distance(pointerDownPos, Input.mousePosition) < dragThreshold)
+            if (pointerDownValid && Vector2.Distance(pointerDownPos, Input.mousePosition) < dragThreshold)
             {
                 isClick = true;
             }
+
+            pointerDownValid = false;
         }
 
         // Touch click detection
@@ -150,15 +164,18 @@ public class PlacementManager : MonoBehaviour
             Touch touch = Input.GetTouch(0);
             if (touch.phase == TouchPhase.Began)
             {
+                pointerDownValid = RenderTextureInputManager.Instance == null || RenderTextureInputManager.Instance.IsScreenPointOverExclusiveRenderTarget(touch.position);
                 pointerDownPos = touch.position;
                 isClick = false; // Reset mouse click if touch is active to prevent double trigger
             }
             else if (touch.phase == TouchPhase.Ended)
             {
-                if (Vector2.Distance(pointerDownPos, touch.position) < dragThreshold)
+                if (pointerDownValid && Vector2.Distance(pointerDownPos, touch.position) < dragThreshold)
                 {
                     isClick = true;
                 }
+
+                pointerDownValid = false;
             }
         }
 

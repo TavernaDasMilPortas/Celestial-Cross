@@ -236,7 +236,10 @@ public class TargetSelector : MonoBehaviour
 
         Ray ray;
         if (RenderTextureInputManager.Instance != null)
-            ray = RenderTextureInputManager.Instance.GetRay(Input.mousePosition);
+        {
+            if (!RenderTextureInputManager.Instance.TryGetRay(Input.mousePosition, out ray))
+                return;
+        }
         else
             ray = cam.ScreenPointToRay(Input.mousePosition);
 

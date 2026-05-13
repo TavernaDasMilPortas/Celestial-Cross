@@ -94,10 +94,12 @@ public class CameraController : MonoBehaviour
 
     // Touch drag state
     bool isTouchDragging;
+    bool isTouchDragEligible;
     Vector2 touchDragStartScreenPos;
 
     // Mouse drag state (para testes no Editor)
     bool isMouseDragging;
+    bool isMouseDragEligible;
     Vector3 mouseDragStartScreenPos;
 
     // Direções de arrasto no plano XZ, calculadas uma vez na Start
@@ -210,6 +212,7 @@ public class CameraController : MonoBehaviour
         if (Input.touchCount != 1)
         {
             isTouchDragging = false;
+            isTouchDragEligible = false;
             return;
         }
 
@@ -218,15 +221,26 @@ public class CameraController : MonoBehaviour
         // Início do toque: registra posição e aguarda threshold
         if (touch.phase == TouchPhase.Began)
         {
+            isTouchDragEligible = IsPointerOverRenderTarget(touch.position);
             isTouchDragging = false;
+
+            if (!isTouchDragEligible)
+            {
+                return;
+            }
+
             touchDragStartScreenPos = touch.position;
             return;
         }
+
+        if (!isTouchDragEligible)
+            return;
 
         // Fim do toque: reseta estado
         if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
         {
             isTouchDragging = false;
+            isTouchDragEligible = false;
             return;
         }
 
@@ -265,16 +279,27 @@ public class CameraController : MonoBehaviour
         if (!anyButton)
         {
             isMouseDragging = false;
+            isMouseDragEligible = false;
             return;
         }
 
         // Início do arrasto: registra posição inicial
         if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1) || Input.GetMouseButtonDown(2))
         {
+            isMouseDragEligible = IsPointerOverRenderTarget(Input.mousePosition);
             isMouseDragging = false;
+
+            if (!isMouseDragEligible)
+            {
+                return;
+            }
+
             mouseDragStartScreenPos = Input.mousePosition;
             return;
         }
+
+        if (!isMouseDragEligible)
+            return;
 
         // Verifica threshold antes de iniciar o arrasto de fato
         if (!isMouseDragging)
@@ -302,6 +327,14 @@ public class CameraController : MonoBehaviour
         Vector3 move = (-dragRight * mouseX + -dragForward * mouseY) * sensitivity;
 
         targetProjectedPoint += move;
+    }
+
+    bool IsPointerOverRenderTarget(Vector2 screenPos)
+    {
+        if (RenderTextureInputManager.Instance == null || !RenderTextureInputManager.Instance.IsRaycastTargetReady())
+            return false;
+
+        return RenderTextureInputManager.Instance.IsScreenPointOverExclusiveRenderTarget(screenPos);
     }
 
     void HandleKeyboard()

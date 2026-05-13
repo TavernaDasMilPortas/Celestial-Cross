@@ -180,7 +180,10 @@ public class GridMap : MonoBehaviour
     {
         Ray ray;
         if (RenderTextureInputManager.Instance != null)
-            ray = RenderTextureInputManager.Instance.GetRay(Input.mousePosition);
+        {
+            if (!RenderTextureInputManager.Instance.TryGetRay(Input.mousePosition, out ray))
+                return new Vector2Int(-1, -1);
+        }
         else
             ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
