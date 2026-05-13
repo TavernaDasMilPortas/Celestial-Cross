@@ -13,8 +13,12 @@ MonoBehaviour:
   m_Name: NewPetSpecies
   m_EditorClassIdentifier: Assembly-CSharp::CelestialCross.Data.Pets.PetSpeciesSO
   id: NewPetSpecies
-  SpeciesName: "Falc\xE3o Drag\xE3o"
+  SpeciesName: OvelhaPomPom
   Icon: {fileID: 21300000, guid: c22fc57713af02140967c8fa63de1a38, type: 3}
+  MovementType: 1
+  IdleAnimation: {fileID: 7400000, guid: 96898d74ccb0679469cc6cc16d952a84, type: 2}
+  SkillAnimation: {fileID: 7400000, guid: 4ee613b770c8212478cc1d51298eb347, type: 2}
+  CombatScale: {x: 1, y: 1, z: 1}
   MinBaseHealth: 10
   MaxBaseHealth: 20
   MinBaseAttack: 5
@@ -28,5 +32,6 @@ MonoBehaviour:
   MinBaseEffectAccuracy: 0
   MaxBaseEffectAccuracy: 0
   ActiveSkills: []
-  PassiveSkills:
-  - {fileID: 11400000, guid: 1ce9c6b3a1749ba4184caef9cecad6ae, type: 2}
+  PassiveSkills: []
+  AbilityGraphs:
+  - {fileID: 11400000, guid: 588e2f904fd93b947b5f099c7c15288b, type: 2}

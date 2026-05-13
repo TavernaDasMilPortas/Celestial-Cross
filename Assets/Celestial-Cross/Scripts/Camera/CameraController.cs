@@ -339,47 +339,20 @@ public class CameraController : MonoBehaviour
         float minMapZ = bounds.bottomLeft.position.z;
         float maxMapZ = bounds.topRight.position.z;
 
-        float mapWidth = maxMapX - minMapX;
-        float mapDepth = maxMapZ - minMapZ;
-
-        // Calcula metade da viewport visível em unidades de mundo.
-        float halfHeight = cam.orthographicSize;
-        float halfWidth = cam.orthographicSize * cam.aspect;
-
-        float pitchRad = cameraRotation.x * Mathf.Deg2Rad;
-        float sinPitch = Mathf.Sin(pitchRad);
-        float extentZ = (sinPitch > 0.01f) ? halfHeight / sinPitch : halfHeight;
-        float extentX = halfWidth;
-
-        // Calcula os limites para o ponto focal (targetProjectedPoint)
-        // Se o mapa for menor que a viewport, o 'limite' deve ser o centro do mapa
-        float minX, maxX, minZ, maxZ;
-
-        if (mapWidth > extentX * 2f) {
-            minX = minMapX + extentX - edgePadding;
-            maxX = maxMapX - extentX + edgePadding;
-        } else {
-            minX = maxX = (minMapX + maxMapX) * 0.5f;
-        }
-
-        if (mapDepth > extentZ * 2f) {
-            minZ = minMapZ + extentZ - edgePadding;
-            maxZ = maxMapZ - extentZ + edgePadding;
-        } else {
-            minZ = maxZ = (minMapZ + maxMapZ) * 0.5f;
-        }
+        // Clampa o ponto focal para que ele não saia da área do mapa + edgePadding.
+        // Isso permite navegar livremente por mapas pequenos sem travar os eixos no centro.
+        float minX = minMapX - edgePadding;
+        float maxX = maxMapX + edgePadding;
+        float minZ = minMapZ - edgePadding;
+        float maxZ = maxMapZ + edgePadding;
 
         float clampedX = Mathf.Clamp(targetProjectedPoint.x, minX, maxX);
         float clampedZ = Mathf.Clamp(targetProjectedPoint.z, minZ, maxZ);
 
         targetProjectedPoint = new Vector3(clampedX, 0f, clampedZ);
         
-        // Opcional: Impedir que o targetZoom seja tão grande que ultrapasse muito o mapa
-        float maxPossibleZoomX = (mapWidth * 0.5f) / cam.aspect;
-        float maxPossibleZoomZ = (mapDepth * 0.5f) * sinPitch;
-        float zoomLimit = Mathf.Max(maxPossibleZoomX, maxPossibleZoomZ, maxZoom);
-        
-        targetZoom = Mathf.Clamp(targetZoom, minZoom, zoomLimit);
+        // Mantém a limitação de zoom máximo para não afastar demais
+        targetZoom = Mathf.Clamp(targetZoom, minZoom, maxZoom);
     }
 
     void ApplyMovement()

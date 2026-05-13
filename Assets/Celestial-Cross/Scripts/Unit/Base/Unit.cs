@@ -236,14 +236,50 @@ public abstract class Unit : MonoBehaviour
 
             Debug.Log($"<color=green>[Unit Stats]</color> {DisplayName} combinou status com o pet <b>{(runtimePetData != null ? runtimePetData.DisplayName : petSpeciesData.SpeciesName)}</b>. Total -> HP: {MaxHealth} | Atk: {Stats.attack} | Def: {Stats.defense} | Spd: {Stats.speed} | Crit: {Stats.criticalChance}%");
 
-            // Instancia o visual do Pet se houver Prefab
-            if (petSpeciesData.CombatPrefab != null)
+            // Instancia o visual do Pet
+            GameObject petObj = null;
+
+            if (petSpeciesData.IdleAnimation != null)
             {
-                var petObj = Instantiate(petSpeciesData.CombatPrefab, transform);
+                // Carrega o Prefab Base universal diretamente da pasta Resources!
+                GameObject basePrefab = Resources.Load<GameObject>("BasePetPrefab");
+                if (basePrefab != null)
+                {
+                    petObj = Instantiate(basePrefab, transform);
+                    petObj.name = $"PetVisual_{petSpeciesData.SpeciesName}";
+                    
+                    var anim = petObj.GetComponent<Animator>();
+
+                    if (anim != null && anim.runtimeAnimatorController != null)
+                    {
+                        // Injeta os clipes específicos deste Pet usando um Override Controller
+                        AnimatorOverrideController overrideController = new AnimatorOverrideController(anim.runtimeAnimatorController);
+                        
+                        var clipOverrides = new List<KeyValuePair<AnimationClip, AnimationClip>>();
+                        foreach (var clip in overrideController.animationClips)
+                        {
+                            if (clip.name == "BasePet_Idle" && petSpeciesData.IdleAnimation != null)
+                                clipOverrides.Add(new KeyValuePair<AnimationClip, AnimationClip>(clip, petSpeciesData.IdleAnimation));
+                            else if (clip.name == "BasePet_Skill" && petSpeciesData.SkillAnimation != null)
+                                clipOverrides.Add(new KeyValuePair<AnimationClip, AnimationClip>(clip, petSpeciesData.SkillAnimation));
+                        }
+                        
+                        overrideController.ApplyOverrides(clipOverrides);
+                        anim.runtimeAnimatorController = overrideController;
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning("BasePetPrefab não encontrado. Crie um prefab com esse nome dentro de uma pasta chamada 'Resources'.");
+                }
+            }
+
+            if (petObj != null)
+            {
                 petVisual = petObj.GetComponent<CelestialCross.UnitVisuals.PetVisualController>();
                 if (petVisual == null) petVisual = petObj.AddComponent<CelestialCross.UnitVisuals.PetVisualController>();
                 
-                petVisual.Setup(transform, petSpeciesData.CombatOffset, petSpeciesData.CombatScale);
+                petVisual.Setup(transform, petSpeciesData.MovementType, petSpeciesData.CombatScale);
                 
                 // Sincroniza o flip inicial
                 var unitVisual = GetComponentInChildren<UnitVisualController>();

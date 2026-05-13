@@ -18,7 +18,7 @@ MonoBehaviour:
   Waves: []
   Enemies:
   - UnitData: {fileID: 11400000, guid: 67628d77266bab446ba0b5274c2a9397, type: 2}
-    GridPosition: {x: 5, y: 5}
+    GridPosition: {x: 5, y: 4}
     OverrideBehaviorProfile: {fileID: 0}
     OverridePatternData: {fileID: 0}
   VictoryRewards: {fileID: 0}

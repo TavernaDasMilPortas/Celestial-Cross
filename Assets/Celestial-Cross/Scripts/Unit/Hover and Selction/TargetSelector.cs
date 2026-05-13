@@ -26,7 +26,6 @@ public class TargetSelector : MonoBehaviour
     List<Unit> selectedTargets = new();
 
     HashSet<GridTile> validTiles = new();
-    List<GridTile> selectedTiles = new();
     List<GridTile> areaPreviewTiles = new();
     List<Vector2Int> selectedPoints = new();
 
@@ -57,6 +56,11 @@ public class TargetSelector : MonoBehaviour
         bool autoRotate = false
     )
     {
+        ClearAreaPreview();
+        ClearSelection();
+        ClearPointSelection();
+        ClearAllHighlights();
+
         this.sourceUnit = sourceUnit;
         this.selectionRange = selectionRange;
         targetingRule = rule != null ? rule.Clone() : new TargetingRuleData();
@@ -67,7 +71,6 @@ public class TargetSelector : MonoBehaviour
 
         selectedTargets.Clear();
         validTargets.Clear();
-        selectedTiles.Clear();
         validTiles.Clear();
         areaPreviewTiles.Clear();
         selectedPoints.Clear();
@@ -125,6 +128,11 @@ public class TargetSelector : MonoBehaviour
     {
         FindValidTiles();
         HighlightValidTiles(); 
+        
+        // Também destacar Units válidas presas na área para melhor percepção visual no modo point
+        FindValidTargets();
+        HighlightValidTargets();
+        
         Debug.Log($"[TargetSelector] Tiles válidos: {validTiles.Count}");
     }
 
@@ -232,12 +240,12 @@ public class TargetSelector : MonoBehaviour
 
         if (targetingRule.origin == TargetOrigin.Point)
         {
-            GridTile clickedTile = hit.collider.GetComponent<GridTile>();
+            GridTile clickedTile = hit.collider.GetComponentInParent<GridTile>();
 
             // Fallback: se clicou em uma Unit, tentar pegar o Tile embaixo dela
             if (clickedTile == null)
             {
-                Unit unitHit = hit.collider.GetComponent<Unit>();
+                Unit unitHit = hit.collider.GetComponentInParent<Unit>();
                 if (unitHit != null && GridMap.Instance != null)
                 {
                     clickedTile = GridMap.Instance.GetTile(unitHit.GridPosition);
@@ -252,7 +260,7 @@ public class TargetSelector : MonoBehaviour
             return;
         }
 
-        Unit clickedUnit = hit.collider.GetComponent<Unit>();
+        Unit clickedUnit = hit.collider.GetComponentInParent<Unit>();
         if (clickedUnit == null)
             return;
 
@@ -434,9 +442,8 @@ public class TargetSelector : MonoBehaviour
     {
         isActive = false;
         ClearAllHighlights();
-        selectedTargets.Clear();
-        selectedTiles.Clear();
-        selectedPoints.Clear();
+        ClearSelection();
+        ClearPointSelection();
         OnCanceled?.Invoke();
     }
 
@@ -537,16 +544,21 @@ public class TargetSelector : MonoBehaviour
             }
         }
 
-        foreach (var selectedTile in selectedTiles)
-            selectedTile.Select();
+        foreach (var point in selectedPoints)
+        {
+            var tile = GridMap.Instance.GetTile(point);
+            if (tile != null) tile.Select();
+        }
     }
 
-    void ClearTileSelection()
+    void ClearPointSelection()
     {
-        foreach (var tile in selectedTiles)
-            tile.ClearSelect();
+        foreach (var point in selectedPoints)
+        {
+            var tile = GridMap.Instance?.GetTile(point);
+            if (tile != null) tile.ClearSelect();
+        }
 
-        selectedTiles.Clear();
         selectedPoints.Clear();
         RefreshAreaPreview();
     }
@@ -557,7 +569,7 @@ public class TargetSelector : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Return))
         {
             int count = targetingRule.origin == TargetOrigin.Point
-                ? selectedTiles.Count
+                ? selectedPoints.Count
                 : selectedTargets.Count;
 
             if (count < targetingRule.minTargets)
