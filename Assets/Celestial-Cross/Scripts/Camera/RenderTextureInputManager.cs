@@ -80,6 +80,49 @@ public class RenderTextureInputManager : MonoBehaviour
         return false;
     }
 
+    /// <summary>
+    /// Converte uma posição do mundo para a posição de tela correspondente sobre a RawImage.
+    /// Útil para posicionar elementos de UI (como popups de dano) sobre objetos do mundo renderizados na Render Texture.
+    /// </summary>
+    public bool WorldToScreenPoint(Vector3 worldPos, out Vector2 screenPos)
+    {
+        if (gameCamera == null || renderTargetUI == null)
+        {
+            screenPos = Vector2.zero;
+            return false;
+        }
+
+        // 1. Converte do Mundo para os pixels da Render Texture (coordenadas da câmera interna)
+        Vector3 camPixelPos = gameCamera.WorldToScreenPoint(worldPos);
+        
+        if (camPixelPos.z < 0) // Objeto atrás da câmera
+        {
+            screenPos = Vector2.zero;
+            return false;
+        }
+
+        // 2. Normaliza a posição (0 a 1) baseada na resolução da câmera (Render Texture)
+        Vector2 normalizedPoint = new Vector2(
+            camPixelPos.x / gameCamera.pixelWidth,
+            camPixelPos.y / gameCamera.pixelHeight
+        );
+
+        // 3. Converte a posição normalizada para o espaço local do RectTransform da RawImage
+        RectTransform rt = renderTargetUI.rectTransform;
+        Vector2 localPoint = new Vector2(
+            (normalizedPoint.x * rt.rect.width) - (rt.rect.width * rt.pivot.x),
+            (normalizedPoint.y * rt.rect.height) - (rt.rect.height * rt.pivot.y)
+        );
+
+        // 4. Converte de local do RectTransform para Screen Point (espaço do Canvas)
+        Canvas canvas = renderTargetUI.canvas;
+        Camera uiCamera = canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay ? canvas.worldCamera : null;
+        
+        // TransformPoint converte de local para mundo (o mundo da UI)
+        screenPos = RectTransformUtility.WorldToScreenPoint(uiCamera, rt.TransformPoint(localPoint));
+        return true;
+    }
+
     public bool IsScreenPointOverRenderTarget(Vector2 screenPos)
     {
         if (renderTargetUI == null)

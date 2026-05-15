@@ -7,7 +7,8 @@ public class DamagePopupManager : MonoBehaviour
 
     [Header("Settings")]
     [SerializeField] private GameObject damageNumberPrefab;
-    [SerializeField] private Vector3 spawnOffset = new Vector3(0, 1.5f, 0);     
+    [SerializeField] private Transform canvasParent;
+    [SerializeField] private Vector3 spawnOffset = new Vector3(0, 1.5f, 0);
 
     private void Awake()
     {
@@ -40,24 +41,46 @@ public class DamagePopupManager : MonoBehaviour
     {
         if (damageNumberPrefab == null)
             return;
-
         if (amount <= 0) return;
 
         Vector3 randomJitter = new Vector3(Random.Range(-0.3f, 0.3f), Random.Range(-0.2f, 0.2f), 0);
-        GameObject obj = Instantiate(damageNumberPrefab, position + spawnOffset + randomJitter, Quaternion.identity);
-        DamageNumberUI ui = obj.GetComponent<DamageNumberUI>();
+        GameObject obj = null;
+        bool isUI = false;
 
-        if (ui != null)
+        // Tenta converter posição do mundo para posição de tela se estivermos usando RawImage (RenderTexture)
+        if (RenderTextureInputManager.Instance != null && RenderTextureInputManager.Instance.WorldToScreenPoint(position + spawnOffset, out Vector2 screenPos))
         {
-            if (isHeal)
+            Transform parent = canvasParent != null ? canvasParent : transform;
+            obj = Instantiate(damageNumberPrefab, parent);
+            
+            // Configura posição na UI
+            RectTransform rect = obj.GetComponent<RectTransform>();
+            if (rect != null)
             {
-                ui.Setup(amount, Color.green, "+");
+                rect.position = new Vector3(screenPos.x, screenPos.y, 0);
+                rect.anchoredPosition += (Vector2)randomJitter * 50f; // Jitter no espaço da UI
             }
             else
             {
-                Color color = isCritical ? Color.yellow : Color.red;
-                ui.Setup(amount, color, "-");
+                obj.transform.position = new Vector3(screenPos.x, screenPos.y, 0);
             }
+            
+            obj.layer = LayerMask.NameToLayer("UI");
+            isUI = true;
+        }
+        else
+        {
+            // Fallback para World Space (comportamento padrão)
+            Transform parent = canvasParent != null ? canvasParent : transform;
+            obj = Instantiate(damageNumberPrefab, position + spawnOffset + randomJitter, Quaternion.identity, parent);
+        }
+
+        DamageNumberUI ui = obj.GetComponent<DamageNumberUI>();
+        if (ui != null)
+        {
+            Color color = isHeal ? Color.green : (isCritical ? Color.yellow : Color.red);
+            string prefix = isHeal ? "+" : "-";
+            ui.Setup(amount, color, prefix, !isUI);
         }
     }
 }
