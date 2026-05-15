@@ -15,32 +15,22 @@ MonoBehaviour:
   pullPositions:
   - positionName: Pull 1
     position: {x: -0.00000047683716, y: -861.85565}
-    delayToShow: 0
   - positionName: Pull 2
-    position: {x: 2.8571444, y: -697.42834}
-    delayToShow: 0.1
+    position: {x: -0.7142842, y: -583.143}
   - positionName: Pull 3
-    position: {x: 2.8571405, y: -378.9999}
-    delayToShow: 0.2
+    position: {x: -0.7142885, y: -186.14252}
   - positionName: Pull 4
-    position: {x: -257, y: -533.0003}
-    delayToShow: 0.3
+    position: {x: -289.14288, y: -397.28583}
   - positionName: Pull 5
-    position: {x: 256.14285, y: -530.8574}
-    delayToShow: 0.4
+    position: {x: 259.71426, y: -441.57166}
   - positionName: Pull 6
-    position: {x: 3.7142859, y: -165.57144}
-    delayToShow: 0.5
+    position: {x: 3.7142856, y: 62.999992}
   - positionName: Pull 7
-    position: {x: 0.8571429, y: 121.14283}
-    delayToShow: 0.6
+    position: {x: 0.8571429, y: 346.14304}
   - positionName: Pull 8
-    position: {x: 130.71423, y: 255.71419}
-    delayToShow: 0.7
+    position: {x: 198.57133, y: 537.85706}
   - positionName: Pull 9
-    position: {x: -124.571396, y: 355.85712}
-    delayToShow: 0.8
+    position: {x: -228.14276, y: 670.14276}
   - positionName: Pull 10
-    position: {x: 0, y: 543.9999}
-    delayToShow: 0.90000004
+    position: {x: 0, y: 815.42847}
   connectionIndices: 

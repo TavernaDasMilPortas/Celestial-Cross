@@ -52,7 +52,7 @@ MonoBehaviour:
     NodeType: MoveEffectNode
     NodeTitle: Move Effect
     Position: {x: 916, y: 215}
-    JsonData: '{"moveMode":0,"range":2,"rangeVariable":"","manualDestination":true,"allowOccupiedTiles":false}'
+    JsonData: '{"moveMode":0,"range":4,"rangeVariable":"","manualDestination":true,"allowOccupiedTiles":false}'
     areaPattern: {fileID: 0}
   Dependencies: []
   Variables:

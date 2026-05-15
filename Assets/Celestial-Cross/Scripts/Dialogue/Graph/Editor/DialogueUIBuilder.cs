@@ -17,7 +17,11 @@ namespace CelestialCross.Dialogue.Editor
                 canvasGO = new GameObject("DialogueCanvas");
                 Canvas canvas = canvasGO.AddComponent<Canvas>();
                 canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-                canvasGO.AddComponent<CanvasScaler>();
+                var scaler = canvasGO.AddComponent<CanvasScaler>();
+                scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+                scaler.referenceResolution = new Vector2(1080f, 1920f);
+                scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
+                scaler.matchWidthOrHeight = 0.5f;
                 canvasGO.AddComponent<GraphicRaycaster>();
             }
 

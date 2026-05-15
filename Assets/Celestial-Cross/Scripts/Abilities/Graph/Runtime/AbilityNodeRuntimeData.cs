@@ -13,6 +13,8 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
     public enum GraphTargetOrigin { Unit, Point }
     public enum GraphAutoStrategyType { ClosestUnit, FarthestUnit, LowestAttribute, HighestAttribute, Self, MainTarget, RandomTarget }
     public enum GraphFactionType { Ally, Enemy, Any }
+    public enum ModifierBonusType { Flat, Percent }
+    public enum ModifierValueMode { Value, Variable }
 
     // --- Dados dos Nós ---
 
@@ -121,9 +123,9 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
     public class DistanceConditionNodeData
     {
         public DistanceCondition.DistanceType checkType;
-        public int distance;
-        public bool integrateFaction;
-        public GraphFactionType faction;
+        public int distanceValue;
+        public bool checkFaction;
+        public FactionTarget faction;
     }
 
     [Serializable]
@@ -185,10 +187,18 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
     public class StatModifierNodeData
     {
         [Serializable]
-        public class StatEntry { public int statIndex; public float value; }
+        public class StatEntry 
+        { 
+            public int statIndex; 
+            public float value;
+            // Armazenar o StatType como string para preservar informação Flat vs Percent
+            public string statTypeName = "AttackFlat";
+            public ModifierBonusType bonusType = ModifierBonusType.Flat;
+            public ModifierValueMode valueMode = ModifierValueMode.Value;
+            public string valueVariable;
+        }
         public List<StatEntry> stats = new List<StatEntry>();
         public bool isBuff = true;
-        public string variableReference; // Multiplicador unificado ou base para os buffs
         public bool canStack = false;
         public int maxStacks = 1;
     }

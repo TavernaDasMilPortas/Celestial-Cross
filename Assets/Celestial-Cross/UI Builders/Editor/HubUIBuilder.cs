@@ -18,6 +18,8 @@ namespace CelestialCross.UI.Builders
             CanvasScaler scaler = canvasGo.GetComponent<CanvasScaler>();
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             scaler.referenceResolution = new Vector2(1080, 1920);
+            scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
+            scaler.matchWidthOrHeight = 0.5f;
 
             // 2. Main Container
             var container = CreatePanel("Container", canvasGo.transform, new Color(0, 0, 0, 0.8f));

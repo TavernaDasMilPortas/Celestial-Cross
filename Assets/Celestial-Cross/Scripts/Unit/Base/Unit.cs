@@ -40,7 +40,7 @@ public abstract class Unit : MonoBehaviour
     public Vector2Int GridPosition;
 
     [Header("Runtime Stats")]
-    [SerializeField] protected CombatStats modifierStats = new CombatStats(0, 0, 0, 0, 0, 0);
+    // Atributos de modificadores (buffs/debuffs) agora são calculados dinamicamente via PassiveManager
 
     public bool hasMovedThisTurn { get; set; }
     public bool hasActedThisTurn { get; set; }
@@ -148,8 +148,15 @@ public abstract class Unit : MonoBehaviour
             int finalAcc = (int)Mathf.Round(baseStats.effectAccuracy + effectAccFlat);
 
             CombatStats finalArtifactStats = new CombatStats(finalHealth, finalAttack, finalDefense, finalSpeed, finalCrit, finalAcc);
+            
+            // Somar bônus de condições ativas do PassiveManager
+            CombatStats conditionStats = new CombatStats(0, 0, 0, 0, 0, 0);
+            if (PassiveManager != null)
+            {
+                conditionStats = PassiveManager.GetTotalStatBonuses(uBase);
+            }
 
-            return finalArtifactStats + modifierStats;
+            return finalArtifactStats + conditionStats;
         }
     }
 

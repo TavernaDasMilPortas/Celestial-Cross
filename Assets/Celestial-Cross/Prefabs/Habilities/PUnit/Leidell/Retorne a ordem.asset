@@ -1,0 +1,146 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b74335336934364f92171120eea7025, type: 3}
+  m_Name: Retorne a ordem
+  m_EditorClassIdentifier: Assembly-CSharp::Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO
+  abilityName: Retorne a ordem
+  abilityIcon: {fileID: 0}
+  abilityDescription: ' Leidell ataca diretamente a sua frente, causa mais dano no
+    primeiro quadrado.'
+  displayRange: 1
+  NodeLinks:
+  - BaseNodeGuid: 4ff28a50-8faa-44a9-8152-e5f125b32d1d
+    PortName: Out
+    TargetNodeGuid: 295032e4-e752-45e9-8c71-16b473ebfea9
+    TargetPortName: In
+  - BaseNodeGuid: 295032e4-e752-45e9-8c71-16b473ebfea9
+    PortName: Level 1
+    TargetNodeGuid: 3a52000c-0868-4b40-9034-82668cf99b8c
+    TargetPortName: In
+  - BaseNodeGuid: 9cc55cbf-e001-42d7-8069-e668db770ee8
+    PortName: Out
+    TargetNodeGuid: 5991a6ed-196e-4b5a-bae5-ae036cd20582
+    TargetPortName: Flow In
+  - BaseNodeGuid: 5991a6ed-196e-4b5a-bae5-ae036cd20582
+    PortName: True
+    TargetNodeGuid: 498e2e04-02db-4ac5-a33f-992edf38089c
+    TargetPortName: In
+  - BaseNodeGuid: 498e2e04-02db-4ac5-a33f-992edf38089c
+    PortName: Out
+    TargetNodeGuid: 0200a004-3162-4fd9-9d95-1caac34f2f7c
+    TargetPortName: In
+  - BaseNodeGuid: 5991a6ed-196e-4b5a-bae5-ae036cd20582
+    PortName: False
+    TargetNodeGuid: 0200a004-3162-4fd9-9d95-1caac34f2f7c
+    TargetPortName: In
+  - BaseNodeGuid: 3a52000c-0868-4b40-9034-82668cf99b8c
+    PortName: Out
+    TargetNodeGuid: 9271ec78-2115-4e8b-9cdd-7ed078f25657
+    TargetPortName: In
+  - BaseNodeGuid: 9271ec78-2115-4e8b-9cdd-7ed078f25657
+    PortName: Out
+    TargetNodeGuid: 9cc55cbf-e001-42d7-8069-e668db770ee8
+    TargetPortName: In
+  - BaseNodeGuid: 945f7c52-79df-45a9-b40b-5e881aae3123
+    PortName: Bool Out
+    TargetNodeGuid: 5991a6ed-196e-4b5a-bae5-ae036cd20582
+    TargetPortName: Cond 0
+  NodeData:
+  - Guid: 4ff28a50-8faa-44a9-8152-e5f125b32d1d
+    NodeType: StartNode
+    NodeTitle: Start
+    Position: {x: 100, y: 200}
+    JsonData: '{"type":1,"subtype":1,"isBuff":true}'
+    areaPattern: {fileID: 0}
+  - Guid: 295032e4-e752-45e9-8c71-16b473ebfea9
+    NodeType: LevelBranchNode
+    NodeTitle: Level Branch
+    Position: {x: 450, y: 200}
+    JsonData: '{"levelCount":3}'
+    areaPattern: {fileID: 0}
+  - Guid: 3a52000c-0868-4b40-9034-82668cf99b8c
+    NodeType: TriggerNode
+    NodeTitle: Trigger Event
+    Position: {x: 684, y: 200}
+    JsonData: '{"trigger":0}'
+    areaPattern: {fileID: 0}
+  - Guid: 9cc55cbf-e001-42d7-8069-e668db770ee8
+    NodeType: VariableModifierNode
+    NodeTitle: Modifier
+    Position: {x: 1439, y: 273}
+    JsonData: '{"variableName":"Damage","operation":0,"value":1.0,"valueVariableReference":""}'
+    areaPattern: {fileID: 0}
+  - Guid: 5991a6ed-196e-4b5a-bae5-ae036cd20582
+    NodeType: ConditionalFlowNode
+    NodeTitle: Branch (Conditional)
+    Position: {x: 1710, y: 365}
+    JsonData: 
+    areaPattern: {fileID: 0}
+  - Guid: 498e2e04-02db-4ac5-a33f-992edf38089c
+    NodeType: VariableModifierNode
+    NodeTitle: Modifier
+    Position: {x: 2090, y: 276}
+    JsonData: '{"variableName":"Damage","operation":1,"value":0.5,"valueVariableReference":""}'
+    areaPattern: {fileID: 0}
+  - Guid: 0200a004-3162-4fd9-9d95-1caac34f2f7c
+    NodeType: DamageEffectNode
+    NodeTitle: Damage Effect
+    Position: {x: 2365, y: 380}
+    JsonData: '{"variableReference":"Damage","baseAttribute":1,"scaleWithDistance":false,"distanceScaleFactor":0.10000000149011612}'
+    areaPattern: {fileID: 0}
+  - Guid: 9271ec78-2115-4e8b-9cdd-7ed078f25657
+    NodeType: TargetNode
+    NodeTitle: Targeting
+    Position: {x: 1053, y: 283}
+    JsonData: '{"reusePrevious":false,"sourceType":0,"mode":1,"range":1,"multipleTargets":false,"maxTargets":1,"origin":1,"strategy":0,"attributeType":0,"factionType":2,"targetCount":1,"autoRotate":true,"preferredDirection":0,"patternReferenceId":"","areaPattern":{"instanceID":52018},"rangeVariable":"","maxTargetsVariable":"max_targets_9271"}'
+    areaPattern: {fileID: 11400000, guid: 355229a7f5738f840b56c5210a05e669, type: 2}
+  - Guid: 945f7c52-79df-45a9-b40b-5e881aae3123
+    NodeType: DistanceConditionNode
+    NodeTitle: Distance & Faction
+    Position: {x: 1453, y: 525}
+    JsonData: '{"checkType":2,"distanceValue":1,"checkFaction":true,"faction":1}'
+    areaPattern: {fileID: 0}
+  Dependencies: []
+  Variables:
+  - name: max_targets_5f97
+    initialValue: 1
+    description: 
+  - name: Damage
+    initialValue: 0
+    description: 
+  - name: dmg_amount_034f
+    initialValue: 10
+    description: 
+  - name: dmg_amount_0200
+    initialValue: 10
+    description: 
+  - name: range
+    initialValue: 0
+    description: 
+  - name: max_targets_9271
+    initialValue: 1
+    description: 
+  MaxLevel: 1
+  aiHint:
+    category: 0
+    basePriority: 50
+    cooldownTurns: 0
+    lowHPTargetBonus: 20
+    freshApplicationBonus: 15
+    targetsFriendlies: 0
+    estimatedValue: 10
+  GeneratedDescription: "<b>--- DESCRI\xC7\xC3O AUTOM\xC1TICA ---</b>\r\n- Esta \xE9
+    uma habilidade do tipo Active. Subtipo: Attack.\r\n- Desvia o fluxo dependendo
+    do n\xEDvel atual da habilidade.\r\n- Escolhe manualmente m\xFAltiplos tiles
+    em \xE1rea a um range de 1 a partir de Point.\r\n- Modifica 'Damage' (Set 1).\r\n 
+    * Se for 'True':\r\n  - Modifica 'Damage' (Add 0,5).\r\n  - Dano escalado pelo
+    atributo Attack multiplicado pela vari\xE1vel 'Damage'.\r\n  * Se for 'False':\r\n"

@@ -23,7 +23,7 @@ MonoBehaviour:
     health: 30
     attack: 10
     defense: 6
-    speed: 7
+    speed: 15
     criticalChance: 7
     effectAccuracy: 1
   maxStats:
@@ -34,9 +34,10 @@ MonoBehaviour:
     criticalChance: 7
     effectAccuracy: 1
   abilityGraphs:
-  - {fileID: 11400000, guid: 588e2f904fd93b947b5f099c7c15288b, type: 2}
-  - {fileID: 11400000, guid: 1046e58697e467140b173faec1eef775, type: 2}
   - {fileID: 11400000, guid: 660a531ea1a9802449c71c3c4a89e403, type: 2}
+  - {fileID: 11400000, guid: 4d060a30e9da47646ae359cf062f8bb1, type: 2}
+  - {fileID: 11400000, guid: f8976fbac49946d42a1ba3e68c6118a8, type: 2}
+  - {fileID: 11400000, guid: 743f84550d77079479449c7485668536, type: 2}
   constellationConfig: {fileID: 11400000, guid: 895416b1fbffaab44ab31b2f8bbc2f06, type: 2}
   nativeActions: []
   references:

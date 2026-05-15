@@ -96,9 +96,8 @@ public class PassiveManager : MonoBehaviour
         if (unit == null) unit = GetComponent<Unit>();
         if (unit == null || unit.Data == null) return;
 
-        // --- 1. Legacy Blueprint passives (Só mantemos se vierem de Pets ou Condições) ---
+        // --- 1. Legacy Blueprint passives ---
         var blueprintAbilities = new List<AbilityBlueprint>();
-        // unit.Data.GetAbilities() removido (Refatoração para Grafos)
         if (unit.petSpeciesData != null)
         {
             if (unit.petSpeciesData.PassiveSkills != null) blueprintAbilities.AddRange(unit.petSpeciesData.PassiveSkills);
@@ -126,21 +125,26 @@ public class PassiveManager : MonoBehaviour
                 if (context.Variables == null) context.Variables = new Dictionary<string, float>();
                 context.Variables["stacks"] = stacks;
 
-                // Modifiers síncronas
                 if (blueprint.modifiers != null)
                 {
                     foreach (var mod in blueprint.modifiers)
                     {
-                        if (mod != null && mod.triggerHook == hook && mod.EvaluateConditions(context))
+                        if (mod != null && mod.triggerHook == hook)
                         {
-                            CombatLogger.Log($"<color=cyan>[PassiveManager]</color> {gameObject.name}: Passiva <b>{blueprint.name}</b> ativada no hook {hook} (Modifier)", LogCategory.Passive);
-                            mod.ApplyModifier(context);
-                            CheckAndTriggerPetVisual(blueprint);
+                            if (mod.EvaluateConditions(context))
+                            {
+                                CombatLogger.Log($"<color=cyan>[PassiveManager]</color> {gameObject.name}: Passiva <b>{blueprint.name}</b> ativada (Modifier)", LogCategory.Passive);
+                                mod.ApplyModifier(context);
+                                CheckAndTriggerPetVisual(blueprint);
+                            }
+                            else
+                            {
+                                CombatLogger.Log($"<color=#ffd700>[Condição]</color> Passiva <b>{blueprint.name}</b> ignorada (Requisitos não atendidos)", LogCategory.Condition);
+                            }
                         }
                     }
                 }
 
-                // EffectSteps
                 if (blueprint.modifierSteps != null)
                 {
                     foreach (var step in blueprint.modifierSteps)
@@ -159,7 +163,7 @@ public class PassiveManager : MonoBehaviour
                             {
                                 if (effect == null) continue;
                                 
-                                CombatLogger.Log($"<color=cyan>[PassiveManager]</color> {gameObject.name}: Passiva <b>{blueprint.name}</b> ativada no hook {hook} (Effect: {effect.GetType().Name})", LogCategory.Passive);
+                                CombatLogger.Log($"<color=cyan>[PassiveManager]</color> {gameObject.name}: Passiva <b>{blueprint.name}</b> ativada (Effect: {effect.GetType().Name})", LogCategory.Passive);
 
                                 var originalTarget = context.target;
                                 context.target = target;
@@ -171,7 +175,6 @@ public class PassiveManager : MonoBehaviour
                     }
                 }
 
-                // Se o blueprint tiver um grafo, executá-lo também (legacy bridge)
                 if (blueprint.abilityGraph != null)
                 {
                     ExecuteGraphForHook(blueprint.abilityGraph, hook, context, stacks);
@@ -183,7 +186,7 @@ public class PassiveManager : MonoBehaviour
             }
         }
 
-        // --- 2. Graph-based conditions (queimadura, veneno, etc) ---
+        // --- 2. Graph-based conditions ---
         for (int i = 0; i < activeGraphConditions.Count; i++)
         {
             var cond = activeGraphConditions[i];
@@ -209,9 +212,10 @@ public class PassiveManager : MonoBehaviour
     {
         if (AbilityGraphInterpreter.Instance == null) return;
         
-        // O Interpreter agora suporta iniciar a partir de TriggerNodes
+        CombatLogger.Log($"<color=cyan>[Passiva]</color> Gatilho <b>{hook}</b> detectado em <b>{gameObject.name}</b>. Executando grafo: <b>{graph.name}</b>", LogCategory.Passive, true);
+
         StartCoroutine(AbilityGraphInterpreter.Instance.ExecuteGraphCoroutine(
-            context.source, graph, hook, null
+            unit, graph, hook, null
         ));
     }
 
@@ -229,7 +233,9 @@ public class PassiveManager : MonoBehaviour
             sourcePassive?.TriggerHook(CombatHook.OnBeforeApplyCondition, context);
         }
 
-        bool persistent = conditionGraph.GetIsPersistent() || conditionGraph.GetDuration() <= 0;
+        // Se for uma Passiva (Inata), ela deve ser persistente por padrão. 
+        // Se for uma Condição (Buff/Debuff), ela segue a duração do grafo.
+        bool persistent = conditionGraph.IsPassive || conditionGraph.GetIsPersistent() || conditionGraph.GetDuration() <= 0;
         int duration = persistent ? 0 : conditionGraph.GetDuration();
         bool canStack = conditionGraph.GetCanStack();
         int maxStacks = conditionGraph.GetMaxStacks();
@@ -364,13 +370,14 @@ public class PassiveManager : MonoBehaviour
             activeRuntimeConditions.Remove(existing);
     }
 
-    private RuntimeCondition FindRuntimeCondition(AbilityBlueprint blueprint)
+    private RuntimeCondition FindRuntimeCondition(AbilityBlueprint conditionBlueprint)
     {
-        if (blueprint == null) return null;
-        for (int i = 0; i < activeRuntimeConditions.Count; i++)
+        if (conditionBlueprint == null) return null;
+        foreach (var cond in activeRuntimeConditions)
         {
-            var cond = activeRuntimeConditions[i];
-            if (cond != null && cond.blueprint == blueprint)
+            // Usar nome para identificação permite que Blueprints gerados dinamicamente 
+            // sejam atualizados corretamente mesmo sendo novas instâncias de ScriptableObject.
+            if (cond != null && cond.blueprint != null && cond.blueprint.name == conditionBlueprint.name)
                 return cond;
         }
         return null;
@@ -431,5 +438,53 @@ public class PassiveManager : MonoBehaviour
             unit.petVisual.PlaySkill();
             Debug.Log($"[PassiveManager] Pet Animation Triggered by Blueprint {blueprint.name}");
         }
+    }
+    public CombatStats GetTotalStatBonuses(CombatStats baseStats)
+    {
+        CombatStats total = new CombatStats(0, 0, 0, 0, 0, 0);
+        float atkPct = 0, defPct = 0, hpPct = 0, spdPct = 0;
+
+        if (activeRuntimeConditions == null) return total;
+
+        foreach (var cond in activeRuntimeConditions)
+        {
+            if (cond == null || cond.blueprint == null || cond.blueprint.modifiers == null) continue;
+
+            int stacks = cond.stacks;
+
+            foreach (var mod in cond.blueprint.modifiers)
+            {
+                if (mod is PassiveEffect_ConditionalStatBonus flatMod)
+                {
+                    total.attack += flatMod.statBonus.attack * stacks;
+                    total.defense += flatMod.statBonus.defense * stacks;
+                    // Evitar bugs de HP 1 que é usado para flags internas em alguns lugares
+                    total.health += (flatMod.statBonus.health > 1 ? flatMod.statBonus.health : 0) * stacks;
+                    total.speed += flatMod.statBonus.speed * stacks;
+                    total.criticalChance += flatMod.statBonus.criticalChance * stacks;
+                }
+                else if (mod is PassiveEffect_PercentStatBonus percentMod)
+                {
+                    foreach (var p in percentMod.modifiers)
+                    {
+                        switch (p.statType)
+                        {
+                            case CelestialCross.Artifacts.StatType.AttackPercent: atkPct += p.percentBonus * stacks; break;
+                            case CelestialCross.Artifacts.StatType.DefensePercent: defPct += p.percentBonus * stacks; break;
+                            case CelestialCross.Artifacts.StatType.HealthPercent: hpPct += p.percentBonus * stacks; break;
+                            case CelestialCross.Artifacts.StatType.Speed: spdPct += p.percentBonus * stacks; break;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Aplicar bônus percentuais sobre o status base da unidade
+        total.attack += Mathf.RoundToInt(baseStats.attack * (atkPct / 100f));
+        total.defense += Mathf.RoundToInt(baseStats.defense * (defPct / 100f));
+        total.health += Mathf.RoundToInt(baseStats.health * (hpPct / 100f));
+        total.speed += Mathf.RoundToInt(baseStats.speed * (spdPct / 100f));
+
+        return total;
     }
 }

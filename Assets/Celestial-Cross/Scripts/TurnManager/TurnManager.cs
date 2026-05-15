@@ -17,7 +17,8 @@ public class TurnManager : MonoBehaviour
     private Unit roundStartUnit;
     public Unit RoundStartUnit => roundStartUnit;
 
-    Queue<Unit> turnQueue = new();
+    private List<Unit> turnQueue = new();
+    private List<Unit> actedUnits = new();
     bool combatStarted;
 
     void Awake()
@@ -37,13 +38,11 @@ public class TurnManager : MonoBehaviour
             return;
         }
 
-        var ordered = units
-            .OrderByDescending(u => u.Speed)
-            .ToList();
-
-        turnQueue = new Queue<Unit>(ordered);
-        roundStartUnit = ordered.FirstOrDefault();
+        turnQueue = units.OrderByDescending(u => u.Speed).ToList();
+        actedUnits.Clear();
+        roundStartUnit = turnQueue.FirstOrDefault();
         RoundCounter = 1;
+        combatStarted = false;
 
         Debug.Log($"[TurnManager] Combate iniciado. Rodada {RoundCounter}");
         OnQueueChanged?.Invoke(turnQueue);
@@ -51,63 +50,80 @@ public class TurnManager : MonoBehaviour
         NextTurn();
     }
 
+    private void RefreshQueueOrder()
+    {
+        // Re-sortear apenas quem ainda não agiu nesta rodada
+        turnQueue = turnQueue.OrderByDescending(u => u.Speed).ToList();
+        OnQueueChanged?.Invoke(turnQueue.Concat(actedUnits));
+    }
+
     void NextTurn()
     {
-        if (turnQueue.Count == 0)
-            return;
+        // 1. Limpar unidades mortas ou inativas de ambas as listas
+        turnQueue.RemoveAll(u => u == null || !u.gameObject.activeInHierarchy);
+        actedUnits.RemoveAll(u => u == null || !u.gameObject.activeInHierarchy);
 
-        // Skip destroyed units
-        while (turnQueue.Count > 0 && turnQueue.Peek() == null)
-        {
-            turnQueue.Dequeue();
-        }
-
+        // 2. Se a fila de quem ainda não agiu está vazia, iniciamos uma nova rodada
         if (turnQueue.Count == 0)
         {
-            Debug.Log("[TurnManager] No units left in turn queue.");
-            return;
+            if (actedUnits.Count == 0) 
+            {
+                Debug.LogWarning("[TurnManager] Nenhuma unidade ativa para continuar o combate.");
+                return;
+            }
+
+            // Nova Rodada: todos que agiram voltam para a fila de espera
+            turnQueue = actedUnits.OrderByDescending(u => u.Speed).ToList();
+            actedUnits.Clear();
+            
+            RoundCounter++;
+            roundStartUnit = turnQueue.FirstOrDefault();
+            
+            CombatLogger.Log($"<color=#ffd700>[Sistema]</color> Iniciando Rodada <b>{RoundCounter}</b>", LogCategory.System);
+            OnRoundStarted?.Invoke(RoundCounter);
         }
 
-        Unit current = turnQueue.Dequeue();
-        turnQueue.Enqueue(current);
+        // 3. Re-ordenar quem falta agir para garantir que buffs de velocidade recentes sejam aplicados
+        RefreshQueueOrder();
+
+        if (turnQueue.Count == 0) return;
+
+        // 4. Pega a próxima unidade
+        Unit current = turnQueue[0];
+        turnQueue.RemoveAt(0);
+        actedUnits.Add(current);
+        
         CurrentUnit = current;
         
         current.GetComponentInChildren<UnitVisualController>()?.SetCombatState(true);
         current.hasMovedThisTurn = false;
         current.hasActedThisTurn = false;
 
-        Debug.Log($"[TurnManager] Turno de {current.DisplayName}");
-
-        if (current == roundStartUnit && combatStarted)
-        {
-            RoundCounter++;
-            Debug.Log($"[TurnManager] Nova Rodada: {RoundCounter}");
-            OnRoundStarted?.Invoke(RoundCounter);
-        }
+        CombatLogger.CurrentUnit = current;
+        CombatLogger.Log($"<color=#00ffff>[Turno]</color> Início do turno de <b>{current.DisplayName}</b>", LogCategory.Ability);
 
         combatStarted = true;
-        OnQueueChanged?.Invoke(turnQueue);
+        OnQueueChanged?.Invoke(turnQueue.Concat(actedUnits));
         OnTurnStarted?.Invoke(current);
 
+        // Lógica de execução (Tutorial, AI ou Player)
+        ProcessUnitTurn(current);
+    }
+
+    private void ProcessUnitTurn(Unit current)
+    {
         if (CelestialCross.Tutorial.TutorialManager.Instance != null && CelestialCross.Tutorial.TutorialManager.Instance.IsActive)
         {
             CelestialCross.Tutorial.TutorialManager.Instance.NotifyTurnEnded();
-            // No tutorial, o fluxo é controlado manualmente ou por condições específicas.
-            // Se for o turno do player, o TutorialManager vai guiá-lo.
-            if (current is Pet)
-            {
-                PlayerController.Instance.StartTurn(current);
-            }
+            if (current is Pet) PlayerController.Instance.StartTurn(current);
             return; 
         }
 
         if (current is EnemyUnit enemy)
         {
             AIBrain brain = enemy.GetComponent<AIBrain>();
-            if (brain != null)
-                brain.ExecuteTurn();
-            else
-                EndTurn();
+            if (brain != null) brain.ExecuteTurn();
+            else EndTurn();
         }
         else if (current is Pet)
         {
@@ -121,13 +137,17 @@ public class TurnManager : MonoBehaviour
 
     public void EndTurn()
     {
-        CurrentUnit?.GetComponentInChildren<UnitVisualController>()?.SetCombatState(false);
+        if (CurrentUnit != null)
+            CurrentUnit.GetComponentInChildren<UnitVisualController>()?.SetCombatState(false);
+            
         OnTurnEnded?.Invoke();
+        
+        // Pequeno delay para a UI respirar antes do próximo turno
         Invoke(nameof(NextTurn), 0.5f);
     }
 
     public IEnumerable<Unit> GetTurnQueue()
     {
-        return turnQueue;
+        return turnQueue.Concat(actedUnits);
     }
 }

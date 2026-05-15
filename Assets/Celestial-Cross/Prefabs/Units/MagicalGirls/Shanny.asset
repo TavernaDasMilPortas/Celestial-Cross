@@ -17,18 +17,24 @@ MonoBehaviour:
   role: 0
   unitClass: 0
   icon: {fileID: 21300000, guid: 818165bbcf8b25a40ba19a9fc51a2e52, type: 3}
-  idleAnim: {fileID: 0}
-  combatIdleAnim: {fileID: 0}
+  idleAnim: {fileID: 7400000, guid: 8e8b605e040d87047845d227255d82f7, type: 2}
+  combatIdleAnim: {fileID: 7400000, guid: 8e8b605e040d87047845d227255d82f7, type: 2}
   baseStats:
     health: 30
     attack: 10
-    defense: 6
+    defense: 0
     speed: 7
     criticalChance: 7
     effectAccuracy: 1
-  abilities:
-  - {fileID: 11400000, guid: 1ce9c6b3a1749ba4184caef9cecad6ae, type: 2}
-  - {fileID: 11400000, guid: 580526a2b04571946b14798068a1496e, type: 2}
+  maxStats:
+    health: 300
+    attack: 100
+    defense: 60
+    speed: 70
+    criticalChance: 7
+    effectAccuracy: 1
+  abilityGraphs: []
+  constellationConfig: {fileID: 0}
   nativeActions: []
   references:
     version: 2

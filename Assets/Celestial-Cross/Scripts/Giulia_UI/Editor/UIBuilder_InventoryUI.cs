@@ -18,6 +18,8 @@ namespace CelestialCross.EditorArea {
                 var scaler = canvas.GetComponent<UnityEngine.UI.CanvasScaler>();
                 scaler.uiScaleMode = UnityEngine.UI.CanvasScaler.ScaleMode.ScaleWithScreenSize;
                 scaler.referenceResolution = new Vector2(1080f, 1920f);
+                scaler.screenMatchMode = UnityEngine.UI.CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
+                scaler.matchWidthOrHeight = 0.5f;
             }
             
             if (Object.FindObjectOfType<UnityEngine.EventSystems.EventSystem>() == null) {
