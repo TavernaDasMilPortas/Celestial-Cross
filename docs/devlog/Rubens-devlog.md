@@ -110,7 +110,28 @@ Popups 3D não apareciam corretamente quando o jogo era exibido através de uma 
 
 ---
 
+## 11. Minimalismo e UX na Shop Scene
+**Data: 15/05/2026**
+### **Problema:**
+A interface da loja exibia excesso de texto informativo (ex: "Mapas: X", "Poeira: Y"), poluindo o visual e ocupando espaço desnecessário em telas mobile.
+
+### **Solução:**
+*   **Limpeza de UI:** Refatoração das strings de exibição para mostrar apenas os valores numéricos brutos das moedas e do contador de pity, adotando um visual mais limpo e direto.
+
+---
+
+## 12. Implementação de UI: Shop Scene (Assets Marina)
+**Data: 15/05/2026**
+### **Problema:**
+A interface da loja ainda utilizava placeholders e layouts temporários que não condiziam com a direção artística do projeto.
+
+### **Solução:**
+*   **Integração de Assets:** Implementação da nova interface visual desenvolvida pela Marina, incluindo splash arts de banners e elementos decorativos, garantindo a fidelidade ao design proposto.
+
+---
+
 ## Próximos Passos
+*   Arrumar anchors da Shop Scene para garantir responsividade em diferentes resoluções.
 *   Finalizar a transição dos popups de dano para o sistema projetado (Overlay).
 *   Refinar a transição de foco de câmera entre múltiplas ações do mesmo turno.
 *   Testar a persistência das passivas da Leidell em batalhas de longa duração.
