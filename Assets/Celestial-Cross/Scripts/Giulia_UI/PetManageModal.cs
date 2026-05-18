@@ -65,18 +65,52 @@ namespace CelestialCross.Giulia_UI
                                $"- CRIT: {currentPet.CriticalChance}%\n" +
                                $"- ACC: {currentPet.EffectAccuracy}%\n\n";
 
-            string activeSkill = speciesData != null && speciesData.PassiveSkills != null && speciesData.PassiveSkills.Count > 0 
-                ? $"<color=#ffffaa>{speciesData.PassiveSkills[0].abilityName}</color>\n" 
-                : "";
-            
-            if (speciesData != null && speciesData.AbilityGraphs != null)
+            string activeSkill = "";
+            if (speciesData != null)
             {
-                foreach (var graph in speciesData.AbilityGraphs)
+                activeSkill = "<b>Habilidades:</b>\n";
+                bool hasSkills = false;
+                if (speciesData.PassiveSkills != null)
                 {
-                    if (graph != null) activeSkill += $"<color=#aaffaa>{(string.IsNullOrEmpty(graph.abilityName) ? graph.name : graph.abilityName)}</color>\n";
+                    foreach (var ab in speciesData.PassiveSkills)
+                    {
+                        if (ab != null)
+                        {
+                            activeSkill += $"- <color=#ffffaa>{ab.abilityName}</color> (Passiva)\n";
+                            hasSkills = true;
+                        }
+                    }
+                }
+                if (speciesData.ActiveSkills != null)
+                {
+                    foreach (var ab in speciesData.ActiveSkills)
+                    {
+                        if (ab != null)
+                        {
+                            activeSkill += $"- <color=#ffffaa>{ab.abilityName}</color> (Ativa)\n";
+                            hasSkills = true;
+                        }
+                    }
+                }
+                if (speciesData.AbilityGraphs != null)
+                {
+                    foreach (var graph in speciesData.AbilityGraphs)
+                    {
+                        if (graph != null)
+                        {
+                            string displayName = string.IsNullOrEmpty(graph.abilityName) ? graph.name : graph.abilityName;
+                            string typeLabel = graph.IsPassive ? "Passiva" : "Ativa";
+                            activeSkill += $"- <color=#aaffaa>{displayName}</color> ({typeLabel} - Grafo)\n";
+                            hasSkills = true;
+                        }
+                    }
+                }
+                if (!hasSkills)
+                {
+                    activeSkill += "(Nenhuma habilidade)\n";
                 }
             }
-
+ 
             detailsText.text = baseInfo + statsInfo + activeSkill;
 
             var acc = AccountManager.Instance.PlayerAccount;

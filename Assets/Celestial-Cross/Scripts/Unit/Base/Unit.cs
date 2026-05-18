@@ -33,6 +33,11 @@ public abstract class Unit : MonoBehaviour
     private List<AbilityBlueprint> cachedArtifactSetPassives = new List<AbilityBlueprint>();
 
     public IReadOnlyList<AbilityBlueprint> ArtifactSetPassives => cachedArtifactSetPassives;
+
+    [SerializeField]
+    private List<Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO> cachedArtifactSetPassiveGraphs = new List<Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO>();
+
+    public IReadOnlyList<Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO> ArtifactSetPassiveGraphs => cachedArtifactSetPassiveGraphs;
     
     public Team Team;
 
@@ -241,6 +246,18 @@ public abstract class Unit : MonoBehaviour
             // Aplica a habilidade do pet como passiva caso aplicável
             if (petSpeciesData.PassiveSkills != null) { foreach(var pass in petSpeciesData.PassiveSkills) { if (pass != null) PassiveManager?.ApplyCondition(pass, this); } }
 
+            // Aplica grafos de habilidades passivas do pet
+            if (petSpeciesData.AbilityGraphs != null)
+            {
+                foreach (var graph in petSpeciesData.AbilityGraphs)
+                {
+                    if (graph != null && graph.IsPassive)
+                    {
+                        PassiveManager?.ApplyGraphCondition(graph, this);
+                    }
+                }
+            }
+
             Debug.Log($"<color=green>[Unit Stats]</color> {DisplayName} combinou status com o pet <b>{(runtimePetData != null ? runtimePetData.DisplayName : petSpeciesData.SpeciesName)}</b>. Total -> HP: {MaxHealth} | Atk: {Stats.attack} | Def: {Stats.defense} | Spd: {Stats.speed} | Crit: {Stats.criticalChance}%");
 
             // Instancia o visual do Pet
@@ -319,19 +336,20 @@ public abstract class Unit : MonoBehaviour
     {
         cachedArtifactStatModifiers.Clear();
         cachedArtifactSetPassives.Clear();
-
+        cachedArtifactSetPassiveGraphs.Clear();
+ 
         if (equippedArtifactData == null)
             return;
-
+ 
         // 1) Main/Sub stats
         for (int i = 0; i < equippedArtifactData.Count; i++)
         {
             var artifact = equippedArtifactData[i];
             if (artifact == null) continue;
-
+ 
             if (artifact.mainStat != null)
                 cachedArtifactStatModifiers.Add(new StatModifier(artifact.mainStat.statType, artifact.mainStat.value));
-
+ 
             if (artifact.subStats != null)
             {
                 for (int s = 0; s < artifact.subStats.Count; s++)
@@ -342,55 +360,72 @@ public abstract class Unit : MonoBehaviour
                 }
             }
         }
-
+ 
         // 2) Set bonuses (stats + passives)
         if (setCatalog == null)
             return;
-
+ 
         var setCounts = new Dictionary<string, int>();
         for (int i = 0; i < equippedArtifactData.Count; i++)
         {
             var artifact = equippedArtifactData[i];
             if (artifact == null || string.IsNullOrWhiteSpace(artifact.artifactSetId))
                 continue;
-
+ 
             if (!setCounts.ContainsKey(artifact.artifactSetId))
                 setCounts[artifact.artifactSetId] = 0;
             setCounts[artifact.artifactSetId]++;
         }
-
+ 
         foreach (var kvp in setCounts)
         {
             var set = setCatalog.GetSetById(kvp.Key);
             if (set == null) continue;
-
+ 
             int piecesEquipped = kvp.Value;
             foreach (var bonus in set.setBonuses)
             {
                 if (piecesEquipped < bonus.piecesRequired)
                     continue;
-
+ 
                 if (bonus.statBonuses != null)
                     cachedArtifactStatModifiers.AddRange(bonus.statBonuses);
-
+ 
                 if (bonus.passiveAbility != null && !cachedArtifactSetPassives.Contains(bonus.passiveAbility))
                     cachedArtifactSetPassives.Add(bonus.passiveAbility);
+
+                if (bonus.passiveGraph != null && !cachedArtifactSetPassiveGraphs.Contains(bonus.passiveGraph))
+                    cachedArtifactSetPassiveGraphs.Add(bonus.passiveGraph);
             }
         }
     }
-
+ 
     private void ApplyArtifactSetPassives()
     {
-        if (PassiveManager == null || cachedArtifactSetPassives == null)
+        if (PassiveManager == null)
             return;
-
-        for (int i = 0; i < cachedArtifactSetPassives.Count; i++)
+ 
+        if (cachedArtifactSetPassives != null)
         {
-            var passive = cachedArtifactSetPassives[i];
-            if (passive == null) continue;
+            for (int i = 0; i < cachedArtifactSetPassives.Count; i++)
+            {
+                var passive = cachedArtifactSetPassives[i];
+                if (passive == null) continue;
+ 
+                // A duração/persistência é controlada dentro do próprio AbilityBlueprint.
+                PassiveManager.ApplyCondition(passive, this);
+            }
+        }
 
-            // A duração/persistência é controlada dentro do próprio AbilityBlueprint.
-            PassiveManager.ApplyCondition(passive, this);
+        if (cachedArtifactSetPassiveGraphs != null)
+        {
+            for (int i = 0; i < cachedArtifactSetPassiveGraphs.Count; i++)
+            {
+                var passiveGraph = cachedArtifactSetPassiveGraphs[i];
+                if (passiveGraph == null) continue;
+ 
+                PassiveManager.ApplyGraphCondition(passiveGraph, this);
+            }
         }
     }
  
