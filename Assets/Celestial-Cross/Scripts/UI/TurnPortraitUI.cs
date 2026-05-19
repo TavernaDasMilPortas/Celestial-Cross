@@ -19,9 +19,12 @@ public class TurnPortraitUI : MonoBehaviour
     {
         if (unit == null) return;
 
-        if (iconImage != null && unit.UnitData != null)
+        if (iconImage != null)
         {
-            iconImage.sprite = unit.UnitData.icon;
+            if (unit.UnitData != null)
+                iconImage.sprite = unit.UnitData.icon;
+            else if (unit.petSpeciesData != null)
+                iconImage.sprite = unit.petSpeciesData.Icon;
         }
 
         if (backgroundImage != null)

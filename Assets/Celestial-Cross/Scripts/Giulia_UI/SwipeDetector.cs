@@ -13,6 +13,9 @@ public class SwipeDetector : MonoBehaviour
 
     public event Action OnSwipeLeft;
     public event Action OnSwipeRight;
+    public bool IsGestureOverRenderTarget { get; private set; }
+    public bool IsSwipeInProgress { get; private set; }
+    public bool WasSwipeConsumed { get; private set; }
 
     private Vector2 touchStart;
     private bool isSwiping;
@@ -39,20 +42,38 @@ public class SwipeDetector : MonoBehaviour
         switch (touch.phase)
         {
             case TouchPhase.Began:
+                IsGestureOverRenderTarget = RenderTextureInputManager.Instance == null
+                    || !RenderTextureInputManager.Instance.IsRaycastTargetReady()
+                    || RenderTextureInputManager.Instance.IsScreenPointOverExclusiveRenderTarget(touch.position);
+
+                if (!IsGestureOverRenderTarget)
+                {
+                    Debug.Log($"[SwipeDetector] Ignorado: touch began fora do RawImage em {touch.position}");
+                    isSwiping = false;
+                    IsSwipeInProgress = false;
+                    WasSwipeConsumed = false;
+                    break;
+                }
+
                 touchStart = touch.position;
                 isSwiping = true;
+                IsSwipeInProgress = true;
+                WasSwipeConsumed = false;
                 break;
 
             case TouchPhase.Ended:
                 if (isSwiping)
                 {
-                    EvaluateSwipe(touch.position);
+                    WasSwipeConsumed = EvaluateSwipe(touch.position);
                     isSwiping = false;
+                    IsSwipeInProgress = false;
                 }
                 break;
 
             case TouchPhase.Canceled:
                 isSwiping = false;
+                IsSwipeInProgress = false;
+                WasSwipeConsumed = false;
                 break;
         }
     }
@@ -65,13 +86,29 @@ public class SwipeDetector : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
+            IsGestureOverRenderTarget = RenderTextureInputManager.Instance == null
+                || !RenderTextureInputManager.Instance.IsRaycastTargetReady()
+                || RenderTextureInputManager.Instance.IsScreenPointOverExclusiveRenderTarget(Input.mousePosition);
+
+            if (!IsGestureOverRenderTarget)
+            {
+                Debug.Log($"[SwipeDetector] Ignorado: mouse down fora do RawImage em {Input.mousePosition}");
+                isSwiping = false;
+                IsSwipeInProgress = false;
+                WasSwipeConsumed = false;
+                return;
+            }
+
             touchStart = Input.mousePosition;
             isSwiping = true;
+            IsSwipeInProgress = true;
+            WasSwipeConsumed = false;
         }
         else if (Input.GetMouseButtonUp(0) && isSwiping)
         {
-            EvaluateSwipe(Input.mousePosition);
+            WasSwipeConsumed = EvaluateSwipe(Input.mousePosition);
             isSwiping = false;
+            IsSwipeInProgress = false;
         }
     }
 
@@ -79,15 +116,17 @@ public class SwipeDetector : MonoBehaviour
     // AVALIAÇÃO
     // =============================
 
-    void EvaluateSwipe(Vector2 endPos)
+    bool EvaluateSwipe(Vector2 endPos)
     {
         float deltaX = endPos.x - touchStart.x;
 
-        if (Mathf.Abs(deltaX) < minSwipeDistance) return;
+        if (Mathf.Abs(deltaX) < minSwipeDistance) return false;
 
         if (deltaX < 0)
             OnSwipeLeft?.Invoke();
         else
             OnSwipeRight?.Invoke();
+
+        return true;
     }
 }

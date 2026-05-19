@@ -16,6 +16,7 @@ public abstract class Unit : MonoBehaviour
     public CelestialCross.Data.Pets.PetSpeciesSO petSpeciesData { get; set; }
     public CelestialCross.Data.Pets.RuntimePetData runtimePetData { get; set; }
     public CelestialCross.Data.RuntimeUnitData runtimeUnitData { get; set; }
+    public CelestialCross.UnitVisuals.PetVisualController petVisual { get; private set; }
     
     [Header("Test/Debug Artifacts")]
     [SerializeField]
@@ -32,6 +33,11 @@ public abstract class Unit : MonoBehaviour
     private List<AbilityBlueprint> cachedArtifactSetPassives = new List<AbilityBlueprint>();
 
     public IReadOnlyList<AbilityBlueprint> ArtifactSetPassives => cachedArtifactSetPassives;
+
+    [SerializeField]
+    private List<Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO> cachedArtifactSetPassiveGraphs = new List<Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO>();
+
+    public IReadOnlyList<Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO> ArtifactSetPassiveGraphs => cachedArtifactSetPassiveGraphs;
     
     public Team Team;
 
@@ -39,7 +45,7 @@ public abstract class Unit : MonoBehaviour
     public Vector2Int GridPosition;
 
     [Header("Runtime Stats")]
-    [SerializeField] protected CombatStats modifierStats = new CombatStats(0, 0, 0, 0, 0, 0);
+    // Atributos de modificadores (buffs/debuffs) agora são calculados dinamicamente via PassiveManager
 
     public bool hasMovedThisTurn { get; set; }
     public bool hasActedThisTurn { get; set; }
@@ -147,8 +153,15 @@ public abstract class Unit : MonoBehaviour
             int finalAcc = (int)Mathf.Round(baseStats.effectAccuracy + effectAccFlat);
 
             CombatStats finalArtifactStats = new CombatStats(finalHealth, finalAttack, finalDefense, finalSpeed, finalCrit, finalAcc);
+            
+            // Somar bônus de condições ativas do PassiveManager
+            CombatStats conditionStats = new CombatStats(0, 0, 0, 0, 0, 0);
+            if (PassiveManager != null)
+            {
+                conditionStats = PassiveManager.GetTotalStatBonuses(uBase);
+            }
 
-            return finalArtifactStats + modifierStats;
+            return finalArtifactStats + conditionStats;
         }
     }
 
@@ -233,7 +246,73 @@ public abstract class Unit : MonoBehaviour
             // Aplica a habilidade do pet como passiva caso aplicável
             if (petSpeciesData.PassiveSkills != null) { foreach(var pass in petSpeciesData.PassiveSkills) { if (pass != null) PassiveManager?.ApplyCondition(pass, this); } }
 
+            // Aplica grafos de habilidades passivas do pet
+            if (petSpeciesData.AbilityGraphs != null)
+            {
+                foreach (var graph in petSpeciesData.AbilityGraphs)
+                {
+                    if (graph != null && graph.IsPassive)
+                    {
+                        PassiveManager?.ApplyGraphCondition(graph, this);
+                    }
+                }
+            }
+
             Debug.Log($"<color=green>[Unit Stats]</color> {DisplayName} combinou status com o pet <b>{(runtimePetData != null ? runtimePetData.DisplayName : petSpeciesData.SpeciesName)}</b>. Total -> HP: {MaxHealth} | Atk: {Stats.attack} | Def: {Stats.defense} | Spd: {Stats.speed} | Crit: {Stats.criticalChance}%");
+
+            // Instancia o visual do Pet
+            GameObject petObj = null;
+
+            if (petSpeciesData.IdleAnimation != null)
+            {
+                // Carrega o Prefab Base universal diretamente da pasta Resources!
+                GameObject basePrefab = Resources.Load<GameObject>("BasePetPrefab");
+                if (basePrefab != null)
+                {
+                    petObj = Instantiate(basePrefab, transform);
+                    petObj.name = $"PetVisual_{petSpeciesData.SpeciesName}";
+                    
+                    var anim = petObj.GetComponent<Animator>();
+
+                    if (anim != null && anim.runtimeAnimatorController != null)
+                    {
+                        // Injeta os clipes específicos deste Pet usando um Override Controller
+                        AnimatorOverrideController overrideController = new AnimatorOverrideController(anim.runtimeAnimatorController);
+                        
+                        var clipOverrides = new List<KeyValuePair<AnimationClip, AnimationClip>>();
+                        foreach (var clip in overrideController.animationClips)
+                        {
+                            if (clip.name == "BasePet_Idle" && petSpeciesData.IdleAnimation != null)
+                                clipOverrides.Add(new KeyValuePair<AnimationClip, AnimationClip>(clip, petSpeciesData.IdleAnimation));
+                            else if (clip.name == "BasePet_Skill" && petSpeciesData.SkillAnimation != null)
+                                clipOverrides.Add(new KeyValuePair<AnimationClip, AnimationClip>(clip, petSpeciesData.SkillAnimation));
+                        }
+                        
+                        overrideController.ApplyOverrides(clipOverrides);
+                        anim.runtimeAnimatorController = overrideController;
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning("BasePetPrefab não encontrado. Crie um prefab com esse nome dentro de uma pasta chamada 'Resources'.");
+                }
+            }
+
+            if (petObj != null)
+            {
+                petVisual = petObj.GetComponent<CelestialCross.UnitVisuals.PetVisualController>();
+                if (petVisual == null) petVisual = petObj.AddComponent<CelestialCross.UnitVisuals.PetVisualController>();
+                
+                petVisual.Setup(transform, petSpeciesData.MovementType, petSpeciesData.CombatScale);
+                
+                // Sincroniza o flip inicial
+                var unitVisual = GetComponentInChildren<UnitVisualController>();
+                if (unitVisual != null)
+                {
+                    var sr = unitVisual.GetComponent<SpriteRenderer>();
+                    if (sr != null) petVisual.FaceDirection(sr.flipX);
+                }
+            }
         }
 
         // Aplica passivas de constelação (Fase 2)
@@ -257,19 +336,20 @@ public abstract class Unit : MonoBehaviour
     {
         cachedArtifactStatModifiers.Clear();
         cachedArtifactSetPassives.Clear();
-
+        cachedArtifactSetPassiveGraphs.Clear();
+ 
         if (equippedArtifactData == null)
             return;
-
+ 
         // 1) Main/Sub stats
         for (int i = 0; i < equippedArtifactData.Count; i++)
         {
             var artifact = equippedArtifactData[i];
             if (artifact == null) continue;
-
+ 
             if (artifact.mainStat != null)
                 cachedArtifactStatModifiers.Add(new StatModifier(artifact.mainStat.statType, artifact.mainStat.value));
-
+ 
             if (artifact.subStats != null)
             {
                 for (int s = 0; s < artifact.subStats.Count; s++)
@@ -280,55 +360,72 @@ public abstract class Unit : MonoBehaviour
                 }
             }
         }
-
+ 
         // 2) Set bonuses (stats + passives)
         if (setCatalog == null)
             return;
-
+ 
         var setCounts = new Dictionary<string, int>();
         for (int i = 0; i < equippedArtifactData.Count; i++)
         {
             var artifact = equippedArtifactData[i];
             if (artifact == null || string.IsNullOrWhiteSpace(artifact.artifactSetId))
                 continue;
-
+ 
             if (!setCounts.ContainsKey(artifact.artifactSetId))
                 setCounts[artifact.artifactSetId] = 0;
             setCounts[artifact.artifactSetId]++;
         }
-
+ 
         foreach (var kvp in setCounts)
         {
             var set = setCatalog.GetSetById(kvp.Key);
             if (set == null) continue;
-
+ 
             int piecesEquipped = kvp.Value;
             foreach (var bonus in set.setBonuses)
             {
                 if (piecesEquipped < bonus.piecesRequired)
                     continue;
-
+ 
                 if (bonus.statBonuses != null)
                     cachedArtifactStatModifiers.AddRange(bonus.statBonuses);
-
+ 
                 if (bonus.passiveAbility != null && !cachedArtifactSetPassives.Contains(bonus.passiveAbility))
                     cachedArtifactSetPassives.Add(bonus.passiveAbility);
+
+                if (bonus.passiveGraph != null && !cachedArtifactSetPassiveGraphs.Contains(bonus.passiveGraph))
+                    cachedArtifactSetPassiveGraphs.Add(bonus.passiveGraph);
             }
         }
     }
-
+ 
     private void ApplyArtifactSetPassives()
     {
-        if (PassiveManager == null || cachedArtifactSetPassives == null)
+        if (PassiveManager == null)
             return;
-
-        for (int i = 0; i < cachedArtifactSetPassives.Count; i++)
+ 
+        if (cachedArtifactSetPassives != null)
         {
-            var passive = cachedArtifactSetPassives[i];
-            if (passive == null) continue;
+            for (int i = 0; i < cachedArtifactSetPassives.Count; i++)
+            {
+                var passive = cachedArtifactSetPassives[i];
+                if (passive == null) continue;
+ 
+                // A duração/persistência é controlada dentro do próprio AbilityBlueprint.
+                PassiveManager.ApplyCondition(passive, this);
+            }
+        }
 
-            // A duração/persistência é controlada dentro do próprio AbilityBlueprint.
-            PassiveManager.ApplyCondition(passive, this);
+        if (cachedArtifactSetPassiveGraphs != null)
+        {
+            for (int i = 0; i < cachedArtifactSetPassiveGraphs.Count; i++)
+            {
+                var passiveGraph = cachedArtifactSetPassiveGraphs[i];
+                if (passiveGraph == null) continue;
+ 
+                PassiveManager.ApplyGraphCondition(passiveGraph, this);
+            }
         }
     }
  
@@ -380,6 +477,9 @@ public abstract class Unit : MonoBehaviour
 
     public AttackResult CalculateAttack(Unit target)
     {
+        if (CelestialCross.Tutorial.TutorialMockCombat.ShouldMock)
+            return CelestialCross.Tutorial.TutorialMockCombat.GetMockedResult();
+
         if (target == null) return new AttackResult(Stats.attack, false);
         return DamageModel.ResolveHit(Stats, target.Stats);
     }

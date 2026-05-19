@@ -39,17 +39,16 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                 Destroy(gameObject);
             }
         }
-
         public IEnumerator ExecuteGraphCoroutine(Unit caster, AbilityGraphSO graph, CombatHook hook, Action onComplete, int level = 1)
         {
-            Debug.Log($"<color=cyan>[Interpreter]</color> Iniciando grafo: {graph.name} com {graph.NodeData.Count} nós.");
-
             if (graph == null || graph.NodeData.Count == 0)
             {
-                Debug.LogWarning("[Interpreter] O grafo está vazio ou nulo!");
                 onComplete?.Invoke();
                 yield break;
             }
+
+            string hookInfo = (hook == CombatHook.OnManualCast) ? "Ativa" : $"Gatilho: {hook}";
+            CombatLogger.Log($"<color=#a29bfe>[Graph]</color> Iniciando <b>{graph.name}</b> ({hookInfo}) para {caster?.DisplayName}", LogCategory.Graph);
 
             var context = new CombatContext(caster);
             context.abilityLevel = level;
@@ -132,7 +131,13 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
 
         private IEnumerator ProcessNode(AbilityGraphSO graph, AbilityNodeData node, CombatContext context, CombatHook currentHook, Action<string> onResultPort)
         {
+            // Log de execução de nó
+            // CombatLogger.Log($"  > Executando: {node.NodeType}", LogCategory.Graph);
+
             string resultPort = "Out";
+
+            // Tenta disparar a animação do pet se o nó for um efeito ou algo "produtivo" (não condicional)
+            CheckAndTriggerPetAnimation(graph, node, context);
 
             switch (node.NodeType)
             {
@@ -194,6 +199,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                             }
                         }
                         resultPort = allTrue ? "True" : "False";
+                        CombatLogger.Log($"  <color=#ffd700>[Lógica]</color> Fluxo Condicional: <b>{resultPort}</b> (Todas as condições {(allTrue ? "cumpridas" : "não cumpridas")})", LogCategory.Condition);
                     }
                     break;
 
@@ -201,12 +207,14 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                     var attrCond = JsonUtility.FromJson<AttributeConditionNodeData>(node.JsonData);
                     bool attrResult = EvaluateAttributeCondition(attrCond, context);
                     resultPort = attrResult ? "True" : "False";
+                    CombatLogger.Log($"  <color=#ffd700>[Condição]</color> Atributo {attrCond.attribute}: <b>{resultPort}</b>", LogCategory.Condition);
                     break;
 
                 case "DistanceConditionNode":
                     var distCond = JsonUtility.FromJson<DistanceConditionNodeData>(node.JsonData);
                     bool distResult = EvaluateDistanceCondition(distCond, context);
                     resultPort = distResult ? "True" : "False";
+                    CombatLogger.Log($"  <color=#ffd700>[Condição]</color> Distância ({distCond.checkType} {distCond.distanceValue}): <b>{resultPort}</b>", LogCategory.Condition);
                     break;
 
                 case "RangeConditionNode":
@@ -219,6 +227,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                     var factionCond = JsonUtility.FromJson<FactionConditionNodeData>(node.JsonData);
                     bool factionResult = EvaluateFactionCondition(factionCond, context);
                     resultPort = factionResult ? "True" : "False";
+                    CombatLogger.Log($"  <color=#ffd700>[Condição]</color> Facção ({factionCond.faction}): <b>{resultPort}</b>", LogCategory.Condition);
                     break;
 
                 case "SpeedAdvantageConditionNode":
@@ -286,6 +295,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
 
                 case "LevelBranchNode":
                     resultPort = $"Level {context.abilityLevel}";
+                    CombatLogger.Log($"  <color=#a29bfe>[Fluxo]</color> Ramificação de Nível: Seguir porta <b>{resultPort}</b>", LogCategory.Graph);
                     break;
 
                 case "StatModifierEffectNode":
@@ -380,6 +390,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                 int finalAmount = Mathf.FloorToInt(baseVal * multiplier);
                 stepContext.amount = finalAmount;
 
+                CombatLogger.Log($"  <color=#ff4d4d>[Dano]</color> Causando <b>{finalAmount}</b> de dano em <b>{target.DisplayName}</b>", LogCategory.Damage);
                 DamageProcessor.ProcessAndApplyDamage(stepContext, true);
             }
         }
@@ -406,6 +417,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                 int finalAmount = Mathf.FloorToInt(baseVal * multiplier);
                 
                 var stepContext = new CombatContext(context.source, target, finalAmount);
+                CombatLogger.Log($"  <color=#4dff88>[Cura]</color> Curando <b>{finalAmount}</b> de HP em <b>{target.DisplayName}</b>", LogCategory.Healing);
                 DamageProcessor.ProcessAndApplyHeal(stepContext, data.canCrit);
             }
         }
@@ -503,7 +515,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                     if (targetTile != null) { targetTile.IsOccupied = true; targetTile.OccupyingUnit = subject; }
                 }
 
-                Debug.Log($"[Interpreter] {subject.name} movido para {destination}");
+                CombatLogger.Log($"  <color=#55ffff>[Movimento]</color> <b>{subject.DisplayName}</b> movido para {destination}", LogCategory.Ability);
             }
             yield return new WaitForSeconds(0.1f);
         }
@@ -526,7 +538,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
 
             // TODO: Implementar campos de Mana e Stamina no CombatStats ou Unit de forma definitiva
             // Por enquanto simulamos a dedução se os campos existirem futuramente
-            Debug.Log($"[Interpreter] Custo aplicado: {mana} Mana, {stamina} Stamina");
+            CombatLogger.Log($"  <color=#55ffff>[Custo]</color> Consumido: {mana} Mana, {stamina} Stamina", LogCategory.Ability);
         }
 
         private void ExecuteStatModifier(StatModifierNodeData data, AbilityNodeData node, AbilityGraphSO graph, CombatContext context)
@@ -537,39 +549,95 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                 var passiveManager = target.GetComponent<PassiveManager>();
                 if (passiveManager == null) continue;
 
-                // We dynamically create a wrapper Blueprint to hold graph's modifier logic
+                // Criar um nome estável para o Blueprint baseado no Grafo e no Nó
+                // Isso permite que o PassiveManager identifique bônus repetidos
+                string stableName = $"GraphBuff_{graph.name}_{node.Guid.Substring(0, 4)}";
+                
                 var dynamicBlueprint = ScriptableObject.CreateInstance<AbilityBlueprint>();
-                dynamicBlueprint.name = "GraphBuff_" + (string.IsNullOrEmpty(data.variableReference) ? Guid.NewGuid().ToString().Substring(0,4) : data.variableReference);
+                dynamicBlueprint.name = stableName;
                 dynamicBlueprint.isPersistentCondition = false;
                 dynamicBlueprint.durationInTurns = 1; // Default duration, maybe Graph supplies DurationPort later
                 dynamicBlueprint.canStack = data.canStack;
                 dynamicBlueprint.maxStacks = data.maxStacks;
                 
-                // Add flat stat modifier to blueprint
-                var mod = new Celestial_Cross.Scripts.Abilities.PassiveEffect_ConditionalStatBonus() 
-                {
-                    triggerHook = data.isBuff ? CombatHook.OnRoundStart : CombatHook.OnTurnStart, // Simplification
-                    statBonus = new CombatStats()
-                };
+                // O multiplicador global foi removido. Cada bônus agora é independente.
                 
-                float multiplier = 1f;
-                if (!string.IsNullOrEmpty(data.variableReference))
-                    multiplier = GetVariable(context, data.variableReference, 1f);
-                
-                // Exemplo simplificado para conversão
+                // Separar modificadores Flat e Percent
+                var flatBonus = new CombatStats();
+                var percentModifiers = new System.Collections.Generic.List<Celestial_Cross.Scripts.Abilities.PassiveEffect_PercentStatBonus.PercentStatModifier>();
+
                 foreach(var stat in data.stats)
                 {
-                    // Mapeia os índices de StatType para CombatStats
-                    if (stat.statIndex == 1) // Supondo AttackFlat
-                        mod.statBonus.attack = (int)(stat.value * multiplier);
-                    if (stat.statIndex == 3) // Supondo DefenseFlat
-                        mod.statBonus.defense = (int)(stat.value * multiplier);
+                    // Converter nome do StatType string para enum
+                    CelestialCross.Artifacts.StatType statType = CelestialCross.Artifacts.StatType.AttackFlat;
+                    if (!string.IsNullOrEmpty(stat.statTypeName))
+                    {
+                        System.Enum.TryParse<CelestialCross.Artifacts.StatType>(stat.statTypeName, out statType);
+                    }
+
+                    float baseVal = stat.value;
+                    if (stat.valueMode == ModifierValueMode.Variable && !string.IsNullOrEmpty(stat.valueVariable))
+                    {
+                        baseVal = GetVariable(context, stat.valueVariable, stat.value);
+                    }
+
+                    float modifiedValue = baseVal; // Não há mais multiplicador global
+
+                    // Processar modificadores Flat
+                    if (statType == CelestialCross.Artifacts.StatType.AttackFlat)
+                    {
+                        flatBonus.attack = (int)modifiedValue;
+                    }
+                    else if (statType == CelestialCross.Artifacts.StatType.DefenseFlat)
+                    {
+                        flatBonus.defense = (int)modifiedValue;
+                    }
+                    else if (statType == CelestialCross.Artifacts.StatType.HealthFlat)
+                    {
+                        flatBonus.health = (int)modifiedValue;
+                    }
+                    else if (statType == CelestialCross.Artifacts.StatType.CriticalRate)
+                    {
+                        flatBonus.criticalChance = (int)modifiedValue;
+                    }
+                    // Processar modificadores Percent
+                    else if (statType == CelestialCross.Artifacts.StatType.AttackPercent 
+                        || statType == CelestialCross.Artifacts.StatType.DefensePercent
+                        || statType == CelestialCross.Artifacts.StatType.HealthPercent
+                        || statType == CelestialCross.Artifacts.StatType.CriticalDamage
+                        || statType == CelestialCross.Artifacts.StatType.EffectResistance
+                        || statType == CelestialCross.Artifacts.StatType.EffectHitRate
+                        || statType == CelestialCross.Artifacts.StatType.Speed)
+                    {
+                        percentModifiers.Add(new Celestial_Cross.Scripts.Abilities.PassiveEffect_PercentStatBonus.PercentStatModifier
+                        {
+                            statType = statType,
+                            percentBonus = modifiedValue
+                        });
+                    }
                 }
 
-                dynamicBlueprint.modifiers.Add(mod);
+                // Adicionar modificador de bônus plano se houver valores
+                if (flatBonus.attack > 0 || flatBonus.defense > 0 || flatBonus.health > 1 || flatBonus.criticalChance > 0)
+                {
+                    var flatMod = new Celestial_Cross.Scripts.Abilities.PassiveEffect_ConditionalStatBonus()
+                    {
+                        triggerHook = data.isBuff ? CombatHook.OnRoundStart : CombatHook.OnTurnStart,
+                        statBonus = flatBonus
+                    };
+                    dynamicBlueprint.modifiers.Add(flatMod);
+                }
 
-                // NOTE: Proper dynamic insertion of stat mods requires a specific Modifier class implementations
-                // For now, the user wants the stack fields configured. We use ApplyCondition with stacking logic!
+                // Adicionar modificador de bônus percentual se houver
+                if (percentModifiers.Count > 0)
+                {
+                    var percentMod = new Celestial_Cross.Scripts.Abilities.PassiveEffect_PercentStatBonus()
+                    {
+                        triggerHook = data.isBuff ? CombatHook.OnRoundStart : CombatHook.OnTurnStart,
+                        modifiers = percentModifiers
+                    };
+                    dynamicBlueprint.modifiers.Add(percentMod);
+                }
 
                 // BUSCAR DURAÇÃO DO DURATION NODE (se conectado)
                 var durationLink = graph.NodeLinks.FirstOrDefault(l => l.TargetNodeGuid == node.Guid && l.TargetPortName == "Duration");
@@ -585,6 +653,15 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                 }
 
                 passiveManager.ApplyCondition(dynamicBlueprint, context.source);
+
+                // Construir log detalhado dos bônus
+                string details = "";
+                if (flatBonus.attack != 0) details += $"ATK+{flatBonus.attack} ";
+                if (flatBonus.defense != 0) details += $"DEF+{flatBonus.defense} ";
+                if (flatBonus.health > 1) details += $"HP+{flatBonus.health} ";
+                foreach(var p in percentModifiers) details += $"{p.statType}+{p.percentBonus}% ";
+
+                CombatLogger.Log($"  <color=#a29bfe>[Status]</color> Bônus aplicado em <b>{target.DisplayName}</b>: <color=#4dff88>{details}</color> ({dynamicBlueprint.durationInTurns} turnos)", LogCategory.Graph);
             }
         }
 
@@ -608,7 +685,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                 {
                     passiveManager.ApplyGraphCondition(conditionGraph, context.source);
                 }
-                Debug.Log($"[Interpreter] Condição '{conditionGraph.name}' aplicada em {target.name} ({data.stacks} stack(s)).");
+                CombatLogger.Log($"  <color=#a29bfe>[Status]</color> Condição <b>{conditionGraph.name}</b> aplicada em <b>{target.DisplayName}</b> ({data.stacks} stacks)", LogCategory.Graph);
             }
         }
 
@@ -648,14 +725,29 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
         private bool EvaluateDistanceCondition(DistanceConditionNodeData data, CombatContext context)
         {
             if (context.targets.Count == 0) return false;
-            int dist = Mathf.Max(Mathf.Abs(context.source.GridPosition.x - context.targets[0].GridPosition.x), 
-                                Mathf.Abs(context.source.GridPosition.y - context.targets[0].GridPosition.y));
+            
+            Unit target = context.targets[0];
+            
+            // Verificação de Facção (se habilitada no nó)
+            if (data.checkFaction)
+            {
+                bool factionMatch = data.faction switch
+                {
+                    FactionTarget.Ally => target.Team == context.source.Team,
+                    FactionTarget.Enemy => target.Team != context.source.Team,
+                    _ => true
+                };
+                if (!factionMatch) return false;
+            }
+
+            int dist = Mathf.Max(Mathf.Abs(context.source.GridPosition.x - target.GridPosition.x), 
+                                Mathf.Abs(context.source.GridPosition.y - target.GridPosition.y));
 
             return data.checkType switch
             {
-                DistanceCondition.DistanceType.Min => dist >= data.distance,
-                DistanceCondition.DistanceType.Max => dist <= data.distance,
-                DistanceCondition.DistanceType.Exact => dist == data.distance,
+                DistanceCondition.DistanceType.Min => dist >= data.distanceValue,
+                DistanceCondition.DistanceType.Max => dist <= data.distanceValue,
+                DistanceCondition.DistanceType.Exact => dist == data.distanceValue,
                 _ => false
             };
         }
@@ -770,6 +862,32 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                 case VariableModifierNodeData.Operation.Multiply: context.Variables[varName] *= value; break;
             }
             Debug.Log($"[Interpreter] Variável '{varName}' atualizada para {context.Variables[varName]} (Op: {op})");
+        }
+
+        #endregion
+
+        #region Pet Animation Helpers
+
+        private void CheckAndTriggerPetAnimation(AbilityGraphSO graph, AbilityNodeData node, CombatContext context)
+        {
+            if (context.hasTriggeredPetAnimation || context.source == null || context.source.petVisual == null) return;
+            if (context.source.petSpeciesData == null || context.source.petSpeciesData.AbilityGraphs == null) return;
+
+            // Só dispara se o grafo pertencer ao pet
+            if (!context.source.petSpeciesData.AbilityGraphs.Contains(graph)) return;
+
+            // Lista de nós que "confirmam" que a habilidade foi ativada (efeitos, vfx, etc)
+            string[] triggerNodes = { 
+                "DamageEffectNode", "HealEffectNode", "MoveEffectNode", "VfxNode", 
+                "StatModifierEffectNode", "ApplyModifierNode", "CleanseStatusNode", "CostNode" 
+            };
+
+            if (triggerNodes.Contains(node.NodeType))
+            {
+                context.hasTriggeredPetAnimation = true;
+                context.source.petVisual.PlaySkill();
+                Debug.Log($"[Interpreter] Pet Animation Triggered for {context.source.DisplayName} by node {node.NodeType}");
+            }
         }
 
         #endregion

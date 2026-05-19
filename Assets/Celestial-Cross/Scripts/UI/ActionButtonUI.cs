@@ -160,6 +160,7 @@ public class ActionButtonUI : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     {
         if (modalShown || !isClickable) return;
 
+        CelestialCross.Tutorial.TutorialManager.Instance?.NotifyActionSelected(actionIndex);
         PlayerController.Instance.SelectAction(actionIndex);
     }
 }

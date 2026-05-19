@@ -78,8 +78,8 @@ namespace CelestialCross.Gacha.UI
             var acc = AccountManager.Instance.PlayerAccount;
             acc.EnsureInitialized();
 
-            if (starMapsText != null) starMapsText.text = $"Mapas: {acc.StarMaps}";
-            if (stardustText != null) stardustText.text = $"Poeira: {acc.Stardust}";
+            if (starMapsText != null) starMapsText.text = $"{acc.StarMaps}";
+            if (stardustText != null) stardustText.text = $"{acc.Stardust}";
             if (moneyText != null) moneyText.text = $"Dinheiro: {acc.Money}";
 
             if (contentBanners != null && contentBanners.activeSelf && availableBanners != null && availableBanners.Count > 0)
@@ -91,7 +91,7 @@ namespace CelestialCross.Gacha.UI
                 if (bannerSplashArt != null) bannerSplashArt.sprite = banner.BannerSplashArt;
                 
                 if (bannerCostInfo != null) 
-                    bannerCostInfo.text = $"Custo Base: {banner.CostPerPull} Mapas/Tiro\nPulls até Supremo Garantido: {banner.HardPityThreshold - pity.PullsSinceLastSupreme}";
+                    bannerCostInfo.text = $"{banner.HardPityThreshold - pity.PullsSinceLastSupreme}";
                 
                 if (pityInfoText != null)
                 {
@@ -124,7 +124,7 @@ namespace CelestialCross.Gacha.UI
 
                 if (animationController != null)
                 {
-                    animationController.PlayGachaSequence(results, () => OnAnimationFinished(results));
+                    animationController.PlayGachaSequence(results, banner.pullVisualConfig, () => OnAnimationFinished(results));
                 }
                 else
                 {

@@ -178,9 +178,17 @@ public class GridMap : MonoBehaviour
 
     public Vector2Int GetMouseGridPosition()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hit))
+        Ray ray;
+        if (RenderTextureInputManager.Instance != null)
         {
+            if (!RenderTextureInputManager.Instance.TryGetRay(Input.mousePosition, out ray))
+                return new Vector2Int(-1, -1);
+        }
+        else
+            ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        if (Physics.Raycast(ray, out RaycastHit hit))
+    {
             GridTile tile = hit.collider.GetComponent<GridTile>();
             if (tile == null)
             {
@@ -301,13 +309,24 @@ public class GridMap : MonoBehaviour
         if (spawnUnitsFromPhaseMap) GenerateUnits();
         SyncCameraBounds();
 
-        Debug.Log($"[GridMap] Grid lógico reconstruído. Tiles: {tiles.Count}");
+        string phaseMapName = phaseMap != null ? phaseMap.name : "null";
+        Debug.Log($"[GridMap] Grid lógico reconstruído. Tiles: {tiles.Count}, spawnUnitsFromPhaseMap={spawnUnitsFromPhaseMap}, phaseMap={phaseMapName}");
     }
 
     void SyncCameraBounds()
     {
         CameraBounds bounds = Object.FindFirstObjectByType<CameraBounds>();
-        if (bounds == null || tiles.Count == 0) return;
+        if (bounds == null)
+        {
+            Debug.LogWarning($"[GridMap] SyncCameraBounds abortado: CameraBounds não encontrado. Tiles atuais: {tiles.Count}");
+            return;
+        }
+
+        if (tiles.Count == 0)
+        {
+            Debug.LogWarning("[GridMap] SyncCameraBounds abortado: nenhum tile disponível para gerar bounds.");
+            return;
+        }
 
         var first = tiles.Keys.First();
         int minX = first.x, minY = first.y, maxX = first.x, maxY = first.y;
@@ -324,11 +343,22 @@ public class GridMap : MonoBehaviour
             bounds.bottomLeft.position = new Vector3(minX * tileSize, 0, minY * tileSize);
         if (bounds.topRight != null)
             bounds.topRight.position = new Vector3(maxX * tileSize, 0, maxY * tileSize);
+
+        string bottomLeftText = bounds.bottomLeft != null ? bounds.bottomLeft.position.ToString() : "null";
+        string topRightText = bounds.topRight != null ? bounds.topRight.position.ToString() : "null";
+        Debug.Log($"[GridMap] CameraBounds sincronizado. bottomLeft={bottomLeftText}, topRight={topRightText}, tileSize={tileSize}");
     }
 
     void GenerateTiles()
     {
-        if (phaseMap == null) return;
+        if (phaseMap == null)
+        {
+            Debug.LogError("[GridMap] GenerateTiles abortado: phaseMap é null.");
+            return;
+        }
+
+        int generatedCount = 0;
+        int skippedNoDefinition = 0;
 
         for (int y = 0; y < phaseMap.tiles.Count; y++)
         {
@@ -372,8 +402,27 @@ public class GridMap : MonoBehaviour
                 }
 
                 tiles.Add(gridPos, tile);
+                generatedCount++;
+                if (generatedCount <= 5)
+                {
+                    Debug.Log($"[GridMap] Tile base gerado: pos={gridPos}, prefab='{def.prefab.name}', world={worldPos}");
+                }
             }
         }
+
+        for (int y = 0; y < phaseMap.tiles.Count; y++)
+        {
+            for (int x = 0; x < phaseMap.tiles[y].columns.Count; x++)
+            {
+                int id = phaseMap.tiles[y].columns[x];
+                if (tileDefinitions.Find(t => t.id == id) == null)
+                {
+                    skippedNoDefinition++;
+                }
+            }
+        }
+
+        Debug.Log($"[GridMap] GenerateTiles concluído. phaseMap={phaseMap.width}x{phaseMap.height}, tilesGerados={generatedCount}, tilesSemDefinition={skippedNoDefinition}.");
     }
 
     void GenerateUnits()

@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CelestialCross.Gacha.GachaBannerSO
   BannerID: 1
   BannerName: Liedel
-  BannerSplashArt: {fileID: 21300000, guid: 171580878dc9f9043ac9929348b8e850, type: 3}
+  BannerSplashArt: {fileID: 21300000, guid: d77c02701f7b9ac4cad3af9eb1fa1c23, type: 3}
   CostPerPull: 1
+  pullVisualConfig: {fileID: 11400000, guid: db3860f4120b12c4fb3da57cffbe7cbd, type: 2}
   SoftPityThreshold: 70
   HardPityThreshold: 90
   GuaranteedAboveBaseEvery: 10
@@ -42,10 +43,10 @@ MonoBehaviour:
   - RewardType: 1
     Rarity: 0
     UnitData: {fileID: 0}
-    PetSpeciesData: {fileID: 11400000, guid: ca3587875a7b1d64bbb5e2585641ebca, type: 2}
+    PetSpeciesData: {fileID: 11400000, guid: e7c0d4a01fadfda4ca0492984cd33e00, type: 2}
     ArtifactSet: {fileID: 0}
     Weight: 1
-    ItemStars: 3
+    ItemStars: 4
     ArtifactRarity: 0
   - RewardType: 2
     Rarity: 3

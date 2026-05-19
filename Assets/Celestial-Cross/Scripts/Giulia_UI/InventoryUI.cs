@@ -1072,6 +1072,7 @@ private void PopulateTab(int tabIndex)
             {
                 if (speciesData.PassiveSkills != null) foreach (var ab in speciesData.PassiveSkills) if (ab != null) { details += $"<color=#ffffaa>{ab.abilityName}</color>\n<size=16>{ab.abilityDescription}</size>\n"; }
                 if (speciesData.ActiveSkills != null) foreach (var ab in speciesData.ActiveSkills) if (ab != null) { details += $"<color=#ffffaa>{ab.abilityName}</color>\n<size=16>{ab.abilityDescription}</size>\n"; }
+                if (speciesData.AbilityGraphs != null) foreach (var graph in speciesData.AbilityGraphs) if (graph != null) { details += $"<color=#aaffaa>{(string.IsNullOrEmpty(graph.abilityName) ? graph.name : graph.abilityName)}</color>\n<size=16>{graph.abilityDescription}</size>\n"; }
             }
             else
             {
@@ -1250,13 +1251,51 @@ private void PopulateTab(int tabIndex)
     }
     // ----------------------------
 
-    private static string FormatArtifactDetails(CelestialCross.Artifacts.ArtifactInstanceData a)
+    private string FormatArtifactDetails(CelestialCross.Artifacts.ArtifactInstanceData a)
     {
-        if (a == null) return "Artefato invÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡lido.";
-
+        if (a == null) return "Artefato inválido.";
+ 
         string setLabel = string.IsNullOrWhiteSpace(a.artifactSetId) ? "<sem set>" : a.artifactSetId;
+        string setBonusesDescription = "";
+ 
+        if (artifactSetCatalog != null && !string.IsNullOrEmpty(a.artifactSetId))
+        {
+            var set = artifactSetCatalog.GetSetById(a.artifactSetId);
+            if (set != null)
+            {
+                setLabel = set.setName;
+                setBonusesDescription = $"\n\n<b>Efeitos do Conjunto ({set.setName}):</b>\n";
+                foreach (var bonus in set.setBonuses)
+                {
+                    setBonusesDescription += $"- <color=#ffb>{bonus.piecesRequired} Peças:</color> ";
+                    List<string> bonusesList = new List<string>();
+                    if (bonus.statBonuses != null)
+                    {
+                        foreach (var stat in bonus.statBonuses)
+                        {
+                            bonusesList.Add(UIStatFormatter.FormatStat(stat));
+                        }
+                    }
+                    if (bonus.passiveAbility != null)
+                    {
+                        bonusesList.Add($"Passiva: <color=#ffffaa>{bonus.passiveAbility.abilityName}</color>");
+                    }
+                    if (bonus.passiveGraph != null)
+                    {
+                        bonusesList.Add($"Passiva: <color=#aaffaa>{(string.IsNullOrEmpty(bonus.passiveGraph.abilityName) ? bonus.passiveGraph.name : bonus.passiveGraph.abilityName)}</color>");
+                    }
+ 
+                    if (bonusesList.Count > 0)
+                        setBonusesDescription += string.Join(", ", bonusesList);
+                    else
+                        setBonusesDescription += "Nenhum";
+                    setBonusesDescription += "\n";
+                }
+            }
+        }
+ 
         string main = a.mainStat != null ? UIStatFormatter.FormatStat(a.mainStat) : "<mainStat null>";
-
+ 
         string sub = "(nenhum)";
         if (a.subStats != null && a.subStats.Count > 0)
         {
@@ -1269,7 +1308,7 @@ private void PopulateTab(int tabIndex)
             }
             sub = sub.TrimEnd();
         }
-
+ 
         return
             $"Artefato\n" +
             $"Slot: {a.slot}\n" +

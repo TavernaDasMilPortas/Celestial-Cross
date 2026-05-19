@@ -35,9 +35,15 @@ public class PlayerController : MonoBehaviour
             activeUnit.SelectAction(index);
     }
 
+    private Vector2 _pointerDownPos;
+    private const float DRAG_THRESHOLD = 40f;
+
     void Update()
     {
         if (activeUnit == null)
+            return;
+
+        if (CelestialCross.Tutorial.TutorialManager.Instance != null && CelestialCross.Tutorial.TutorialManager.Instance.IsActive)
             return;
 
         // Seleção de ações (teclas numéricas)
@@ -45,8 +51,34 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha1)) activeUnit.SelectAction(1);
         if (Input.GetKeyDown(KeyCode.Alpha2)) activeUnit.SelectAction(2);
 
-        // Em dispositivos mobile, só atualizamos o alvo ao ocorrer um toque/clique
-        if (Input.GetMouseButtonDown(0) || Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
+        bool isClick = false;
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            _pointerDownPos = Input.mousePosition;
+        }
+        else if (Input.GetMouseButtonUp(0))
+        {
+            if (Vector2.Distance(_pointerDownPos, Input.mousePosition) < DRAG_THRESHOLD)
+                isClick = true;
+        }
+
+        if (Input.touchCount > 0)
+        {
+            Touch t = Input.GetTouch(0);
+            if (t.phase == TouchPhase.Began)
+            {
+                _pointerDownPos = t.position;
+                isClick = false;
+            }
+            else if (t.phase == TouchPhase.Ended)
+            {
+                if (Vector2.Distance(_pointerDownPos, t.position) < DRAG_THRESHOLD)
+                    isClick = true;
+            }
+        }
+
+        if (isClick)
         {
             UpdateTargeting();
         }
@@ -131,5 +163,24 @@ public class PlayerController : MonoBehaviour
         activeUnit = null;
         FindObjectOfType<ActionBarUI>()?.ClearButtons();
         TurnManager.Instance.EndTurn();
+    }
+
+    // ==========================================
+    // TUTORIAL HELPERS
+    // ==========================================
+
+    public void TutorialForceSelectAction(int index)
+    {
+        if (activeUnit != null) activeUnit.SelectAction(index);
+    }
+
+    public void TutorialForceTargetTile(Vector2Int gridPos)
+    {
+        if (activeUnit != null && activeUnit.CurrentAction != null)
+        {
+            activeUnit.CurrentAction.Target = gridPos;
+            // Notifica o tutorial se estiver esperando por isso
+            CelestialCross.Tutorial.TutorialManager.Instance?.NotifyTargetConfirmed();
+        }
     }
 }

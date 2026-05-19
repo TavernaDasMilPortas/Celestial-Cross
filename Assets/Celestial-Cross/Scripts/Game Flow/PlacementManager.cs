@@ -15,6 +15,7 @@ public class PlacementManager : MonoBehaviour
 
     [Header("UI")]
     [SerializeField] private ActionBarUI placementActionBar;
+    [SerializeField] private SwipeDetector swipeDetector;
 
     private UnitData selectedUnitToPlace;
     private Dictionary<UnitData, Unit> placedUnitsDict = new Dictionary<UnitData, Unit>();
@@ -33,6 +34,9 @@ public class PlacementManager : MonoBehaviour
         {
             Instance = this;
         }
+
+        if (swipeDetector == null)
+            swipeDetector = FindFirstObjectByType<SwipeDetector>();
         
 #if UNITY_EDITOR
         if (petCatalog == null)
@@ -56,6 +60,8 @@ public class PlacementManager : MonoBehaviour
     {
         var spawnTiles = GridMap.Instance.GetAllTiles().Where(t => t.IsPlayerSpawnZone).Select(t => t.GridPosition).ToList();
         GridMap.Instance.HighlightArea(spawnTiles);
+
+        Debug.Log($"[PlacementManager] Spawn zones destacadas. Total={spawnTiles.Count}. A câmera não será enquadrada nesses tiles.");
     }
 
     private void Update()
@@ -120,20 +126,67 @@ public class PlacementManager : MonoBehaviour
         Debug.Log($"Selected '{unitData.displayName}' for placement.");
     }
 
+    private Vector2 pointerDownPos;
+    private bool pointerDownValid;
+
+    // Increase threshold to prevent small jitters during drag from counting as clicks
+    private float dragThreshold = 40f;
+
     private void HandlePlacementInput()
     {
-        bool inputDetected = false;
+        if (swipeDetector != null && (swipeDetector.IsSwipeInProgress || swipeDetector.WasSwipeConsumed))
+        {
+            Debug.Log("[PlacementManager] Input de placement ignorado porque um swipe está em andamento ou acabou de ser consumido.");
+            return;
+        }
 
+        bool isClick = false;
+
+        // Mouse click detection (with threshold for drag)
         if (Input.GetMouseButtonDown(0))
         {
-            inputDetected = true;
+            pointerDownValid = RenderTextureInputManager.Instance == null || RenderTextureInputManager.Instance.IsScreenPointOverExclusiveRenderTarget(Input.mousePosition);
+            pointerDownPos = Input.mousePosition;
         }
-        else if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
+        else if (Input.GetMouseButtonUp(0))
         {
-            inputDetected = true;
+            if (pointerDownValid && Vector2.Distance(pointerDownPos, Input.mousePosition) < dragThreshold)
+            {
+                isClick = true;
+            }
+
+            pointerDownValid = false;
         }
 
-        if (!inputDetected) return;
+        // Touch click detection
+        if (Input.touchCount > 0)
+        {
+            Touch touch = Input.GetTouch(0);
+            if (touch.phase == TouchPhase.Began)
+            {
+                pointerDownValid = RenderTextureInputManager.Instance == null || RenderTextureInputManager.Instance.IsScreenPointOverExclusiveRenderTarget(touch.position);
+                pointerDownPos = touch.position;
+                isClick = false; // Reset mouse click if touch is active to prevent double trigger
+            }
+            else if (touch.phase == TouchPhase.Ended)
+            {
+                if (pointerDownValid && Vector2.Distance(pointerDownPos, touch.position) < dragThreshold)
+                {
+                    isClick = true;
+                }
+
+                pointerDownValid = false;
+            }
+        }
+
+        // If the user was dragging the camera, we should ignore the click
+        if (CameraController.Instance != null && CameraController.Instance.cameraMode == CameraController.CameraMode.Free)
+        {
+            // Extra safety: you can't click to place if you dragged enough to trigger free mode
+            // unless distance is very tight. Let's just rely on the distance limit.
+        }
+
+        if (!isClick) return;
 
         Vector2Int gridPos = GridMap.Instance.GetMouseGridPosition();
         if (gridPos.x != -1 && gridPos.y != -1)
@@ -242,6 +295,8 @@ public class PlacementManager : MonoBehaviour
         
         Debug.Log($"Unit '{unitData.displayName}' placement confirmed.");
         
+        CelestialCross.Tutorial.TutorialManager.Instance?.NotifyUnitPlaced(unitData);
+
         // 2- Se todas as unidades estão no mapa e QUALQUER uma for confirmada, inicia.
         // Ou se já confirmamos o número total necessário de unidades.
         if (confirmedUnits.Count >= totalUnitsToPlace || placedUnitsDict.Count >= totalUnitsToPlace)

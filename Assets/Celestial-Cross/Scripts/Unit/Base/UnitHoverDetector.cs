@@ -15,13 +15,13 @@ public class UnitHoverDetector : MonoBehaviour
         outline = GetComponent<UnitOutlineController>();
     }
 
-    void OnMouseEnter()
+    public void ManualMouseEnter()
     {
         outline?.SetHover(true);
         ForceHover(unit);
     }
 
-    void OnMouseExit()
+    public void ManualMouseExit()
     {
         outline?.SetHover(false);
         ForceHoverEnd(unit);

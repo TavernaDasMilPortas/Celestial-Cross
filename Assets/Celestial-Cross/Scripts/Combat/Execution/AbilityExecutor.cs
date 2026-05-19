@@ -46,15 +46,20 @@ namespace Celestial_Cross.Scripts.Combat.Execution
                 StopCoroutine(activeAbilityRoutine);
                 activeAbilityRoutine = null;
                 
-                // Limpa seletores residuais
-                foreach (var selector in GetComponents<TargetSelector>())
+                // Limpa seletores residuais em QUALQUER objeto (anteriormente s buscava no singleton)
+                var allSelectors = FindObjectsByType<TargetSelector>(FindObjectsSortMode.None);
+                foreach (var selector in allSelectors)
                 {
                     Destroy(selector);
                 }
                 
                 GridMap.Instance?.ResetAllTileVisuals();
                 OnTargetPreviewChanged?.Invoke(null, new List<Unit>());
-                CombatLogger.Log("Habilidade anterior abortada para iniciar nova ao.", LogCategory.System);
+                
+                // Reset camera focus if it was locked to an action
+                CameraController.Instance?.ResetFocus();
+
+                CombatLogger.Log("Habilidade anterior abortada para iniciar nova ação.", LogCategory.System);
             }
         }
 
@@ -91,6 +96,12 @@ namespace Celestial_Cross.Scripts.Combat.Execution
             {
                 Debug.LogError("[AbilityExecutor] AbilityGraphInterpreter não encontrado!");
                 onComplete?.Invoke();
+            }
+
+            // Ao fim da ação, focar novamente no caster se o turno dele não acabou
+            if (caster != null && (caster.hasActedThisTurn == false || caster.hasMovedThisTurn == false))
+            {
+                CameraController.Instance?.Follow(caster);
             }
         }
 
@@ -247,6 +258,13 @@ namespace Celestial_Cross.Scripts.Combat.Execution
             }
 
             GridMap.Instance?.ResetAllTileVisuals();
+
+            // Ao fim da ação, focar novamente no caster se o turno dele não acabou
+            if (caster != null && (caster.hasActedThisTurn == false || caster.hasMovedThisTurn == false))
+            {
+                CameraController.Instance?.Follow(caster);
+            }
+
             onComplete?.Invoke();
         }
     }

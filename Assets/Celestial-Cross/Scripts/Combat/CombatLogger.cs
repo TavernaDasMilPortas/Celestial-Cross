@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace CelestialCross.Combat
 {
-    public enum LogCategory { Damage, Healing, Passive, Condition, Ability, System }
+    public enum LogCategory { Damage, Healing, Passive, Condition, Ability, System, Graph }
 
     [Serializable]
     public struct LogEntry
@@ -13,20 +13,23 @@ namespace CelestialCross.Combat
         public LogCategory category;
         public string message;
         public string color;
+        public bool isTriggerOnly;
 
-        public LogEntry(string msg, LogCategory cat)
+        public LogEntry(string msg, LogCategory cat, bool isTrigger = false)
         {
             timestamp = DateTime.Now.ToString("HH:mm:ss");
             message = msg;
             category = cat;
+            isTriggerOnly = isTrigger;
             color = cat switch
             {
-                LogCategory.Damage => "red",
-                LogCategory.Healing => "green",
-                LogCategory.Passive => "magenta",
-                LogCategory.Condition => "yellow",
-                LogCategory.Ability => "cyan",
-                _ => "white"
+                LogCategory.Damage => "#ff4d4d",    // Vermelho vibrante
+                LogCategory.Healing => "#4dff88",   // Verde cura
+                LogCategory.Passive => "#da70d6",   // Orquídea
+                LogCategory.Condition => "#ffd700", // Dourado
+                LogCategory.Ability => "#00ffff",   // Ciano
+                LogCategory.Graph => "#a29bfe",     // Roxo suave (Grafos)
+                _ => "#ffffff"
             };
         }
     }
@@ -34,43 +37,42 @@ namespace CelestialCross.Combat
     public class CombatLogger : MonoBehaviour
     {
         public static CombatLogger Instance { get; private set; }
+        public static Unit CurrentUnit;
 
         public List<LogEntry> entries = new List<LogEntry>();
-        public int maxEntries = 50;
+        public int maxEntries = 100;
 
-        // Filtros para o Inspector (usados pelo Editor script)
+        // Filtros para o Inspector
         [HideInInspector] public bool showDamage = true;
         [HideInInspector] public bool showHealing = true;
         [HideInInspector] public bool showPassives = true;
         [HideInInspector] public bool showConditions = true;
         [HideInInspector] public bool showAbilities = true;
+        [HideInInspector] public bool showGraphs = true;
+        [HideInInspector] public bool showEmptyTriggers = true;
 
         private void Awake()
         {
-            if (Instance == null) 
-            {
-                Instance = this;
-            }
-            else if (Instance != this)
-            {
-                Destroy(gameObject);
-            }
+            if (Instance == null) Instance = this;
+            else if (Instance != this) Destroy(gameObject);
         }
 
-        public static void Log(string message, LogCategory category = LogCategory.System)
+        public static void Log(string message, LogCategory category = LogCategory.System, bool isTrigger = false)
         {
-            // Remove tags HTML de logs antigos para nÃ£o duplicar no novo sistema se vierem strings sujas
-            string cleanMsg = global::System.Text.RegularExpressions.Regex.Replace(message, "<.*?>", string.Empty);
-
             if (Instance == null)
             {
+                string cleanMsg = global::System.Text.RegularExpressions.Regex.Replace(message, "<.*?>", string.Empty);
                 Debug.Log($"[{category}] {cleanMsg}");
                 return;
             }
 
-            Instance.entries.Add(new LogEntry(cleanMsg, category));
+            Instance.entries.Add(new LogEntry(message, category, isTrigger));
             if (Instance.entries.Count > Instance.maxEntries)
                 Instance.entries.RemoveAt(0);
+            
+            // Log no console também para facilitar debug sem abrir a janela de log
+            string consoleMsg = global::System.Text.RegularExpressions.Regex.Replace(message, "<.*?>", string.Empty);
+            // Debug.Log($"[CombatLog] {consoleMsg}"); 
         }
 
         public void Clear()

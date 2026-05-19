@@ -4,6 +4,12 @@ using Celestial_Cross.Scripts.Abilities;
 
 namespace CelestialCross.Data.Pets
 {
+    public enum PetMovementType
+    {
+        Ground,
+        Flying
+    }
+
     [CreateAssetMenu(fileName = "NewPetSpecies", menuName = "Celestial Cross/Pets/Pet Species Base")]
     public class PetSpeciesSO : ScriptableObject
     {
@@ -12,6 +18,19 @@ namespace CelestialCross.Data.Pets
 
         public string SpeciesName;
         public Sprite Icon;
+
+        [Header("Visuals (Combat)")]
+        [Tooltip("Define o tipo de locomoção. O Prefab Base lerá isso para se posicionar automaticamente no chão ou voando.")]
+        public PetMovementType MovementType = PetMovementType.Ground;
+
+        [Tooltip("Animação principal de ficar parado (Idle)")]
+        public AnimationClip IdleAnimation;
+        
+        [Tooltip("Animação quando o pet utiliza a habilidade dele")]
+        public AnimationClip SkillAnimation;
+
+        [Tooltip("Escala visual do pet no combate.")]
+        public Vector3 CombatScale = Vector3.one;
 
         [Header("Status Ranges (Limites por Level e Estrela)")]
         [Tooltip("Vida Base Mínima num roll ruim")]

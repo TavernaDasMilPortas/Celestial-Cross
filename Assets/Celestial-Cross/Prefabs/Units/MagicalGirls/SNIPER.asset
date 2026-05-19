@@ -17,11 +17,11 @@ MonoBehaviour:
   role: 0
   unitClass: 2
   icon: {fileID: 21300000, guid: da5d0934c4a477f4aade0b1cda993998, type: 3}
-  idleAnim: {fileID: 7400000, guid: c0a3e192c258dd24f9d57f1c29acb1e9, type: 2}
-  combatIdleAnim: {fileID: 7400000, guid: f4f282c9dd3dca340a6e6743ca25e81e, type: 2}
+  idleAnim: {fileID: 7400000, guid: 1c843137ba59fce43aa513d9b2a4af45, type: 2}
+  combatIdleAnim: {fileID: 7400000, guid: 1c843137ba59fce43aa513d9b2a4af45, type: 2}
   baseStats:
     health: 10
-    attack: 40
+    attack: 5
     defense: 5
     speed: 3
     criticalChance: 10

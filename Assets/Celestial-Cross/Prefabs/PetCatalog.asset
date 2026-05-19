@@ -15,3 +15,4 @@ MonoBehaviour:
   entries:
   - petSpecies: {fileID: 11400000, guid: 52c34e207dee2284f86e51d9d05b28fd, type: 2}
   - petSpecies: {fileID: 11400000, guid: ca3587875a7b1d64bbb5e2585641ebca, type: 2}
+  - petSpecies: {fileID: 11400000, guid: e7c0d4a01fadfda4ca0492984cd33e00, type: 2}

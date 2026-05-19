@@ -17,6 +17,8 @@ MonoBehaviour:
   PhaseMap: {fileID: 11400000, guid: aa84a7dcbee22b84ebe4ed90ff5c0a6b, type: 2}
   Waves: []
   Enemies:
-  - UnitData: {fileID: 11400000, guid: 67628d77266bab446ba0b5274c2a9397, type: 2}
-    GridPosition: {x: 4, y: 4}
+  - UnitData: {fileID: 11400000, guid: 704753636e58dab40b1e29a96fbcd4ee, type: 2}
+    GridPosition: {x: 5, y: 4}
+    OverrideBehaviorProfile: {fileID: 0}
+    OverridePatternData: {fileID: 0}
   VictoryRewards: {fileID: 0}

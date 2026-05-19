@@ -105,11 +105,6 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor
                 string varName2 = EnsureVariableExists("stamina_cost_" + shortGuid, 5);
                 costNode.SetVariableReference(varName1, varName2);
             }
-            else if (node is StatModifierEffectNode statNode)
-            {
-                string varName = EnsureVariableExists("buff_base_" + shortGuid, 1);
-                statNode.SetVariableReference(varName);
-            }
             else if (node is TargetNode targetNode)
             {
                 string varName = EnsureVariableExists("max_targets_" + shortGuid, 1);
