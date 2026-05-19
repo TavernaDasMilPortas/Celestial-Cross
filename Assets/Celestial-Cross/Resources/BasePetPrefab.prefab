@@ -127,5 +127,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82620dd8831d0dc48bc98ed37541ac00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CelestialCross.UnitVisuals.PetVisualController
-  groundOffset: {x: -0.7, y: 0, z: 0}
+  groundOffset: {x: -2, y: 1, z: -2}
   flyOffset: {x: -2, y: 1, z: 2}

@@ -25,14 +25,18 @@ MonoBehaviour:
     PortName: Level 1
     TargetNodeGuid: 33282880-2fd4-4221-9e69-4366105462df
     TargetPortName: In
-  - BaseNodeGuid: 33282880-2fd4-4221-9e69-4366105462df
-    PortName: Out
-    TargetNodeGuid: 3e1f9768-fefd-4cdc-a40c-b32a5370127a
-    TargetPortName: In
   - BaseNodeGuid: b64181e9-615a-4386-bf46-b0cc97b0afc1
     PortName: Settings Out
     TargetNodeGuid: 3e1f9768-fefd-4cdc-a40c-b32a5370127a
     TargetPortName: Duration
+  - BaseNodeGuid: 33282880-2fd4-4221-9e69-4366105462df
+    PortName: Out
+    TargetNodeGuid: 7072e5b2-8e1d-45a4-86de-48b55354d71b
+    TargetPortName: In
+  - BaseNodeGuid: 7072e5b2-8e1d-45a4-86de-48b55354d71b
+    PortName: Out
+    TargetNodeGuid: 3e1f9768-fefd-4cdc-a40c-b32a5370127a
+    TargetPortName: In
   NodeData:
   - Guid: d11aa7d0-77cf-41a9-995f-6fd22d506fe5
     NodeType: StartNode
@@ -49,25 +53,34 @@ MonoBehaviour:
   - Guid: 33282880-2fd4-4221-9e69-4366105462df
     NodeType: TriggerNode
     NodeTitle: Trigger Event
-    Position: {x: 710, y: 200}
+    Position: {x: 655, y: 209}
     JsonData: '{"trigger":4}'
+    areaPattern: {fileID: 0}
+  - Guid: 7072e5b2-8e1d-45a4-86de-48b55354d71b
+    NodeType: TargetNode
+    NodeTitle: Targeting
+    Position: {x: 964, y: 189}
+    JsonData: '{"reusePrevious":false,"sourceType":1,"mode":0,"range":3,"multipleTargets":false,"maxTargets":1,"origin":0,"strategy":4,"attributeType":0,"factionType":2,"targetCount":1,"autoRotate":true,"preferredDirection":0,"patternReferenceId":"","areaPattern":{"instanceID":0},"rangeVariable":"","maxTargetsVariable":"max_targets_7072"}'
     areaPattern: {fileID: 0}
   - Guid: 3e1f9768-fefd-4cdc-a40c-b32a5370127a
     NodeType: StatModifierEffectNode
     NodeTitle: Stat Modifier
-    Position: {x: 1075, y: 209}
+    Position: {x: 1261, y: 329}
     JsonData: '{"stats":[{"statIndex":6,"value":10.0,"statTypeName":"Speed","bonusType":1,"valueMode":0,"valueVariable":""}],"isBuff":true,"canStack":true,"maxStacks":10}'
     areaPattern: {fileID: 0}
   - Guid: b64181e9-615a-4386-bf46-b0cc97b0afc1
     NodeType: DurationNode
     NodeTitle: Duration / Expiry
-    Position: {x: 808, y: 379}
+    Position: {x: 979, y: 467}
     JsonData: '{"type":4,"value":1}'
     areaPattern: {fileID: 0}
   Dependencies: []
   Variables:
   - name: Bonus
     initialValue: 0
+    description: 
+  - name: max_targets_7072
+    initialValue: 1
     description: 
   MaxLevel: 1
   aiHint:
@@ -80,4 +93,4 @@ MonoBehaviour:
     estimatedValue: 10
   GeneratedDescription: "<b>--- DESCRI\xC7\xC3O AUTOM\xC1TICA ---</b>\r\n- Esta \xE9
     uma habilidade do tipo Passive.\r\n- Desvia o fluxo dependendo do n\xEDvel atual
-    da habilidade.\r\n"
+    da habilidade.\r\n- Seleciona automaticamente a si mesmo.\r\n"
