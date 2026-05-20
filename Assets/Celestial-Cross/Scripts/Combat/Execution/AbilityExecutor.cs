@@ -98,6 +98,12 @@ namespace Celestial_Cross.Scripts.Combat.Execution
                 onComplete?.Invoke();
             }
 
+            // Espera todos os popups de dano sumirem antes de focar ou concluir
+            if (DamagePopupManager.Instance != null)
+            {
+                yield return new WaitUntil(() => !DamagePopupManager.Instance.HasActivePopups);
+            }
+
             // Ao fim da ação, focar novamente no caster se o turno dele não acabou
             if (caster != null && (caster.hasActedThisTurn == false || caster.hasMovedThisTurn == false))
             {
@@ -258,6 +264,12 @@ namespace Celestial_Cross.Scripts.Combat.Execution
             }
 
             GridMap.Instance?.ResetAllTileVisuals();
+
+            // Espera todos os popups de dano sumirem antes de focar ou concluir
+            if (DamagePopupManager.Instance != null)
+            {
+                yield return new WaitUntil(() => !DamagePopupManager.Instance.HasActivePopups);
+            }
 
             // Ao fim da ação, focar novamente no caster se o turno dele não acabou
             if (caster != null && (caster.hasActedThisTurn == false || caster.hasMovedThisTurn == false))

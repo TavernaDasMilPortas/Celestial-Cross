@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 
 public class CameraController : MonoBehaviour
@@ -50,7 +51,17 @@ public class CameraController : MonoBehaviour
     [Header("Zoom")]
     public float zoomSpeed = 0.1f;
     public bool autoConfigZoom = true; // Auto ajusta com base no tamanho do mapa
+    
+    [System.Obsolete("Use initialTilesWidthToSee and initialTilesHeightToSee instead")]
+    [HideInInspector]
     public float initialTilesToSee = 4f; // Tamanho do grid que a câmera vai tentar focar no início
+    
+    [Tooltip("Largura do grid que a câmera vai tentar focar no início (em tiles)")]
+    public float initialTilesWidthToSee = 4f;
+    
+    [System.Obsolete("Use apenas a largura para controle de zoom.")]
+    [HideInInspector]
+    public float initialTilesHeightToSee = 4f;
     
     [Tooltip("Tamanho fixo do tile (em metros). Deixe o Reference Tile vazio se preferir configurar o tamanho por esse número.")]
     public float tileSizeOverride = 1f; 
@@ -135,6 +146,13 @@ public class CameraController : MonoBehaviour
 
         transform.rotation = Quaternion.Euler(cameraRotation);
         
+#pragma warning disable CS0618
+        if (initialTilesWidthToSee == 4f && initialTilesToSee != 4f)
+        {
+            initialTilesWidthToSee = initialTilesToSee;
+        }
+#pragma warning restore CS0618
+        
         StartCoroutine(DelayedSetupZoom());
 
         targetProjectedPoint = ProjectCameraToPlane(transform.position);
@@ -152,7 +170,17 @@ public class CameraController : MonoBehaviour
 
     System.Collections.IEnumerator DelayedSetupZoom()
     {
-        yield return new WaitForEndOfFrame();
+        if (RenderTextureInputManager.Instance != null && RenderTextureInputManager.Instance.createAndAssignTextureOnStart)
+        {
+            while (!RenderTextureInputManager.Instance.IsInitialized)
+            {
+                yield return null;
+            }
+        }
+        else
+        {
+            yield return new WaitForEndOfFrame();
+        }
 
         float calculatedTileSize = ResolveLogicalTileSize();
         float referenceTileSize = ResolveReferenceTileSize();
@@ -172,6 +200,12 @@ public class CameraController : MonoBehaviour
         // Always check drags. If drag happened, it will set CameraMode.Free automatically
         HandleDrag();
         HandleMouseDrag();
+
+        if (cameraMode == CameraMode.Free && pendingFollowCoroutine != null)
+        {
+            StopCoroutine(pendingFollowCoroutine);
+            pendingFollowCoroutine = null;
+        }
 
         switch (cameraMode)
         {
@@ -496,23 +530,8 @@ public class CameraController : MonoBehaviour
         maxZoom = globalMapZoom;
         minZoom = 1.5f; // Limite mínimo fixo pra evitar que a conta abaixo travasse tudo por ser muito restrita
 
-        // -- Configura o zoom inicial para englobar "initialTilesToSee" --
-        float zoomTargetSize = initialTilesToSee * logicalTileSize; 
-        
-        float targetZoomForTargetWidth = (zoomTargetSize / 2f) / currentAspect;
-        float targetZoomForTargetHeight = (zoomTargetSize / 2f) * Mathf.Sin(cameraRotation.x * Mathf.Deg2Rad);
-        
-        float defaultInitialZoom = Mathf.Max(targetZoomForTargetWidth, targetZoomForTargetHeight);
-        
-        // Debug pra entendermos o que rolou no cálculo:
-        Debug.Log($"[Camera] Mapa: {mapWidth}x{mapHeight}. Zoom Global Máximo é {maxZoom}. A visão de {initialTilesToSee} tiles (tile lógico={logicalTileSize}) mediu Zoom de {defaultInitialZoom}");
-
-        // Começa com a visão configurada (mas garantido de não ultrapassar os limites do mapa inteiro)
-        targetZoom = Mathf.Clamp(defaultInitialZoom, minZoom, maxZoom);
-        cam.orthographicSize = targetZoom;
-
+        // Determina o centro de enquadramento
         float gridTileSize = ResolveLogicalTileSize();
-
         Vector3 finalCenter = GetBestSpawnFramingCenter(gridTileSize);
         if (finalCenter == Vector3.zero && (GridMap.Instance == null || GridMap.Instance.phaseMap == null))
         {
@@ -521,9 +540,44 @@ public class CameraController : MonoBehaviour
 
         float finalCenterX = Mathf.Round(finalCenter.x / gridTileSize) * gridTileSize;
         float finalCenterZ = Mathf.Round(finalCenter.z / gridTileSize) * gridTileSize;
+        Vector3 centerPoint = new Vector3(finalCenterX, 0f, finalCenterZ);
 
-        targetProjectedPoint = new Vector3(finalCenterX, 0f, finalCenterZ);
+        // Obtenção da largura desejada em tiles
+        float targetWidthTiles = initialTilesWidthToSee;
+
+        // Se o mapa for menor que a largura definida, foca na largura do mapa
+        float mapWidthInTiles = (maxMapX - minMapX) / logicalTileSize;
+        if (mapWidthInTiles < targetWidthTiles)
+        {
+            targetWidthTiles = mapWidthInTiles;
+        }
+
+        // Calcula a largura desejada no mundo
+        float wHalf = (targetWidthTiles * logicalTileSize) / 2f;
+
+        // Representa a largura horizontal do grid (dois pontos ao longo do eixo X do mundo)
+        Vector3 leftPoint = centerPoint - wHalf * Vector3.right;
+        Vector3 rightPoint = centerPoint + wHalf * Vector3.right;
+
+        // Projeta os cantos de largura para o espaço local da câmera
+        Vector3 localLeft = cam.transform.InverseTransformDirection(leftPoint - centerPoint);
+        Vector3 localRight = cam.transform.InverseTransformDirection(rightPoint - centerPoint);
+
+        float widthSpan = Mathf.Abs(localRight.x - localLeft.x);
+
+        // O zoom (orthographic size) necessário para a largura caber é (widthSpan / 2) / aspect
+        float defaultInitialZoom = (widthSpan / 2f) / currentAspect;
+
+        // Debug pra entendermos o que rolou no cálculo:
+        Debug.Log($"[Camera] Mapa: {mapWidth}x{mapHeight} (lógico {mapWidthInTiles:F1} tiles de largura). Zoom Global Máximo é {maxZoom}. A visão de {targetWidthTiles} tiles de largura (tile lógico={logicalTileSize}) mediu Zoom de {defaultInitialZoom}");
+
+        // Começa com a visão configurada (mas garantido de não ultrapassar os limites do mapa inteiro)
+        targetZoom = Mathf.Clamp(defaultInitialZoom, minZoom, maxZoom);
+        cam.orthographicSize = targetZoom;
+
+        targetProjectedPoint = centerPoint;
         SnapToTarget();
+
         // Calcula quantos tiles estão realmente sendo mostrados na tela após o clamp
         float shownWidth = (targetZoom * currentAspect * 2f) / logicalTileSize;
         float shownHeight = ((targetZoom / Mathf.Sin(cameraRotation.x * Mathf.Deg2Rad)) * 2f) / logicalTileSize;
@@ -720,12 +774,33 @@ public class CameraController : MonoBehaviour
         }
     }
 
+    private Coroutine pendingFollowCoroutine;
+
     public void Follow(Unit unit)
     {
         if (unit == null) return;
-        Debug.Log($"[CameraController] Seguindo unidade: {unit.DisplayName}");
+        Debug.Log($"[CameraController] Solicitação de seguir unidade: {unit.DisplayName}");
+
+        if (pendingFollowCoroutine != null)
+        {
+            StopCoroutine(pendingFollowCoroutine);
+            pendingFollowCoroutine = null;
+        }
+
+        pendingFollowCoroutine = StartCoroutine(CoFollowAfterPopups(unit));
+    }
+
+    private IEnumerator CoFollowAfterPopups(Unit unit)
+    {
+        // Espera todos os popups de dano sumirem antes de focar
+        if (DamagePopupManager.Instance != null)
+        {
+            yield return new WaitUntil(() => !DamagePopupManager.Instance.HasActivePopups);
+        }
+
         followTarget = unit;
         cameraMode = CameraMode.FollowUnit;
+        pendingFollowCoroutine = null;
 
         // Se for a primeira unidade ou o herói, podemos forçar um snap inicial
         if (Time.timeSinceLevelLoad < 2f) 

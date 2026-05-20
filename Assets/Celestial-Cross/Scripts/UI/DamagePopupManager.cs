@@ -9,6 +9,18 @@ public class DamagePopupManager : MonoBehaviour
     [SerializeField] private GameObject damageNumberPrefab;
     [SerializeField] private Transform canvasParent;
     [SerializeField] private Vector3 spawnOffset = new Vector3(0, 1.5f, 0);
+    [SerializeField] private Vector3 uiScale = Vector3.one;
+
+    private List<GameObject> activePopups = new();
+
+    public bool HasActivePopups
+    {
+        get
+        {
+            activePopups.RemoveAll(p => p == null);
+            return activePopups.Count > 0;
+        }
+    }
 
     private void Awake()
     {
@@ -46,33 +58,62 @@ public class DamagePopupManager : MonoBehaviour
         Vector3 randomJitter = new Vector3(Random.Range(-0.3f, 0.3f), Random.Range(-0.2f, 0.2f), 0);
         GameObject obj = null;
         bool isUI = false;
+        Vector3 spawnPosition = Vector3.zero;
 
-        // Tenta converter posição do mundo para posição de tela se estivermos usando RawImage (RenderTexture)
-        if (RenderTextureInputManager.Instance != null && RenderTextureInputManager.Instance.WorldToScreenPoint(position + spawnOffset, out Vector2 screenPos))
+        // 1. Tenta converter usando o RenderTextureInputManager (caso esteja ativo)
+        if (RenderTextureInputManager.Instance != null && RenderTextureInputManager.Instance.WorldToCanvasWorldPoint(position + spawnOffset, out Vector3 canvasWorldPos))
+        {
+            spawnPosition = canvasWorldPos;
+            isUI = true;
+        }
+        // 2. Se não estiver ativo, tenta projetar usando a Câmera Principal diretamente no Canvas da UI
+        else if (Camera.main != null && canvasParent != null)
+        {
+            Vector3 screenPos = Camera.main.WorldToScreenPoint(position + spawnOffset);
+            if (screenPos.z >= 0)
+            {
+                RectTransform parentRect = canvasParent.GetComponent<RectTransform>();
+                Canvas canvas = canvasParent.GetComponentInParent<Canvas>();
+                Camera uiCamera = (canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay) ? canvas.worldCamera : null;
+                
+                if (parentRect != null && RectTransformUtility.ScreenPointToWorldPointInRectangle(parentRect, screenPos, uiCamera, out Vector3 worldPoint))
+                {
+                    spawnPosition = worldPoint;
+                    isUI = true;
+                }
+            }
+        }
+
+        if (isUI)
         {
             Transform parent = canvasParent != null ? canvasParent : transform;
             obj = Instantiate(damageNumberPrefab, parent);
             
-            // Configura posição na UI
             RectTransform rect = obj.GetComponent<RectTransform>();
             if (rect != null)
             {
-                rect.position = new Vector3(screenPos.x, screenPos.y, 0);
-                rect.anchoredPosition += (Vector2)randomJitter * 50f; // Jitter no espaço da UI
+                rect.position = spawnPosition;
+                rect.anchoredPosition += (Vector2)randomJitter * 100f; // Jitter no espaço da UI
             }
             else
             {
-                obj.transform.position = new Vector3(screenPos.x, screenPos.y, 0);
+                obj.transform.position = spawnPosition;
             }
             
+            obj.transform.localScale = uiScale;
             obj.layer = LayerMask.NameToLayer("UI");
-            isUI = true;
         }
         else
         {
-            // Fallback para World Space (comportamento padrão)
+            // Fallback absoluto
             Transform parent = canvasParent != null ? canvasParent : transform;
-            obj = Instantiate(damageNumberPrefab, position + spawnOffset + randomJitter, Quaternion.identity, parent);
+            obj = Instantiate(damageNumberPrefab, parent);
+            obj.transform.localScale = uiScale;
+        }
+
+        if (obj != null)
+        {
+            activePopups.Add(obj);
         }
 
         DamageNumberUI ui = obj.GetComponent<DamageNumberUI>();
@@ -80,7 +121,7 @@ public class DamagePopupManager : MonoBehaviour
         {
             Color color = isHeal ? Color.green : (isCritical ? Color.yellow : Color.red);
             string prefix = isHeal ? "+" : "-";
-            ui.Setup(amount, color, prefix, !isUI);
+            ui.Setup(amount, color, prefix, false); // Sempre falso, pois o prefab agora é sempre elemento UI do Canvas
         }
     }
 }

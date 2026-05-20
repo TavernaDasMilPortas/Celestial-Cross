@@ -14,7 +14,6 @@ public class DamageNumberUI : MonoBehaviour
     public void Setup(int amount, Color color, string prefix, bool worldSpace = true)
     {
         this.isWorldSpace = worldSpace;
-        if (!isWorldSpace) transform.localScale = Vector3.one; // Reseta escala minúscula do mundo para UI
         
         if (textMesh == null) textMesh = GetComponentInChildren<TMP_Text>();
         
@@ -30,11 +29,11 @@ public class DamageNumberUI : MonoBehaviour
     private IEnumerator Animate()
     {
         float elapsed = 0f;
-        Vector3 startPos = transform.position;
+        RectTransform rect = GetComponent<RectTransform>();
+        Vector2 startAnchoredPos = (rect != null && !isWorldSpace) ? rect.anchoredPosition : Vector2.zero;
+        Vector3 startWorldPos = transform.position;
         Vector3 initialScale = transform.localScale;
         Color startColor = textMesh != null ? textMesh.color : Color.white;
-        
-        float currentMoveSpeed = isWorldSpace ? moveSpeed : moveSpeed * 100f; // Compensa metros vs pixels
 
         while (elapsed < duration)
         {
@@ -42,7 +41,14 @@ public class DamageNumberUI : MonoBehaviour
             float t = elapsed / duration;
 
             // Movimento para cima
-            transform.position = startPos + Vector3.up * (elapsed * currentMoveSpeed);
+            if (!isWorldSpace && rect != null)
+            {
+                rect.anchoredPosition = startAnchoredPos + Vector2.up * (elapsed * moveSpeed * 100f);
+            }
+            else
+            {
+                transform.position = startWorldPos + Vector3.up * (elapsed * moveSpeed);
+            }
 
             // Escala (pop-in respeitando a escala inicial do prefab)
             float scaleValue = scaleCurve.Evaluate(t);

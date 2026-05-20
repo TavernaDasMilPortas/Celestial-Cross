@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -20,6 +21,7 @@ public class PlacementManager : MonoBehaviour
     private UnitData selectedUnitToPlace;
     private Dictionary<UnitData, Unit> placedUnitsDict = new Dictionary<UnitData, Unit>();
     private HashSet<UnitData> confirmedUnits = new HashSet<UnitData>();
+    private List<UnitData> allOwnedUnits = new List<UnitData>();
     private int totalUnitsToPlace;
 
     public event System.Action OnPlacementEnded;
@@ -101,6 +103,7 @@ public class PlacementManager : MonoBehaviour
             .ToList();
 
         totalUnitsToPlace = ownedUnits.Count;
+        allOwnedUnits = ownedUnits;
 
         placementActionBar.ClearButtons();
         placementActionBar.GenerateButtonsForPlacement(ownedUnits, SelectUnitForPlacement);
@@ -114,15 +117,31 @@ public class PlacementManager : MonoBehaviour
 
     private void SelectUnitForPlacement(UnitData unitData)
     {
-        // Se a unidade já foi confirmada, podemos desconfirmá-la para permitir realocação,
-        // mas mantendo ela instanciada no local que estava
+        // Se a unidade já foi confirmada, retiramos ela do mapa e o controle passa para ela
         if (confirmedUnits.Contains(unitData))
         {
             confirmedUnits.Remove(unitData);
-            placementActionBar.SetButtonInteractable(unitData.UnitID, true);
+            placementActionBar.SetButtonConfirmedVisual(unitData.UnitID, false);
+
+            if (placedUnitsDict.TryGetValue(unitData, out Unit unit))
+            {
+                if (unit != null)
+                {
+                    var tile = GridMap.Instance.GetTile(unit.GridPosition);
+                    if (tile != null)
+                    {
+                        tile.SetConfirmed(false);
+                        tile.IsOccupied = false;
+                        tile.OccupyingUnit = null;
+                    }
+                    Destroy(unit.gameObject);
+                }
+                placedUnitsDict.Remove(unitData);
+            }
         }
 
         selectedUnitToPlace = unitData;
+        placementActionBar.SetButtonSelected(unitData.UnitID);
         Debug.Log($"Selected '{unitData.displayName}' for placement.");
     }
 
@@ -290,18 +309,47 @@ public class PlacementManager : MonoBehaviour
     private void ConfirmUnit(UnitData unitData)
     {
         confirmedUnits.Add(unitData);
-        placementActionBar.SetButtonInteractable(unitData.UnitID, false);
-        selectedUnitToPlace = null; // Tira seleção atual
+        placementActionBar.SetButtonConfirmedVisual(unitData.UnitID, true);
+
+        // Deixa o tile sob o personagem confirmado verde
+        if (placedUnitsDict.TryGetValue(unitData, out Unit unit))
+        {
+            if (unit != null)
+            {
+                var tile = GridMap.Instance.GetTile(unit.GridPosition);
+                if (tile != null)
+                {
+                    tile.SetConfirmed(true);
+                }
+            }
+        }
         
         Debug.Log($"Unit '{unitData.displayName}' placement confirmed.");
         
         CelestialCross.Tutorial.TutorialManager.Instance?.NotifyUnitPlaced(unitData);
 
-        // 2- Se todas as unidades estão no mapa e QUALQUER uma for confirmada, inicia.
-        // Ou se já confirmamos o número total necessário de unidades.
-        if (confirmedUnits.Count >= totalUnitsToPlace || placedUnitsDict.Count >= totalUnitsToPlace)
+        // Termina a fase se a unidade foi confirmada E todas as outras já estão posicionadas (no mapa)
+        if (placedUnitsDict.Count >= totalUnitsToPlace)
         {
             EndPlacementPhase();
+            return;
+        }
+
+        // Tenta passar o controle para a próxima unidade que ainda NÃO foi colocada no mapa
+        var nextUnit = allOwnedUnits.FirstOrDefault(u => !placedUnitsDict.ContainsKey(u));
+        // Se todas já estão no mapa, pega a próxima não confirmada
+        if (nextUnit == null)
+        {
+            nextUnit = allOwnedUnits.FirstOrDefault(u => !confirmedUnits.Contains(u));
+        }
+
+        if (nextUnit != null)
+        {
+            SelectUnitForPlacement(nextUnit);
+        }
+        else
+        {
+            selectedUnitToPlace = null;
         }
     }
 
@@ -319,8 +367,36 @@ public class PlacementManager : MonoBehaviour
 
     public void EndPlacementPhase()
     {
+        StartCoroutine(CoEndPlacementPhase());
+    }
+
+    private IEnumerator CoEndPlacementPhase()
+    {
         ClearSelection();
-        GridMap.Instance.ResetAllTileVisuals();
+
+        // Faz com que todos os highlights fiquem verdes
+        if (GridMap.Instance != null)
+        {
+            GridMap.Instance.forceAllHighlightsGreen = true;
+            GridMap.Instance.RefreshDynamicHighlights();
+        }
+
+        yield return new WaitForSeconds(0.3f);
+
+        // Reseta todos os tiles confirmados (cor verde)
+        if (GridMap.Instance != null)
+        {
+            GridMap.Instance.forceAllHighlightsGreen = false;
+            foreach (var tile in GridMap.Instance.GetAllTiles())
+            {
+                if (tile != null)
+                {
+                    tile.SetConfirmed(false);
+                }
+            }
+            GridMap.Instance.ResetAllTileVisuals();
+        }
+
         gameObject.SetActive(false);
         GameFlowManager.Instance.PlayerFormation = placedUnitsDict.Values.ToList();
         Debug.Log("Ending Placement Phase...");

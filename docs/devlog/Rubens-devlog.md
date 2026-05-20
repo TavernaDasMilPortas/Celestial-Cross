@@ -130,8 +130,24 @@ A interface da loja ainda utilizava placeholders e layouts temporários que não
 
 ---
 
+## 13. Posicionamento de Unidades, Câmera e Sincronização de Popups
+**Data: 19/05/2026 - 20/05/2026**
+### **Problemas:**
+*   A fase de posicionamento de unidades permitia início automático antes de confirmações e não permitia retratar unidades já colocadas de volta para a mão.
+*   A câmera dependia de cálculos de altura e apresentava distorções de estiramento no RenderTexture na inicialização.
+*   Popups de dano usavam prefabs com Canvas aninhados duplicados, geravam posições incorretas sob escalas do CanvasScaler e a câmera mudava de foco prematuramente antes dos popups terminarem sua animação.
+
+### **Soluções:**
+*   **Fluxo Sequencial de Posicionamento:** Seleção ordenada automática da próxima unidade após confirmação; capacidade de recolher unidades confirmadas do mapa (removendo a confirmação e liberando a unidade de volta para o jogador).
+*   **Confirmação Visual (Tiles Verdes):** Destaque verde (`IsConfirmed`) nos tiles de unidades confirmadas que piscam em verde e desaparecem após 0.3s na transição de início de combate.
+*   **Zoom Exclusivo por Largura:** Refatoração de zoom baseada inteiramente na largura desejada de tiles no grid (`initialTilesWidthToSee`).
+*   **Sincronização de Aspect Ratio:** Inicialização atrasada (`WaitForEndOfFrame`) do gerenciador da RenderTexture para obter as proporções corretas da tela e prevenir estiramento visual.
+*   **Popups Puros e Ajuste de Escala:** Remoção do Canvas aninhado nos prefabs de popup. Projeção precisa via `WorldToCanvasWorldPoint` e fallback usando `RectTransformUtility.ScreenPointToWorldPointInRectangle` para a câmera principal. Adição do parâmetro `uiScale` para controle de tamanho customizado.
+*   **Sincronização do Ciclo de Vida do Dano:** Alteração do método `Follow()` da câmera e do final das ações/fim de turno no interpretador para aguardar até que todas as animações dos popups ativos terminem antes de mover a câmera ou iniciar um novo turno.
+
+---
+
 ## Próximos Passos
 *   Arrumar anchors da Shop Scene para garantir responsividade em diferentes resoluções.
-*   Finalizar a transição dos popups de dano para o sistema projetado (Overlay).
-*   Refinar a transição de foco de câmera entre múltiplas ações do mesmo turno.
 *   Testar a persistência das passivas da Leidell em batalhas de longa duração.
+*   Continuar refinamento de polimento geral das transições visuais e efeitos.
