@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CelestialCross.Combat;
@@ -137,13 +138,26 @@ public class TurnManager : MonoBehaviour
 
     public void EndTurn()
     {
+        StartCoroutine(CoEndTurn());
+    }
+
+    private IEnumerator CoEndTurn()
+    {
         if (CurrentUnit != null)
             CurrentUnit.GetComponentInChildren<UnitVisualController>()?.SetCombatState(false);
             
         OnTurnEnded?.Invoke();
+
+        // Espera todos os popups de dano sumirem antes de seguir para o próximo turno
+        if (DamagePopupManager.Instance != null)
+        {
+            yield return new WaitUntil(() => !DamagePopupManager.Instance.HasActivePopups);
+        }
         
         // Pequeno delay para a UI respirar antes do próximo turno
-        Invoke(nameof(NextTurn), 0.5f);
+        yield return new WaitForSeconds(0.5f);
+
+        NextTurn();
     }
 
     public IEnumerable<Unit> GetTurnQueue()

@@ -147,4 +147,20 @@ public class ActionBarUI : MonoBehaviour
             button.SetInteractable(interactable);
         }
     }
+
+    public void SetButtonSelected(string unitId)
+    {
+        foreach (var pair in buttonsByUnitId)
+        {
+            pair.Value.SetSelected(pair.Key == unitId);
+        }
+    }
+
+    public void SetButtonConfirmedVisual(string unitId, bool confirmed)
+    {
+        if (buttonsByUnitId.TryGetValue(unitId, out var button))
+        {
+            button.SetConfirmedVisual(confirmed);
+        }
+    }
 }

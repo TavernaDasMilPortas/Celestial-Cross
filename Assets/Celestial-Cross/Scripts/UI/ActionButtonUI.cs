@@ -101,6 +101,14 @@ public class ActionButtonUI : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         }
     }
 
+    public void SetConfirmedVisual(bool confirmed)
+    {
+        if (iconImage != null)
+        {
+            iconImage.color = confirmed ? new Color(1f, 1f, 1f, 0.4f) : Color.white;
+        }
+    }
+
     public void OnPointerDown(PointerEventData eventData)
     {
         if (action == null) return; // Disable hold for placement buttons

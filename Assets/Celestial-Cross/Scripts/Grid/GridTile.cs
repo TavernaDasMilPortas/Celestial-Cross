@@ -18,6 +18,7 @@ public class GridTile : MonoBehaviour
     [Header("Colors (Darken)")]
     [SerializeField] private Color baseColor = Color.gray;
     [SerializeField] private Color executionColor = new Color(0.15f, 0.15f, 0.15f, 1f);
+    [SerializeField] private Color confirmedColor = new Color(0.1f, 0.7f, 0.1f, 1f);
 
     private MaterialPropertyBlock propertyBlock;
 
@@ -31,6 +32,7 @@ public class GridTile : MonoBehaviour
     private bool isAreaCenter = false;
     private bool isAreaPreview = false;
     private bool isHighlight = false;
+    private bool isConfirmed = false;
 
     // ─────────────────────────────────────────────────────────────────────────
     // INIT
@@ -104,6 +106,7 @@ public class GridTile : MonoBehaviour
     // ─────────────────────────────────────────────────────────────────────────
 
     public bool IsHighlighted => isHighlight;
+    public bool IsConfirmed => isConfirmed;
     public bool IsSelected => isSelected;
     public bool IsAreaPreview => isAreaPreview;
     public bool IsAreaCenter => isAreaCenter;
@@ -162,6 +165,12 @@ public class GridTile : MonoBehaviour
         UpdateVisuals();
     }
 
+    public void SetConfirmed(bool state)
+    {
+        isConfirmed = state;
+        UpdateVisuals();
+    }
+
     public void HardClearAllStates()
     {
         isExecution = false;
@@ -169,6 +178,7 @@ public class GridTile : MonoBehaviour
         isAreaCenter = false;
         isAreaPreview = false;
         isHighlight = false;
+        isConfirmed = false;
         UpdateVisuals();
     }
 

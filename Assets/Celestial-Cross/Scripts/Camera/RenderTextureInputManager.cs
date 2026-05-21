@@ -18,22 +18,56 @@ public class RenderTextureInputManager : MonoBehaviour
     public bool createAndAssignTextureOnStart = true;
     public int textureResolutionStr = 1024; // Resolução quadrada
 
+    public bool IsInitialized { get; private set; } = false;
+
     void Awake()
     {
         Instance = this;
     }
 
-    void Start()
+    System.Collections.IEnumerator Start()
     {
+        // Aguarda o final do frame para garantir que os layouts da UI (CanvasScaler, etc.) estejam calculados
+        yield return new WaitForEndOfFrame();
+
         if (createAndAssignTextureOnStart && renderTargetUI != null && gameCamera != null)
         {
-            // Cria um Render Texture quadrado (ex: 1024x1024) que se ajustará no aspect nativo
-            RenderTexture rt = new RenderTexture(textureResolutionStr, textureResolutionStr, 24);
+            float aspect = 1f;
+            if (renderTargetUI.rectTransform != null)
+            {
+                float uiW = renderTargetUI.rectTransform.rect.width;
+                float uiH = renderTargetUI.rectTransform.rect.height;
+                if (uiW > 0.01f && uiH > 0.01f)
+                {
+                    aspect = uiW / uiH;
+                }
+            }
+
+            int width = textureResolutionStr;
+            int height = textureResolutionStr;
+
+            if (aspect > 1f)
+            {
+                height = Mathf.RoundToInt(textureResolutionStr / aspect);
+            }
+            else
+            {
+                width = Mathf.RoundToInt(textureResolutionStr * aspect);
+            }
+
+            // Garante dimensões válidas de textura
+            width = Mathf.Max(width, 16);
+            height = Mathf.Max(height, 16);
+
+            // Cria o Render Texture com o aspect ratio correto das dimensões da UI
+            RenderTexture rt = new RenderTexture(width, height, 24);
             rt.name = "GameRenderTexture";
             
             gameCamera.targetTexture = rt;
             renderTargetUI.texture = rt;
         }
+
+        IsInitialized = true;
     }
 
     /// <summary>
@@ -78,6 +112,45 @@ public class RenderTextureInputManager : MonoBehaviour
 
         ray = default;
         return false;
+    }
+
+    /// <summary>
+    /// Converte uma posição do mundo 3D para a posição no espaço de mundo da UI (Canvas) correspondente sobre a RawImage.
+    /// Ideal para posicionar elementos de UI (como popups de dano) definindo diretamente a propriedade rectTransform.position.
+    /// </summary>
+    public bool WorldToCanvasWorldPoint(Vector3 worldPos, out Vector3 canvasWorldPos)
+    {
+        if (gameCamera == null || renderTargetUI == null)
+        {
+            canvasWorldPos = Vector3.zero;
+            return false;
+        }
+
+        // 1. Converte do Mundo para os pixels da Render Texture (coordenadas da câmera interna)
+        Vector3 camPixelPos = gameCamera.WorldToScreenPoint(worldPos);
+        
+        if (camPixelPos.z < 0) // Objeto atrás da câmera
+        {
+            canvasWorldPos = Vector3.zero;
+            return false;
+        }
+
+        // 2. Normaliza a posição (0 a 1) baseada na resolução da câmera (Render Texture)
+        Vector2 normalizedPoint = new Vector2(
+            camPixelPos.x / gameCamera.pixelWidth,
+            camPixelPos.y / gameCamera.pixelHeight
+        );
+
+        // 3. Converte a posição normalizada para o espaço local do RectTransform da RawImage
+        RectTransform rt = renderTargetUI.rectTransform;
+        Vector2 localPoint = new Vector2(
+            (normalizedPoint.x * rt.rect.width) - (rt.rect.width * rt.pivot.x),
+            (normalizedPoint.y * rt.rect.height) - (rt.rect.height * rt.pivot.y)
+        );
+
+        // 4. Converte o ponto local da RawImage para a posição de mundo da UI
+        canvasWorldPos = rt.TransformPoint(localPoint);
+        return true;
     }
 
     /// <summary>

@@ -20,6 +20,8 @@ public class GridMap : MonoBehaviour
     private Dictionary<Vector2Int, GridTile> tiles = new();
     private List<GameObject> spawnedUnits = new();
 
+    [HideInInspector] public bool forceAllHighlightsGreen = false;
+
     // =============================
     // DIRTY STATE
     // =============================
@@ -234,7 +236,7 @@ public class GridMap : MonoBehaviour
         foreach (var tile in tiles.Values)
         {
             if (tile == null) continue;
-            if (tile.IsHighlighted) rangeSet.Add(tile.GridPosition);
+            if (tile.IsHighlighted || tile.IsConfirmed) rangeSet.Add(tile.GridPosition);
             if (tile.IsSelected) selectSet.Add(tile.GridPosition);
             if (tile.IsAreaPreview || tile.IsAreaCenter) previewSet.Add(tile.GridPosition);
         }
@@ -245,11 +247,13 @@ public class GridMap : MonoBehaviour
             if (tile == null) continue;
 
             // Camada 1: Fundo (Range)
-            if (tile.IsHighlighted)
+            if (tile.IsHighlighted || tile.IsConfirmed)
             {
                 int mask = GetHighlightBitmask(tile.GridPosition, rangeSet);
                 Sprite s = defaultHighlightConfig.GetSprite(mask);
-                Color c = defaultHighlightConfig.GetColor(CelestialCross.Grid.HighlightType.Movement);
+                Color c = (tile.IsConfirmed || forceAllHighlightsGreen)
+                    ? defaultHighlightConfig.GetColor(CelestialCross.Grid.HighlightType.Special) 
+                    : defaultHighlightConfig.GetColor(CelestialCross.Grid.HighlightType.Movement);
                 if (s != null)
                 {
                     Vector3 worldPos = GridToWorld(tile.GridPosition) + new Vector3(0, 0.00f, 0);
@@ -262,8 +266,9 @@ public class GridMap : MonoBehaviour
             {
                 int mask = GetHighlightBitmask(tile.GridPosition, selectSet);
                 Sprite s = defaultHighlightConfig.GetSprite(mask);
-                // "Amarelo" ao clicar (Preview)
-                Color c = defaultHighlightConfig.GetColor(CelestialCross.Grid.HighlightType.Preview);
+                Color c = forceAllHighlightsGreen
+                    ? defaultHighlightConfig.GetColor(CelestialCross.Grid.HighlightType.Special)
+                    : defaultHighlightConfig.GetColor(CelestialCross.Grid.HighlightType.Preview);
                 if (s != null)
                 {
                     Vector3 worldPos = GridToWorld(tile.GridPosition) + new Vector3(0, 0.01f, 0);
@@ -276,7 +281,9 @@ public class GridMap : MonoBehaviour
             {
                 int mask = GetHighlightBitmask(tile.GridPosition, previewSet);
                 Sprite s = defaultHighlightConfig.GetSprite(mask);
-                Color c = defaultHighlightConfig.GetColor(CelestialCross.Grid.HighlightType.Preview);
+                Color c = forceAllHighlightsGreen
+                    ? defaultHighlightConfig.GetColor(CelestialCross.Grid.HighlightType.Special)
+                    : defaultHighlightConfig.GetColor(CelestialCross.Grid.HighlightType.Preview);
                 if (s != null)
                 {
                     Vector3 worldPos = GridToWorld(tile.GridPosition) + new Vector3(0, 0.02f, 0);
