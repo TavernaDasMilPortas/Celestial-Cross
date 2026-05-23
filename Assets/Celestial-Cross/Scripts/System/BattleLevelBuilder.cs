@@ -18,6 +18,11 @@ public class BattleLevelBuilder : MonoBehaviour
     [Header("Combat")]
     [Tooltip("Se true, chama CombatInitializer.StartCombat() após spawnar as units")]
     [SerializeField] private bool autoStartCombatAfterBuild = true;
+ 
+    [Header("Enemy Focus Phase")]
+    [SerializeField] private bool enableEnemyFocusPhase = true;
+    [SerializeField] private float enemyFocusDuration = 1.5f;
+    [SerializeField] private float enemyFocusZoom = 4.5f;
 
     void Start()
     {
@@ -67,7 +72,52 @@ public class BattleLevelBuilder : MonoBehaviour
         }
 
         // Spawns dos inimigos
-        SpawnEnemies(flow, grid);
+        List<EnemyUnit> enemies = SpawnEnemies(flow, grid);
+
+        // Fase de foco da câmera em cada inimigo antes do posicionamento
+        if (enableEnemyFocusPhase && CameraController.Instance != null)
+        {
+            if (enemies != null && enemies.Count > 0)
+            {
+                Debug.Log($"[BattleLevelBuilder] Iniciando fase de foco nos inimigos. Total={enemies.Count}");
+                
+                // Coloca a câmera em modo livre para mover programaticamente
+                CameraController.Instance.EnableFreeCamera(true);
+                
+                foreach (var enemy in enemies)
+                {
+                    if (enemy == null) continue;
+                    
+                    Debug.Log($"[BattleLevelBuilder] Focando no inimigo: {enemy.DisplayName} em {enemy.transform.position}");
+                    CameraController.Instance.TargetProjectedPoint = enemy.transform.position;
+                    CameraController.Instance.TargetZoom = enemyFocusZoom;
+                    
+                    // Espera pelo tempo determinado ou até que o jogador arraste a tela
+                    float elapsed = 0f;
+                    while (elapsed < enemyFocusDuration)
+                    {
+                        if (CameraController.Instance.IsDragging)
+                        {
+                            Debug.Log("[BattleLevelBuilder] Foco de câmera cancelado pelo arrasto do jogador.");
+                            break;
+                        }
+                        elapsed += Time.deltaTime;
+                        yield return null;
+                    }
+                    
+                    if (CameraController.Instance.IsDragging)
+                        break;
+                }
+                
+                // Redefine a câmera para o enquadramento inicial
+                CameraController.Instance.ResetToInitialFraming();
+                yield return new WaitForSeconds(0.8f);
+            }
+            else
+            {
+                Debug.LogWarning("[BattleLevelBuilder] Fase de foco pulada: nenhuma unidade EnemyUnit foi instanciada.");
+            }
+        }
 
         // Inicia a fase de posicionamento do jogador
         if (placementManager != null)
@@ -117,8 +167,9 @@ public class BattleLevelBuilder : MonoBehaviour
         }
     }
 
-    private void SpawnEnemies(GameFlowManager flow, GridMap grid)
+    private List<EnemyUnit> SpawnEnemies(GameFlowManager flow, GridMap grid)
     {
+        List<EnemyUnit> spawnedEnemiesList = new List<EnemyUnit>();
         var level = flow.SelectedLevel;
         List<EnemySpawnInfo> enemySpawns = null;
 
@@ -126,6 +177,9 @@ public class BattleLevelBuilder : MonoBehaviour
             enemySpawns = level.Waves[0].Enemies;
         else
             enemySpawns = level.Enemies;
+
+        int spawnsCount = enemySpawns != null ? enemySpawns.Count : 0;
+        Debug.Log($"[BattleLevelBuilder] SpawnEnemies: Total de spawns configurados = {spawnsCount}");
 
         if (enemySpawns != null)
         {
@@ -141,6 +195,7 @@ public class BattleLevelBuilder : MonoBehaviour
                     EnemyUnit eUnit = spawnedUnit as EnemyUnit;
                     if (eUnit != null)
                     {
+                        spawnedEnemiesList.Add(eUnit);
                         if (enemy.OverridePatternData != null)
                         {
                             eUnit.SetPatternData(enemy.OverridePatternData);
@@ -150,9 +205,16 @@ public class BattleLevelBuilder : MonoBehaviour
                             eUnit.SetBehaviorProfile(enemy.OverrideBehaviorProfile);
                         }
                     }
+                    else
+                    {
+                        Debug.LogWarning($"[BattleLevelBuilder] Unidade spawnada em {enemy.GridPosition} não é do tipo EnemyUnit (tipo: {spawnedUnit.GetType()})");
+                    }
                 }
             }
         }
+        
+        Debug.Log($"[BattleLevelBuilder] SpawnEnemies concluído. Total instanciado = {spawnedEnemiesList.Count}");
+        return spawnedEnemiesList;
     }
 
     static void ClearUnits(GridMap grid)

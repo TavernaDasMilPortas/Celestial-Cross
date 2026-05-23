@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef019e32b8e12a6418f7c6e7711a025c, type: 3}
   m_Name: NewAIPattern
   m_EditorClassIdentifier: Assembly-CSharp::AIPatternData
-  initialProfile: {fileID: 0}
+  initialProfile: {fileID: 11400000, guid: 82cc7ffe03edafa4799d3396b2b38f88, type: 2}
   phases: []

@@ -57,7 +57,7 @@ public class DamageNumberUI : MonoBehaviour
         if (rect != null)
         {
             Vector3 current3DPos = lastWorldPos + spawnOffset + jitterOffset;
-            Vector3 canvasWorldPos;
+            Vector3 canvasWorldPos = Vector3.zero;
             bool positionFound = false;
 
             if (RenderTextureInputManager.Instance != null && RenderTextureInputManager.Instance.WorldToCanvasWorldPoint(current3DPos, out canvasWorldPos))
@@ -113,7 +113,7 @@ public class DamageNumberUI : MonoBehaviour
 
                 // Calcula a posição 3D do alvo atualizada, somando a subida da animação e o jitter
                 Vector3 current3DPos = lastWorldPos + spawnOffset + jitterOffset + (Vector3.up * (elapsed * moveSpeed));
-                Vector3 canvasWorldPos;
+                Vector3 canvasWorldPos = Vector3.zero;
                 bool positionFound = false;
 
                 // 1. Tenta converter usando o RenderTextureInputManager (caso esteja ativo)
