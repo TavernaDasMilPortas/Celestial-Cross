@@ -236,7 +236,9 @@ public class AccountManager : MonoBehaviour
                     (int)petSpecies.MaxBaseDefense,
                     (int)petSpecies.MaxBaseSpeed,
                     (int)petSpecies.MaxBaseCriticalChance,
-                    (int)petSpecies.MaxBaseEffectAccuracy
+                    (int)petSpecies.MaxBaseCriticalDamage,
+                    (int)petSpecies.MaxBaseEffectAccuracy,
+                    (int)petSpecies.MaxBaseEffectResistance
                 );
                 PlayerAccount.OwnedRuntimePets.Add(newPet);
             }

@@ -596,7 +596,7 @@ private void PopulateTab(int tabIndex)
             topPanelTexts[tabIndex].text = string.IsNullOrWhiteSpace(text) ? "" : text;
     }
 
-    private void ProcessStatData(CelestialCross.Artifacts.StatModifierData stat, ref float hF, ref float hP, ref float aF, ref float aP, ref float dF, ref float dP, ref float spdF, ref float crF, ref float eaf)
+    private void ProcessStatData(CelestialCross.Artifacts.StatModifierData stat, ref float hF, ref float hP, ref float aF, ref float aP, ref float dF, ref float dP, ref float spdF, ref float crF, ref float eaf, ref float cdF, ref float erf)
     {
         if (stat == null) return;
         switch (stat.statType)
@@ -609,7 +609,9 @@ private void PopulateTab(int tabIndex)
             case CelestialCross.Artifacts.StatType.DefensePercent: dP += stat.value; break;
             case CelestialCross.Artifacts.StatType.Speed:  spdF += stat.value; break;
             case CelestialCross.Artifacts.StatType.CriticalRate: crF += stat.value; break;
+            case CelestialCross.Artifacts.StatType.CriticalDamage: cdF += stat.value; break;
             case CelestialCross.Artifacts.StatType.EffectHitRate: eaf += stat.value; break;
+            case CelestialCross.Artifacts.StatType.EffectResistance: erf += stat.value; break;
         }
     }
 
@@ -756,7 +758,7 @@ private void PopulateTab(int tabIndex)
                 }
             }
 
-            float hF = 0, hP = 0, aF = 0, aP = 0, dF = 0, dP = 0, spdF = 0, crF = 0, eaf = 0;
+            float hF = 0, hP = 0, aF = 0, aP = 0, dF = 0, dP = 0, spdF = 0, crF = 0, eaf = 0, cdF = 0, erf = 0;
             if (loadout != null)
             {
                 var artifactIDs = loadout.GetEquippedArtifactIDs();
@@ -765,12 +767,12 @@ private void PopulateTab(int tabIndex)
                     var arti = account.GetArtifactByGuid(guid);
                     if (arti != null)
                     {
-                        ProcessStatData(arti.mainStat, ref hF, ref hP, ref aF, ref aP, ref dF, ref dP, ref spdF, ref crF, ref eaf);
+                        ProcessStatData(arti.mainStat, ref hF, ref hP, ref aF, ref aP, ref dF, ref dP, ref spdF, ref crF, ref eaf, ref cdF, ref erf);
                         if (arti.subStats != null)
                         {
                             foreach (var sub in arti.subStats)
                             {
-                                ProcessStatData(sub, ref hF, ref hP, ref aF, ref aP, ref dF, ref dP, ref spdF, ref crF, ref eaf);
+                                ProcessStatData(sub, ref hF, ref hP, ref aF, ref aP, ref dF, ref dP, ref spdF, ref crF, ref eaf, ref cdF, ref erf);
                             }
                         }
                     }
@@ -782,7 +784,9 @@ private void PopulateTab(int tabIndex)
             int finalDefense = (int)Mathf.Round(baseStats.defense * (1f + (dP / 100f)) + dF);
             int finalSpeed = (int)Mathf.Round(baseStats.speed + spdF);
             int finalCrit = Mathf.Clamp((int)Mathf.Round(baseStats.criticalChance + crF), 0, 100);
+            int finalCritDmg = Mathf.Max(50, (int)Mathf.Round(baseStats.criticalDamage + cdF)); // Base 50%
             int finalAcc = Mathf.Clamp((int)Mathf.Round(baseStats.effectAccuracy + eaf), 0, 100);
+            int finalRes = Mathf.Clamp((int)Mathf.Round(baseStats.effectResistance + erf), 0, 100);
             
             if (equippedPet != null && equippedPetSpecies != null)
             {
@@ -791,7 +795,9 @@ private void PopulateTab(int tabIndex)
                 finalDefense += equippedPet.Defense;
                 finalSpeed += equippedPet.Speed;
                 finalCrit = Mathf.Clamp(finalCrit + equippedPet.CriticalChance, 0, 100);
+                finalCritDmg = Mathf.Max(50, finalCritDmg + equippedPet.CriticalDamage);
                 finalAcc = Mathf.Clamp(finalAcc + equippedPet.EffectAccuracy, 0, 100);
+                finalRes = Mathf.Clamp(finalRes + equippedPet.EffectResistance, 0, 100);
             }
             
             int roundedBaseHealth = Mathf.RoundToInt(baseStats.health);
@@ -799,14 +805,18 @@ private void PopulateTab(int tabIndex)
             int roundedBaseDefense = Mathf.RoundToInt(baseStats.defense);
             int roundedBaseSpeed = Mathf.RoundToInt(baseStats.speed);
             int roundedBaseCrit = Mathf.RoundToInt(baseStats.criticalChance);
+            int roundedBaseCritDmg = Mathf.RoundToInt(baseStats.criticalDamage);
             int roundedBaseAcc = Mathf.RoundToInt(baseStats.effectAccuracy);
+            int roundedBaseRes = Mathf.RoundToInt(baseStats.effectResistance);
 
             string healthText = finalHealth > roundedBaseHealth ? $"<color=#00ff00>{finalHealth}</color> <color=#aaaaaa>({roundedBaseHealth} +{finalHealth - roundedBaseHealth})</color>" : finalHealth.ToString();
             string attackText = finalAttack > roundedBaseAttack ? $"<color=#00ff00>{finalAttack}</color> <color=#aaaaaa>({roundedBaseAttack} +{finalAttack - roundedBaseAttack})</color>" : finalAttack.ToString();
             string defenseText = finalDefense > roundedBaseDefense ? $"<color=#00ff00>{finalDefense}</color> <color=#aaaaaa>({roundedBaseDefense} +{finalDefense - roundedBaseDefense})</color>" : finalDefense.ToString();
             string speedText = finalSpeed > roundedBaseSpeed ? $"<color=#00ff00>{finalSpeed}</color> <color=#aaaaaa>({roundedBaseSpeed} +{finalSpeed - roundedBaseSpeed})</color>" : finalSpeed.ToString();
             string critText = finalCrit > roundedBaseCrit ? $"<color=#00ff00>{finalCrit}%</color> <color=#aaaaaa>({roundedBaseCrit}% +{finalCrit - roundedBaseCrit}%)</color>" : $"{finalCrit}%";
+            string cdText = finalCritDmg > roundedBaseCritDmg ? $"<color=#00ff00>{finalCritDmg}%</color> <color=#aaaaaa>({roundedBaseCritDmg}% +{finalCritDmg - roundedBaseCritDmg}%)</color>" : $"{finalCritDmg}%";
             string accText = finalAcc > roundedBaseAcc ? $"<color=#00ff00>{finalAcc}%</color> <color=#aaaaaa>({roundedBaseAcc}% +{finalAcc - roundedBaseAcc}%)</color>" : $"{finalAcc}%";
+            string resText = finalRes > roundedBaseRes ? $"<color=#00ff00>{finalRes}%</color> <color=#aaaaaa>({roundedBaseRes}% +{finalRes - roundedBaseRes}%)</color>" : $"{finalRes}%";
 
             string abilitiesList = "Nenhuma habilidade";
             if (unitAbilitiesContainer != null)
@@ -838,7 +848,9 @@ private void PopulateTab(int tabIndex)
                                  $"<color=#ff8888>DEF:</color> {defenseText}\n" +
                                  $"<color=#ff8888>SPD:</color> {speedText}   " +
                                  $"<color=#ff8888>CRIT:</color> {critText}   " +
-                                 $"<color=#ff8888>ACC:</color> {accText}" +
+                                 $"<color=#ff8888>CR.DMG:</color> {cdText}\n" +
+                                 $"<color=#ff8888>ACC:</color> {accText}   " +
+                                 $"<color=#ff8888>RES:</color> {resText}" +
                                  $"</size>";
             unitStatsText.text = defaultStatsText;
         }
@@ -1067,7 +1079,8 @@ private void PopulateTab(int tabIndex)
             details = $"<b>{speciesName}</b>\n" +
                       $"Estrelas: {data.RarityStars}* | Nível: {data.CurrentLevel}\n\n" +
                       $"HP: +{data.Health}   ATK: +{data.Attack}   DEF: +{data.Defense}\n" +
-                      $"SPD: +{data.Speed}   CRIT: +{data.CriticalChance}%   ACC: +{data.EffectAccuracy}%\n\n";
+                      $"SPD: +{data.Speed}   CRIT: +{data.CriticalChance}%\n" +
+                      $"CR.DMG: +{data.CriticalDamage}%   ACC: +{data.EffectAccuracy}%   RES: +{data.EffectResistance}%\n\n";
             if (speciesData != null)
             {
                 if (speciesData.PassiveSkills != null) foreach (var ab in speciesData.PassiveSkills) if (ab != null) { details += $"<color=#ffffaa>{ab.abilityName}</color>\n<size=16>{ab.abilityDescription}</size>\n"; }

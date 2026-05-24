@@ -1,4 +1,4 @@
-﻿namespace CelestialCross.Data.Pets
+namespace CelestialCross.Data.Pets
 {
     [global::System.Serializable]
     public class RuntimePetData
@@ -16,13 +16,15 @@
         public int Defense;
         public int Speed;
         public int CriticalChance;
+        public int CriticalDamage;
         public int EffectAccuracy;
+        public int EffectResistance;
 
         public string DisplayName => string.IsNullOrWhiteSpace(SpeciesName) ? $"Espécie {SpeciesID}" : SpeciesName;
 
         public RuntimePetData() {}
 
-        public RuntimePetData(string speciesID, string speciesName, int stars, int hp, int atk, int def, int spd, int crit, int acc)
+        public RuntimePetData(string speciesID, string speciesName, int stars, int hp, int atk, int def, int spd, int crit, int critDmg, int acc, int effRes)
         {
             UUID = global::System.Guid.NewGuid().ToString();
             SpeciesID = speciesID;
@@ -34,7 +36,9 @@
             Defense = def;
             Speed = spd;
             CriticalChance = crit;
+            CriticalDamage = critDmg;
             EffectAccuracy = acc;
+            EffectResistance = effRes;
         }
     }
 }

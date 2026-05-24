@@ -157,6 +157,14 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                     if (!string.IsNullOrEmpty(targetData.rangeVariable))
                         resolvedRange = (int)GetVariable(context, targetData.rangeVariable, resolvedRange);
 
+                    if (targetData.useExtraRangeVariable && context.source != null && context.source.VariableStore != null)
+                    {
+                        float extraRange = string.IsNullOrEmpty(context.slotId)
+                            ? context.source.VariableStore.GetGlobalVar("ExtraRange")
+                            : context.source.VariableStore.GetSlotVar(context.slotId, "ExtraRange");
+                        resolvedRange += Mathf.RoundToInt(extraRange);
+                    }
+
                     yield return StartCoroutine(HandleTargeting(targetData, context, currentHook, resolvedRange));
                     break;
 
@@ -293,6 +301,59 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                     ModifyVariable(context, modData.variableName, modData.operation, modVal);
                     break;
 
+                case "ReadUnitVariableNode":
+                    var readData = JsonUtility.FromJson<ReadUnitVariableNodeData>(node.JsonData);
+                    if (context.source != null && context.source.VariableStore != null)
+                    {
+                        float val = readData.isSlotVariable && !string.IsNullOrEmpty(context.slotId)
+                            ? context.source.VariableStore.GetSlotVar(context.slotId, readData.variableName)
+                            : context.source.VariableStore.GetGlobalVar(readData.variableName);
+                        
+                        context.Variables[readData.outputVariable] = val;
+                        CombatLogger.Log($"  <color=#a29bfe>[Variavel]</color> Lida variável de unidade '{readData.variableName}' ({val}) para o contexto '{readData.outputVariable}'", LogCategory.Graph);
+                    }
+                    break;
+
+                case "WriteUnitVariableNode":
+                    var writeData = JsonUtility.FromJson<WriteUnitVariableNodeData>(node.JsonData);
+                    if (context.source != null && context.source.VariableStore != null)
+                    {
+                        float val = writeData.value;
+                        if (!string.IsNullOrEmpty(writeData.contextVariableReference))
+                            val = GetVariable(context, writeData.contextVariableReference, val);
+
+                        float currentVal = writeData.isSlotVariable && !string.IsNullOrEmpty(context.slotId)
+                            ? context.source.VariableStore.GetSlotVar(context.slotId, writeData.variableName)
+                            : context.source.VariableStore.GetGlobalVar(writeData.variableName);
+
+                        float newVal = writeData.operation switch
+                        {
+                            WriteUnitVariableNodeData.Operation.Set => val,
+                            WriteUnitVariableNodeData.Operation.Add => currentVal + val,
+                            WriteUnitVariableNodeData.Operation.Multiply => currentVal * val,
+                            _ => val
+                        };
+
+                        if (writeData.isSlotVariable && !string.IsNullOrEmpty(context.slotId))
+                            context.source.VariableStore.SetSlotVar(context.slotId, writeData.variableName, newVal);
+                        else
+                            context.source.VariableStore.SetGlobalVar(writeData.variableName, newVal);
+
+                        CombatLogger.Log($"  <color=#a29bfe>[Variavel]</color> Variável de unidade '{writeData.variableName}' {(writeData.isSlotVariable?"(Slot)":"(Global)")} atualizada para {newVal}", LogCategory.Graph);
+                    }
+                    break;
+
+                case "SkillBranchNode":
+                    var branchData = JsonUtility.FromJson<SkillBranchNodeData>(node.JsonData);
+                    bool branchActive = false;
+                    if (context.source != null && context.source.Loadout != null && !string.IsNullOrEmpty(branchData.branchId))
+                    {
+                        branchActive = context.source.Loadout.branchSelections.Exists(sel => sel.selectedBranchIds.Contains(branchData.branchId));
+                    }
+                    resultPort = branchActive ? "Active" : "Inactive";
+                    CombatLogger.Log($"  <color=#a29bfe>[Ramo]</color> Validação de Ramo '{branchData.branchId}': <b>{(branchActive ? "Ativo" : "Inativo")}</b>", LogCategory.Graph);
+                    break;
+
                 case "LevelBranchNode":
                     resultPort = $"Level {context.abilityLevel}";
                     CombatLogger.Log($"  <color=#a29bfe>[Fluxo]</color> Ramificação de Nível: Seguir porta <b>{resultPort}</b>", LogCategory.Graph);
@@ -375,12 +436,23 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                 var stepContext = new CombatContext(context.source, target);
                 
                 float baseVal = 0;
-                var attr = (AttributeCondition.AttributeType)data.baseAttribute;
-                switch(attr)
+
+                if (data.scalings != null && data.scalings.Count > 0)
                 {
-                    case AttributeCondition.AttributeType.HP: baseVal = target.Health.CurrentHealth; break;
-                    case AttributeCondition.AttributeType.Attack: baseVal = context.source.Stats.attack; break;
-                    default: baseVal = context.source.Stats.attack; break;
+                    foreach (var scaling in data.scalings)
+                    {
+                        var u = scaling.useTargetStat ? target : context.source;
+                        if (u != null && u.VariableStore != null)
+                        {
+                            float statVal = u.VariableStore.GetStat(scaling.statType);
+                            baseVal += statVal * (scaling.percentage / 100f);
+                        }
+                    }
+                }
+                else
+                {
+                    // Fallback to source attack
+                    baseVal = context.source != null ? context.source.Stats.attack : 0;
                 }
 
                 float multiplier = 1.0f;
@@ -402,12 +474,23 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                 if (target == null) continue;
                 
                 float baseVal = 0;
-                var attr = (AttributeCondition.AttributeType)data.baseAttribute;
-                switch(attr)
+                
+                if (data.scalings != null && data.scalings.Count > 0)
                 {
-                    case AttributeCondition.AttributeType.HP: baseVal = target.Health.MaxHealth; break;
-                    case AttributeCondition.AttributeType.Attack: baseVal = context.source.Stats.attack; break;
-                    default: baseVal = target.Health.MaxHealth; break;
+                    foreach (var scaling in data.scalings)
+                    {
+                        var u = scaling.useTargetStat ? target : context.source;
+                        if (u != null && u.VariableStore != null)
+                        {
+                            float statVal = u.VariableStore.GetStat(scaling.statType);
+                            baseVal += statVal * (scaling.percentage / 100f);
+                        }
+                    }
+                }
+                else
+                {
+                    // Fallback to target max health
+                    baseVal = target.Health.MaxHealth;
                 }
 
                 float multiplier = 1.0f;
@@ -675,9 +758,22 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                 return;
             }
 
+            bool isBuff = conditionGraph.GetIsBuff();
+
             foreach (var target in context.targets)
             {
                 if (target == null) continue;
+
+                // Teste de Resistência para debuffs
+                if (!isBuff)
+                {
+                    if (!EffectResistanceCheck.ShouldApplyEffect(context.source, target, 100f))
+                    {
+                        CombatLogger.Log($"  <color=#ffd700>[Resistido]</color> <b>{target.DisplayName}</b> resistiu à condição <b>{conditionGraph.name}</b>", LogCategory.Graph);
+                        continue;
+                    }
+                }
+
                 var passiveManager = target.GetComponent<PassiveManager>();
                 if (passiveManager == null) continue;
 

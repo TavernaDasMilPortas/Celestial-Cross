@@ -76,6 +76,8 @@ public class UnitRuntimeConfigurator : MonoBehaviour
         var loadout = AccountManager.Instance.PlayerAccount.GetLoadoutForUnit(unitData.UnitID);
         if (loadout == null) return;
 
+        unit.ConfigureLoadout(loadout);
+
         var equipped = new List<ArtifactInstanceData>();
         var ids = loadout.GetEquippedArtifactIDs();
         for (int i = 0; i < ids.Count; i++)

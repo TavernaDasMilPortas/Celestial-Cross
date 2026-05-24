@@ -52,6 +52,20 @@ public class PassiveManager : MonoBehaviour
         }
     }
 
+    public List<string> GetActiveConditionNames()
+    {
+        var names = new List<string>();
+        foreach (var c in activeRuntimeConditions)
+        {
+            if (c.blueprint != null) names.Add(c.blueprint.abilityName);
+        }
+        foreach (var c in activeGraphConditions)
+        {
+            if (c.graph != null) names.Add(c.graph.name);
+        }
+        return names;
+    }
+
     void Awake()
     {
         unit = GetComponent<Unit>();
@@ -441,8 +455,9 @@ public class PassiveManager : MonoBehaviour
     }
     public CombatStats GetTotalStatBonuses(CombatStats baseStats)
     {
-        CombatStats total = new CombatStats(0, 0, 0, 0, 0, 0);
+        CombatStats total = new CombatStats(0, 0, 0, 0, 0, 0, 0, 0);
         float atkPct = 0, defPct = 0, hpPct = 0, spdPct = 0;
+        float critDmgFlat = 0, effAccFlat = 0, effResFlat = 0;
 
         if (activeRuntimeConditions == null) return total;
 
@@ -462,6 +477,9 @@ public class PassiveManager : MonoBehaviour
                     total.health += (flatMod.statBonus.health > 1 ? flatMod.statBonus.health : 0) * stacks;
                     total.speed += flatMod.statBonus.speed * stacks;
                     total.criticalChance += flatMod.statBonus.criticalChance * stacks;
+                    total.criticalDamage += flatMod.statBonus.criticalDamage * stacks;
+                    total.effectAccuracy += flatMod.statBonus.effectAccuracy * stacks;
+                    total.effectResistance += flatMod.statBonus.effectResistance * stacks;
                 }
                 else if (mod is PassiveEffect_PercentStatBonus percentMod)
                 {
@@ -473,6 +491,9 @@ public class PassiveManager : MonoBehaviour
                             case CelestialCross.Artifacts.StatType.DefensePercent: defPct += p.percentBonus * stacks; break;
                             case CelestialCross.Artifacts.StatType.HealthPercent: hpPct += p.percentBonus * stacks; break;
                             case CelestialCross.Artifacts.StatType.Speed: spdPct += p.percentBonus * stacks; break;
+                            case CelestialCross.Artifacts.StatType.CriticalDamage: critDmgFlat += p.percentBonus * stacks; break;
+                            case CelestialCross.Artifacts.StatType.EffectHitRate: effAccFlat += p.percentBonus * stacks; break;
+                            case CelestialCross.Artifacts.StatType.EffectResistance: effResFlat += p.percentBonus * stacks; break;
                         }
                     }
                 }
@@ -484,6 +505,9 @@ public class PassiveManager : MonoBehaviour
         total.defense += Mathf.RoundToInt(baseStats.defense * (defPct / 100f));
         total.health += Mathf.RoundToInt(baseStats.health * (hpPct / 100f));
         total.speed += Mathf.RoundToInt(baseStats.speed * (spdPct / 100f));
+        total.criticalDamage += Mathf.RoundToInt(critDmgFlat);
+        total.effectAccuracy += Mathf.RoundToInt(effAccFlat);
+        total.effectResistance += Mathf.RoundToInt(effResFlat);
 
         return total;
     }

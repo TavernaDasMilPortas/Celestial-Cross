@@ -147,7 +147,50 @@ A interface da loja ainda utilizava placeholders e layouts temporários que não
 
 ---
 
+## 14. Expansão de Status Base e Resistências
+**Data: 23/05/2026**
+### **Problema:**
+O combate baseava-se muito em dano plano e as condições de controle de grupo/status careciam de mitigação defensiva apropriada.
+
+### **Solução:**
+*   **Novas Métricas:** Adicionados `CriticalDamage` e `EffectResistance` aos status globais (`CombatStats`) das Unidades e dos Pets (`PetSpeciesSO` e `RuntimePetData`).
+*   **Refatoração do DamageProcessor:** O multiplicador crítico base agora escala perfeitamente e ataques baseados em debuff passam pela verificação de Resistência do defensor antes da aplicação final.
+
+---
+
+## 15. Sistema Dinâmico de Escalonamento (Scaling)
+**Data: 23/05/2026**
+### **Problema:**
+Grafos de habilidade operavam com números inteiros ou flutuantes diretos, limitando builds criativas (ex: "Bate com o valor de defesa" ou "Soma HP Máximo").
+
+### **Solução:**
+*   **Escalonamento Multi-Status:** `DamageNodeData` e `HealNodeData` agora utilizam a listagem `StatScalingData`, lendo e processando múltiplos status (ex: 100% de Ataque + 25% de Velocidade) via `AbilityGraphInterpreter` sem hardcoding.
+*   **Armazenamento de Variáveis Globais:** Criado o `UnitVariableStore` onde nodos de grafos de Habilidades agora conseguem ler e escrever variáveis transitórias e permanentes.
+
+---
+
+## 16. Fundações da Skill Tree e Modificadores
+**Data: 23/05/2026**
+### **Problema:**
+Inflexibilidade no carregamento de habilidades; o jogador não conseguia modificar o que as ações faziam, deixando a progressão tática limitada.
+
+### **Solução:**
+*   **Divisão de Tiers:** Separação do grafo central com uso do `SkillBranchNode` dentro do editor gráfico. A execução das habilidades passou a depender das escolhas dos Tiers feitos pelo usuário no novo sistema de Configuração (`SkillTreeConfigSO` e `SkillBranchTree`).
+*   **Persistência em Conta:** As modificações feitas nas ramificações da Skill Tree são mantidas em `UnitLoadout` que integra perfeitamente o sistema de gravação `AccountManager`.
+
+---
+
+## 17. Novos Modais de UI e Builders para Habilidades
+**Data: 23/05/2026**
+### **Problema:**
+A interface não mostrava quais passivas e condições estavam ativas em tempo real e não havia local para interagir com o novo sistema de árvore de habilidades.
+
+### **Solução:**
+*   **Componentes Modulares Dinâmicos:** Desenvolvimento do `SkillTabUI`, `SkillSelectionModal`, e `SkillBranchModal` para a tela de Inventário.
+*   **Lista de Passivas em Combate:** `PassiveListModal` exibe todos os buffs momentâneos da unidade vinculada (`PassiveManager.GetActiveConditionNames()`).
+*   **Integração Automatizada:** Ferramentas de utilidade de Editor criadas na janela superior (`Celestial Cross -> UI Builders -> Skills`) para injetar instantaneamente as Canvas prontas na cena sem perda de referências.
+
 ## Próximos Passos
 *   Arrumar anchors da Shop Scene para garantir responsividade em diferentes resoluções.
-*   Testar a persistência das passivas da Leidell em batalhas de longa duração.
-*   Continuar refinamento de polimento geral das transições visuais e efeitos.
+*   Testar a persistência das passivas da Leidell em batalhas de longa duração com o novo Loadout.
+*   Aprofundar as mecânicas das Inteligências Artificiais usando o novo sistema de Variáveis de Unidade.

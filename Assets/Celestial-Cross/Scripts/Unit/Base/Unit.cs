@@ -70,7 +70,7 @@ public abstract class Unit : MonoBehaviour
             
             CombatStats baseStats = unitData != null
                 ? unitData.GetStatsAtLevel(level, refMaxLevel)
-                : new CombatStats(1, 0, 0, 0, 0, 0);
+                : new CombatStats(1, 0, 0, 0, 0, 0, 50, 0);
 
             if (runtimePetData != null)
             {
@@ -89,14 +89,16 @@ public abstract class Unit : MonoBehaviour
             float defFlat = 0f, defPct = 0f;
             float spdFlat = 0f;
             float critChanceFlat = 0f;
+            float critDamageFlat = 0f;
             float effectAccFlat = 0f;
+            float effectResFlat = 0f;
 
             // Prefer cache built from saved-data artifacts (Option B). If empty, fallback to debug ScriptableObjects.
             if (cachedArtifactStatModifiers != null && cachedArtifactStatModifiers.Count > 0)
             {
                 for (int i = 0; i < cachedArtifactStatModifiers.Count; i++)
                 {
-                    ProcessArtifactStat(cachedArtifactStatModifiers[i], ref healthFlat, ref healthPct, ref atkFlat, ref atkPct, ref defFlat, ref defPct, ref spdFlat, ref critChanceFlat, ref effectAccFlat);
+                    ProcessArtifactStat(cachedArtifactStatModifiers[i], ref healthFlat, ref healthPct, ref atkFlat, ref atkPct, ref defFlat, ref defPct, ref spdFlat, ref critChanceFlat, ref critDamageFlat, ref effectAccFlat, ref effectResFlat);
                 }
             }
             else if (equippedArtifacts != null)
@@ -107,10 +109,10 @@ public abstract class Unit : MonoBehaviour
                 {
                     if (artifact != null)
                     {
-                        ProcessArtifactStat(artifact.mainStat, ref healthFlat, ref healthPct, ref atkFlat, ref atkPct, ref defFlat, ref defPct, ref spdFlat, ref critChanceFlat, ref effectAccFlat);
+                        ProcessArtifactStat(artifact.mainStat, ref healthFlat, ref healthPct, ref atkFlat, ref atkPct, ref defFlat, ref defPct, ref spdFlat, ref critChanceFlat, ref critDamageFlat, ref effectAccFlat, ref effectResFlat);
                         foreach (var sub in artifact.subStats)
                         {
-                            ProcessArtifactStat(sub, ref healthFlat, ref healthPct, ref atkFlat, ref atkPct, ref defFlat, ref defPct, ref spdFlat, ref critChanceFlat, ref effectAccFlat);
+                            ProcessArtifactStat(sub, ref healthFlat, ref healthPct, ref atkFlat, ref atkPct, ref defFlat, ref defPct, ref spdFlat, ref critChanceFlat, ref critDamageFlat, ref effectAccFlat, ref effectResFlat);
                         }
 
                         if (artifact.artifactSet != null)
@@ -133,7 +135,7 @@ public abstract class Unit : MonoBehaviour
                         {
                             foreach (var statMod in bonus.statBonuses)
                             {
-                                ProcessArtifactStat(statMod, ref healthFlat, ref healthPct, ref atkFlat, ref atkPct, ref defFlat, ref defPct, ref spdFlat, ref critChanceFlat, ref effectAccFlat);
+                                ProcessArtifactStat(statMod, ref healthFlat, ref healthPct, ref atkFlat, ref atkPct, ref defFlat, ref defPct, ref spdFlat, ref critChanceFlat, ref critDamageFlat, ref effectAccFlat, ref effectResFlat);
                             }
                         }
                     }
@@ -150,12 +152,14 @@ public abstract class Unit : MonoBehaviour
             int finalDefense = (int)(Mathf.Round(uBase.defense * (1f + (defPct / 100f))) + defFlat) + petDefense;
             int finalSpeed = (int)Mathf.Round(baseStats.speed + spdFlat); // Pet speed already in baseStats. Speed generally hasn't a percent variant in standard logic
             int finalCrit = (int)Mathf.Round(baseStats.criticalChance + critChanceFlat);
+            int finalCritDmg = (int)Mathf.Round(baseStats.criticalDamage + critDamageFlat);
             int finalAcc = (int)Mathf.Round(baseStats.effectAccuracy + effectAccFlat);
+            int finalRes = (int)Mathf.Round(baseStats.effectResistance + effectResFlat);
 
-            CombatStats finalArtifactStats = new CombatStats(finalHealth, finalAttack, finalDefense, finalSpeed, finalCrit, finalAcc);
+            CombatStats finalArtifactStats = new CombatStats(finalHealth, finalAttack, finalDefense, finalSpeed, finalCrit, finalAcc, finalCritDmg, finalRes);
             
             // Somar bônus de condições ativas do PassiveManager
-            CombatStats conditionStats = new CombatStats(0, 0, 0, 0, 0, 0);
+            CombatStats conditionStats = new CombatStats(0, 0, 0, 0, 0, 0, 0, 0);
             if (PassiveManager != null)
             {
                 conditionStats = PassiveManager.GetTotalStatBonuses(uBase);
@@ -165,7 +169,7 @@ public abstract class Unit : MonoBehaviour
         }
     }
 
-    private void ProcessArtifactStat(StatModifier stat, ref float hF, ref float hP, ref float aF, ref float aP, ref float dF, ref float dP, ref float spdF, ref float crF, ref float eaf)
+    private void ProcessArtifactStat(StatModifier stat, ref float hF, ref float hP, ref float aF, ref float aP, ref float dF, ref float dP, ref float spdF, ref float crF, ref float crDF, ref float eaf, ref float erf)
     {
         switch (stat.statType)
         {
@@ -177,8 +181,9 @@ public abstract class Unit : MonoBehaviour
             case StatType.DefensePercent: dP += stat.value; break;
             case StatType.Speed: spdF += stat.value; break;
             case StatType.CriticalRate: crF += stat.value; break;
+            case StatType.CriticalDamage: crDF += stat.value; break;
             case StatType.EffectHitRate: eaf += stat.value; break;
-            // CriticalDamage and EffectResistance can be added here if Unit.CombatStats supports them in the future.
+            case StatType.EffectResistance: erf += stat.value; break;
         }
     }
 
@@ -187,6 +192,13 @@ public abstract class Unit : MonoBehaviour
 
     public Health Health { get; private set; }
     public PassiveManager PassiveManager { get; private set; }
+    public UnitVariableStore VariableStore { get; private set; }
+    public UnitLoadout Loadout { get; private set; }
+
+    public void ConfigureLoadout(UnitLoadout loadout)
+    {
+        Loadout = loadout;
+    }
 
     protected List<IUnitAction> actions = new();
     public IReadOnlyList<IUnitAction> Actions => actions;
@@ -209,6 +221,8 @@ public abstract class Unit : MonoBehaviour
             PassiveManager = gameObject.AddComponent<PassiveManager>();
             Debug.Log($"<color=yellow>[Unit]</color> PassiveManager adicionado dinamicamente a {gameObject.name}");
         }
+
+        VariableStore = new UnitVariableStore(this);
     }
  
     public virtual void Initialize()

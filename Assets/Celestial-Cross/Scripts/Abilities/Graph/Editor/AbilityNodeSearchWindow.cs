@@ -34,6 +34,9 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor
                 new SearchTreeEntry(new GUIContent("Loop")) { userData = typeof(LoopNode), level = 2 },
                 new SearchTreeEntry(new GUIContent("Level Branch")) { userData = typeof(LevelBranchNode), level = 2 },
                 new SearchTreeEntry(new GUIContent("Duration / Expiry")) { userData = typeof(DurationNode), level = 2 },
+                new SearchTreeEntry(new GUIContent("Skill Branch")) { userData = typeof(SkillBranchNode), level = 2 },
+                new SearchTreeEntry(new GUIContent("Read Unit Variable")) { userData = typeof(ReadUnitVariableNode), level = 2 },
+                new SearchTreeEntry(new GUIContent("Write Unit Variable")) { userData = typeof(WriteUnitVariableNode), level = 2 },
 
                 new SearchTreeGroupEntry(new GUIContent("Effects"), 1),
                 new SearchTreeEntry(new GUIContent("Damage Effect")) { userData = typeof(DamageEffectNode), level = 2 },

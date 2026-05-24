@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 using CelestialCross.Data.Pets;
 
@@ -63,9 +63,11 @@ namespace CelestialCross.Data.Dungeon
                     int finalSpd = Mathf.RoundToInt(Random.Range(selectedPetSpecies.MinBaseSpeed, selectedPetSpecies.MaxBaseSpeed) * starMultiplier);
                     int finalCrit = Mathf.Clamp(Mathf.RoundToInt(Random.Range(selectedPetSpecies.MinBaseCriticalChance, selectedPetSpecies.MaxBaseCriticalChance) * starMultiplier), 0, 100);
                     int finalAcc = Mathf.Clamp(Mathf.RoundToInt(Random.Range(selectedPetSpecies.MinBaseEffectAccuracy, selectedPetSpecies.MaxBaseEffectAccuracy) * starMultiplier), 0, 100);
+                    int finalCritDmg = Mathf.RoundToInt(Random.Range(selectedPetSpecies.MinBaseCriticalDamage, selectedPetSpecies.MaxBaseCriticalDamage) * starMultiplier);
+                    int finalEffRes = Mathf.Clamp(Mathf.RoundToInt(Random.Range(selectedPetSpecies.MinBaseEffectResistance, selectedPetSpecies.MaxBaseEffectResistance) * starMultiplier), 0, 100);
 
                     var newPet = new RuntimePetData(selectedPetSpecies.id, selectedPetSpecies.SpeciesName, stars,
-                        finalHp, finalAtk, finalDef, finalSpd, finalCrit, finalAcc
+                        finalHp, finalAtk, finalDef, finalSpd, finalCrit, finalCritDmg, finalAcc, finalEffRes
                     );
 
                     rewardData.GeneratedPets.Add(newPet);

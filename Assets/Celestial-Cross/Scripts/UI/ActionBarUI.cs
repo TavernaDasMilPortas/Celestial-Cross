@@ -6,6 +6,10 @@ public class ActionBarUI : MonoBehaviour
 {
     [SerializeField] private GameObject buttonPrefab;
     [SerializeField] private Transform container;
+    
+    [Header("Passives UI (Phase 5)")]
+    public UnityEngine.UI.Button passivesButton;
+    public CelestialCross.UI.Skills.PassiveListModal passiveListModal;
 
     private List<ActionButtonUI> spawnedButtons = new();
     private Unit currentUnit;
@@ -42,6 +46,13 @@ public class ActionBarUI : MonoBehaviour
         // Highlight initial action if it exists
         if (unit.CurrentAction != null)
             HandleActionChanged(unit.CurrentAction);
+
+        if (passivesButton != null && passiveListModal != null)
+        {
+            passivesButton.gameObject.SetActive(true);
+            passivesButton.onClick.RemoveAllListeners();
+            passivesButton.onClick.AddListener(() => passiveListModal.Open(currentUnit));
+        }
     }
 
     private void CreateButtonForAction(IUnitAction action, int index, bool isClickable)
@@ -117,6 +128,11 @@ public class ActionBarUI : MonoBehaviour
         }
         spawnedButtons.Clear();
         buttonsByUnitId.Clear();
+        
+        if (passivesButton != null)
+        {
+            passivesButton.gameObject.SetActive(false);
+        }
     }
 
     public void GenerateButtonsForPlacement(List<UnitData> units, System.Action<UnitData> onUnitSelected)
