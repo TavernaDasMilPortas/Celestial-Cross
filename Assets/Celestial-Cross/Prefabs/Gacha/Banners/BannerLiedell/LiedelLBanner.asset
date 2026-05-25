@@ -64,3 +64,11 @@ MonoBehaviour:
     Weight: 1
     ItemStars: 3
     ArtifactRarity: 0
+  - RewardType: 1
+    Rarity: 0
+    UnitData: {fileID: 0}
+    PetSpeciesData: {fileID: 11400000, guid: ca3587875a7b1d64bbb5e2585641ebca, type: 2}
+    ArtifactSet: {fileID: 0}
+    Weight: 1
+    ItemStars: 3
+    ArtifactRarity: 0

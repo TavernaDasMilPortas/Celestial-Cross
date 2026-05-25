@@ -508,7 +508,17 @@ namespace CelestialCross.Editor
             {
                 generateSkillTree = true;
                 basicAttackGraph = source.skillTreeConfig.basicAttack;
+                if (basicAttackGraph != null && !associatedGraphs.Contains(basicAttackGraph))
+                {
+                    associatedGraphs.Add(basicAttackGraph);
+                }
+
                 movementSkillGraph = source.skillTreeConfig.movementSkill;
+                if (movementSkillGraph != null && !associatedGraphs.Contains(movementSkillGraph))
+                {
+                    associatedGraphs.Add(movementSkillGraph);
+                }
+
                 combatSkillGraphs = new List<AbilityGraphSO>();
 
                 #pragma warning disable 612, 618
@@ -522,6 +532,10 @@ namespace CelestialCross.Editor
                         foreach (var graph in source.skillTreeConfig.slot1Skills)
                         {
                             if (graph == null) continue;
+                            if (!associatedGraphs.Contains(graph))
+                            {
+                                associatedGraphs.Add(graph);
+                            }
                             combatSkillGraphs.Add(graph);
                             skillSlotAssignments[graph] = 1;
                         }
@@ -531,6 +545,10 @@ namespace CelestialCross.Editor
                         foreach (var graph in source.skillTreeConfig.slot2Skills)
                         {
                             if (graph == null) continue;
+                            if (!associatedGraphs.Contains(graph))
+                            {
+                                associatedGraphs.Add(graph);
+                            }
                             combatSkillGraphs.Add(graph);
                             skillSlotAssignments[graph] = 2;
                         }
@@ -538,7 +556,15 @@ namespace CelestialCross.Editor
                 }
                 else if (source.skillTreeConfig.combatSkills != null)
                 {
-                    combatSkillGraphs.AddRange(source.skillTreeConfig.combatSkills);
+                    foreach (var graph in source.skillTreeConfig.combatSkills)
+                    {
+                        if (graph == null) continue;
+                        if (!associatedGraphs.Contains(graph))
+                        {
+                            associatedGraphs.Add(graph);
+                        }
+                        combatSkillGraphs.Add(graph);
+                    }
                     int count = 0;
                     foreach (var graph in source.skillTreeConfig.combatSkills)
                     {
