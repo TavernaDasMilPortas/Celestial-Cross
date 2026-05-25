@@ -252,6 +252,9 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
     public class SkillBranchNodeData
     {
         public string branchId;
+        public int tierIndex;
+        public string branchName;
+        public string branchDescription;
     }
 }
 

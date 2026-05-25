@@ -8,11 +8,21 @@ namespace CelestialCross.UI.Skills
     public class PassiveListModal : MonoBehaviour
     {
         public GameObject modalRoot;
-        public RectTransform passivesContainer;
-        public RectTransform conditionsContainer;
-        public RectTransform buffsContainer;
         
-        public GameObject listItemPrefab;
+        [Header("Seção 1: Condições Temporárias")]
+        public RectTransform conditionsGrid;
+        public GameObject conditionIconPrefab;
+        public PassiveDetailModal detailModal;
+        
+        [Header("Seção 2: Efeitos Ativos (Status)")]
+        public RectTransform positiveModifiersContainer;
+        public RectTransform negativeModifiersContainer;
+        public GameObject modifierItemPrefab;
+        
+        [Header("Seção 3: Todas as Passivas Nativas")]
+        public RectTransform allPassivesContainer;
+        public GameObject passiveItemPrefab;
+        
         public Button closeButton;
 
         private void Start()
@@ -24,54 +34,134 @@ namespace CelestialCross.UI.Skills
         public void Open(global::Unit unit)
         {
             if (unit == null) return;
-            modalRoot.SetActive(true);
+            if (modalRoot != null) modalRoot.SetActive(true);
             Populate(unit);
         }
 
         public void Close()
         {
-            modalRoot.SetActive(false);
+            if (modalRoot != null) modalRoot.SetActive(false);
+            if (detailModal != null) detailModal.Close();
         }
 
         private void Populate(global::Unit unit)
         {
-            foreach (Transform child in passivesContainer) Destroy(child.gameObject);
-            foreach (Transform child in conditionsContainer) Destroy(child.gameObject);
-            foreach (Transform child in buffsContainer) Destroy(child.gameObject);
+            // Limpar containers de forma segura
+            ClearContainer(conditionsGrid);
+            ClearContainer(positiveModifiersContainer);
+            ClearContainer(negativeModifiersContainer);
+            ClearContainer(allPassivesContainer);
 
-            // Populate Passives
-            if (unit.Data != null)
-            {
-                // Constellation, pets, etc. For demonstration, we just get from UnitData
-                AddListItem(passivesContainer, "Passivas", "Efeitos base da unidade e constelação");
-            }
+            if (unit == null || unit.PassiveManager == null) return;
 
-            // Populate Conditions & Buffs from PassiveManager or StatusManager
-            // Example:
-            if (unit.PassiveManager != null)
+            // --- SEÇÃO 1: Condições Temporárias (Grid de Ícones) ---
+            var allConditions = unit.PassiveManager.GetActiveConditionsInfo();
+            if (allConditions != null && conditionsGrid != null && conditionIconPrefab != null)
             {
-                var activePassives = unit.PassiveManager.GetActiveConditionNames();
-                if (activePassives != null)
+                foreach (var c in allConditions)
                 {
-                    foreach (var p in activePassives)
+                    if (c.isPersistent) continue; // Pular permanentes/passivas estáticas nesta seção
+
+                    var go = Instantiate(conditionIconPrefab, conditionsGrid);
+                    go.SetActive(true);
+
+                    // Configurar imagem do botão (ícone da condição)
+                    var btn = go.GetComponent<Button>();
+                    var img = go.GetComponent<Image>();
+                    if (img != null)
                     {
-                        AddListItem(conditionsContainer, p, "Condição Ativa");
+                        img.sprite = c.icon;
+                    }
+
+                    // Exibir turnos restantes no texto (ex: "3t")
+                    var turnTxt = go.GetComponentInChildren<TextMeshProUGUI>();
+                    if (turnTxt != null)
+                    {
+                        turnTxt.text = $"{c.remainingTurns}t";
+                    }
+
+                    // Ação de clique para abrir o submodal de detalhes
+                    if (btn != null)
+                    {
+                        var capturedCond = c;
+                        btn.onClick.RemoveAllListeners();
+                        btn.onClick.AddListener(() => {
+                            if (detailModal != null)
+                            {
+                                string durStr = $"{capturedCond.remainingTurns} Turnos Restantes" + (capturedCond.stacks > 1 ? $" (x{capturedCond.stacks} Acúmulos)" : "");
+                                detailModal.Open(capturedCond.icon, capturedCond.name, durStr, capturedCond.description);
+                            }
+                        });
                     }
                 }
             }
-            
-            // Add Buffs/Debuffs (stat modifiers)
-            AddListItem(buffsContainer, "Buffs", "Exemplo de status modificado");
+
+            // --- SEÇÃO 2: Modificadores de Status Ativos (Positivos e Negativos) ---
+            var activeModifiers = unit.PassiveManager.GetActiveStatModifiers();
+            if (activeModifiers != null && modifierItemPrefab != null)
+            {
+                foreach (var mod in activeModifiers)
+                {
+                    var container = mod.isPositive ? positiveModifiersContainer : negativeModifiersContainer;
+                    if (container != null)
+                    {
+                        var go = Instantiate(modifierItemPrefab, container);
+                        go.SetActive(true);
+
+                        // Icone do Modificador
+                        var img = go.transform.Find("Icon")?.GetComponent<Image>();
+                        if (img != null)
+                        {
+                            img.sprite = mod.icon;
+                            img.gameObject.SetActive(mod.icon != null);
+                        }
+
+                        // Texto do Modificador
+                        var txt = go.transform.Find("Text")?.GetComponent<TextMeshProUGUI>();
+                        if (txt != null)
+                        {
+                            string colorTag = mod.isPositive ? "#4f4" : "#f44";
+                            txt.text = $"<b><color={colorTag}>{mod.statText}</color></b> (<size=90%>{mod.remaining}</size>)";
+                        }
+                    }
+                }
+            }
+
+            // --- SEÇÃO 3: Todas as Passivas Nativas ---
+            var staticPassives = unit.PassiveManager.GetStaticPassives();
+            if (staticPassives != null && allPassivesContainer != null && passiveItemPrefab != null)
+            {
+                foreach (var sp in staticPassives)
+                {
+                    var go = Instantiate(passiveItemPrefab, allPassivesContainer);
+                    go.SetActive(true);
+
+                    // Icone da Passiva
+                    var img = go.transform.Find("Icon")?.GetComponent<Image>();
+                    if (img != null)
+                    {
+                        img.sprite = sp.icon;
+                        img.gameObject.SetActive(sp.icon != null);
+                    }
+
+                    // Texto e Descrição da Passiva
+                    var txt = go.transform.Find("Text")?.GetComponent<TextMeshProUGUI>();
+                    if (txt != null)
+                    {
+                        string sourceStr = $"<color=#8bf>[{sp.source}]</color>";
+                        string desc = string.IsNullOrEmpty(sp.description) ? "Sem descrição disponível." : sp.description;
+                        txt.text = $"<b>{sp.name}</b> {sourceStr}\n<size=85%>{desc}</size>";
+                    }
+                }
+            }
         }
 
-        private void AddListItem(RectTransform container, string title, string desc)
+        private void ClearContainer(RectTransform container)
         {
-            if (listItemPrefab == null) return;
-            var go = Instantiate(listItemPrefab, container);
-            var text = go.GetComponentInChildren<TextMeshProUGUI>();
-            if (text != null)
+            if (container == null) return;
+            foreach (Transform child in container)
             {
-                text.text = $"<b>{title}</b>\n<size=80%>{desc}</size>";
+                Destroy(child.gameObject);
             }
         }
     }

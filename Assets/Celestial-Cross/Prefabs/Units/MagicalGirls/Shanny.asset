@@ -25,16 +25,21 @@ MonoBehaviour:
     defense: 0
     speed: 7
     criticalChance: 7
+    criticalDamage: 50
     effectAccuracy: 1
+    effectResistance: 0
   maxStats:
     health: 300
     attack: 100
     defense: 60
     speed: 70
     criticalChance: 7
+    criticalDamage: 50
     effectAccuracy: 1
+    effectResistance: 0
   abilityGraphs: []
   constellationConfig: {fileID: 0}
+  skillTreeConfig: {fileID: 0}
   nativeActions: []
   references:
     version: 2

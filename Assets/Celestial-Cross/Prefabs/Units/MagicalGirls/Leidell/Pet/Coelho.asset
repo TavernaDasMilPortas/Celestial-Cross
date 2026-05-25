@@ -31,6 +31,10 @@ MonoBehaviour:
   MaxBaseCriticalChance: 5
   MinBaseEffectAccuracy: 0
   MaxBaseEffectAccuracy: 5
+  MinBaseCriticalDamage: 0
+  MaxBaseCriticalDamage: 0
+  MinBaseEffectResistance: 0
+  MaxBaseEffectResistance: 0
   ActiveSkills: []
   PassiveSkills: []
   AbilityGraphs:

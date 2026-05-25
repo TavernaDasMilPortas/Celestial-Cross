@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using Celestial_Cross.Scripts.Abilities.Graph;
 
 namespace Celestial_Cross.Scripts.Abilities.SkillTree
 {
@@ -9,12 +10,19 @@ namespace Celestial_Cross.Scripts.Abilities.SkillTree
         public string characterId;
         
         [Header("Habilidade Básica")]
-        public SkillEntry basicAttack;
+        public AbilityGraphSO basicAttack;
         
         [Header("Habilidade de Movimentação")]
-        public SkillEntry movementSkill;
+        public AbilityGraphSO movementSkill;
         
         [Header("Pool de Habilidades para os Slots de Combate (Slot1 e Slot2)")]
-        public List<SkillEntry> combatSkills = new List<SkillEntry>();
+        [System.Obsolete("Use slot1Skills and slot2Skills instead")]
+        public List<AbilityGraphSO> combatSkills = new List<AbilityGraphSO>();
+
+        [Header("Pool de Habilidades para o Slot 1")]
+        public List<AbilityGraphSO> slot1Skills = new List<AbilityGraphSO>();
+
+        [Header("Pool de Habilidades para o Slot 2")]
+        public List<AbilityGraphSO> slot2Skills = new List<AbilityGraphSO>();
     }
 }

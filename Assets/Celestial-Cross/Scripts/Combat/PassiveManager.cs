@@ -52,6 +52,317 @@ public class PassiveManager : MonoBehaviour
         }
     }
 
+    public struct PassiveInfo
+    {
+        public string name;
+        public string description;
+        public Sprite icon;
+        public bool isPersistent;
+        public int remainingTurns;
+        public int stacks;
+    }
+
+    public List<PassiveInfo> GetActiveConditionsInfo()
+    {
+        var list = new List<PassiveInfo>();
+        foreach (var c in activeRuntimeConditions)
+        {
+            if (c.blueprint != null)
+            {
+                list.Add(new PassiveInfo 
+                { 
+                    name = string.IsNullOrEmpty(c.blueprint.abilityName) ? c.blueprint.name : c.blueprint.abilityName,
+                    description = c.blueprint.abilityDescription,
+                    icon = c.blueprint.abilityIcon,
+                    isPersistent = c.isPersistent,
+                    remainingTurns = c.remainingTurns,
+                    stacks = c.stacks
+                });
+            }
+        }
+        foreach (var c in activeGraphConditions)
+        {
+            if (c.graph != null)
+            {
+                list.Add(new PassiveInfo
+                {
+                    name = string.IsNullOrEmpty(c.graph.abilityName) ? c.graph.name : c.graph.abilityName,
+                    description = c.graph.abilityDescription,
+                    icon = c.graph.abilityIcon,
+                    isPersistent = c.isPersistent,
+                    remainingTurns = c.remainingTurns,
+                    stacks = c.stacks
+                });
+            }
+        }
+        return list;
+    }
+
+    public struct StaticPassiveInfo
+    {
+        public string name;
+        public string description;
+        public Sprite icon;
+        public string source;
+    }
+
+    public struct StatModifierInfo
+    {
+        public string statText;
+        public string source;
+        public string remaining;
+        public bool isPositive;
+        public Sprite icon;
+    }
+
+    public List<StaticPassiveInfo> GetStaticPassives()
+    {
+        var list = new List<StaticPassiveInfo>();
+        if (unit == null) unit = GetComponent<Unit>();
+        if (unit == null) return list;
+
+        // 1. Árvore de habilidades
+        if (unit.unitData != null && unit.unitData.skillTreeConfig != null)
+        {
+            var tree = unit.unitData.skillTreeConfig;
+            if (unit.Loadout != null)
+            {
+                if (!string.IsNullOrEmpty(unit.Loadout.Slot1SkillId))
+                {
+                    var pool1 = (tree.slot1Skills != null && tree.slot1Skills.Count > 0)
+                        ? tree.slot1Skills
+                        : tree.combatSkills;
+
+                    var g = pool1.Find(x => x != null && x.name == unit.Loadout.Slot1SkillId);
+                    if (g != null && g.IsPassive)
+                    {
+                        list.Add(new StaticPassiveInfo
+                        {
+                            name = string.IsNullOrEmpty(g.abilityName) ? g.name : g.abilityName,
+                            description = g.abilityDescription,
+                            icon = g.abilityIcon,
+                            source = "Slot 1"
+                        });
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(unit.Loadout.Slot2SkillId))
+                {
+                    var pool2 = (tree.slot2Skills != null && tree.slot2Skills.Count > 0)
+                        ? tree.slot2Skills
+                        : tree.combatSkills;
+
+                    var g = pool2.Find(x => x != null && x.name == unit.Loadout.Slot2SkillId);
+                    if (g != null && g.IsPassive)
+                    {
+                        list.Add(new StaticPassiveInfo
+                        {
+                            name = string.IsNullOrEmpty(g.abilityName) ? g.name : g.abilityName,
+                            description = g.abilityDescription,
+                            icon = g.abilityIcon,
+                            source = "Slot 2"
+                        });
+                    }
+                }
+            }
+            if (tree.basicAttack != null && tree.basicAttack.IsPassive)
+            {
+                list.Add(new StaticPassiveInfo
+                {
+                    name = string.IsNullOrEmpty(tree.basicAttack.abilityName) ? tree.basicAttack.name : tree.basicAttack.abilityName,
+                    description = tree.basicAttack.abilityDescription,
+                    icon = tree.basicAttack.abilityIcon,
+                    source = "Ataque Básico"
+                });
+            }
+            if (tree.movementSkill != null && tree.movementSkill.IsPassive)
+            {
+                list.Add(new StaticPassiveInfo
+                {
+                    name = string.IsNullOrEmpty(tree.movementSkill.abilityName) ? tree.movementSkill.name : tree.movementSkill.abilityName,
+                    description = tree.movementSkill.abilityDescription,
+                    icon = tree.movementSkill.abilityIcon,
+                    source = "Movimentação"
+                });
+            }
+        }
+
+        // 2. Constelação
+        if (unit.unitData != null && unit.runtimeUnitData != null)
+        {
+            var constPassives = CelestialCross.System.ConstellationService.GetUnlockedPassives(unit.unitData, unit.runtimeUnitData.ConstellationLevel);
+            if (constPassives != null)
+            {
+                foreach (var g in constPassives)
+                {
+                    if (g != null)
+                    {
+                        list.Add(new StaticPassiveInfo
+                        {
+                            name = string.IsNullOrEmpty(g.abilityName) ? g.name : g.abilityName,
+                            description = g.abilityDescription,
+                            icon = g.abilityIcon,
+                            source = "Constelação"
+                        });
+                    }
+                }
+            }
+        }
+
+        // 3. Pet
+        if (unit.petSpeciesData != null)
+        {
+            if (unit.petSpeciesData.PassiveSkills != null)
+            {
+                foreach (var pass in unit.petSpeciesData.PassiveSkills)
+                {
+                    if (pass != null)
+                    {
+                        list.Add(new StaticPassiveInfo
+                        {
+                            name = string.IsNullOrEmpty(pass.abilityName) ? pass.name : pass.abilityName,
+                            description = pass.abilityDescription,
+                            icon = pass.abilityIcon,
+                            source = "Pet"
+                        });
+                    }
+                }
+            }
+            if (unit.petSpeciesData.AbilityGraphs != null)
+            {
+                foreach (var g in unit.petSpeciesData.AbilityGraphs)
+                {
+                    if (g != null && g.IsPassive)
+                    {
+                        list.Add(new StaticPassiveInfo
+                        {
+                            name = string.IsNullOrEmpty(g.abilityName) ? g.name : g.abilityName,
+                            description = g.abilityDescription,
+                            icon = g.abilityIcon,
+                            source = "Pet (Grafo)"
+                        });
+                    }
+                }
+            }
+        }
+
+        // 4. Artefatos
+        if (unit.equippedArtifacts != null)
+        {
+            if (unit.ArtifactSetPassives != null)
+            {
+                foreach (var pass in unit.ArtifactSetPassives)
+                {
+                    if (pass != null)
+                    {
+                        list.Add(new StaticPassiveInfo
+                        {
+                            name = string.IsNullOrEmpty(pass.abilityName) ? pass.name : pass.abilityName,
+                            description = pass.abilityDescription,
+                            icon = pass.abilityIcon,
+                            source = "Set de Artefatos"
+                        });
+                    }
+                }
+            }
+            if (unit.ArtifactSetPassiveGraphs != null)
+            {
+                foreach (var g in unit.ArtifactSetPassiveGraphs)
+                {
+                    if (g != null)
+                    {
+                        list.Add(new StaticPassiveInfo
+                        {
+                            name = string.IsNullOrEmpty(g.abilityName) ? g.name : g.abilityName,
+                            description = g.abilityDescription,
+                            icon = g.abilityIcon,
+                            source = "Set de Artefatos (Grafo)"
+                        });
+                    }
+                }
+            }
+        }
+
+        return list;
+    }
+
+    public List<StatModifierInfo> GetActiveStatModifiers()
+    {
+        var list = new List<StatModifierInfo>();
+        if (activeRuntimeConditions == null) return list;
+
+        foreach (var cond in activeRuntimeConditions)
+        {
+            if (cond == null || cond.blueprint == null || cond.blueprint.modifiers == null) continue;
+
+            int stacks = cond.stacks;
+            string sourceName = string.IsNullOrEmpty(cond.blueprint.abilityName) ? cond.blueprint.name : cond.blueprint.abilityName;
+            string timeStr = cond.isPersistent ? "Permanente" : $"{cond.remainingTurns} Turnos";
+            Sprite icon = cond.blueprint.abilityIcon;
+
+            foreach (var mod in cond.blueprint.modifiers)
+            {
+                if (mod is PassiveEffect_ConditionalStatBonus flatMod)
+                {
+                    AddFlatStatIfNonZero(list, flatMod.statBonus.attack * stacks, "Ataque", sourceName, timeStr, icon);
+                    AddFlatStatIfNonZero(list, flatMod.statBonus.defense * stacks, "Defesa", sourceName, timeStr, icon);
+                    if (flatMod.statBonus.health > 1)
+                        AddFlatStatIfNonZero(list, flatMod.statBonus.health * stacks, "HP", sourceName, timeStr, icon);
+                    AddFlatStatIfNonZero(list, flatMod.statBonus.speed * stacks, "Velocidade", sourceName, timeStr, icon);
+                    AddFlatStatIfNonZero(list, flatMod.statBonus.criticalChance * stacks, "Chance Crítica", sourceName, timeStr, icon);
+                    AddFlatStatIfNonZero(list, flatMod.statBonus.criticalDamage * stacks, "Dano Crítico", sourceName, timeStr, icon);
+                    AddFlatStatIfNonZero(list, flatMod.statBonus.effectAccuracy * stacks, "Acurácia de Efeito", sourceName, timeStr, icon);
+                    AddFlatStatIfNonZero(list, flatMod.statBonus.effectResistance * stacks, "Resistência de Efeito", sourceName, timeStr, icon);
+                }
+                else if (mod is PassiveEffect_PercentStatBonus percentMod)
+                {
+                    foreach (var p in percentMod.modifiers)
+                    {
+                        string statName = "";
+                        switch (p.statType)
+                        {
+                            case CelestialCross.Artifacts.StatType.AttackPercent: statName = "Ataque"; break;
+                            case CelestialCross.Artifacts.StatType.DefensePercent: statName = "Defesa"; break;
+                            case CelestialCross.Artifacts.StatType.HealthPercent: statName = "HP"; break;
+                            case CelestialCross.Artifacts.StatType.Speed: statName = "Velocidade"; break;
+                            case CelestialCross.Artifacts.StatType.CriticalDamage: statName = "Dano Crítico"; break;
+                            case CelestialCross.Artifacts.StatType.EffectHitRate: statName = "Acurácia de Efeito"; break;
+                            case CelestialCross.Artifacts.StatType.EffectResistance: statName = "Resistência de Efeito"; break;
+                        }
+                        if (!string.IsNullOrEmpty(statName))
+                        {
+                            float val = p.percentBonus * stacks;
+                            string prefix = val > 0 ? "+" : "";
+                            list.Add(new StatModifierInfo
+                            {
+                                statText = $"{prefix}{val}% de {statName}",
+                                source = sourceName,
+                                remaining = timeStr,
+                                isPositive = val > 0,
+                                icon = icon
+                            });
+                        }
+                    }
+                }
+            }
+        }
+        return list;
+    }
+
+    private void AddFlatStatIfNonZero(List<StatModifierInfo> list, float val, string statName, string source, string remaining, Sprite icon)
+    {
+        if (val == 0) return;
+        string prefix = val > 0 ? "+" : "";
+        list.Add(new StatModifierInfo
+        {
+            statText = $"{prefix}{val} de {statName}",
+            source = source,
+            remaining = remaining,
+            isPositive = val > 0,
+            icon = icon
+        });
+    }
+
     public List<string> GetActiveConditionNames()
     {
         var names = new List<string>();
@@ -226,11 +537,9 @@ public class PassiveManager : MonoBehaviour
     {
         if (AbilityGraphInterpreter.Instance == null) return;
         
-        CombatLogger.Log($"<color=cyan>[Passiva]</color> Gatilho <b>{hook}</b> detectado em <b>{gameObject.name}</b>. Executando grafo: <b>{graph.name}</b>", LogCategory.Passive, true);
+        CombatLogger.Log($"<color=cyan>[Passiva - Sync]</color> Gatilho <b>{hook}</b> detectado em <b>{gameObject.name}</b>. Executando grafo: <b>{graph.name}</b>", LogCategory.Passive, true);
 
-        StartCoroutine(AbilityGraphInterpreter.Instance.ExecuteGraphCoroutine(
-            unit, graph, hook, null
-        ));
+        AbilityGraphInterpreter.Instance.ExecuteGraphSync(unit, graph, hook);
     }
 
     // --- Apply / Remove Condition (Graph-based) ---

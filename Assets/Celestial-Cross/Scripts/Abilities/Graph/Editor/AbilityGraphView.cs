@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -15,7 +16,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor
         private Blackboard blackboard;
         private AbilityGraphSO currentSO;
 
-        public AbilityGraphView(AbilityGraphWindow editorWindow)
+        public AbilityGraphView(EditorWindow editorWindow)
         {
             SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
 
@@ -124,7 +125,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor
             return baseName;
         }
 
-        private void AddSearchWindow(AbilityGraphWindow editorWindow)
+        private void AddSearchWindow(EditorWindow editorWindow)
         {
             searchWindow = ScriptableObject.CreateInstance<AbilityNodeSearchWindow>();
             searchWindow.Init(editorWindow, this);

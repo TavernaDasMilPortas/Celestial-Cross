@@ -19,6 +19,7 @@ namespace Celestial_Cross.Scripts.Units
 
         public int Level { get; set; } = 1;
         public Vector2Int Target { get; set; }
+        public string SlotId { get; set; } = "";
 
         public event Action<ActionForecast> OnForecastUpdated;
 
@@ -50,6 +51,7 @@ namespace Celestial_Cross.Scripts.Units
             if (AbilityExecutor.Instance != null)
             {
                 AbilityExecutor.Instance.ExecuteGraph(caster, Graph, CombatHook.OnManualCast, () => {
+                    // Reset focus
                     CameraController.Instance?.ResetFocus();
 
                     // Obter subtipo do StartNode do Grafo
@@ -77,7 +79,7 @@ namespace Celestial_Cross.Scripts.Units
                     {
                         PlayerController.Instance?.RefreshUI();
                     }
-                }, Level);
+                }, Level, SlotId);
             }
             else
             {

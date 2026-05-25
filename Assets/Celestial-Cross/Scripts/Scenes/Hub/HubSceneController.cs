@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -63,7 +63,14 @@ public class HubSceneController : MonoBehaviour
 
     void Start()
     {
-        RefreshAccountUI();
+        if (AccountManager.Instance != null && AccountManager.Instance.PlayerAccount != null)
+        {
+            RefreshAccountUI();
+        }
+        else
+        {
+            AccountManager.OnAccountReady += HandleAccountReady;
+        }
 
         if (btnGoInventory != null) btnGoInventory.onClick.AddListener(GoToInventoryScene);
         if (btnGoShop != null) btnGoShop.onClick.AddListener(GoToShopScene);
@@ -73,6 +80,17 @@ public class HubSceneController : MonoBehaviour
 
         BuildCategoryButtons();
         ShowMainPanel();
+    }
+
+    private void HandleAccountReady()
+    {
+        AccountManager.OnAccountReady -= HandleAccountReady;
+        RefreshAccountUI();
+    }
+
+    private void OnDestroy()
+    {
+        AccountManager.OnAccountReady -= HandleAccountReady;
     }
 
     public void GoToShopScene()

@@ -190,7 +190,22 @@ A interface não mostrava quais passivas e condições estavam ativas em tempo r
 *   **Lista de Passivas em Combate:** `PassiveListModal` exibe todos os buffs momentâneos da unidade vinculada (`PassiveManager.GetActiveConditionNames()`).
 *   **Integração Automatizada:** Ferramentas de utilidade de Editor criadas na janela superior (`Celestial Cross -> UI Builders -> Skills`) para injetar instantaneamente as Canvas prontas na cena sem perda de referências.
 
+## 18. Otimização do Modal de Passivas de Combate e Ajustes Lógicos das Habilidades de Slot
+**Data: 25/05/2026**
+### **Problema:**
+O modal de passivas possuía um layout confuso de colunas que limitava a legibilidade e usava bordas quadradas pesadas de agrupamento. Além disso, as passivas baseadas em grafo (como a `Full House` de Leidell) sofriam de atrasos na aplicação (corrotinas assíncronas no início da rodada) e eram injetadas de forma incondicional no combate mesmo quando não estavam equipadas nos slots de combate do `Loadout`. Os modificadores numéricos no combate também não exibiam seus ícones de origem adequadamente.
+
+### **Solução:**
+*   **Refatoração Visual e Stacked (Design Clean):** Reformulado o `PassiveListModal` e o construtor dinâmico de UI `CombatUISetupUtility` para posicionar as 3 seções verticalmente uma embaixo da outra (empilhadas de largura completa). Removemos as bordas quadradas escuras para dar um visual mais livre e premium. O texto dos bônus agora omite a indicação literal de fonte, exibindo apenas a duração restante.
+*   **Submodal de Detalhes e Ícones Integrados:** Criado o `PassiveDetailModal` para exibir detalhes completos de condições temporárias ao clicar em seus ícones. Adicionados componentes de imagem nos prefabs de bônus e passivas, garantindo que o ícone original da habilidade apareça ao lado de suas respectivas informações textuais.
+*   **Injeção Síncrona de Grafos de Passivas:** Modificado o `AbilityGraphInterpreter` para disponibilizar interpretações 100% síncronas (`ExecuteGraphSync` e `ProcessNodeSync`). O `PassiveManager` executa passivas instantaneamente no mesmo frame em que os hooks do round/turno iniciam, aplicando os bônus sem atraso de frames.
+*   **Injeção Seletiva via Loadout:** Atualizado o `Unit.Initialize()` e o `PassiveManager.GetStaticPassives()` para registrar no `PassiveManager` apenas as passivas ativas nativas (ataque básico/movimentação) e as passivas selecionadas e equipadas nos slots 1 e 2 do `Loadout`. Habilidades passivas que estão na árvore geral mas não foram equipadas não são mais injetadas no combate e nem exibidas no modal.
+*   **Preservação de Sprites Dinâmicos:** O interpretador de grafos agora copia o ícone original da passiva/habilidade para os blueprints de modificadores gerados dinamicamente, permitindo que os ícones de origem apareçam corretamente na listagem dos bônus ativos.
+
+---
+
 ## Próximos Passos
 *   Arrumar anchors da Shop Scene para garantir responsividade em diferentes resoluções.
-*   Testar a persistência das passivas da Leidell em batalhas de longa duração com o novo Loadout.
 *   Aprofundar as mecânicas das Inteligências Artificiais usando o novo sistema de Variáveis de Unidade.
+*   Verificar em Play Mode as transições visuais e o submodal de detalhes de status durante batalhas reais.
+

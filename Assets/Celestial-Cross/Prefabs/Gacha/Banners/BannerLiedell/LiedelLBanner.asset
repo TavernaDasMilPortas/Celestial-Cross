@@ -24,7 +24,7 @@ MonoBehaviour:
   SupremeChoices:
   - RewardType: 0
     Rarity: 5
-    UnitData: {fileID: 11400000, guid: 67628d77266bab446ba0b5274c2a9397, type: 2}
+    UnitData: {fileID: 11400000, guid: 41ab50bd04fdfce42875fe6724f71972, type: 2}
     PetSpeciesData: {fileID: 0}
     ArtifactSet: {fileID: 0}
     Weight: 1

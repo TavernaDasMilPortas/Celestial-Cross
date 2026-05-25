@@ -74,23 +74,23 @@ namespace Celestial_Cross.Scripts.Combat.Execution
             activeAbilityRoutine = StartCoroutine(ExecuteBlueprintCoroutine(caster, blueprint, currentHook, onComplete));
         }
 
-        public void ExecuteGraph(Unit caster, AbilityGraphSO graph, CombatHook currentHook = CombatHook.OnManualCast, Action onComplete = null, int level = 1)
+        public void ExecuteGraph(Unit caster, AbilityGraphSO graph, CombatHook currentHook = CombatHook.OnManualCast, Action onComplete = null, int level = 1, string slotId = "")
         {
             if (currentHook == CombatHook.OnManualCast)
             {
                 AbortCurrentAbility();
             }
 
-            activeAbilityRoutine = StartCoroutine(ExecuteGraphCoroutine(caster, graph, currentHook, onComplete, level));
+            activeAbilityRoutine = StartCoroutine(ExecuteGraphCoroutine(caster, graph, currentHook, onComplete, level, slotId));
         }
 
-        private IEnumerator ExecuteGraphCoroutine(Unit caster, AbilityGraphSO graph, CombatHook currentHook, Action onComplete, int level = 1)
+        private IEnumerator ExecuteGraphCoroutine(Unit caster, AbilityGraphSO graph, CombatHook currentHook, Action onComplete, int level = 1, string slotId = "")
         {
             CombatLogger.Log($"<color=white>[AbilityExecutor]</color> Iniciando grafo: <b>{graph.name}</b> (Hook: {currentHook})", LogCategory.Ability);
             
             if (AbilityGraphInterpreter.Instance != null)
             {
-                yield return StartCoroutine(AbilityGraphInterpreter.Instance.ExecuteGraphCoroutine(caster, graph, currentHook, onComplete, level));
+                yield return StartCoroutine(AbilityGraphInterpreter.Instance.ExecuteGraphCoroutine(caster, graph, currentHook, onComplete, level, slotId));
             }
             else
             {

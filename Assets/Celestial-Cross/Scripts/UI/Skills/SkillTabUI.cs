@@ -4,6 +4,7 @@ using TMPro;
 using System.Collections.Generic;
 using CelestialCross.System;
 using Celestial_Cross.Scripts.Abilities.SkillTree;
+using Celestial_Cross.Scripts.Abilities.Graph;
 using CelestialCross.Data;
 
 namespace CelestialCross.UI.Skills
@@ -23,6 +24,9 @@ namespace CelestialCross.UI.Skills
         [Header("Modals")]
         public SkillSelectionModal selectionModal;
         public SkillBranchModal branchModal;
+
+        [Header("Data")]
+        public UnitCatalog unitCatalog;
 
         private string currentUnitId;
 
@@ -47,29 +51,95 @@ namespace CelestialCross.UI.Skills
             var account = AccountManager.Instance?.PlayerAccount;
             if (account == null) return;
 
-            var unitData = account.GetOwnedUnitRuntimeData(currentUnitId);
             var loadout = account.GetLoadoutForUnit(currentUnitId);
 
-            // We need to fetch the SkillTreeConfigSO from the unit's base data.
-            // Since we don't have direct access here easily without UnitCatalog, we assume UnitData holds it.
-            // But we need the UnitCatalog from somewhere. We can just emit an event or require a reference.
-            
-            // For now, let's just show "Equipped" or "Not Equipped" using loadout.
-            UpdateSlotUI(SkillSlotType.Basic, basicSkillText, "Ataque Básico");
-            UpdateSlotUI(SkillSlotType.Movement, movementSkillText, "Movimentação");
-            
-            string slot1Name = string.IsNullOrEmpty(loadout?.Slot1SkillId) ? "Vazio" : loadout.Slot1SkillId;
-            UpdateSlotUI(SkillSlotType.Slot1, slot1SkillText, slot1Name);
-            
-            string slot2Name = string.IsNullOrEmpty(loadout?.Slot2SkillId) ? "Vazio" : loadout.Slot2SkillId;
-            UpdateSlotUI(SkillSlotType.Slot2, slot2SkillText, slot2Name);
+            // Buscar o SkillTreeConfigSO via UnitData
+            SkillTreeConfigSO treeConfig = GetTreeConfig();
+
+            AbilityGraphSO basicGraph = treeConfig != null ? treeConfig.basicAttack : null;
+            AbilityGraphSO moveGraph = treeConfig != null ? treeConfig.movementSkill : null;
+
+            AbilityGraphSO slot1Graph = null;
+            if (loadout != null && !string.IsNullOrEmpty(loadout.Slot1SkillId) && treeConfig != null)
+            {
+                #pragma warning disable 612, 618
+                var pool = (treeConfig.slot1Skills != null && treeConfig.slot1Skills.Count > 0) ? treeConfig.slot1Skills : treeConfig.combatSkills;
+                if (pool != null) slot1Graph = pool.Find(g => g != null && g.name == loadout.Slot1SkillId);
+                #pragma warning restore 612, 618
+            }
+
+            AbilityGraphSO slot2Graph = null;
+            if (loadout != null && !string.IsNullOrEmpty(loadout.Slot2SkillId) && treeConfig != null)
+            {
+                #pragma warning disable 612, 618
+                var pool = (treeConfig.slot2Skills != null && treeConfig.slot2Skills.Count > 0) ? treeConfig.slot2Skills : treeConfig.combatSkills;
+                if (pool != null) slot2Graph = pool.Find(g => g != null && g.name == loadout.Slot2SkillId);
+                #pragma warning restore 612, 618
+            }
+
+            UpdateSlotUI(basicSkillButton, basicSkillText, "Ataque Básico", basicGraph);
+            UpdateSlotUI(movementSkillButton, movementSkillText, "Movimentação", moveGraph);
+            UpdateSlotUI(slot1SkillButton, slot1SkillText, "Slot 1", slot1Graph);
+            UpdateSlotUI(slot2SkillButton, slot2SkillText, "Slot 2", slot2Graph);
         }
 
-        private void UpdateSlotUI(SkillSlotType type, TextMeshProUGUI textComp, string skillName)
+        private string ResolveSlotSkillName(string skillId, SkillTreeConfigSO treeConfig)
+        {
+            if (string.IsNullOrEmpty(skillId)) return "Vazio";
+            if (treeConfig == null) return skillId;
+
+            #pragma warning disable 612, 618
+            var list1 = treeConfig.slot1Skills;
+            if (list1 != null)
+            {
+                foreach (var graph in list1)
+                    if (graph != null && graph.name == skillId)
+                        return string.IsNullOrEmpty(graph.abilityName) ? graph.name : graph.abilityName;
+            }
+
+            var list2 = treeConfig.slot2Skills;
+            if (list2 != null)
+            {
+                foreach (var graph in list2)
+                    if (graph != null && graph.name == skillId)
+                        return string.IsNullOrEmpty(graph.abilityName) ? graph.name : graph.abilityName;
+            }
+
+            var legacy = treeConfig.combatSkills;
+            if (legacy != null)
+            {
+                foreach (var graph in legacy)
+                    if (graph != null && graph.name == skillId)
+                        return string.IsNullOrEmpty(graph.abilityName) ? graph.name : graph.abilityName;
+            }
+            #pragma warning restore 612, 618
+
+            return skillId;
+        }
+
+        private void UpdateSlotUI(Button button, TextMeshProUGUI textComp, string slotLabel, AbilityGraphSO graph)
         {
             if (textComp != null)
             {
-                textComp.text = $"<b>{type}</b>\n<color=#ffb>{skillName}</color>";
+                textComp.text = $"<b>{slotLabel}</b>";
+            }
+
+            if (button != null)
+            {
+                var img = button.GetComponent<Image>();
+                if (img != null)
+                {
+                    if (graph != null && graph.abilityIcon != null)
+                    {
+                        img.sprite = graph.abilityIcon;
+                        img.color = Color.white;
+                    }
+                    else
+                    {
+                        img.sprite = null;
+                        img.color = new Color(0.2f, 0.2f, 0.3f, 1f);
+                    }
+                }
             }
         }
 
@@ -79,27 +149,104 @@ namespace CelestialCross.UI.Skills
             var account = AccountManager.Instance?.PlayerAccount;
             if (account == null) return;
 
-            // Open Selection Modal for Slot1/Slot2, or open Branch Modal directly for Basic/Movement
+            SkillTreeConfigSO treeConfig = GetTreeConfig();
+
             if (slot == SkillSlotType.Slot1 || slot == SkillSlotType.Slot2)
             {
-                if (selectionModal != null)
+                var loadout = account.GetLoadoutForUnit(currentUnitId);
+                string skillId = (slot == SkillSlotType.Slot1) ? loadout?.Slot1SkillId : loadout?.Slot2SkillId;
+
+                if (string.IsNullOrEmpty(skillId))
                 {
-                    selectionModal.Open(currentUnitId, slot, () => {
-                        // After selection, we might open branch modal
-                        Refresh();
-                    });
+                    // Slot is empty, open selection modal directly
+                    if (selectionModal != null)
+                    {
+                        selectionModal.Open(currentUnitId, slot, () => {
+                            Refresh();
+                        });
+                    }
+                }
+                else
+                {
+                    // Slot has a skill, open branch modal
+                    AbilityGraphSO graph = null;
+                    if (treeConfig != null)
+                    {
+                        #pragma warning disable 612, 618
+                        var pool = (slot == SkillSlotType.Slot1)
+                            ? (treeConfig.slot1Skills != null && treeConfig.slot1Skills.Count > 0 ? treeConfig.slot1Skills : treeConfig.combatSkills)
+                            : (treeConfig.slot2Skills != null && treeConfig.slot2Skills.Count > 0 ? treeConfig.slot2Skills : treeConfig.combatSkills);
+                        
+                        if (pool != null)
+                        {
+                            graph = pool.Find(g => g != null && g.name == skillId);
+                        }
+                        #pragma warning restore 612, 618
+                    }
+
+                    if (graph != null && branchModal != null)
+                    {
+                        branchModal.Open(currentUnitId, graph.name, graph, slot, () => {
+                            Refresh();
+                        }, () => {
+                            // On Change clicked in branch modal: open selection modal
+                            if (selectionModal != null)
+                            {
+                                selectionModal.Open(currentUnitId, slot, () => {
+                                    Refresh();
+                                });
+                            }
+                        });
+                    }
+                    else
+                    {
+                        // Fallback if graph is not found
+                        if (selectionModal != null)
+                        {
+                            selectionModal.Open(currentUnitId, slot, () => {
+                                Refresh();
+                            });
+                        }
+                    }
                 }
             }
             else
             {
                 // Basic / Movement can only have branches, they are fixed
-                if (branchModal != null)
+                AbilityGraphSO graph = null;
+                if (treeConfig != null)
                 {
-                    branchModal.Open(currentUnitId, slot.ToString(), null, () => {
+                    graph = (slot == SkillSlotType.Basic) ? treeConfig.basicAttack : treeConfig.movementSkill;
+                }
+
+                if (branchModal != null && graph != null)
+                {
+                    branchModal.Open(currentUnitId, graph.name, graph, slot, () => {
                         Refresh();
                     });
                 }
             }
+        }
+
+        private SkillTreeConfigSO GetTreeConfig()
+        {
+            if (unitCatalog == null)
+            {
+                unitCatalog = FindObjectOfType<UnitCatalog>();
+                #if UNITY_EDITOR
+                if (unitCatalog == null)
+                {
+                    string[] guids = UnityEditor.AssetDatabase.FindAssets("t:UnitCatalog");
+                    if (guids.Length > 0)
+                    {
+                        unitCatalog = UnityEditor.AssetDatabase.LoadAssetAtPath<UnitCatalog>(UnityEditor.AssetDatabase.GUIDToAssetPath(guids[0]));
+                    }
+                }
+                #endif
+            }
+            if (unitCatalog == null) return null;
+            var unitData = unitCatalog.GetUnitData(currentUnitId);
+            return unitData?.skillTreeConfig;
         }
     }
 }
