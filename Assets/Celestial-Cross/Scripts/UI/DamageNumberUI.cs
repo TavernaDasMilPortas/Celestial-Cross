@@ -10,9 +10,15 @@ public class DamageNumberUI : MonoBehaviour
     [SerializeField] private AnimationCurve scaleCurve = AnimationCurve.EaseInOut(0, 1f, 1, 1.2f);
 
     private bool isWorldSpace = true;
+    private bool followTarget = false;
+    private Transform targetTransform;
+    private Vector3 spawnOffset;
+    private Vector3 jitterOffset;
+    private Vector3 lastWorldPos;
 
     public void Setup(int amount, Color color, string prefix, bool worldSpace = true)
     {
+        this.followTarget = false;
         this.isWorldSpace = worldSpace;
         
         if (textMesh == null) textMesh = GetComponentInChildren<TMP_Text>();
@@ -21,6 +27,64 @@ public class DamageNumberUI : MonoBehaviour
         {
             textMesh.text = $"{prefix}{amount}";
             textMesh.color = color;
+        }
+
+        StartCoroutine(Animate());
+    }
+
+    public void Setup(Transform target, Vector3 offset, Vector3 jitter, int amount, Color color, string prefix)
+    {
+        this.targetTransform = target;
+        this.spawnOffset = offset;
+        this.jitterOffset = jitter;
+        if (target != null)
+        {
+            this.lastWorldPos = target.position;
+        }
+        this.followTarget = true;
+        this.isWorldSpace = false;
+
+        if (textMesh == null) textMesh = GetComponentInChildren<TMP_Text>();
+
+        if (textMesh != null)
+        {
+            textMesh.text = $"{prefix}{amount}";
+            textMesh.color = color;
+        }
+
+        // Posicionamento imediato para evitar glitch visual de 1 frame
+        RectTransform rect = GetComponent<RectTransform>();
+        if (rect != null)
+        {
+            Vector3 current3DPos = lastWorldPos + spawnOffset + jitterOffset;
+            Vector3 canvasWorldPos = Vector3.zero;
+            bool positionFound = false;
+
+            if (RenderTextureInputManager.Instance != null && RenderTextureInputManager.Instance.WorldToCanvasWorldPoint(current3DPos, out canvasWorldPos))
+            {
+                positionFound = true;
+            }
+            else if (Camera.main != null && transform.parent != null)
+            {
+                Vector3 screenPos = Camera.main.WorldToScreenPoint(current3DPos);
+                if (screenPos.z >= 0)
+                {
+                    RectTransform parentRect = transform.parent as RectTransform;
+                    Canvas canvas = GetComponentInParent<Canvas>();
+                    Camera uiCamera = (canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay) ? canvas.worldCamera : null;
+
+                    if (parentRect != null && RectTransformUtility.ScreenPointToWorldPointInRectangle(parentRect, screenPos, uiCamera, out Vector3 worldPoint))
+                    {
+                        canvasWorldPos = worldPoint;
+                        positionFound = true;
+                    }
+                }
+            }
+
+            if (positionFound)
+            {
+                rect.position = canvasWorldPos;
+            }
         }
 
         StartCoroutine(Animate());
@@ -40,14 +104,57 @@ public class DamageNumberUI : MonoBehaviour
             elapsed += Time.deltaTime;
             float t = elapsed / duration;
 
-            // Movimento para cima
-            if (!isWorldSpace && rect != null)
+            if (followTarget && rect != null)
             {
-                rect.anchoredPosition = startAnchoredPos + Vector2.up * (elapsed * moveSpeed * 100f);
+                if (targetTransform != null)
+                {
+                    lastWorldPos = targetTransform.position;
+                }
+
+                // Calcula a posição 3D do alvo atualizada, somando a subida da animação e o jitter
+                Vector3 current3DPos = lastWorldPos + spawnOffset + jitterOffset + (Vector3.up * (elapsed * moveSpeed));
+                Vector3 canvasWorldPos = Vector3.zero;
+                bool positionFound = false;
+
+                // 1. Tenta converter usando o RenderTextureInputManager (caso esteja ativo)
+                if (RenderTextureInputManager.Instance != null && RenderTextureInputManager.Instance.WorldToCanvasWorldPoint(current3DPos, out canvasWorldPos))
+                {
+                    positionFound = true;
+                }
+                // 2. Se não estiver ativo, tenta projetar usando a Câmera Principal diretamente no Canvas da UI
+                else if (Camera.main != null && transform.parent != null)
+                {
+                    Vector3 screenPos = Camera.main.WorldToScreenPoint(current3DPos);
+                    if (screenPos.z >= 0)
+                    {
+                        RectTransform parentRect = transform.parent as RectTransform;
+                        Canvas canvas = GetComponentInParent<Canvas>();
+                        Camera uiCamera = (canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay) ? canvas.worldCamera : null;
+
+                        if (parentRect != null && RectTransformUtility.ScreenPointToWorldPointInRectangle(parentRect, screenPos, uiCamera, out Vector3 worldPoint))
+                        {
+                            canvasWorldPos = worldPoint;
+                            positionFound = true;
+                        }
+                    }
+                }
+
+                if (positionFound)
+                {
+                    rect.position = canvasWorldPos;
+                }
             }
             else
             {
-                transform.position = startWorldPos + Vector3.up * (elapsed * moveSpeed);
+                // Movimento clássico para cima
+                if (!isWorldSpace && rect != null)
+                {
+                    rect.anchoredPosition = startAnchoredPos + Vector2.up * (elapsed * moveSpeed * 100f);
+                }
+                else
+                {
+                    transform.position = startWorldPos + Vector3.up * (elapsed * moveSpeed);
+                }
             }
 
             // Escala (pop-in respeitando a escala inicial do prefab)
@@ -78,3 +185,4 @@ public class DamageNumberUI : MonoBehaviour
         }
     }
 }
+

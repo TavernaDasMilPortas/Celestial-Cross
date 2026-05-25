@@ -24,7 +24,7 @@ MonoBehaviour:
   SupremeChoices:
   - RewardType: 0
     Rarity: 5
-    UnitData: {fileID: 11400000, guid: 67628d77266bab446ba0b5274c2a9397, type: 2}
+    UnitData: {fileID: 11400000, guid: 41ab50bd04fdfce42875fe6724f71972, type: 2}
     PetSpeciesData: {fileID: 0}
     ArtifactSet: {fileID: 0}
     Weight: 1
@@ -60,6 +60,14 @@ MonoBehaviour:
     Rarity: 4
     UnitData: {fileID: 11400000, guid: 642b786367762f940aded926f739f0ba, type: 2}
     PetSpeciesData: {fileID: 0}
+    ArtifactSet: {fileID: 0}
+    Weight: 1
+    ItemStars: 3
+    ArtifactRarity: 0
+  - RewardType: 1
+    Rarity: 0
+    UnitData: {fileID: 0}
+    PetSpeciesData: {fileID: 11400000, guid: ca3587875a7b1d64bbb5e2585641ebca, type: 2}
     ArtifactSet: {fileID: 0}
     Weight: 1
     ItemStars: 3

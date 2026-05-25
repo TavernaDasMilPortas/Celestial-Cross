@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb249868a85523b4686441d22073799e, type: 3}
   m_Name: Inimigo
   m_EditorClassIdentifier: Assembly-CSharp::UnitData
-  unitID: 704753636e58dab40b1e29a96fbcd4ee
+  unitID: d11906f56e9fd2b42821cf5c9336bf57
   displayName: shanny
   role: 0
   unitClass: 0

@@ -47,13 +47,14 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
         public AreaPatternData areaPattern;
         public string rangeVariable;
         public string maxTargetsVariable;
+        public bool useExtraRangeVariable = false;
     }
 
     [Serializable]
     public class DamageNodeData
     {
-        public string variableReference; // Se preenchido, usa o valor da variável
-        public int baseAttribute = (int)AttributeCondition.AttributeType.Attack;
+        public string variableReference; // Se preenchido, usa o valor da variável (multiplicador)
+        public List<StatScalingData> scalings = new List<StatScalingData>();
         public bool scaleWithDistance = false;
         public float distanceScaleFactor = 0.1f;
     }
@@ -61,8 +62,8 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
     [Serializable]
     public class HealNodeData
     {
-        public string variableReference;
-        public int baseAttribute = 0;
+        public string variableReference; // Se preenchido, usa o valor da variável (multiplicador)
+        public List<StatScalingData> scalings = new List<StatScalingData>();
         public bool canCrit = true;
         public bool allowOverheal = false;
     }
@@ -90,6 +91,25 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
         public Operation operation = Operation.Set;
         public float value;
         public string valueVariableReference; // Opcional: usar outra variável como valor
+    }
+
+    [Serializable]
+    public class ReadUnitVariableNodeData
+    {
+        public string variableName;
+        public bool isSlotVariable = false;
+        public string outputVariable; // A variável de contexto onde o valor será salvo
+    }
+
+    [Serializable]
+    public class WriteUnitVariableNodeData
+    {
+        public enum Operation { Set, Add, Multiply }
+        public string variableName;
+        public bool isSlotVariable = false;
+        public Operation operation = Operation.Set;
+        public float value;
+        public string contextVariableReference; // Se preenchido, usa uma variável do contexto como valor
     }
 
     [Serializable]
@@ -226,6 +246,15 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
     {
         public Celestial_Cross.Scripts.Abilities.Modifiers.DurationType type = Celestial_Cross.Scripts.Abilities.Modifiers.DurationType.Turns;
         public int value = 1;
+    }
+
+    [Serializable]
+    public class SkillBranchNodeData
+    {
+        public string branchId;
+        public int tierIndex;
+        public string branchName;
+        public string branchDescription;
     }
 }
 

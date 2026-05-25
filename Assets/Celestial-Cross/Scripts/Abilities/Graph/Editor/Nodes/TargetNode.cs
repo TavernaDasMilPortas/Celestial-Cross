@@ -18,6 +18,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
         private Toggle multipleTargetsToggle;
         private IntegerField maxTargetsField;
         private TextField maxTargetsVarField;
+        private Toggle useExtraRangeVariableToggle;
         private ObjectField areaPatternField;
         private EnumField preferredDirectionDropdown;
         private Toggle autoRotateToggle;
@@ -78,6 +79,11 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
             rangeVarField.value = nodeData.rangeVariable;
             rangeVarField.RegisterValueChangedCallback(evt => nodeData.rangeVariable = evt.newValue);
             manualContainer.Add(rangeVarField);
+
+            useExtraRangeVariableToggle = new Toggle("Use Extra Range Var");
+            useExtraRangeVariableToggle.value = nodeData.useExtraRangeVariable;
+            useExtraRangeVariableToggle.RegisterValueChangedCallback(evt => nodeData.useExtraRangeVariable = evt.newValue);
+            manualContainer.Add(useExtraRangeVariableToggle);
 
             multipleTargetsToggle = new Toggle("Multiple Targets");
             multipleTargetsToggle.value = nodeData.multipleTargets;
@@ -205,6 +211,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
             // Manual
             modeDropdown.value = nodeData.mode;
             rangeField.value = nodeData.range;
+            if (useExtraRangeVariableToggle != null) useExtraRangeVariableToggle.value = nodeData.useExtraRangeVariable;
             multipleTargetsToggle.value = nodeData.multipleTargets;
             maxTargetsField.value = nodeData.maxTargets;
             areaPatternField.value = nodeData.areaPattern;

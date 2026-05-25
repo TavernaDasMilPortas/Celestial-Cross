@@ -112,6 +112,35 @@ namespace Celestial_Cross.Scripts.Abilities.Graph
             return variable != null ? variable.initialValue : 0f;
         }
 
+        // --- Skill Branch helpers ---
+
+        /// <summary>
+        /// Extrai todos os SkillBranchNode do grafo, agrupados por tier, para uso pela UI.
+        /// </summary>
+        public List<SkillBranchTierInfo> GetBranchTiers()
+        {
+            var tiers = new Dictionary<int, List<SkillBranchNodeData>>();
+            foreach (var node in NodeData)
+            {
+                if (node.NodeType != "SkillBranchNode") continue;
+                if (string.IsNullOrEmpty(node.JsonData)) continue;
+                var data = JsonUtility.FromJson<SkillBranchNodeData>(node.JsonData);
+                if (!tiers.ContainsKey(data.tierIndex))
+                    tiers[data.tierIndex] = new List<SkillBranchNodeData>();
+                tiers[data.tierIndex].Add(data);
+            }
+            return tiers.OrderBy(t => t.Key)
+                .Select(t => new SkillBranchTierInfo { tierIndex = t.Key, options = t.Value })
+                .ToList();
+        }
+
+        [System.Serializable]
+        public class SkillBranchTierInfo
+        {
+            public int tierIndex;
+            public List<SkillBranchNodeData> options;
+        }
+
         [System.Serializable]
         public class Dependency
         {

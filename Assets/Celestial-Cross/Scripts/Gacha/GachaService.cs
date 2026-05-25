@@ -264,7 +264,7 @@ namespace CelestialCross.Gacha
             {
                 string petID = entry.GetID();
                 // Instancia o Pet Data RNG com base na espécie (simplificado aqui. Depois podemos gerar os stats randomicos de HP/ATK baseados em ranges min/max)
-                var newPet = new CelestialCross.Data.Pets.RuntimePetData(petID, "", entry.ItemStars, 100, 10, 10, 10, 5, 0);
+                var newPet = new CelestialCross.Data.Pets.RuntimePetData(petID, "", entry.ItemStars, 100, 10, 10, 10, 5, 50, 0, 0);
                 account.OwnedRuntimePets.Add(newPet);
             }
             else if (entry.RewardType == GachaRewardType.Artifact)

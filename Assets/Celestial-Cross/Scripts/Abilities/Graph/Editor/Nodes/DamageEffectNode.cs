@@ -9,10 +9,10 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
 {
     public class DamageEffectNode : AbilityNode
     {
-        private EnumField baseAttributeDropdown;
+        private VisualElement scalingsContainer;
+        private TextField variableReferenceField;
         private Toggle scaleWithDistanceToggle;
         private FloatField distanceScaleFactorField;
-        private TextField variableReferenceField;
 
         private Celestial_Cross.Scripts.Abilities.Graph.Runtime.DamageNodeData nodeData = new Celestial_Cross.Scripts.Abilities.Graph.Runtime.DamageNodeData();
 
@@ -39,10 +39,11 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
             variableReferenceField.RegisterValueChangedCallback(evt => nodeData.variableReference = evt.newValue);
             extensionContainer.Add(variableReferenceField);
 
-            baseAttributeDropdown = new EnumField("Base Attribute", AttributeCondition.AttributeType.Attack);
-            baseAttributeDropdown.RegisterValueChangedCallback(evt => {
-                nodeData.baseAttribute = (int)(AttributeCondition.AttributeType)evt.newValue;
-            });
+            var addBtn = new Button(AddScaling) { text = "Add Scaling Stat" };
+            extensionContainer.Add(addBtn);
+
+            scalingsContainer = new VisualElement();
+            extensionContainer.Add(scalingsContainer);
 
             scaleWithDistanceToggle = new Toggle("Scale With Distance");
             scaleWithDistanceToggle.value = nodeData.scaleWithDistance;
@@ -58,16 +59,99 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
 
             UpdateDynamicFields();
 
+            if (nodeData.scalings.Count == 0) AddScaling();
+
             RefreshExpandedState();
             RefreshPorts();
         }
 
+        private void AddScaling()
+        {
+            var entry = new CelestialCross.Combat.StatScalingData
+            {
+                statType = CelestialCross.Artifacts.StatType.AttackFlat,
+                percentage = 100f,
+                useTargetStat = false
+            };
+            nodeData.scalings.Add(entry);
+            CreateScalingUI(entry);
+        }
+
+        private void CreateScalingUI(CelestialCross.Combat.StatScalingData entry)
+        {
+            var row = new VisualElement();
+            row.style.flexDirection = FlexDirection.Column;
+            row.style.backgroundColor = new Color(0.2f, 0.2f, 0.2f, 0.5f);
+            row.style.marginBottom = 4;
+            row.style.paddingTop = 2;
+            row.style.paddingBottom = 2;
+            row.style.paddingLeft = 2;
+            row.style.paddingRight = 2;
+            row.style.borderBottomWidth = 1;
+            row.style.borderBottomColor = Color.gray;
+
+            var topRow = new VisualElement();
+            topRow.style.flexDirection = FlexDirection.Row;
+
+            var statEnum = new EnumField(entry.statType);
+            statEnum.style.flexGrow = 1;
+            statEnum.RegisterValueChangedCallback(evt => {
+                entry.statType = (CelestialCross.Artifacts.StatType)evt.newValue;
+                UpdateEntryInList(row, entry);
+            });
+            
+            var targetToggle = new Toggle("Use Target");
+            targetToggle.value = entry.useTargetStat;
+            targetToggle.RegisterValueChangedCallback(evt => {
+                entry.useTargetStat = evt.newValue;
+                UpdateEntryInList(row, entry);
+            });
+
+            var removeBtn = new Button(() => {
+                nodeData.scalings.Remove(entry);
+                scalingsContainer.Remove(row);
+                RefreshExpandedState();
+            }) { text = "X" };
+            removeBtn.style.color = Color.red;
+
+            topRow.Add(statEnum);
+            topRow.Add(targetToggle);
+            topRow.Add(removeBtn);
+            row.Add(topRow);
+
+            var bottomRow = new VisualElement();
+            bottomRow.style.flexDirection = FlexDirection.Row;
+            bottomRow.style.marginTop = 2;
+
+            var pctField = new FloatField("Percentage (%)");
+            pctField.value = entry.percentage;
+            pctField.style.flexGrow = 1;
+            pctField.RegisterValueChangedCallback(evt => {
+                entry.percentage = evt.newValue;
+                UpdateEntryInList(row, entry);
+            });
+
+            bottomRow.Add(pctField);
+            row.Add(bottomRow);
+
+            // Armazenamos o objeto da struct na tag da UI para atualizações se necessário
+            row.userData = entry;
+
+            scalingsContainer.Add(row);
+            RefreshExpandedState();
+        }
+
+        private void UpdateEntryInList(VisualElement row, CelestialCross.Combat.StatScalingData entry)
+        {
+            int index = scalingsContainer.IndexOf(row);
+            if (index >= 0 && index < nodeData.scalings.Count)
+            {
+                nodeData.scalings[index] = entry;
+            }
+        }
+
         private void UpdateDynamicFields()
         {
-            if (!extensionContainer.Contains(baseAttributeDropdown))
-                extensionContainer.Insert(0, baseAttributeDropdown);
-
-            // Lógica dinâmica para Scale With Distance
             if (nodeData.scaleWithDistance)
             {
                 if (!extensionContainer.Contains(distanceScaleFactorField))
@@ -95,15 +179,23 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
                 variableReferenceField.value = nodeData.variableReference;
                 scaleWithDistanceToggle.value = nodeData.scaleWithDistance;
                 distanceScaleFactorField.value = nodeData.distanceScaleFactor;
+                
+                scalingsContainer.Clear();
+                if (nodeData.scalings != null)
+                {
+                    foreach (var scaling in nodeData.scalings)
+                    {
+                        CreateScalingUI(scaling);
+                    }
+                }
+                
                 UpdateDynamicFields();
             }
         }
 
         public override string GetDescription()
         {
-            string scaleText = nodeData.scaleWithDistance ? " (escala com a distância)" : "";
-            var attr = (AttributeCondition.AttributeType)nodeData.baseAttribute;
-            return $"Dano escalado pelo atributo {attr} multiplicado pela variável '{nodeData.variableReference}'{scaleText}.";
+            return $"Dano escalado ({nodeData.scalings?.Count ?? 0} stats).";
         }
 
         public void SetVariableReference(string varName)

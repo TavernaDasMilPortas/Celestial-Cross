@@ -94,6 +94,15 @@ public class InventoryUI : MonoBehaviour
     public Image[] constellationStars = new Image[6];
     public Button constellationButton;
     public TMP_Text insigniaCountText;
+
+    [Header("Unit Sub-Tabs Configuration")]
+    public Button unitSubTabEquipButton;
+    public Button unitSubTabConstellationButton;
+    public Button unitSubTabSkillsButton;
+    public GameObject unitSubPanelEquip;
+    public GameObject unitSubPanelConstellation;
+    public GameObject unitSubPanelSkills;
+    public CelestialCross.UI.Skills.SkillTabUI skillTab;
     
     private CelestialCross.Artifacts.ArtifactInstanceData selectedArtifactToEquip;
     private RuntimePetData selectedPetInstance;
@@ -130,6 +139,7 @@ public class InventoryUI : MonoBehaviour
 
     void Start()
     {
+        Debug.Log("[InventoryUI] Start chamado.");
         if (unitCatalog == null)
             Debug.LogWarning("InventoryUI: UnitCatalog não atribuído! A UI de Constelação e Detalhes pode não funcionar corretamente.");
 
@@ -143,10 +153,38 @@ public class InventoryUI : MonoBehaviour
             managePetButton.onClick.AddListener(OnManagePetClicked);
 
         WireUpFixedButtons();
+        InitializeSubTabs();
         
         if (constellationButton != null)
             constellationButton.onClick.AddListener(OnConstellationUpgradeClicked);
         
+        // Auto-criação do AccountManager para testes diretos no editor
+        if (AccountManager.Instance == null)
+        {
+            Debug.Log("[InventoryUI] AccountManager não encontrado. Criando AccountManager dinâmico para depuração...");
+            var go = new GameObject("AccountManager_AutoCreated");
+            go.AddComponent<AccountManager>();
+        }
+
+        Debug.Log($"[InventoryUI] AccountManager.Instance: {AccountManager.Instance != null}, PlayerAccount: {(AccountManager.Instance != null ? AccountManager.Instance.PlayerAccount != null : false)}");
+
+        if (AccountManager.Instance != null && AccountManager.Instance.PlayerAccount != null)
+        {
+            Debug.Log("[InventoryUI] Conta já disponível. Renderizando abas...");
+            RefreshAllTabs();
+            SwitchToTab(0);
+        }
+        else
+        {
+            Debug.Log("[InventoryUI] Conta não disponível ainda. Registrando listener do OnAccountReady...");
+            AccountManager.OnAccountReady += HandleAccountReady;
+        }
+    }
+
+    private void HandleAccountReady()
+    {
+        Debug.Log("[InventoryUI] Evento OnAccountReady recebido. Renderizando abas...");
+        AccountManager.OnAccountReady -= HandleAccountReady;
         RefreshAllTabs();
         SwitchToTab(0);
     }
@@ -200,15 +238,54 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
+    private void InitializeSubTabs()
+    {
+        if (unitSubTabEquipButton != null) unitSubTabEquipButton.onClick.AddListener(() => SwitchUnitSubTab(0));
+        if (unitSubTabConstellationButton != null) unitSubTabConstellationButton.onClick.AddListener(() => SwitchUnitSubTab(1));
+        if (unitSubTabSkillsButton != null) unitSubTabSkillsButton.onClick.AddListener(() => SwitchUnitSubTab(2));
+        
+        SwitchUnitSubTab(0); // Equipamento ativo por padrão
+    }
+
+    public void SwitchUnitSubTab(int subTabIndex)
+    {
+        if (unitSubPanelEquip != null) unitSubPanelEquip.SetActive(subTabIndex == 0);
+        if (unitSubPanelConstellation != null) unitSubPanelConstellation.SetActive(subTabIndex == 1);
+        if (unitSubPanelSkills != null) unitSubPanelSkills.SetActive(subTabIndex == 2);
+
+        UpdateSubTabButtonVisual(unitSubTabEquipButton, subTabIndex == 0);
+        UpdateSubTabButtonVisual(unitSubTabConstellationButton, subTabIndex == 1);
+        UpdateSubTabButtonVisual(unitSubTabSkillsButton, subTabIndex == 2);
+    }
+
+    private void UpdateSubTabButtonVisual(Button btn, bool isActive)
+    {
+        if (btn == null) return;
+        var img = btn.GetComponent<Image>();
+        if (img != null)
+        {
+            img.color = isActive ? new Color(0.4f, 0.35f, 0.45f, 1f) : new Color(0.2f, 0.18f, 0.22f, 1f);
+        }
+        var txt = btn.GetComponentInChildren<TextMeshProUGUI>();
+        if (txt != null)
+        {
+            txt.color = isActive ? Color.white : Color.gray;
+        }
+    }
+
     private void OnEnable()
     {
         // When the panel is reopened, refresh lists from Account.
         if (Application.isPlaying)
-            RefreshAllTabs();
+        {
+            if (AccountManager.Instance != null && AccountManager.Instance.PlayerAccount != null)
+                RefreshAllTabs();
+        }
     }
 
     void OnDestroy()
     {
+        AccountManager.OnAccountReady -= HandleAccountReady;
         UnregisterSwipe();
 
         if (tabs != null)
@@ -270,6 +347,12 @@ public class InventoryUI : MonoBehaviour
             CancelEquipMode();
         else if (isSelectingPet && index != 1)
             CancelEquipMode();
+
+        if (index != 0 && skillTab != null)
+        {
+            if (skillTab.selectionModal != null) skillTab.selectionModal.gameObject.SetActive(false);
+            if (skillTab.branchModal != null) skillTab.branchModal.gameObject.SetActive(false);
+        }
 
         currentTabIndex = index;
 
@@ -346,7 +429,9 @@ public class InventoryUI : MonoBehaviour
     
     private void RefreshAllTabs()
     {
+        Debug.Log($"[InventoryUI] RefreshAllTabs chamado. gridContainers nulo? {gridContainers == null}");
         if (gridContainers == null) return;
+        Debug.Log($"[InventoryUI] gridContainers.Length: {gridContainers.Length}");
 
         for (int i = 0; i < gridContainers.Length; i++)
             PopulateTab(i);
@@ -354,16 +439,20 @@ public class InventoryUI : MonoBehaviour
 
 private void PopulateTab(int tabIndex)
     {
+        Debug.Log($"[InventoryUI] PopulateTab({tabIndex}) chamado. gridContainers.Length: {(gridContainers != null ? gridContainers.Length : 0)}");
         if (gridContainers == null || tabIndex < 0 || tabIndex >= gridContainers.Length) return;
         var container = gridContainers[tabIndex];
+        Debug.Log($"[InventoryUI] Container para tab {tabIndex}: {(container != null ? container.name : "NULO")}");
         if (container == null) return;
 
         ClearSpawned(tabIndex);
 
         var account = AccountManager.Instance != null ? AccountManager.Instance.PlayerAccount : null;
+        Debug.Log($"[InventoryUI] PopulateTab - AccountManager.Instance: {AccountManager.Instance != null}, account nulo? {account == null}");
 
         if (account == null)
         {
+            Debug.Log("[InventoryUI] Account nulo. Renderizando placeholders de debug...");
             // No account available: show placeholders.
             for (int i = 0; i < 12; i++)
                 SpawnItem(tabIndex, container, "", $"Item {i + 1}", () => SetDetails(tabIndex, $"Item {i + 1}"));
@@ -371,12 +460,14 @@ private void PopulateTab(int tabIndex)
         }
 
         account.EnsureInitialized();
+        Debug.Log($"[InventoryUI] Unidades: {account.OwnedUnitIDs?.Count}, Pets: {account.OwnedRuntimePets?.Count}, Artefatos: {account.OwnedArtifacts?.Count}");
 
         switch ((InventoryKind)Mathf.Clamp(tabIndex, 0, 2))
         {
             case InventoryKind.Units:
                 if (account.OwnedUnitIDs != null)
                 {
+                    Debug.Log($"[InventoryUI] Populando Unidades. Quantidade de IDs de unidade: {account.OwnedUnitIDs.Count}");
                     for (int i = 0; i < account.OwnedUnitIDs.Count; i++)
                     {
                         string id = account.OwnedUnitIDs[i];
@@ -401,6 +492,7 @@ private void PopulateTab(int tabIndex)
             case InventoryKind.Pets:
                 if (account.OwnedRuntimePets != null)
                 {
+                    Debug.Log($"[InventoryUI] Populando Pets. Quantidade de Pets: {account.OwnedRuntimePets.Count}");
                     for (int i = 0; i < account.OwnedRuntimePets.Count; i++)
                     {
                         var pet = account.OwnedRuntimePets[i];
@@ -431,6 +523,7 @@ private void PopulateTab(int tabIndex)
             case InventoryKind.Artifacts:
                 if (account.OwnedArtifacts != null)
                 {
+                    Debug.Log($"[InventoryUI] Populando Artefatos. Quantidade: {account.OwnedArtifacts.Count}");
                     for (int i = 0; i < account.OwnedArtifacts.Count; i++)
                     {
                         var a = account.OwnedArtifacts[i];
@@ -453,6 +546,7 @@ private void PopulateTab(int tabIndex)
         }
 
         // Empty-state messaging
+        Debug.Log($"[InventoryUI] spawnedItemsPerTab[{tabIndex}].Count = {spawnedItemsPerTab[tabIndex].Count}");
         if (spawnedItemsPerTab[tabIndex].Count == 0)
         {
             string emptyLabel = tabIndex == 0 ? "(sem unidades)" : tabIndex == 1 ? "(sem pets)" : "(sem artefatos)";
@@ -474,6 +568,7 @@ private void PopulateTab(int tabIndex)
 
     private void SpawnItem(int tabIndex, RectTransform parent, string itemId, string label, Action onClick, Sprite icon = null)
     {
+        Debug.Log($"[InventoryUI] SpawnItem - tabIndex: {tabIndex}, label: {label}, icon? {icon != null}");
         bool isSelected = (!string.IsNullOrEmpty(itemId) && itemId == currentlySelectedTabItemId);
         bool isEquippedTarget = false;
         
@@ -486,6 +581,35 @@ private void PopulateTab(int tabIndex)
         if (slotPrefab != null)
         {
             go = Instantiate(slotPrefab, parent);
+            go.SetActive(true); // Forçar ativação já que o prefab modelo pode estar inativo
+
+            var iconImg = go.transform.Find("Icon")?.GetComponent<Image>();
+            if (iconImg != null)
+            {
+                if (icon != null)
+                {
+                    iconImg.gameObject.SetActive(true);
+                    iconImg.sprite = icon;
+                }
+                else
+                {
+                    iconImg.gameObject.SetActive(false);
+                }
+            }
+
+            var labelTxt = go.transform.Find("Label")?.GetComponent<TextMeshProUGUI>() ?? go.GetComponentInChildren<TextMeshProUGUI>();
+            if (labelTxt != null)
+            {
+                labelTxt.text = label;
+                if (icon != null && iconImg != null)
+                {
+                    labelTxt.gameObject.SetActive(false); // Esconder texto se houver ícone
+                }
+                else
+                {
+                    labelTxt.gameObject.SetActive(true);
+                }
+            }
         }
         else
         {
@@ -596,7 +720,7 @@ private void PopulateTab(int tabIndex)
             topPanelTexts[tabIndex].text = string.IsNullOrWhiteSpace(text) ? "" : text;
     }
 
-    private void ProcessStatData(CelestialCross.Artifacts.StatModifierData stat, ref float hF, ref float hP, ref float aF, ref float aP, ref float dF, ref float dP, ref float spdF, ref float crF, ref float eaf)
+    private void ProcessStatData(CelestialCross.Artifacts.StatModifierData stat, ref float hF, ref float hP, ref float aF, ref float aP, ref float dF, ref float dP, ref float spdF, ref float crF, ref float eaf, ref float cdF, ref float erf)
     {
         if (stat == null) return;
         switch (stat.statType)
@@ -609,7 +733,9 @@ private void PopulateTab(int tabIndex)
             case CelestialCross.Artifacts.StatType.DefensePercent: dP += stat.value; break;
             case CelestialCross.Artifacts.StatType.Speed:  spdF += stat.value; break;
             case CelestialCross.Artifacts.StatType.CriticalRate: crF += stat.value; break;
+            case CelestialCross.Artifacts.StatType.CriticalDamage: cdF += stat.value; break;
             case CelestialCross.Artifacts.StatType.EffectHitRate: eaf += stat.value; break;
+            case CelestialCross.Artifacts.StatType.EffectResistance: erf += stat.value; break;
         }
     }
 
@@ -756,7 +882,7 @@ private void PopulateTab(int tabIndex)
                 }
             }
 
-            float hF = 0, hP = 0, aF = 0, aP = 0, dF = 0, dP = 0, spdF = 0, crF = 0, eaf = 0;
+            float hF = 0, hP = 0, aF = 0, aP = 0, dF = 0, dP = 0, spdF = 0, crF = 0, eaf = 0, cdF = 0, erf = 0;
             if (loadout != null)
             {
                 var artifactIDs = loadout.GetEquippedArtifactIDs();
@@ -765,12 +891,12 @@ private void PopulateTab(int tabIndex)
                     var arti = account.GetArtifactByGuid(guid);
                     if (arti != null)
                     {
-                        ProcessStatData(arti.mainStat, ref hF, ref hP, ref aF, ref aP, ref dF, ref dP, ref spdF, ref crF, ref eaf);
+                        ProcessStatData(arti.mainStat, ref hF, ref hP, ref aF, ref aP, ref dF, ref dP, ref spdF, ref crF, ref eaf, ref cdF, ref erf);
                         if (arti.subStats != null)
                         {
                             foreach (var sub in arti.subStats)
                             {
-                                ProcessStatData(sub, ref hF, ref hP, ref aF, ref aP, ref dF, ref dP, ref spdF, ref crF, ref eaf);
+                                ProcessStatData(sub, ref hF, ref hP, ref aF, ref aP, ref dF, ref dP, ref spdF, ref crF, ref eaf, ref cdF, ref erf);
                             }
                         }
                     }
@@ -782,7 +908,9 @@ private void PopulateTab(int tabIndex)
             int finalDefense = (int)Mathf.Round(baseStats.defense * (1f + (dP / 100f)) + dF);
             int finalSpeed = (int)Mathf.Round(baseStats.speed + spdF);
             int finalCrit = Mathf.Clamp((int)Mathf.Round(baseStats.criticalChance + crF), 0, 100);
+            int finalCritDmg = Mathf.Max(50, (int)Mathf.Round(baseStats.criticalDamage + cdF)); // Base 50%
             int finalAcc = Mathf.Clamp((int)Mathf.Round(baseStats.effectAccuracy + eaf), 0, 100);
+            int finalRes = Mathf.Clamp((int)Mathf.Round(baseStats.effectResistance + erf), 0, 100);
             
             if (equippedPet != null && equippedPetSpecies != null)
             {
@@ -791,7 +919,9 @@ private void PopulateTab(int tabIndex)
                 finalDefense += equippedPet.Defense;
                 finalSpeed += equippedPet.Speed;
                 finalCrit = Mathf.Clamp(finalCrit + equippedPet.CriticalChance, 0, 100);
+                finalCritDmg = Mathf.Max(50, finalCritDmg + equippedPet.CriticalDamage);
                 finalAcc = Mathf.Clamp(finalAcc + equippedPet.EffectAccuracy, 0, 100);
+                finalRes = Mathf.Clamp(finalRes + equippedPet.EffectResistance, 0, 100);
             }
             
             int roundedBaseHealth = Mathf.RoundToInt(baseStats.health);
@@ -799,14 +929,18 @@ private void PopulateTab(int tabIndex)
             int roundedBaseDefense = Mathf.RoundToInt(baseStats.defense);
             int roundedBaseSpeed = Mathf.RoundToInt(baseStats.speed);
             int roundedBaseCrit = Mathf.RoundToInt(baseStats.criticalChance);
+            int roundedBaseCritDmg = Mathf.RoundToInt(baseStats.criticalDamage);
             int roundedBaseAcc = Mathf.RoundToInt(baseStats.effectAccuracy);
+            int roundedBaseRes = Mathf.RoundToInt(baseStats.effectResistance);
 
             string healthText = finalHealth > roundedBaseHealth ? $"<color=#00ff00>{finalHealth}</color> <color=#aaaaaa>({roundedBaseHealth} +{finalHealth - roundedBaseHealth})</color>" : finalHealth.ToString();
             string attackText = finalAttack > roundedBaseAttack ? $"<color=#00ff00>{finalAttack}</color> <color=#aaaaaa>({roundedBaseAttack} +{finalAttack - roundedBaseAttack})</color>" : finalAttack.ToString();
             string defenseText = finalDefense > roundedBaseDefense ? $"<color=#00ff00>{finalDefense}</color> <color=#aaaaaa>({roundedBaseDefense} +{finalDefense - roundedBaseDefense})</color>" : finalDefense.ToString();
             string speedText = finalSpeed > roundedBaseSpeed ? $"<color=#00ff00>{finalSpeed}</color> <color=#aaaaaa>({roundedBaseSpeed} +{finalSpeed - roundedBaseSpeed})</color>" : finalSpeed.ToString();
             string critText = finalCrit > roundedBaseCrit ? $"<color=#00ff00>{finalCrit}%</color> <color=#aaaaaa>({roundedBaseCrit}% +{finalCrit - roundedBaseCrit}%)</color>" : $"{finalCrit}%";
+            string cdText = finalCritDmg > roundedBaseCritDmg ? $"<color=#00ff00>{finalCritDmg}%</color> <color=#aaaaaa>({roundedBaseCritDmg}% +{finalCritDmg - roundedBaseCritDmg}%)</color>" : $"{finalCritDmg}%";
             string accText = finalAcc > roundedBaseAcc ? $"<color=#00ff00>{finalAcc}%</color> <color=#aaaaaa>({roundedBaseAcc}% +{finalAcc - roundedBaseAcc}%)</color>" : $"{finalAcc}%";
+            string resText = finalRes > roundedBaseRes ? $"<color=#00ff00>{finalRes}%</color> <color=#aaaaaa>({roundedBaseRes}% +{finalRes - roundedBaseRes}%)</color>" : $"{finalRes}%";
 
             string abilitiesList = "Nenhuma habilidade";
             if (unitAbilitiesContainer != null)
@@ -838,7 +972,9 @@ private void PopulateTab(int tabIndex)
                                  $"<color=#ff8888>DEF:</color> {defenseText}\n" +
                                  $"<color=#ff8888>SPD:</color> {speedText}   " +
                                  $"<color=#ff8888>CRIT:</color> {critText}   " +
-                                 $"<color=#ff8888>ACC:</color> {accText}" +
+                                 $"<color=#ff8888>CR.DMG:</color> {cdText}\n" +
+                                 $"<color=#ff8888>ACC:</color> {accText}   " +
+                                 $"<color=#ff8888>RES:</color> {resText}" +
                                  $"</size>";
             unitStatsText.text = defaultStatsText;
         }
@@ -947,6 +1083,11 @@ private void PopulateTab(int tabIndex)
                 iconTr.gameObject.SetActive(false);
                 unitEquipTexts[i].gameObject.SetActive(true);
             } }
+        }
+
+        if (skillTab != null)
+        {
+            skillTab.Setup(unitId);
         }
     }
 
@@ -1067,7 +1208,8 @@ private void PopulateTab(int tabIndex)
             details = $"<b>{speciesName}</b>\n" +
                       $"Estrelas: {data.RarityStars}* | Nível: {data.CurrentLevel}\n\n" +
                       $"HP: +{data.Health}   ATK: +{data.Attack}   DEF: +{data.Defense}\n" +
-                      $"SPD: +{data.Speed}   CRIT: +{data.CriticalChance}%   ACC: +{data.EffectAccuracy}%\n\n";
+                      $"SPD: +{data.Speed}   CRIT: +{data.CriticalChance}%\n" +
+                      $"CR.DMG: +{data.CriticalDamage}%   ACC: +{data.EffectAccuracy}%   RES: +{data.EffectResistance}%\n\n";
             if (speciesData != null)
             {
                 if (speciesData.PassiveSkills != null) foreach (var ab in speciesData.PassiveSkills) if (ab != null) { details += $"<color=#ffffaa>{ab.abilityName}</color>\n<size=16>{ab.abilityDescription}</size>\n"; }

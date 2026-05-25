@@ -4,6 +4,7 @@ using CelestialCross.Combat;
 using Celestial_Cross.Scripts.Abilities;
 using Celestial_Cross.Scripts.Units;
 using CelestialCross.Artifacts;
+using Celestial_Cross.Scripts.Abilities.Graph;
 
 [RequireComponent(typeof(Health))]
 [RequireComponent(typeof(Collider))]
@@ -70,7 +71,7 @@ public abstract class Unit : MonoBehaviour
             
             CombatStats baseStats = unitData != null
                 ? unitData.GetStatsAtLevel(level, refMaxLevel)
-                : new CombatStats(1, 0, 0, 0, 0, 0);
+                : new CombatStats(1, 0, 0, 0, 0, 0, 50, 0);
 
             if (runtimePetData != null)
             {
@@ -89,14 +90,16 @@ public abstract class Unit : MonoBehaviour
             float defFlat = 0f, defPct = 0f;
             float spdFlat = 0f;
             float critChanceFlat = 0f;
+            float critDamageFlat = 0f;
             float effectAccFlat = 0f;
+            float effectResFlat = 0f;
 
             // Prefer cache built from saved-data artifacts (Option B). If empty, fallback to debug ScriptableObjects.
             if (cachedArtifactStatModifiers != null && cachedArtifactStatModifiers.Count > 0)
             {
                 for (int i = 0; i < cachedArtifactStatModifiers.Count; i++)
                 {
-                    ProcessArtifactStat(cachedArtifactStatModifiers[i], ref healthFlat, ref healthPct, ref atkFlat, ref atkPct, ref defFlat, ref defPct, ref spdFlat, ref critChanceFlat, ref effectAccFlat);
+                    ProcessArtifactStat(cachedArtifactStatModifiers[i], ref healthFlat, ref healthPct, ref atkFlat, ref atkPct, ref defFlat, ref defPct, ref spdFlat, ref critChanceFlat, ref critDamageFlat, ref effectAccFlat, ref effectResFlat);
                 }
             }
             else if (equippedArtifacts != null)
@@ -107,10 +110,10 @@ public abstract class Unit : MonoBehaviour
                 {
                     if (artifact != null)
                     {
-                        ProcessArtifactStat(artifact.mainStat, ref healthFlat, ref healthPct, ref atkFlat, ref atkPct, ref defFlat, ref defPct, ref spdFlat, ref critChanceFlat, ref effectAccFlat);
+                        ProcessArtifactStat(artifact.mainStat, ref healthFlat, ref healthPct, ref atkFlat, ref atkPct, ref defFlat, ref defPct, ref spdFlat, ref critChanceFlat, ref critDamageFlat, ref effectAccFlat, ref effectResFlat);
                         foreach (var sub in artifact.subStats)
                         {
-                            ProcessArtifactStat(sub, ref healthFlat, ref healthPct, ref atkFlat, ref atkPct, ref defFlat, ref defPct, ref spdFlat, ref critChanceFlat, ref effectAccFlat);
+                            ProcessArtifactStat(sub, ref healthFlat, ref healthPct, ref atkFlat, ref atkPct, ref defFlat, ref defPct, ref spdFlat, ref critChanceFlat, ref critDamageFlat, ref effectAccFlat, ref effectResFlat);
                         }
 
                         if (artifact.artifactSet != null)
@@ -133,7 +136,7 @@ public abstract class Unit : MonoBehaviour
                         {
                             foreach (var statMod in bonus.statBonuses)
                             {
-                                ProcessArtifactStat(statMod, ref healthFlat, ref healthPct, ref atkFlat, ref atkPct, ref defFlat, ref defPct, ref spdFlat, ref critChanceFlat, ref effectAccFlat);
+                                ProcessArtifactStat(statMod, ref healthFlat, ref healthPct, ref atkFlat, ref atkPct, ref defFlat, ref defPct, ref spdFlat, ref critChanceFlat, ref critDamageFlat, ref effectAccFlat, ref effectResFlat);
                             }
                         }
                     }
@@ -150,12 +153,14 @@ public abstract class Unit : MonoBehaviour
             int finalDefense = (int)(Mathf.Round(uBase.defense * (1f + (defPct / 100f))) + defFlat) + petDefense;
             int finalSpeed = (int)Mathf.Round(baseStats.speed + spdFlat); // Pet speed already in baseStats. Speed generally hasn't a percent variant in standard logic
             int finalCrit = (int)Mathf.Round(baseStats.criticalChance + critChanceFlat);
+            int finalCritDmg = (int)Mathf.Round(baseStats.criticalDamage + critDamageFlat);
             int finalAcc = (int)Mathf.Round(baseStats.effectAccuracy + effectAccFlat);
+            int finalRes = (int)Mathf.Round(baseStats.effectResistance + effectResFlat);
 
-            CombatStats finalArtifactStats = new CombatStats(finalHealth, finalAttack, finalDefense, finalSpeed, finalCrit, finalAcc);
+            CombatStats finalArtifactStats = new CombatStats(finalHealth, finalAttack, finalDefense, finalSpeed, finalCrit, finalAcc, finalCritDmg, finalRes);
             
             // Somar bônus de condições ativas do PassiveManager
-            CombatStats conditionStats = new CombatStats(0, 0, 0, 0, 0, 0);
+            CombatStats conditionStats = new CombatStats(0, 0, 0, 0, 0, 0, 0, 0);
             if (PassiveManager != null)
             {
                 conditionStats = PassiveManager.GetTotalStatBonuses(uBase);
@@ -165,7 +170,7 @@ public abstract class Unit : MonoBehaviour
         }
     }
 
-    private void ProcessArtifactStat(StatModifier stat, ref float hF, ref float hP, ref float aF, ref float aP, ref float dF, ref float dP, ref float spdF, ref float crF, ref float eaf)
+    private void ProcessArtifactStat(StatModifier stat, ref float hF, ref float hP, ref float aF, ref float aP, ref float dF, ref float dP, ref float spdF, ref float crF, ref float crDF, ref float eaf, ref float erf)
     {
         switch (stat.statType)
         {
@@ -177,8 +182,9 @@ public abstract class Unit : MonoBehaviour
             case StatType.DefensePercent: dP += stat.value; break;
             case StatType.Speed: spdF += stat.value; break;
             case StatType.CriticalRate: crF += stat.value; break;
+            case StatType.CriticalDamage: crDF += stat.value; break;
             case StatType.EffectHitRate: eaf += stat.value; break;
-            // CriticalDamage and EffectResistance can be added here if Unit.CombatStats supports them in the future.
+            case StatType.EffectResistance: erf += stat.value; break;
         }
     }
 
@@ -187,6 +193,13 @@ public abstract class Unit : MonoBehaviour
 
     public Health Health { get; private set; }
     public PassiveManager PassiveManager { get; private set; }
+    public UnitVariableStore VariableStore { get; private set; }
+    public UnitLoadout Loadout { get; private set; }
+
+    public void ConfigureLoadout(UnitLoadout loadout)
+    {
+        Loadout = loadout;
+    }
 
     protected List<IUnitAction> actions = new();
     public IReadOnlyList<IUnitAction> Actions => actions;
@@ -209,6 +222,8 @@ public abstract class Unit : MonoBehaviour
             PassiveManager = gameObject.AddComponent<PassiveManager>();
             Debug.Log($"<color=yellow>[Unit]</color> PassiveManager adicionado dinamicamente a {gameObject.name}");
         }
+
+        VariableStore = new UnitVariableStore(this);
     }
  
     public virtual void Initialize()
@@ -236,6 +251,54 @@ public abstract class Unit : MonoBehaviour
                     if (g != null && g.IsPassive)
                     {
                         PassiveManager?.ApplyGraphCondition(g, this);
+                    }
+                }
+            }
+        }
+
+        // Aplica passivas da árvore de habilidades (SkillTreeConfig) e do Loadout
+        var treeConfig = unitData != null ? unitData.skillTreeConfig : null;
+        if (treeConfig != null)
+        {
+            // 1. Ataque básico se for passivo
+            if (treeConfig.basicAttack != null && treeConfig.basicAttack.IsPassive)
+            {
+                PassiveManager?.ApplyGraphCondition(treeConfig.basicAttack, this);
+            }
+            // 2. Movimentação se for passiva
+            if (treeConfig.movementSkill != null && treeConfig.movementSkill.IsPassive)
+            {
+                PassiveManager?.ApplyGraphCondition(treeConfig.movementSkill, this);
+            }
+
+            // 3. Habilidades passivas selecionadas nos slots 1 e 2 do Loadout
+            if (Loadout != null)
+            {
+                if (!string.IsNullOrEmpty(Loadout.Slot1SkillId))
+                {
+                    var pool1 = (treeConfig.slot1Skills != null && treeConfig.slot1Skills.Count > 0)
+                        ? treeConfig.slot1Skills
+                        : treeConfig.combatSkills;
+
+                    var g = pool1.Find(x => x != null && x.name == Loadout.Slot1SkillId);
+                    if (g != null && g.IsPassive)
+                    {
+                        PassiveManager?.ApplyGraphCondition(g, this);
+                        Debug.Log($"[Unit] Passiva do Slot 1 '{g.name}' aplicada em {DisplayName}.");
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(Loadout.Slot2SkillId))
+                {
+                    var pool2 = (treeConfig.slot2Skills != null && treeConfig.slot2Skills.Count > 0)
+                        ? treeConfig.slot2Skills
+                        : treeConfig.combatSkills;
+
+                    var g = pool2.Find(x => x != null && x.name == Loadout.Slot2SkillId);
+                    if (g != null && g.IsPassive)
+                    {
+                        PassiveManager?.ApplyGraphCondition(g, this);
+                        Debug.Log($"[Unit] Passiva do Slot 2 '{g.name}' aplicada em {DisplayName}.");
                     }
                 }
             }
@@ -435,24 +498,107 @@ public abstract class Unit : MonoBehaviour
         actions.Clear();
         foreach (var action in GetComponents<IUnitAction>()) 
         {
-            if (action is not WaitAction) Destroy(action as Component);
+            Destroy(action as Component);
         }
         
-        var waitAction = GetComponent<WaitAction>();
-        if (waitAction == null) waitAction = gameObject.AddComponent<WaitAction>();
-        // waitAction.MarkConfigured(); // Comentado se não necessário
-        actions.Add(waitAction);
-        
-        // As habilidades agora vêm exclusivamente de Grafos ou Definições executáveis
-        
+        var addedGraphs = new HashSet<AbilityGraphSO>();
+
+        // 1) Ataque Básico e Movimentação da Árvore (Apenas se não forem passivos)
+        var treeConfig = unitData.skillTreeConfig;
+        if (treeConfig != null)
+        {
+            if (treeConfig.basicAttack != null && !treeConfig.basicAttack.IsPassive)
+            {
+                actions.Add(new GraphActionWrapper(this, treeConfig.basicAttack));
+                addedGraphs.Add(treeConfig.basicAttack);
+            }
+            if (treeConfig.movementSkill != null && !treeConfig.movementSkill.IsPassive)
+            {
+                actions.Add(new GraphActionWrapper(this, treeConfig.movementSkill));
+                addedGraphs.Add(treeConfig.movementSkill);
+            }
+        }
+
+        // 2) Habilidades ativas dos slots 1 e 2
+        if (Loadout != null && treeConfig != null)
+        {
+            #pragma warning disable 612, 618
+            if (!string.IsNullOrEmpty(Loadout.Slot1SkillId))
+            {
+                var pool = (treeConfig.slot1Skills != null && treeConfig.slot1Skills.Count > 0)
+                    ? treeConfig.slot1Skills
+                    : treeConfig.combatSkills;
+
+                var g = pool.Find(x => x != null && x.name == Loadout.Slot1SkillId);
+                if (g != null && !g.IsPassive && !addedGraphs.Contains(g))
+                {
+                    var wrapper = new GraphActionWrapper(this, g);
+                    wrapper.SlotId = "Slot1";
+                    actions.Add(wrapper);
+                    addedGraphs.Add(g);
+                    Debug.Log($"[Unit] Habilidade do Slot 1 '{g.name}' injetada em {DisplayName}.");
+                }
+            }
+            if (!string.IsNullOrEmpty(Loadout.Slot2SkillId))
+            {
+                var pool = (treeConfig.slot2Skills != null && treeConfig.slot2Skills.Count > 0)
+                    ? treeConfig.slot2Skills
+                    : treeConfig.combatSkills;
+
+                var g = pool.Find(x => x != null && x.name == Loadout.Slot2SkillId);
+                if (g != null && !g.IsPassive && !addedGraphs.Contains(g))
+                {
+                    var wrapper = new GraphActionWrapper(this, g);
+                    wrapper.SlotId = "Slot2";
+                    actions.Add(wrapper);
+                    addedGraphs.Add(g);
+                    Debug.Log($"[Unit] Habilidade do Slot 2 '{g.name}' injetada em {DisplayName}.");
+                }
+            }
+            #pragma warning restore 612, 618
+        }
+
+        // 3) Outras habilidades da própria unidade (apenas ativas)
         var graphs = unitData.GetAbilityGraphs();
-        if (graphs != null) foreach (var g in graphs) if (g != null) actions.Add(new GraphActionWrapper(this, g));
+        if (graphs != null)
+        {
+            foreach (var g in graphs)
+            {
+                if (g != null && !g.IsPassive && !addedGraphs.Contains(g))
+                {
+                    actions.Add(new GraphActionWrapper(this, g));
+                    addedGraphs.Add(g);
+                }
+            }
+        }
+
+        // 4) Habilidades dos Pets (apenas ativas)
         if (petSpeciesData != null)
         {
-            if (petSpeciesData.PassiveSkills != null) foreach (var pass in petSpeciesData.PassiveSkills) if (pass != null) actions.Add(new BlueprintActionWrapper(this, pass));
-            if (petSpeciesData.ActiveSkills != null) foreach (var act in petSpeciesData.ActiveSkills) if (act != null) actions.Add(new BlueprintActionWrapper(this, act));
-            if (petSpeciesData.AbilityGraphs != null) foreach (var graph in petSpeciesData.AbilityGraphs) if (graph != null) actions.Add(new GraphActionWrapper(this, graph));
+            if (petSpeciesData.ActiveSkills != null)
+            {
+                foreach (var act in petSpeciesData.ActiveSkills)
+                {
+                    if (act != null && !act.isPassive)
+                    {
+                        actions.Add(new BlueprintActionWrapper(this, act));
+                    }
+                }
+            }
+            if (petSpeciesData.AbilityGraphs != null)
+            {
+                foreach (var graph in petSpeciesData.AbilityGraphs)
+                {
+                    if (graph != null && !graph.IsPassive && !addedGraphs.Contains(graph))
+                    {
+                        actions.Add(new GraphActionWrapper(this, graph));
+                        addedGraphs.Add(graph);
+                    }
+                }
+            }
         }
+
+        // 5) Executáveis nativos (se houver)
         foreach (var definition in unitData.GetExecutableDefinitions()) {
             var component = gameObject.AddComponent(definition.GetType()) as IUnitAction;
             if (component != null)

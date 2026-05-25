@@ -9,7 +9,7 @@ namespace CelestialCross.Giulia_UI
         {
             if (stat == null) return "N/A";
             string name = stat.statType.ToString();
-            bool isPercent = name.EndsWith("Percent") || name.EndsWith("Rate") || name.EndsWith("Accuracy") || name.EndsWith("Chance");
+            bool isPercent = name.EndsWith("Percent") || name.EndsWith("Rate") || name.EndsWith("Accuracy") || name.EndsWith("Chance") || name.EndsWith("Damage") || name.EndsWith("Resistance");
             
             name = name.Replace("Percent", "").Replace("Flat", "");
             
@@ -28,7 +28,7 @@ namespace CelestialCross.Giulia_UI
         public static string FormatStat(StatModifier stat)
         {
             string name = stat.statType.ToString();
-            bool isPercent = name.EndsWith("Percent") || name.EndsWith("Rate") || name.EndsWith("Accuracy") || name.EndsWith("Chance");
+            bool isPercent = name.EndsWith("Percent") || name.EndsWith("Rate") || name.EndsWith("Accuracy") || name.EndsWith("Chance") || name.EndsWith("Damage") || name.EndsWith("Resistance");
             
             name = name.Replace("Percent", "").Replace("Flat", "");
             

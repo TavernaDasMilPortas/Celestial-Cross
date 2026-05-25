@@ -31,8 +31,10 @@ namespace Celestial_Cross.Scripts.Combat.Execution
             float dmgFloat = totalBase * multiplier;
             if (context.isCritical)
             {
-                float critMult = 2.0f;
+                float baseCritDmg = context.source != null ? context.source.Stats.criticalDamage : 50f;
+                float critMult = 1.0f + (baseCritDmg / 100f);
                 if (context.Variables.TryGetValue("crit_mult_bonus", out float cMult)) critMult += cMult;
+                if (context.Variables.TryGetValue("bonus_crit_damage", out float bCdm)) critMult += (bCdm / 100f);
                 dmgFloat *= critMult;
             }
 
@@ -78,7 +80,14 @@ namespace Celestial_Cross.Scripts.Combat.Execution
             }
 
             float healFloat = totalBase * multiplier;
-            if (context.isCritical) healFloat *= 1.5f; // Multiplicador de cura crítica fixo ou vindo do SO?
+            if (context.isCritical)
+            {
+                float baseCritDmg = context.source != null ? context.source.Stats.criticalDamage : 50f;
+                float critMult = 1.0f + (baseCritDmg / 100f);
+                if (context.Variables.TryGetValue("crit_mult_bonus", out float cMult)) critMult += cMult;
+                if (context.Variables.TryGetValue("bonus_crit_damage", out float bCdm)) critMult += (bCdm / 100f);
+                healFloat *= critMult;
+            }
 
             int finalHeal = Mathf.Max(0, Mathf.RoundToInt(healFloat));
 

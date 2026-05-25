@@ -66,7 +66,10 @@ public static class DamageModel
 
         int damage = Mathf.Max(1, raw);
         if (isCritical)
-            damage *= 2;
+        {
+            float critMult = 1.0f + (attacker.criticalDamage / 100f);
+            damage = Mathf.RoundToInt(damage * critMult);
+        }
 
         return new AttackResult(damage, isCritical);
     }

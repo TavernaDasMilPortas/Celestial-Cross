@@ -41,78 +41,31 @@ public class DamagePopupManager : MonoBehaviour
         // isso garante que o popup sempre use a posição atualizada da unidade.
         
         health.OnDamageTaken += (amount, isCritical) => {
-            if (health != null) SpawnPopup(health.transform.position, amount, isCritical, false);
+            if (health != null) SpawnPopup(health.transform, amount, isCritical, false);
         };
 
         health.OnHealed += (amount) => {
-            if (health != null) SpawnPopup(health.transform.position, amount, false, true);
+            if (health != null) SpawnPopup(health.transform, amount, false, true);
         };
     }
 
-    private void SpawnPopup(Vector3 position, int amount, bool isCritical, bool isHeal)
+    private void SpawnPopup(Transform target, int amount, bool isCritical, bool isHeal)
     {
         if (damageNumberPrefab == null)
             return;
         if (amount <= 0) return;
+        if (target == null) return;
 
         Vector3 randomJitter = new Vector3(Random.Range(-0.3f, 0.3f), Random.Range(-0.2f, 0.2f), 0);
         GameObject obj = null;
-        bool isUI = false;
-        Vector3 spawnPosition = Vector3.zero;
 
-        // 1. Tenta converter usando o RenderTextureInputManager (caso esteja ativo)
-        if (RenderTextureInputManager.Instance != null && RenderTextureInputManager.Instance.WorldToCanvasWorldPoint(position + spawnOffset, out Vector3 canvasWorldPos))
-        {
-            spawnPosition = canvasWorldPos;
-            isUI = true;
-        }
-        // 2. Se não estiver ativo, tenta projetar usando a Câmera Principal diretamente no Canvas da UI
-        else if (Camera.main != null && canvasParent != null)
-        {
-            Vector3 screenPos = Camera.main.WorldToScreenPoint(position + spawnOffset);
-            if (screenPos.z >= 0)
-            {
-                RectTransform parentRect = canvasParent.GetComponent<RectTransform>();
-                Canvas canvas = canvasParent.GetComponentInParent<Canvas>();
-                Camera uiCamera = (canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay) ? canvas.worldCamera : null;
-                
-                if (parentRect != null && RectTransformUtility.ScreenPointToWorldPointInRectangle(parentRect, screenPos, uiCamera, out Vector3 worldPoint))
-                {
-                    spawnPosition = worldPoint;
-                    isUI = true;
-                }
-            }
-        }
-
-        if (isUI)
-        {
-            Transform parent = canvasParent != null ? canvasParent : transform;
-            obj = Instantiate(damageNumberPrefab, parent);
-            
-            RectTransform rect = obj.GetComponent<RectTransform>();
-            if (rect != null)
-            {
-                rect.position = spawnPosition;
-                rect.anchoredPosition += (Vector2)randomJitter * 100f; // Jitter no espaço da UI
-            }
-            else
-            {
-                obj.transform.position = spawnPosition;
-            }
-            
-            obj.transform.localScale = uiScale;
-            obj.layer = LayerMask.NameToLayer("UI");
-        }
-        else
-        {
-            // Fallback absoluto
-            Transform parent = canvasParent != null ? canvasParent : transform;
-            obj = Instantiate(damageNumberPrefab, parent);
-            obj.transform.localScale = uiScale;
-        }
+        Transform parent = canvasParent != null ? canvasParent : transform;
+        obj = Instantiate(damageNumberPrefab, parent);
 
         if (obj != null)
         {
+            obj.transform.localScale = uiScale;
+            obj.layer = LayerMask.NameToLayer("UI");
             activePopups.Add(obj);
         }
 
@@ -121,7 +74,7 @@ public class DamagePopupManager : MonoBehaviour
         {
             Color color = isHeal ? Color.green : (isCritical ? Color.yellow : Color.red);
             string prefix = isHeal ? "+" : "-";
-            ui.Setup(amount, color, prefix, false); // Sempre falso, pois o prefab agora é sempre elemento UI do Canvas
+            ui.Setup(target, spawnOffset, randomJitter, amount, color, prefix);
         }
     }
 }

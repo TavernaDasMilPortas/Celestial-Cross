@@ -62,6 +62,16 @@ namespace CelestialCross.Data.Pets
         public float MinBaseEffectAccuracy;
         [Tooltip("Precisão de Efeito Base Máxima")]
         public float MaxBaseEffectAccuracy;
+
+        [Tooltip("Dano Crítico Base Mínimo")]
+        public float MinBaseCriticalDamage;
+        [Tooltip("Dano Crítico Base Máximo")]
+        public float MaxBaseCriticalDamage;
+
+        [Tooltip("Resistência a Efeito Base Mínima")]
+        public float MinBaseEffectResistance;
+        [Tooltip("Resistência a Efeito Base Máxima")]
+        public float MaxBaseEffectResistance;
         
         [Header("Habilidades (Skills)")]
         [Tooltip("Habilidades ativas gerais deste pet.")]

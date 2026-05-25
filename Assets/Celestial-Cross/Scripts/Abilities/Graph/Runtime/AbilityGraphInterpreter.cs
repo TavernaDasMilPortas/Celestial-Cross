@@ -39,7 +39,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                 Destroy(gameObject);
             }
         }
-        public IEnumerator ExecuteGraphCoroutine(Unit caster, AbilityGraphSO graph, CombatHook hook, Action onComplete, int level = 1)
+        public IEnumerator ExecuteGraphCoroutine(Unit caster, AbilityGraphSO graph, CombatHook hook, Action onComplete, int level = 1, string slotId = "")
         {
             if (graph == null || graph.NodeData.Count == 0)
             {
@@ -52,6 +52,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
 
             var context = new CombatContext(caster);
             context.abilityLevel = level;
+            context.slotId = slotId;
 
             // Inicializar Blackboard com valores do SO
             foreach (var variable in graph.Variables)
@@ -129,6 +130,251 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
             onComplete?.Invoke();
         }
 
+        public void ExecuteGraphSync(Unit caster, AbilityGraphSO graph, CombatHook hook, int level = 1, string slotId = "")
+        {
+            if (graph == null || graph.NodeData.Count == 0) return;
+
+            string hookInfo = (hook == CombatHook.OnManualCast) ? "Ativa" : $"Gatilho: {hook}";
+            CombatLogger.Log($"<color=#a29bfe>[Graph - Sync]</color> Iniciando <b>{graph.name}</b> ({hookInfo}) para {caster?.DisplayName}", LogCategory.Graph);
+
+            var context = new CombatContext(caster);
+            context.abilityLevel = level;
+            context.slotId = slotId;
+
+            // Inicializar Blackboard com valores do SO
+            foreach (var variable in graph.Variables)
+            {
+                context.Variables[variable.name] = variable.initialValue;
+            }
+            var nodeMap = graph.NodeData.ToDictionary(n => n.Guid);
+            var connections = graph.NodeLinks;
+
+            AbilityNodeData currentNodeData = null;
+
+            if (hook == CombatHook.OnManualCast)
+            {
+                currentNodeData = graph.NodeData.FirstOrDefault(n => n.NodeType == "StartNode");
+            }
+            else
+            {
+                currentNodeData = graph.NodeData.FirstOrDefault(n => {
+                    if (n.NodeType != "TriggerNode") return false;
+                    if (string.IsNullOrEmpty(n.JsonData)) return false;
+                    var triggerData = JsonUtility.FromJson<TriggerNodeData>(n.JsonData);
+                    return triggerData.trigger == hook;
+                });
+            }
+
+            if (currentNodeData == null) return;
+
+            int safetyCounter = 0;
+            while (currentNodeData != null && safetyCounter < 1000)
+            {
+                safetyCounter++;
+                Debug.Log($"[Interpreter - Sync] Executando nó: {currentNodeData.NodeType} ({currentNodeData.Guid})");
+
+                string nextPort = ProcessNodeSync(graph, currentNodeData, context, hook);
+
+                var link = connections.FirstOrDefault(l => l.BaseNodeGuid == currentNodeData.Guid && l.PortName == nextPort);
+                if (link != null)
+                {
+                    currentNodeData = nodeMap[link.TargetNodeGuid];
+                }
+                else
+                {
+                    currentNodeData = null;
+                }
+            }
+
+            Debug.Log("<color=cyan>[Interpreter - Sync]</color> Execução finalizada.");
+        }
+
+        private string ProcessNodeSync(AbilityGraphSO graph, AbilityNodeData node, CombatContext context, CombatHook currentHook)
+        {
+            string resultPort = "Out";
+
+            CheckAndTriggerPetAnimation(graph, node, context);
+
+            switch (node.NodeType)
+            {
+                case "TriggerNode":
+                    break;
+
+                case "TargetNode":
+                    var targetData = JsonUtility.FromJson<TargetNodeData>(node.JsonData);
+                    
+                    AreaPatternData pattern = graph.GetAsset<AreaPatternData>(targetData.patternReferenceId);
+                    if (pattern == null) pattern = node.areaPattern;
+                    targetData.areaPattern = pattern; 
+
+                    int resolvedRange = targetData.range;
+                    if (!string.IsNullOrEmpty(targetData.rangeVariable))
+                        resolvedRange = (int)GetVariable(context, targetData.rangeVariable, resolvedRange);
+
+                    if (targetData.useExtraRangeVariable && context.source != null && context.source.VariableStore != null)
+                    {
+                        float extraRange = string.IsNullOrEmpty(context.slotId)
+                            ? context.source.VariableStore.GetGlobalVar("ExtraRange")
+                            : context.source.VariableStore.GetSlotVar(context.slotId, "ExtraRange");
+                        resolvedRange += Mathf.RoundToInt(extraRange);
+                    }
+
+                    // No modo síncrono para passivas, resolvemos o auto targeting imediatamente
+                    var dataCopy = targetData; 
+                    dataCopy.range = resolvedRange;
+                    context.targets = AutoTargetResolver.Resolve(context.source, dataCopy);
+                    break;
+
+                case "DamageEffectNode":
+                    var dmgData = JsonUtility.FromJson<DamageNodeData>(node.JsonData);
+                    ExecuteDamage(dmgData, context);
+                    break;
+
+                case "HealEffectNode":
+                    var healData = JsonUtility.FromJson<HealNodeData>(node.JsonData);
+                    ExecuteHeal(healData, context);
+                    break;
+
+                case "ConditionalFlowNode":
+                    bool allTrue = true;
+                    var condLinks = graph.NodeLinks.Where(l => l.TargetNodeGuid == node.Guid && l.TargetPortName.StartsWith("Cond")).ToList();
+                    
+                    if (condLinks.Count > 0)
+                    {
+                        foreach (var link in condLinks)
+                        {
+                            var sourceNode = graph.NodeData.FirstOrDefault(n => n.Guid == link.BaseNodeGuid);
+                            if (sourceNode != null)
+                            {
+                                string subResult = ProcessNodeSync(graph, sourceNode, context, currentHook);
+                                if (subResult != "True" && subResult != "Bool Out")
+                                {
+                                    allTrue = false;
+                                    break;
+                                }
+                            }
+                        }
+                        resultPort = allTrue ? "True" : "False";
+                    }
+                    break;
+
+                case "AttributeConditionNode":
+                    var attrCond = JsonUtility.FromJson<AttributeConditionNodeData>(node.JsonData);
+                    bool attrResult = EvaluateAttributeCondition(attrCond, context);
+                    resultPort = attrResult ? "True" : "False";
+                    break;
+
+                case "DistanceConditionNode":
+                    var distCond = JsonUtility.FromJson<DistanceConditionNodeData>(node.JsonData);
+                    bool distResult = EvaluateDistanceCondition(distCond, context);
+                    resultPort = distResult ? "True" : "False";
+                    break;
+
+                case "RangeConditionNode":
+                    var rangeCond = JsonUtility.FromJson<RangeConditionNodeData>(node.JsonData);
+                    bool rangeResult = EvaluateRangeCondition(rangeCond, context);
+                    resultPort = rangeResult ? "True" : "False";
+                    break;
+
+                case "FactionConditionNode":
+                    var factionCond = JsonUtility.FromJson<FactionConditionNodeData>(node.JsonData);
+                    bool factionResult = EvaluateFactionCondition(factionCond, context);
+                    resultPort = factionResult ? "True" : "False";
+                    break;
+
+                case "SpeedAdvantageConditionNode":
+                    var speedCond = JsonUtility.FromJson<SpeedAdvantageConditionNodeData>(node.JsonData);
+                    bool speedResult = EvaluateSpeedAdvantageCondition(speedCond, context);
+                    resultPort = speedResult ? "True" : "False";
+                    break;
+
+                case "TurnOrderConditionNode":
+                    var turnCond = JsonUtility.FromJson<TurnOrderConditionNodeData>(node.JsonData);
+                    bool turnResult = EvaluateTurnOrderCondition(turnCond, context);
+                    resultPort = turnResult ? "True" : "False";
+                    break;
+
+                case "VariableModifierNode":
+                    var modData = JsonUtility.FromJson<VariableModifierNodeData>(node.JsonData);
+                    float modVal = modData.value;
+                    if (!string.IsNullOrEmpty(modData.valueVariableReference))
+                        modVal = GetVariable(context, modData.valueVariableReference, modVal);
+                    
+                    ModifyVariable(context, modData.variableName, modData.operation, modVal);
+                    break;
+
+                case "ReadUnitVariableNode":
+                    var readData = JsonUtility.FromJson<ReadUnitVariableNodeData>(node.JsonData);
+                    if (context.source != null && context.source.VariableStore != null)
+                    {
+                        float val = readData.isSlotVariable && !string.IsNullOrEmpty(context.slotId)
+                            ? context.source.VariableStore.GetSlotVar(context.slotId, readData.variableName)
+                            : context.source.VariableStore.GetGlobalVar(readData.variableName);
+                        
+                        context.Variables[readData.outputVariable] = val;
+                    }
+                    break;
+
+                case "WriteUnitVariableNode":
+                    var writeData = JsonUtility.FromJson<WriteUnitVariableNodeData>(node.JsonData);
+                    if (context.source != null && context.source.VariableStore != null)
+                    {
+                        float val = writeData.value;
+                        if (!string.IsNullOrEmpty(writeData.contextVariableReference))
+                            val = GetVariable(context, writeData.contextVariableReference, val);
+
+                        float currentVal = writeData.isSlotVariable && !string.IsNullOrEmpty(context.slotId)
+                            ? context.source.VariableStore.GetSlotVar(context.slotId, writeData.variableName)
+                            : context.source.VariableStore.GetGlobalVar(writeData.variableName);
+
+                        float newVal = writeData.operation switch
+                        {
+                            WriteUnitVariableNodeData.Operation.Set => val,
+                            WriteUnitVariableNodeData.Operation.Add => currentVal + val,
+                            WriteUnitVariableNodeData.Operation.Multiply => currentVal * val,
+                            _ => val
+                        };
+
+                        if (writeData.isSlotVariable && !string.IsNullOrEmpty(context.slotId))
+                            context.source.VariableStore.SetSlotVar(context.slotId, writeData.variableName, newVal);
+                        else
+                            context.source.VariableStore.SetGlobalVar(writeData.variableName, newVal);
+                    }
+                    break;
+
+                case "LevelBranchNode":
+                    resultPort = $"Level {context.abilityLevel}";
+                    break;
+
+                case "StatModifierEffectNode":
+                    var statModData = JsonUtility.FromJson<StatModifierNodeData>(node.JsonData);
+                    ExecuteStatModifier(statModData, node, graph, context);
+                    break;
+
+                case "ApplyModifierNode":
+                    var applyModData = JsonUtility.FromJson<ApplyModifierNodeData>(node.JsonData);
+                    ExecuteApplyModifier(applyModData, node, graph, context);
+                    break;
+
+                case "VfxNode":
+                    var vfxData = JsonUtility.FromJson<VfxNodeData>(node.JsonData);
+                    ExecuteVfx(vfxData, context);
+                    break;
+
+                case "CostNode":
+                    var costData = JsonUtility.FromJson<CostNodeData>(node.JsonData);
+                    ExecuteCost(costData, context);
+                    break;
+
+                case "CleanseStatusNode":
+                    var cleanseData = JsonUtility.FromJson<CleanseStatusNodeData>(node.JsonData);
+                    ExecuteCleanse(cleanseData, context);
+                    break;
+            }
+
+            return resultPort;
+        }
+
         private IEnumerator ProcessNode(AbilityGraphSO graph, AbilityNodeData node, CombatContext context, CombatHook currentHook, Action<string> onResultPort)
         {
             // Log de execução de nó
@@ -156,6 +402,14 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                     int resolvedRange = targetData.range;
                     if (!string.IsNullOrEmpty(targetData.rangeVariable))
                         resolvedRange = (int)GetVariable(context, targetData.rangeVariable, resolvedRange);
+
+                    if (targetData.useExtraRangeVariable && context.source != null && context.source.VariableStore != null)
+                    {
+                        float extraRange = string.IsNullOrEmpty(context.slotId)
+                            ? context.source.VariableStore.GetGlobalVar("ExtraRange")
+                            : context.source.VariableStore.GetSlotVar(context.slotId, "ExtraRange");
+                        resolvedRange += Mathf.RoundToInt(extraRange);
+                    }
 
                     yield return StartCoroutine(HandleTargeting(targetData, context, currentHook, resolvedRange));
                     break;
@@ -293,6 +547,59 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                     ModifyVariable(context, modData.variableName, modData.operation, modVal);
                     break;
 
+                case "ReadUnitVariableNode":
+                    var readData = JsonUtility.FromJson<ReadUnitVariableNodeData>(node.JsonData);
+                    if (context.source != null && context.source.VariableStore != null)
+                    {
+                        float val = readData.isSlotVariable && !string.IsNullOrEmpty(context.slotId)
+                            ? context.source.VariableStore.GetSlotVar(context.slotId, readData.variableName)
+                            : context.source.VariableStore.GetGlobalVar(readData.variableName);
+                        
+                        context.Variables[readData.outputVariable] = val;
+                        CombatLogger.Log($"  <color=#a29bfe>[Variavel]</color> Lida variável de unidade '{readData.variableName}' ({val}) para o contexto '{readData.outputVariable}'", LogCategory.Graph);
+                    }
+                    break;
+
+                case "WriteUnitVariableNode":
+                    var writeData = JsonUtility.FromJson<WriteUnitVariableNodeData>(node.JsonData);
+                    if (context.source != null && context.source.VariableStore != null)
+                    {
+                        float val = writeData.value;
+                        if (!string.IsNullOrEmpty(writeData.contextVariableReference))
+                            val = GetVariable(context, writeData.contextVariableReference, val);
+
+                        float currentVal = writeData.isSlotVariable && !string.IsNullOrEmpty(context.slotId)
+                            ? context.source.VariableStore.GetSlotVar(context.slotId, writeData.variableName)
+                            : context.source.VariableStore.GetGlobalVar(writeData.variableName);
+
+                        float newVal = writeData.operation switch
+                        {
+                            WriteUnitVariableNodeData.Operation.Set => val,
+                            WriteUnitVariableNodeData.Operation.Add => currentVal + val,
+                            WriteUnitVariableNodeData.Operation.Multiply => currentVal * val,
+                            _ => val
+                        };
+
+                        if (writeData.isSlotVariable && !string.IsNullOrEmpty(context.slotId))
+                            context.source.VariableStore.SetSlotVar(context.slotId, writeData.variableName, newVal);
+                        else
+                            context.source.VariableStore.SetGlobalVar(writeData.variableName, newVal);
+
+                        CombatLogger.Log($"  <color=#a29bfe>[Variavel]</color> Variável de unidade '{writeData.variableName}' {(writeData.isSlotVariable?"(Slot)":"(Global)")} atualizada para {newVal}", LogCategory.Graph);
+                    }
+                    break;
+
+                case "SkillBranchNode":
+                    var branchData = JsonUtility.FromJson<SkillBranchNodeData>(node.JsonData);
+                    bool branchActive = false;
+                    if (context.source != null && context.source.Loadout != null && !string.IsNullOrEmpty(branchData.branchId))
+                    {
+                        branchActive = context.source.Loadout.branchSelections.Exists(sel => sel.selectedBranchIds.Contains(branchData.branchId));
+                    }
+                    resultPort = branchActive ? "Active" : "Inactive";
+                    CombatLogger.Log($"  <color=#a29bfe>[Ramo]</color> Validação de Ramo '{branchData.branchId}': <b>{(branchActive ? "Ativo" : "Inativo")}</b>", LogCategory.Graph);
+                    break;
+
                 case "LevelBranchNode":
                     resultPort = $"Level {context.abilityLevel}";
                     CombatLogger.Log($"  <color=#a29bfe>[Fluxo]</color> Ramificação de Nível: Seguir porta <b>{resultPort}</b>", LogCategory.Graph);
@@ -375,12 +682,23 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                 var stepContext = new CombatContext(context.source, target);
                 
                 float baseVal = 0;
-                var attr = (AttributeCondition.AttributeType)data.baseAttribute;
-                switch(attr)
+
+                if (data.scalings != null && data.scalings.Count > 0)
                 {
-                    case AttributeCondition.AttributeType.HP: baseVal = target.Health.CurrentHealth; break;
-                    case AttributeCondition.AttributeType.Attack: baseVal = context.source.Stats.attack; break;
-                    default: baseVal = context.source.Stats.attack; break;
+                    foreach (var scaling in data.scalings)
+                    {
+                        var u = scaling.useTargetStat ? target : context.source;
+                        if (u != null && u.VariableStore != null)
+                        {
+                            float statVal = u.VariableStore.GetStat(scaling.statType);
+                            baseVal += statVal * (scaling.percentage / 100f);
+                        }
+                    }
+                }
+                else
+                {
+                    // Fallback to source attack
+                    baseVal = context.source != null ? context.source.Stats.attack : 0;
                 }
 
                 float multiplier = 1.0f;
@@ -402,12 +720,23 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                 if (target == null) continue;
                 
                 float baseVal = 0;
-                var attr = (AttributeCondition.AttributeType)data.baseAttribute;
-                switch(attr)
+                
+                if (data.scalings != null && data.scalings.Count > 0)
                 {
-                    case AttributeCondition.AttributeType.HP: baseVal = target.Health.MaxHealth; break;
-                    case AttributeCondition.AttributeType.Attack: baseVal = context.source.Stats.attack; break;
-                    default: baseVal = target.Health.MaxHealth; break;
+                    foreach (var scaling in data.scalings)
+                    {
+                        var u = scaling.useTargetStat ? target : context.source;
+                        if (u != null && u.VariableStore != null)
+                        {
+                            float statVal = u.VariableStore.GetStat(scaling.statType);
+                            baseVal += statVal * (scaling.percentage / 100f);
+                        }
+                    }
+                }
+                else
+                {
+                    // Fallback to target max health
+                    baseVal = target.Health.MaxHealth;
                 }
 
                 float multiplier = 1.0f;
@@ -555,6 +884,9 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                 
                 var dynamicBlueprint = ScriptableObject.CreateInstance<AbilityBlueprint>();
                 dynamicBlueprint.name = stableName;
+                dynamicBlueprint.abilityName = string.IsNullOrEmpty(graph.abilityName) ? graph.name : graph.abilityName;
+                dynamicBlueprint.abilityIcon = graph.abilityIcon;
+                dynamicBlueprint.abilityDescription = graph.abilityDescription;
                 dynamicBlueprint.isPersistentCondition = false;
                 dynamicBlueprint.durationInTurns = 1; // Default duration, maybe Graph supplies DurationPort later
                 dynamicBlueprint.canStack = data.canStack;
@@ -675,9 +1007,22 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                 return;
             }
 
+            bool isBuff = conditionGraph.GetIsBuff();
+
             foreach (var target in context.targets)
             {
                 if (target == null) continue;
+
+                // Teste de Resistência para debuffs
+                if (!isBuff)
+                {
+                    if (!EffectResistanceCheck.ShouldApplyEffect(context.source, target, 100f))
+                    {
+                        CombatLogger.Log($"  <color=#ffd700>[Resistido]</color> <b>{target.DisplayName}</b> resistiu à condição <b>{conditionGraph.name}</b>", LogCategory.Graph);
+                        continue;
+                    }
+                }
+
                 var passiveManager = target.GetComponent<PassiveManager>();
                 if (passiveManager == null) continue;
 

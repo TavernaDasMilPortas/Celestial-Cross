@@ -119,3 +119,9 @@ Use events to trigger persistence or server synchronization when necessary.
 Design systems so they can work both offline and online.
 
 Persisted data should be handled by dedicated systems instead of gameplay scripts.
+
+## Language and Communication
+
+* Always communicate with the user in Portuguese (Português do Brasil).
+* Always write documents, plans, walkthroughs, tasks, and code comments in Portuguese (Português do Brasil) unless explicitly requested otherwise.
+

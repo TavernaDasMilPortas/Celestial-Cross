@@ -9,10 +9,10 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
 {
     public class HealEffectNode : AbilityNode
     {
-        private EnumField baseAttributeDropdown;
+        private VisualElement scalingsContainer;
+        private TextField variableReferenceField;
         private Toggle canCritToggle;
         private Toggle allowOverhealToggle;
-        private TextField variableReferenceField;
 
         private Celestial_Cross.Scripts.Abilities.Graph.Runtime.HealNodeData nodeData = new Celestial_Cross.Scripts.Abilities.Graph.Runtime.HealNodeData();
 
@@ -38,10 +38,11 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
             variableReferenceField.RegisterValueChangedCallback(evt => nodeData.variableReference = evt.newValue);
             extensionContainer.Add(variableReferenceField);
 
-            baseAttributeDropdown = new EnumField("Base Attribute", ValueType.Flat); 
-            baseAttributeDropdown.RegisterValueChangedCallback(evt => {
-                nodeData.baseAttribute = System.Convert.ToInt32(evt.newValue);
-            });
+            var addBtn = new Button(AddScaling) { text = "Add Scaling Stat" };
+            extensionContainer.Add(addBtn);
+
+            scalingsContainer = new VisualElement();
+            extensionContainer.Add(scalingsContainer);
 
             canCritToggle = new Toggle("Can Crit Heal");
             canCritToggle.value = nodeData.canCrit;
@@ -53,17 +54,94 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
             allowOverhealToggle.RegisterValueChangedCallback(evt => nodeData.allowOverheal = evt.newValue);
             extensionContainer.Add(allowOverhealToggle);
 
-            UpdateDynamicFields();
+            if (nodeData.scalings.Count == 0) AddScaling();
 
             RefreshExpandedState();
             RefreshPorts();
         }
 
-        private void UpdateDynamicFields()
+        private void AddScaling()
         {
-            if (!extensionContainer.Contains(baseAttributeDropdown))
-                extensionContainer.Insert(0, baseAttributeDropdown); 
+            var entry = new CelestialCross.Combat.StatScalingData
+            {
+                statType = CelestialCross.Artifacts.StatType.HealthFlat,
+                percentage = 100f,
+                useTargetStat = true
+            };
+            nodeData.scalings.Add(entry);
+            CreateScalingUI(entry);
+        }
+
+        private void CreateScalingUI(CelestialCross.Combat.StatScalingData entry)
+        {
+            var row = new VisualElement();
+            row.style.flexDirection = FlexDirection.Column;
+            row.style.backgroundColor = new Color(0.2f, 0.2f, 0.2f, 0.5f);
+            row.style.marginBottom = 4;
+            row.style.paddingTop = 2;
+            row.style.paddingBottom = 2;
+            row.style.paddingLeft = 2;
+            row.style.paddingRight = 2;
+            row.style.borderBottomWidth = 1;
+            row.style.borderBottomColor = Color.gray;
+
+            var topRow = new VisualElement();
+            topRow.style.flexDirection = FlexDirection.Row;
+
+            var statEnum = new EnumField(entry.statType);
+            statEnum.style.flexGrow = 1;
+            statEnum.RegisterValueChangedCallback(evt => {
+                entry.statType = (CelestialCross.Artifacts.StatType)evt.newValue;
+                UpdateEntryInList(row, entry);
+            });
+            
+            var targetToggle = new Toggle("Use Target");
+            targetToggle.value = entry.useTargetStat;
+            targetToggle.RegisterValueChangedCallback(evt => {
+                entry.useTargetStat = evt.newValue;
+                UpdateEntryInList(row, entry);
+            });
+
+            var removeBtn = new Button(() => {
+                nodeData.scalings.Remove(entry);
+                scalingsContainer.Remove(row);
+                RefreshExpandedState();
+            }) { text = "X" };
+            removeBtn.style.color = Color.red;
+
+            topRow.Add(statEnum);
+            topRow.Add(targetToggle);
+            topRow.Add(removeBtn);
+            row.Add(topRow);
+
+            var bottomRow = new VisualElement();
+            bottomRow.style.flexDirection = FlexDirection.Row;
+            bottomRow.style.marginTop = 2;
+
+            var pctField = new FloatField("Percentage (%)");
+            pctField.value = entry.percentage;
+            pctField.style.flexGrow = 1;
+            pctField.RegisterValueChangedCallback(evt => {
+                entry.percentage = evt.newValue;
+                UpdateEntryInList(row, entry);
+            });
+
+            bottomRow.Add(pctField);
+            row.Add(bottomRow);
+
+            row.userData = entry;
+
+            scalingsContainer.Add(row);
             RefreshExpandedState();
+        }
+
+        private void UpdateEntryInList(VisualElement row, CelestialCross.Combat.StatScalingData entry)
+        {
+            int index = scalingsContainer.IndexOf(row);
+            if (index >= 0 && index < nodeData.scalings.Count)
+            {
+                nodeData.scalings[index] = entry;
+            }
         }
 
         public override string GetJsonData()
@@ -79,15 +157,22 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
                 variableReferenceField.value = nodeData.variableReference;
                 canCritToggle.value = nodeData.canCrit;
                 allowOverhealToggle.value = nodeData.allowOverheal;
-                UpdateDynamicFields();
+
+                scalingsContainer.Clear();
+                if (nodeData.scalings != null)
+                {
+                    foreach (var scaling in nodeData.scalings)
+                    {
+                        CreateScalingUI(scaling);
+                    }
+                }
             }
         }
 
         public override string GetDescription()
         {
             string overhealText = nodeData.allowOverheal ? " (pode sobre-curar)" : "";
-            var attr = (AttributeCondition.AttributeType)nodeData.baseAttribute;
-            return $"Cura escalada pelo atributo {attr} multiplicado pela variável '{nodeData.variableReference}'{overhealText}.";
+            return $"Cura escalada ({nodeData.scalings?.Count ?? 0} stats){overhealText}.";
         }
 
         public void SetVariableReference(string varName)

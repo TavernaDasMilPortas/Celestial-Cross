@@ -40,6 +40,7 @@ namespace CelestialCross.Combat
         public IUnitAction action; 
 
         public int abilityLevel = 1;
+        public string slotId = "";
         public bool hasTriggeredPetAnimation;
         public global::System.Collections.Generic.Dictionary<string, float> Variables;
         public global::System.Collections.Generic.Dictionary<string, int> loopCounters;

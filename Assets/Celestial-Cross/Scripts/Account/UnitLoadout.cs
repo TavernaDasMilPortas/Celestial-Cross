@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections.Generic;
 using CelestialCross.Artifacts;
 
@@ -16,6 +16,12 @@ public class UnitLoadout
     public string BootsID;      // Slot 4
     public string NecklaceID;   // Slot 5
     public string RingID;       // Slot 6
+
+    [Header("Skill Tree Loadout")]
+    public string Slot1SkillId;
+    public string Slot2SkillId;
+    public List<Celestial_Cross.Scripts.Abilities.SkillTree.SkillBranchSelection> branchSelections = new List<Celestial_Cross.Scripts.Abilities.SkillTree.SkillBranchSelection>();
+
     public UnitLoadout() {}
     public UnitLoadout(string unitID)
     {

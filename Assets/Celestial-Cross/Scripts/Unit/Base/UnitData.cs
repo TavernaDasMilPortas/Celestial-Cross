@@ -58,12 +58,16 @@ public class UnitData : ScriptableObject
         if (referenceMaxLevel <= 1) return baseStats;
         float factor = Mathf.Clamp01((float)(level - 1) / (referenceMaxLevel - 1));
         return new CombatStats(
+            // Stats que escalam com level:
             Mathf.RoundToInt(baseStats.health + (maxStats.health - baseStats.health) * factor),
             Mathf.RoundToInt(baseStats.attack + (maxStats.attack - baseStats.attack) * factor),
             Mathf.RoundToInt(baseStats.defense + (maxStats.defense - baseStats.defense) * factor),
             Mathf.RoundToInt(baseStats.speed + (maxStats.speed - baseStats.speed) * factor),
-            Mathf.RoundToInt(baseStats.criticalChance + (maxStats.criticalChance - baseStats.criticalChance) * factor),
-            Mathf.RoundToInt(baseStats.effectAccuracy + (maxStats.effectAccuracy - baseStats.effectAccuracy) * factor)
+            // Stats que NÃO escalam com level:
+            baseStats.criticalChance,
+            baseStats.effectAccuracy,
+            baseStats.criticalDamage,
+            baseStats.effectResistance
         );
     }
 
@@ -75,6 +79,10 @@ public class UnitData : ScriptableObject
     [Header("Constellation")]
     [Tooltip("Configuração completa da constelação (Formato + Habilidades).")]
     public CelestialCross.Data.ConstellationConfigSO constellationConfig;
+
+    [Header("Skill Tree Config")]
+    [Tooltip("Configuração da árvore de habilidades da unidade.")]
+    public Celestial_Cross.Scripts.Abilities.SkillTree.SkillTreeConfigSO skillTreeConfig;
 
     [Header("Actions (Native)")]
     [SerializeReference]

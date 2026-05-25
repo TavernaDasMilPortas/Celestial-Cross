@@ -81,6 +81,20 @@ public class CameraController : MonoBehaviour
     Vector3 targetProjectedPoint;
     float targetZoom;
 
+    public Vector3 TargetProjectedPoint
+    {
+        get => targetProjectedPoint;
+        set => targetProjectedPoint = value;
+    }
+
+    public float TargetZoom
+    {
+        get => targetZoom;
+        set => targetZoom = value;
+    }
+
+    public bool IsDragging => isTouchDragging || isMouseDragging;
+
     Unit followTarget;
     IUnitAction targetedAction;
     float originalZoom;
@@ -814,6 +828,12 @@ public class CameraController : MonoBehaviour
         
         Vector3 desiredCameraPos = targetProjectedPoint - cam.transform.forward * depthOffset;
         transform.position = desiredCameraPos;
+    }
+
+    public void ResetToInitialFraming()
+    {
+        float tileSize = ResolveLogicalTileSize();
+        SetupAutoZoom(tileSize);
     }
 
     public void EnableFreeCamera(bool enable)

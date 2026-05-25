@@ -24,6 +24,9 @@ namespace CelestialCross.Editor
 
             if (hubScene != null)
             {
+                // Salva todas as cenas abertas antes de entrar no Play Mode
+                EditorSceneManager.SaveOpenScenes();
+
                 // Define que SEMPRE que o jogo iniciar, começará pela Hub
                 EditorSceneManager.playModeStartScene = hubScene;
                 EditorApplication.isPlaying = true;

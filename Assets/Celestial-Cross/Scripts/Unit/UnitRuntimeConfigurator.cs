@@ -12,10 +12,29 @@ public class UnitRuntimeConfigurator : MonoBehaviour
 
     public void Initialize(UnitData unitData, CelestialCross.Data.Pets.RuntimePetData runtimePetData = null, CelestialCross.Data.Pets.PetSpeciesSO petSpeciesData = null)
     {
+        // Auto-detecção: se a referência serializada perdeu-se (ex: troca de Robot → EnemyUnit),
+        // tenta resolver automaticamente antes de falhar.
         if (unit == null)
         {
-            Debug.LogError("Unit component is not assigned in the UnitRuntimeConfigurator.", this);
-            return;
+            unit = GetComponent<Unit>();
+            if (unit != null)
+            {
+                Debug.LogWarning($"[UnitRuntimeConfigurator] Campo 'unit' estava vazio — resolvido automaticamente para '{unit.GetType().Name}'. Atualize a referência no prefab para evitar este aviso.", this);
+            }
+            else
+            {
+                Debug.LogError("[UnitRuntimeConfigurator] Nenhum componente Unit encontrado neste GameObject. A injeção de dados não será feita.", this);
+                return;
+            }
+        }
+
+        if (unitSpriteRenderer == null)
+        {
+            unitSpriteRenderer = GetComponentInChildren<SpriteRenderer>();
+            if (unitSpriteRenderer != null)
+            {
+                Debug.LogWarning($"[UnitRuntimeConfigurator] Campo 'unitSpriteRenderer' estava vazio — resolvido automaticamente via GetComponentInChildren. Atualize a referência no prefab.", this);
+            }
         }
 
         // Assign the Scriptable Objects
@@ -56,6 +75,8 @@ public class UnitRuntimeConfigurator : MonoBehaviour
         // UnitLoadout is keyed by UnitID
         var loadout = AccountManager.Instance.PlayerAccount.GetLoadoutForUnit(unitData.UnitID);
         if (loadout == null) return;
+
+        unit.ConfigureLoadout(loadout);
 
         var equipped = new List<ArtifactInstanceData>();
         var ids = loadout.GetEquippedArtifactIDs();
