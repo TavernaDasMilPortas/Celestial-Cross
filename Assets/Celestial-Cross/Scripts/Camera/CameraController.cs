@@ -795,6 +795,8 @@ public class CameraController : MonoBehaviour
         if (unit == null) return;
         Debug.Log($"[CameraController] Solicitação de seguir unidade: {unit.DisplayName}");
 
+        followTarget = unit;
+
         if (pendingFollowCoroutine != null)
         {
             StopCoroutine(pendingFollowCoroutine);
@@ -812,7 +814,6 @@ public class CameraController : MonoBehaviour
             yield return new WaitUntil(() => !DamagePopupManager.Instance.HasActivePopups);
         }
 
-        followTarget = unit;
         cameraMode = CameraMode.FollowUnit;
         pendingFollowCoroutine = null;
 
@@ -850,12 +851,6 @@ public class CameraController : MonoBehaviour
             return;
         }
 
-        // Foca na unidade dona da ação
-        if (followTarget != null)
-        {
-            targetProjectedPoint = followTarget.transform.position + Vector3.forward * verticalCenterOffset;
-        }
-
         // Só salva o estado original se não estivermos já focados em uma ação
         if (targetedAction == null)
         {
@@ -864,6 +859,13 @@ public class CameraController : MonoBehaviour
         }
 
         targetedAction = action;
+
+        // Foca na unidade dona da ação
+        if (followTarget != null)
+        {
+            targetProjectedPoint = followTarget.transform.position + Vector3.forward * verticalCenterOffset;
+            cameraMode = CameraMode.FollowUnit; // Força voltar a seguir a unidade ao selecionar habilidade
+        }
 
         // Se o alcance for grande, precisamos de uma visão mais ampla ou livre
         if (action.Range >= 4)

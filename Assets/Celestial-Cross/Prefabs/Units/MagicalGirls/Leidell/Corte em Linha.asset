@@ -28,15 +28,43 @@ MonoBehaviour:
     TargetPortName: In
   - BaseNodeGuid: 27fa66de-60a9-49f9-9c7c-a257a3009d6c
     PortName: Out
-    TargetNodeGuid: 7cdaace2-1509-4798-814b-759666daa1b8
-    TargetPortName: In
-  - BaseNodeGuid: 7cdaace2-1509-4798-814b-759666daa1b8
-    PortName: Out
     TargetNodeGuid: a0371024-1013-40d2-8a84-02b30f6e0548
     TargetPortName: In
   - BaseNodeGuid: a0371024-1013-40d2-8a84-02b30f6e0548
     PortName: Out
+    TargetNodeGuid: 53358a68-ff13-4e08-a0e6-79171586c769
+    TargetPortName: In
+  - BaseNodeGuid: 53358a68-ff13-4e08-a0e6-79171586c769
+    PortName: Base
+    TargetNodeGuid: 83d9ff52-0df2-429a-9450-64886af8f4c8
+    TargetPortName: In
+  - BaseNodeGuid: 83d9ff52-0df2-429a-9450-64886af8f4c8
+    PortName: Out
     TargetNodeGuid: d6726758-6ad8-49a6-a737-9b71f1fc2df5
+    TargetPortName: In
+  - BaseNodeGuid: 53358a68-ff13-4e08-a0e6-79171586c769
+    PortName: area
+    TargetNodeGuid: f417f5ce-6344-4920-9af4-e01db3f4d4fe
+    TargetPortName: In
+  - BaseNodeGuid: 53358a68-ff13-4e08-a0e6-79171586c769
+    PortName: speed
+    TargetNodeGuid: a299aba1-0d49-4fbf-b569-c27d54a17f63
+    TargetPortName: In
+  - BaseNodeGuid: a299aba1-0d49-4fbf-b569-c27d54a17f63
+    PortName: Out
+    TargetNodeGuid: e376e0f7-9e83-4212-9792-c880ddc7a443
+    TargetPortName: In
+  - BaseNodeGuid: f417f5ce-6344-4920-9af4-e01db3f4d4fe
+    PortName: Out
+    TargetNodeGuid: 7cdaace2-1509-4798-814b-759666daa1b8
+    TargetPortName: In
+  - BaseNodeGuid: 7cdaace2-1509-4798-814b-759666daa1b8
+    PortName: Out
+    TargetNodeGuid: d6726758-6ad8-49a6-a737-9b71f1fc2df5
+    TargetPortName: In
+  - BaseNodeGuid: e376e0f7-9e83-4212-9792-c880ddc7a443
+    PortName: Out
+    TargetNodeGuid: 1c083f9f-98da-486e-b7eb-edd22b7da8f7
     TargetPortName: In
   NodeData:
   - Guid: d729ba19-f1c3-4beb-a0d0-37101164a784
@@ -51,29 +79,65 @@ MonoBehaviour:
     Position: {x: 572, y: 200}
     JsonData: '{"trigger":0}'
     areaPattern: {fileID: 0}
-  - Guid: 7cdaace2-1509-4798-814b-759666daa1b8
-    NodeType: TargetNode
-    NodeTitle: Targeting
-    Position: {x: 855, y: 200}
-    JsonData: '{"reusePrevious":false,"sourceType":0,"mode":1,"range":1,"multipleTargets":false,"maxTargets":1,"origin":1,"strategy":0,"attributeType":0,"factionType":2,"targetCount":1,"autoRotate":true,"preferredDirection":0,"patternReferenceId":"","areaPattern":{"instanceID":-4716},"rangeVariable":"","maxTargetsVariable":"max_targets_7cda"}'
-    areaPattern: {fileID: 11400000, guid: 4d3e096878d32b04aa2b0c35fd58943d, type: 2}
-  - Guid: a0371024-1013-40d2-8a84-02b30f6e0548
-    NodeType: VariableModifierNode
-    NodeTitle: Modifier
-    Position: {x: 1234, y: 210}
-    JsonData: '{"variableName":"Damage","operation":0,"value":1.0,"valueVariableReference":""}'
-    areaPattern: {fileID: 0}
-  - Guid: d6726758-6ad8-49a6-a737-9b71f1fc2df5
-    NodeType: DamageEffectNode
-    NodeTitle: Damage Effect
-    Position: {x: 1523, y: 210}
-    JsonData: '{"variableReference":"Damage","baseAttribute":1,"scaleWithDistance":false,"distanceScaleFactor":0.10000000149011612}'
-    areaPattern: {fileID: 0}
   - Guid: a6834a88-24b9-484d-93f9-5c4bb7cc3cca
     NodeType: LevelBranchNode
     NodeTitle: Level Branch
     Position: {x: 409, y: 222}
     JsonData: '{"levelCount":3}'
+    areaPattern: {fileID: 0}
+  - Guid: 53358a68-ff13-4e08-a0e6-79171586c769
+    NodeType: RamificationNode
+    NodeTitle: Ramification
+    Position: {x: 1067, y: 225}
+    JsonData: '{"tierIndex":0,"flows":[{"flowId":"flow_a8d588a3","flowName":"area"},{"flowId":"flow_5429b835","flowName":"speed"}]}'
+    areaPattern: {fileID: 0}
+  - Guid: a0371024-1013-40d2-8a84-02b30f6e0548
+    NodeType: VariableModifierNode
+    NodeTitle: Modifier
+    Position: {x: 837, y: 234}
+    JsonData: '{"variableName":"Damage","operation":0,"value":1.0,"valueVariableReference":""}'
+    areaPattern: {fileID: 0}
+  - Guid: 83d9ff52-0df2-429a-9450-64886af8f4c8
+    NodeType: TargetNode
+    NodeTitle: Targeting
+    Position: {x: 1517, y: 38}
+    JsonData: '{"reusePrevious":false,"sourceType":0,"mode":0,"range":1,"multipleTargets":false,"maxTargets":1,"origin":1,"strategy":0,"attributeType":0,"factionType":2,"targetCount":1,"autoRotate":true,"preferredDirection":0,"patternReferenceId":"","areaPattern":{"instanceID":0},"rangeVariable":"","maxTargetsVariable":"max_targets_83d9","useExtraRangeVariable":false}'
+    areaPattern: {fileID: 0}
+  - Guid: f417f5ce-6344-4920-9af4-e01db3f4d4fe
+    NodeType: RamificationSpecNode
+    NodeTitle: Ramification Spec
+    Position: {x: 1346, y: 302}
+    JsonData: '{"specName":"Corte em linha","specDescription":"","iconDependencyId":""}'
+    areaPattern: {fileID: 0}
+  - Guid: a299aba1-0d49-4fbf-b569-c27d54a17f63
+    NodeType: RamificationSpecNode
+    NodeTitle: Ramification Spec
+    Position: {x: 1388, y: 568}
+    JsonData: '{"specName":"Corte Veloz","specDescription":"","iconDependencyId":""}'
+    areaPattern: {fileID: 0}
+  - Guid: e376e0f7-9e83-4212-9792-c880ddc7a443
+    NodeType: TargetNode
+    NodeTitle: Targeting
+    Position: {x: 1774, y: 628}
+    JsonData: '{"reusePrevious":false,"sourceType":0,"mode":0,"range":1,"multipleTargets":false,"maxTargets":1,"origin":1,"strategy":0,"attributeType":0,"factionType":2,"targetCount":1,"autoRotate":true,"preferredDirection":0,"patternReferenceId":"","areaPattern":{"instanceID":0},"rangeVariable":"","maxTargetsVariable":"max_targets_e376","useExtraRangeVariable":false}'
+    areaPattern: {fileID: 0}
+  - Guid: 7cdaace2-1509-4798-814b-759666daa1b8
+    NodeType: TargetNode
+    NodeTitle: Targeting
+    Position: {x: 1703, y: 285}
+    JsonData: '{"reusePrevious":false,"sourceType":0,"mode":1,"range":1,"multipleTargets":false,"maxTargets":1,"origin":1,"strategy":0,"attributeType":0,"factionType":2,"targetCount":1,"autoRotate":true,"preferredDirection":0,"patternReferenceId":"","areaPattern":{"instanceID":60062},"rangeVariable":"","maxTargetsVariable":"max_targets_7cda","useExtraRangeVariable":false}'
+    areaPattern: {fileID: 11400000, guid: 4d3e096878d32b04aa2b0c35fd58943d, type: 2}
+  - Guid: d6726758-6ad8-49a6-a737-9b71f1fc2df5
+    NodeType: DamageEffectNode
+    NodeTitle: Damage Effect
+    Position: {x: 2282, y: 229}
+    JsonData: '{"variableReference":"Damage","scalings":[{"statType":3,"percentage":100.0,"useTargetStat":false}],"scaleWithDistance":false,"distanceScaleFactor":0.10000000149011612}'
+    areaPattern: {fileID: 0}
+  - Guid: 1c083f9f-98da-486e-b7eb-edd22b7da8f7
+    NodeType: DamageEffectNode
+    NodeTitle: Damage Effect
+    Position: {x: 2200, y: 603}
+    JsonData: '{"variableReference":"Damage","scalings":[{"statType":2,"percentage":100.0,"useTargetStat":false},{"statType":6,"percentage":10.0,"useTargetStat":false}],"scaleWithDistance":false,"distanceScaleFactor":0.10000000149011612}'
     areaPattern: {fileID: 0}
   Dependencies: []
   Variables:
@@ -86,6 +150,18 @@ MonoBehaviour:
   - name: dmg_amount_d672
     initialValue: 10
     description: 
+  - name: max_targets_83d9
+    initialValue: 1
+    description: 
+  - name: max_targets_ac07
+    initialValue: 1
+    description: 
+  - name: dmg_amount_1c08
+    initialValue: 10
+    description: 
+  - name: max_targets_e376
+    initialValue: 1
+    description: 
   MaxLevel: 1
   aiHint:
     category: 0
@@ -97,6 +173,9 @@ MonoBehaviour:
     estimatedValue: 10
   GeneratedDescription: "<b>--- DESCRI\xC7\xC3O AUTOM\xC1TICA ---</b>\r\n- Esta \xE9
     uma habilidade do tipo Active. Subtipo: None.\r\n- Desvia o fluxo dependendo
-    do n\xEDvel atual da habilidade.\r\n- Escolhe manualmente m\xFAltiplos tiles
-    em \xE1rea a um range de 1 a partir de Point.\r\n- Modifica 'Damage' (Set 1).\r\n-
-    Dano escalado pelo atributo Attack multiplicado pela vari\xE1vel 'Damage'.\r\n"
+    do n\xEDvel atual da habilidade.\r\n- Modifica 'Damage' (Set 1).\r\n- Ramifica\xE7\xE3o
+    (Tier 0) com 2 fluxos.\r\n- Escolhe manualmente unidade(s) a um range de 1 a
+    partir de Point.\r\n- Dano escalado (1 stats).\r\n- Spec: Corte em linha\r\n-
+    Escolhe manualmente m\xFAltiplos tiles em \xE1rea a um range de 1 a partir de
+    Point.\r\n- Spec: Corte Veloz\r\n- Escolhe manualmente unidade(s) a um range
+    de 1 a partir de Point.\r\n- Dano escalado (2 stats).\r\n"

@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb249868a85523b4686441d22073799e, type: 3}
+  m_Name: Damien
+  m_EditorClassIdentifier: Assembly-CSharp::UnitData
+  unitID: 
+  displayName: Damien
+  role: 1
+  unitClass: 0
+  icon: {fileID: 21300000, guid: bddd496d597ff4a438d0d30a24e47923, type: 3}
+  idleAnim: {fileID: 7400000, guid: 93859c449fc37e447a6a688b20bfe712, type: 2}
+  combatIdleAnim: {fileID: 7400000, guid: 93859c449fc37e447a6a688b20bfe712, type: 2}
+  baseStats:
+    health: 60
+    attack: 5
+    defense: 9
+    speed: 20
+    criticalChance: 0
+    criticalDamage: 50
+    effectAccuracy: 0
+    effectResistance: 0
+  maxStats:
+    health: 500
+    attack: 45
+    defense: 75
+    speed: 25
+    criticalChance: 5
+    criticalDamage: 150
+    effectAccuracy: 10
+    effectResistance: 30
+  abilityGraphs:
+  - {fileID: 11400000, guid: 0545f8945b68bf3448f4e36f6059507b, type: 2}
+  - {fileID: 11400000, guid: 660a531ea1a9802449c71c3c4a89e403, type: 2}
+  constellationConfig: {fileID: 0}
+  skillTreeConfig: {fileID: 11400000, guid: a9b503e6bc5b5ca4a8bd7511f926893a, type: 2}
+  nativeActions: []
+  references:
+    version: 2
+    RefIds: []
