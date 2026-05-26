@@ -214,19 +214,20 @@ public class EnemyPointerManager : MonoBehaviour
             activePointers.Remove(dead);
         }
 
-        Vector2 screenCenter = new Vector2(Screen.width * 0.5f, Screen.height * 0.5f);
+        Vector2 centerCamera = new Vector2(Camera.main.pixelWidth * 0.5f, Camera.main.pixelHeight * 0.5f);
+        Rect rect = rectTransform.rect;
 
         foreach (var enemy in currentEnemies)
         {
             if (enemy == null || !enemy.gameObject.activeInHierarchy) continue;
 
             Vector3 worldPos = enemy.transform.position;
-            Vector3 screenPos = Camera.main.WorldToScreenPoint(worldPos);
+            Vector3 camPixelPos = Camera.main.WorldToScreenPoint(worldPos);
 
-            // Verifica se o inimigo está dentro dos limites da tela e à frente da câmera
-            bool isOnScreen = screenPos.z > 0 &&
-                              screenPos.x >= 0 && screenPos.x <= Screen.width &&
-                              screenPos.y >= 0 && screenPos.y <= Screen.height;
+            // Verifica se o inimigo está dentro dos limites da visão real da câmera
+            bool isOnScreen = camPixelPos.z > 0 &&
+                              camPixelPos.x >= 0 && camPixelPos.x <= Camera.main.pixelWidth &&
+                              camPixelPos.y >= 0 && camPixelPos.y <= Camera.main.pixelHeight;
 
             if (isOnScreen)
             {
@@ -257,44 +258,37 @@ public class EnemyPointerManager : MonoBehaviour
                 arrow.SetActive(true);
 
                 // Se o inimigo está atrás da câmera, inverte a projeção para apontar corretamente
-                if (screenPos.z < 0)
+                Vector2 projPos = new Vector2(camPixelPos.x, camPixelPos.y);
+                if (camPixelPos.z < 0)
                 {
-                    screenPos *= -1f;
+                    projPos *= -1f;
                 }
 
-                // Vetor direção a partir do centro da tela
-                Vector2 dir = ((Vector2)screenPos - screenCenter).normalized;
+                // Vetor direção a partir do centro da câmera
+                Vector2 dir = (projPos - centerCamera).normalized;
 
-                // Margens e limites com padding
-                float xMin = screenPadding;
-                float xMax = Screen.width - screenPadding;
-                float yMin = screenPadding;
-                float yMax = Screen.height - screenPadding;
+                // Margens e limites com padding baseados no Rect local (suporta canvas dinâmicos/RTs)
+                float xMin = rect.xMin + screenPadding;
+                float xMax = rect.xMax - screenPadding;
+                float yMin = rect.yMin + screenPadding;
+                float yMax = rect.yMax - screenPadding;
 
-                // Equação de interseção com as bordas da tela
+                // Equação de interseção com as bordas do Rect
                 float tX = float.MaxValue;
-                if (dir.x > 0) tX = (xMax - screenCenter.x) / dir.x;
-                else if (dir.x < 0) tX = (xMin - screenCenter.x) / dir.x;
+                if (dir.x > 0) tX = (xMax - rect.center.x) / dir.x;
+                else if (dir.x < 0) tX = (xMin - rect.center.x) / dir.x;
 
                 float tY = float.MaxValue;
-                if (dir.y > 0) tY = (yMax - screenCenter.y) / dir.y;
-                else if (dir.y < 0) tY = (yMin - screenCenter.y) / dir.y;
+                if (dir.y > 0) tY = (yMax - rect.center.y) / dir.y;
+                else if (dir.y < 0) tY = (yMin - rect.center.y) / dir.y;
 
                 float t = Mathf.Min(tX, tY);
-                Vector2 edgePosition = screenCenter + dir * t;
+                Vector2 localPoint = rect.center + dir * t;
 
                 // Aplica posição
                 RectTransform arrowRect = arrow.GetComponent<RectTransform>();
                 if (arrowRect != null)
                 {
-                    // Converte a posição absoluta da tela para a escala do Canvas local
-                    // Usa a câmera do Canvas para suportar Screen Space - Camera
-                    RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                        rectTransform,
-                        edgePosition,
-                        canvasCamera,
-                        out Vector2 localPoint
-                    );
                     arrowRect.anchoredPosition = localPoint;
 
                     // Rotaciona a seta para apontar para o inimigo

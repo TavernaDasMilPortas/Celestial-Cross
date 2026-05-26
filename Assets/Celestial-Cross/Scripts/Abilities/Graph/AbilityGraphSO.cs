@@ -112,33 +112,76 @@ namespace Celestial_Cross.Scripts.Abilities.Graph
             return variable != null ? variable.initialValue : 0f;
         }
 
-        // --- Skill Branch helpers ---
+        // --- Ramification helpers ---
 
-        /// <summary>
-        /// Extrai todos os SkillBranchNode do grafo, agrupados por tier, para uso pela UI.
-        /// </summary>
-        public List<SkillBranchTierInfo> GetBranchTiers()
+        [System.Serializable]
+        public class RamificationTierInfo
         {
-            var tiers = new Dictionary<int, List<SkillBranchNodeData>>();
-            foreach (var node in NodeData)
-            {
-                if (node.NodeType != "SkillBranchNode") continue;
-                if (string.IsNullOrEmpty(node.JsonData)) continue;
-                var data = JsonUtility.FromJson<SkillBranchNodeData>(node.JsonData);
-                if (!tiers.ContainsKey(data.tierIndex))
-                    tiers[data.tierIndex] = new List<SkillBranchNodeData>();
-                tiers[data.tierIndex].Add(data);
-            }
-            return tiers.OrderBy(t => t.Key)
-                .Select(t => new SkillBranchTierInfo { tierIndex = t.Key, options = t.Value })
-                .ToList();
+            public int tierIndex;
+            public List<RamificationOptionInfo> options;
         }
 
         [System.Serializable]
-        public class SkillBranchTierInfo
+        public class RamificationOptionInfo
         {
-            public int tierIndex;
-            public List<SkillBranchNodeData> options;
+            public string flowId;
+            public string displayName;
+            public string description;
+            public string iconDependencyId;
+        }
+
+        public List<RamificationTierInfo> GetRamificationTiers()
+        {
+            var tiers = new Dictionary<int, List<RamificationOptionInfo>>();
+            
+            foreach (var node in NodeData)
+            {
+                if (node.NodeType != "RamificationNode") continue;
+                if (string.IsNullOrEmpty(node.JsonData)) continue;
+                
+                var ramData = JsonUtility.FromJson<RamificationNodeData>(node.JsonData);
+                var options = new List<RamificationOptionInfo>();
+                
+                foreach (var flow in ramData.flows)
+                {
+                    // Buscar o SpecNode conectado a essa porta
+                    var link = NodeLinks.FirstOrDefault(l => 
+                        l.BaseNodeGuid == node.Guid && l.PortName == flow.flowName);
+                    
+                    string specName = flow.flowName;
+                    string specDesc = "";
+                    string specIcon = "";
+                    
+                    if (link != null)
+                    {
+                        var specNode = NodeData.FirstOrDefault(n => 
+                            n.Guid == link.TargetNodeGuid && n.NodeType == "RamificationSpecNode");
+                        if (specNode != null && !string.IsNullOrEmpty(specNode.JsonData))
+                        {
+                            var specData = JsonUtility.FromJson<RamificationSpecNodeData>(specNode.JsonData);
+                            if (!string.IsNullOrEmpty(specData.specName)) specName = specData.specName;
+                            specDesc = specData.specDescription ?? "";
+                            specIcon = specData.iconDependencyId ?? "";
+                        }
+                    }
+                    
+                    options.Add(new RamificationOptionInfo
+                    {
+                        flowId = flow.flowId,
+                        displayName = specName,
+                        description = specDesc,
+                        iconDependencyId = specIcon
+                    });
+                }
+                
+                if (!tiers.ContainsKey(ramData.tierIndex))
+                    tiers[ramData.tierIndex] = new List<RamificationOptionInfo>();
+                tiers[ramData.tierIndex].AddRange(options);
+            }
+            
+            return tiers.OrderBy(t => t.Key)
+                .Select(t => new RamificationTierInfo { tierIndex = t.Key, options = t.Value })
+                .ToList();
         }
 
         [System.Serializable]

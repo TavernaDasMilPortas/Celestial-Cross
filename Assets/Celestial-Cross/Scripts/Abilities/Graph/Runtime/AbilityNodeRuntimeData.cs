@@ -94,22 +94,14 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
     }
 
     [Serializable]
-    public class ReadUnitVariableNodeData
+    public class UnitVariableNodeData
     {
-        public string variableName;
-        public bool isSlotVariable = false;
-        public string outputVariable; // A variável de contexto onde o valor será salvo
-    }
-
-    [Serializable]
-    public class WriteUnitVariableNodeData
-    {
-        public enum Operation { Set, Add, Multiply }
-        public string variableName;
-        public bool isSlotVariable = false;
-        public Operation operation = Operation.Set;
+        public UnitVariable variable = UnitVariable.ExtraRange;
+        public UnitVariableOperation operation = UnitVariableOperation.Get;
+        public UnitVariableScope scope = UnitVariableScope.Global;
         public float value;
-        public string contextVariableReference; // Se preenchido, usa uma variável do contexto como valor
+        public string contextVariableReference;
+        public string outputVariable;
     }
 
     [Serializable]
@@ -249,12 +241,25 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
     }
 
     [Serializable]
-    public class SkillBranchNodeData
+    public class RamificationNodeData
     {
-        public string branchId;
         public int tierIndex;
-        public string branchName;
-        public string branchDescription;
+        public List<RamificationFlowData> flows = new List<RamificationFlowData>();
+    }
+
+    [Serializable]
+    public class RamificationFlowData
+    {
+        public string flowId;    // ID único da porta / branchId
+        public string flowName;  // Nome exibido na porta
+    }
+
+    [Serializable]
+    public class RamificationSpecNodeData
+    {
+        public string specName;
+        public string specDescription;
+        public string iconDependencyId; // referência ao ícone em AbilityGraphSO.Dependencies
     }
 }
 

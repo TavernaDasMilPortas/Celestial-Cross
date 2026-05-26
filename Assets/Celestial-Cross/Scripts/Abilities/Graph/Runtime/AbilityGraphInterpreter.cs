@@ -303,43 +303,86 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                     ModifyVariable(context, modData.variableName, modData.operation, modVal);
                     break;
 
-                case "ReadUnitVariableNode":
-                    var readData = JsonUtility.FromJson<ReadUnitVariableNodeData>(node.JsonData);
-                    if (context.source != null && context.source.VariableStore != null)
+                case "UnitVariableNode":
+                    var unitVarData = JsonUtility.FromJson<UnitVariableNodeData>(node.JsonData);
+                    string varKey = unitVarData.variable.ToString();
+                    
+                    if (unitVarData.operation == UnitVariableOperation.Get)
                     {
-                        float val = readData.isSlotVariable && !string.IsNullOrEmpty(context.slotId)
-                            ? context.source.VariableStore.GetSlotVar(context.slotId, readData.variableName)
-                            : context.source.VariableStore.GetGlobalVar(readData.variableName);
+                        float readVal = 0f;
+                        if (context.source?.VariableStore != null)
+                        {
+                            readVal = unitVarData.scope == UnitVariableScope.Slot && !string.IsNullOrEmpty(context.slotId)
+                                ? context.source.VariableStore.GetSlotVar(context.slotId, varKey)
+                                : context.source.VariableStore.GetGlobalVar(varKey);
+                        }
+                        if (!string.IsNullOrEmpty(unitVarData.outputVariable))
+                            context.Variables[unitVarData.outputVariable] = readVal;
+                    }
+                    else
+                    {
+                        if (UnitVariableHelper.IsReadOnly(unitVarData.variable))
+                        {
+                            Debug.LogWarning($"[Interpreter] Tentativa de escrever na variável read-only '{varKey}'");
+                            break;
+                        }
                         
-                        context.Variables[readData.outputVariable] = val;
+                        float writeVal = unitVarData.value;
+                        if (!string.IsNullOrEmpty(unitVarData.contextVariableReference))
+                            writeVal = GetVariable(context, unitVarData.contextVariableReference, writeVal);
+                        
+                        float currentVal = 0f;
+                        if (context.source?.VariableStore != null)
+                        {
+                            currentVal = unitVarData.scope == UnitVariableScope.Slot && !string.IsNullOrEmpty(context.slotId)
+                                ? context.source.VariableStore.GetSlotVar(context.slotId, varKey)
+                                : context.source.VariableStore.GetGlobalVar(varKey);
+                        }
+                        
+                        float newVal = unitVarData.operation switch
+                        {
+                            UnitVariableOperation.Set => writeVal,
+                            UnitVariableOperation.Add => currentVal + writeVal,
+                            UnitVariableOperation.Subtract => currentVal - writeVal,
+                            UnitVariableOperation.Multiply => currentVal * writeVal,
+                            UnitVariableOperation.Divide => writeVal != 0 ? currentVal / writeVal : currentVal,
+                            _ => writeVal
+                        };
+                        
+                        if (context.source?.VariableStore != null)
+                        {
+                            if (unitVarData.scope == UnitVariableScope.Slot && !string.IsNullOrEmpty(context.slotId))
+                                context.source.VariableStore.SetSlotVar(context.slotId, varKey, newVal);
+                            else
+                                context.source.VariableStore.SetGlobalVar(varKey, newVal);
+                        }
                     }
                     break;
 
-                case "WriteUnitVariableNode":
-                    var writeData = JsonUtility.FromJson<WriteUnitVariableNodeData>(node.JsonData);
-                    if (context.source != null && context.source.VariableStore != null)
+                case "RamificationNode":
+                    var ramData = JsonUtility.FromJson<RamificationNodeData>(node.JsonData);
+                    resultPort = "Base"; // Padrão
+                    
+                    if (context.source?.Loadout != null && ramData.flows != null)
                     {
-                        float val = writeData.value;
-                        if (!string.IsNullOrEmpty(writeData.contextVariableReference))
-                            val = GetVariable(context, writeData.contextVariableReference, val);
-
-                        float currentVal = writeData.isSlotVariable && !string.IsNullOrEmpty(context.slotId)
-                            ? context.source.VariableStore.GetSlotVar(context.slotId, writeData.variableName)
-                            : context.source.VariableStore.GetGlobalVar(writeData.variableName);
-
-                        float newVal = writeData.operation switch
+                        var sel = context.source.Loadout.branchSelections.Find(
+                            s => s.skillId == graph.name);
+                        if (sel != null && sel.selectedBranchIds.Count > ramData.tierIndex)
                         {
-                            WriteUnitVariableNodeData.Operation.Set => val,
-                            WriteUnitVariableNodeData.Operation.Add => currentVal + val,
-                            WriteUnitVariableNodeData.Operation.Multiply => currentVal * val,
-                            _ => val
-                        };
-
-                        if (writeData.isSlotVariable && !string.IsNullOrEmpty(context.slotId))
-                            context.source.VariableStore.SetSlotVar(context.slotId, writeData.variableName, newVal);
-                        else
-                            context.source.VariableStore.SetGlobalVar(writeData.variableName, newVal);
+                            string selectedId = sel.selectedBranchIds[ramData.tierIndex];
+                            if (!string.IsNullOrEmpty(selectedId))
+                            {
+                                var matchingFlow = ramData.flows.Find(f => f.flowId == selectedId);
+                                if (matchingFlow != null)
+                                    resultPort = matchingFlow.flowName;
+                            }
+                        }
                     }
+                    CombatLogger.Log($"  <color=#a29bfe>[Ramificação]</color> Tier {ramData.tierIndex}: <b>{resultPort}</b>", LogCategory.Graph);
+                    break;
+
+                case "RamificationSpecNode":
+                    // Passthrough
                     break;
 
                 case "LevelBranchNode":
@@ -547,57 +590,88 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                     ModifyVariable(context, modData.variableName, modData.operation, modVal);
                     break;
 
-                case "ReadUnitVariableNode":
-                    var readData = JsonUtility.FromJson<ReadUnitVariableNodeData>(node.JsonData);
-                    if (context.source != null && context.source.VariableStore != null)
+                case "UnitVariableNode":
+                    var unitVarData = JsonUtility.FromJson<UnitVariableNodeData>(node.JsonData);
+                    string varKey = unitVarData.variable.ToString();
+                    
+                    if (unitVarData.operation == UnitVariableOperation.Get)
                     {
-                        float val = readData.isSlotVariable && !string.IsNullOrEmpty(context.slotId)
-                            ? context.source.VariableStore.GetSlotVar(context.slotId, readData.variableName)
-                            : context.source.VariableStore.GetGlobalVar(readData.variableName);
-                        
-                        context.Variables[readData.outputVariable] = val;
-                        CombatLogger.Log($"  <color=#a29bfe>[Variavel]</color> Lida variável de unidade '{readData.variableName}' ({val}) para o contexto '{readData.outputVariable}'", LogCategory.Graph);
-                    }
-                    break;
-
-                case "WriteUnitVariableNode":
-                    var writeData = JsonUtility.FromJson<WriteUnitVariableNodeData>(node.JsonData);
-                    if (context.source != null && context.source.VariableStore != null)
-                    {
-                        float val = writeData.value;
-                        if (!string.IsNullOrEmpty(writeData.contextVariableReference))
-                            val = GetVariable(context, writeData.contextVariableReference, val);
-
-                        float currentVal = writeData.isSlotVariable && !string.IsNullOrEmpty(context.slotId)
-                            ? context.source.VariableStore.GetSlotVar(context.slotId, writeData.variableName)
-                            : context.source.VariableStore.GetGlobalVar(writeData.variableName);
-
-                        float newVal = writeData.operation switch
+                        float readVal = 0f;
+                        if (context.source?.VariableStore != null)
                         {
-                            WriteUnitVariableNodeData.Operation.Set => val,
-                            WriteUnitVariableNodeData.Operation.Add => currentVal + val,
-                            WriteUnitVariableNodeData.Operation.Multiply => currentVal * val,
-                            _ => val
+                            readVal = unitVarData.scope == UnitVariableScope.Slot && !string.IsNullOrEmpty(context.slotId)
+                                ? context.source.VariableStore.GetSlotVar(context.slotId, varKey)
+                                : context.source.VariableStore.GetGlobalVar(varKey);
+                        }
+                        if (!string.IsNullOrEmpty(unitVarData.outputVariable))
+                            context.Variables[unitVarData.outputVariable] = readVal;
+                        CombatLogger.Log($"  <color=#a29bfe>[Variavel]</color> Lida variável de unidade '{varKey}' ({readVal}) para o contexto '{unitVarData.outputVariable}'", LogCategory.Graph);
+                    }
+                    else
+                    {
+                        if (UnitVariableHelper.IsReadOnly(unitVarData.variable))
+                        {
+                            Debug.LogWarning($"[Interpreter] Tentativa de escrever na variável read-only '{varKey}'");
+                            break;
+                        }
+                        
+                        float writeVal = unitVarData.value;
+                        if (!string.IsNullOrEmpty(unitVarData.contextVariableReference))
+                            writeVal = GetVariable(context, unitVarData.contextVariableReference, writeVal);
+                        
+                        float currentVal = 0f;
+                        if (context.source?.VariableStore != null)
+                        {
+                            currentVal = unitVarData.scope == UnitVariableScope.Slot && !string.IsNullOrEmpty(context.slotId)
+                                ? context.source.VariableStore.GetSlotVar(context.slotId, varKey)
+                                : context.source.VariableStore.GetGlobalVar(varKey);
+                        }
+                        
+                        float newVal = unitVarData.operation switch
+                        {
+                            UnitVariableOperation.Set => writeVal,
+                            UnitVariableOperation.Add => currentVal + writeVal,
+                            UnitVariableOperation.Subtract => currentVal - writeVal,
+                            UnitVariableOperation.Multiply => currentVal * writeVal,
+                            UnitVariableOperation.Divide => writeVal != 0 ? currentVal / writeVal : currentVal,
+                            _ => writeVal
                         };
-
-                        if (writeData.isSlotVariable && !string.IsNullOrEmpty(context.slotId))
-                            context.source.VariableStore.SetSlotVar(context.slotId, writeData.variableName, newVal);
-                        else
-                            context.source.VariableStore.SetGlobalVar(writeData.variableName, newVal);
-
-                        CombatLogger.Log($"  <color=#a29bfe>[Variavel]</color> Variável de unidade '{writeData.variableName}' {(writeData.isSlotVariable?"(Slot)":"(Global)")} atualizada para {newVal}", LogCategory.Graph);
+                        
+                        if (context.source?.VariableStore != null)
+                        {
+                            if (unitVarData.scope == UnitVariableScope.Slot && !string.IsNullOrEmpty(context.slotId))
+                                context.source.VariableStore.SetSlotVar(context.slotId, varKey, newVal);
+                            else
+                                context.source.VariableStore.SetGlobalVar(varKey, newVal);
+                        }
+                        CombatLogger.Log($"  <color=#a29bfe>[Variavel]</color> Variável de unidade '{varKey}' ({(unitVarData.scope == UnitVariableScope.Slot?"Slot":"Global")}) atualizada para {newVal}", LogCategory.Graph);
                     }
                     break;
 
-                case "SkillBranchNode":
-                    var branchData = JsonUtility.FromJson<SkillBranchNodeData>(node.JsonData);
-                    bool branchActive = false;
-                    if (context.source != null && context.source.Loadout != null && !string.IsNullOrEmpty(branchData.branchId))
+                case "RamificationNode":
+                    var ramData = JsonUtility.FromJson<RamificationNodeData>(node.JsonData);
+                    resultPort = "Base"; // Padrão
+                    
+                    if (context.source?.Loadout != null && ramData.flows != null)
                     {
-                        branchActive = context.source.Loadout.branchSelections.Exists(sel => sel.selectedBranchIds.Contains(branchData.branchId));
+                        var sel = context.source.Loadout.branchSelections.Find(
+                            s => s.skillId == graph.name);
+                        if (sel != null && sel.selectedBranchIds.Count > ramData.tierIndex)
+                        {
+                            string selectedId = sel.selectedBranchIds[ramData.tierIndex];
+                            if (!string.IsNullOrEmpty(selectedId))
+                            {
+                                var matchingFlow = ramData.flows.Find(f => f.flowId == selectedId);
+                                if (matchingFlow != null)
+                                    resultPort = matchingFlow.flowName;
+                            }
+                        }
                     }
-                    resultPort = branchActive ? "Active" : "Inactive";
-                    CombatLogger.Log($"  <color=#a29bfe>[Ramo]</color> Validação de Ramo '{branchData.branchId}': <b>{(branchActive ? "Ativo" : "Inativo")}</b>", LogCategory.Graph);
+                    CombatLogger.Log($"  <color=#a29bfe>[Ramificação]</color> Tier {ramData.tierIndex}: <b>{resultPort}</b>", LogCategory.Graph);
+                    break;
+
+                case "RamificationSpecNode":
+                    // Passthrough
                     break;
 
                 case "LevelBranchNode":

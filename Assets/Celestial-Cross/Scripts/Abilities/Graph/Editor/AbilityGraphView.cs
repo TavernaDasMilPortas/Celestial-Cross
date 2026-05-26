@@ -193,5 +193,24 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor
             damageNode.Initialize(Guid.NewGuid().ToString(), position);
             return damageNode;
         }
+
+        public void CreateAndConnectSpecNode(RamificationNode source, Port outputPort, Vector2 offset)
+        {
+            var specNode = new RamificationSpecNode();
+            
+            // Posicionar o SpecNode ao lado do RamificationNode
+            var position = source.GetPosition().position + offset;
+            specNode.Initialize(Guid.NewGuid().ToString(), position);
+            
+            AddElement(specNode);
+
+            // Conectar a porta do RamificationNode com o Input do SpecNode
+            var inputPort = specNode.inputContainer.Q<Port>();
+            if (inputPort != null && outputPort != null)
+            {
+                var edge = outputPort.ConnectTo(inputPort);
+                AddElement(edge);
+            }
+        }
     }
 }
