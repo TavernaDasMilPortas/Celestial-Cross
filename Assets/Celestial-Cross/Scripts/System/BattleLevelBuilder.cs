@@ -74,12 +74,21 @@ public class BattleLevelBuilder : MonoBehaviour
         // Spawns dos inimigos
         List<EnemyUnit> enemies = SpawnEnemies(flow, grid);
 
-        // Fase de foco da câmera em cada inimigo antes do posicionamento
+        // Aguarda um frame para garantir que os game objects e componentes das unidades inimigas estejam totalmente inicializados
+        yield return null;
+
+        // Se a lista retornada por SpawnEnemies estiver vazia, tenta coletar todas as EnemyUnits da cena (fallback robusto)
+        if (enemies == null || enemies.Count == 0)
+        {
+            enemies = Object.FindObjectsByType<EnemyUnit>(FindObjectsSortMode.None).ToList();
+        }
+
+        // Fase de foco da câmera em cada inimigo antes do posicionamento (Highlight dos Inimigos)
         if (enableEnemyFocusPhase && CameraController.Instance != null)
         {
             if (enemies != null && enemies.Count > 0)
             {
-                Debug.Log($"[BattleLevelBuilder] Iniciando fase de foco nos inimigos. Total={enemies.Count}");
+                Debug.Log($"[BattleLevelBuilder] Iniciando fase de foco/highlight nos inimigos. Total={enemies.Count}");
                 
                 // Coloca a câmera em modo livre para mover programaticamente
                 CameraController.Instance.EnableFreeCamera(true);
@@ -88,9 +97,14 @@ public class BattleLevelBuilder : MonoBehaviour
                 {
                     if (enemy == null) continue;
                     
-                    Debug.Log($"[BattleLevelBuilder] Focando no inimigo: {enemy.DisplayName} em {enemy.transform.position}");
+                    Debug.Log($"[BattleLevelBuilder] Focando e destacando inimigo: {enemy.DisplayName} em {enemy.transform.position}");
                     CameraController.Instance.TargetProjectedPoint = enemy.transform.position;
                     CameraController.Instance.TargetZoom = enemyFocusZoom;
+                    
+                    // Ativa o outline visual para destacar o inimigo
+                    var outline = enemy.GetComponent<UnitOutlineController>();
+                    if (outline == null) outline = enemy.GetComponentInChildren<UnitOutlineController>();
+                    outline?.SetSelected(true);
                     
                     // Espera pelo tempo determinado ou até que o jogador arraste a tela
                     float elapsed = 0f;
@@ -104,6 +118,9 @@ public class BattleLevelBuilder : MonoBehaviour
                         elapsed += Time.deltaTime;
                         yield return null;
                     }
+                    
+                    // Desativa o outline após focar nele
+                    outline?.SetSelected(false);
                     
                     if (CameraController.Instance.IsDragging)
                         break;
