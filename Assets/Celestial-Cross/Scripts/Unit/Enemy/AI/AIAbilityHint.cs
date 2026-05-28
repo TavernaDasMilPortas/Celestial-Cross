@@ -36,5 +36,8 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI
 
         [Tooltip("Estimated numeric value for scaling (Damage amount, Heal power, etc.).")]
         public float estimatedValue = 10f;
+
+        [Tooltip("If true, the auto-generator will not overwrite these values.")]
+        public bool isLocked = false;
     }
 }

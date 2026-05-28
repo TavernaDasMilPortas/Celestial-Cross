@@ -1,0 +1,69 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8cf6610ba3c29a74aa7d2416f7a095d4, type: 3}
+  m_Name: AggressiveMelee
+  m_EditorClassIdentifier: Assembly-CSharp::Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.BehaviorTreeSO
+  treeName: Aggressive Melee
+  description: "Tenta atacar se o alvo estiver no alcance. Se n\xE3o estiver, move-se
+    agressivamente."
+  NodeData:
+  - Guid: root
+    NodeType: BTRootEditorNode
+    NodeTitle: Root
+    Position: {x: 100, y: 200}
+    JsonData: 
+  - Guid: sel
+    NodeType: BTSelectorEditorNode
+    NodeTitle: Selector
+    Position: {x: 400, y: 200}
+    JsonData: 
+  - Guid: seq
+    NodeType: BTSequenceEditorNode
+    NodeTitle: Sequence
+    Position: {x: 700, y: 50}
+    JsonData: 
+  - Guid: cond_range
+    NodeType: BTConditionTargetInRangeEditorNode
+    NodeTitle: Alvo no Alcance
+    Position: {x: 1000, y: -50}
+    JsonData: 
+  - Guid: act_atk
+    NodeType: BTActionAttackEditorNode
+    NodeTitle: Atacar
+    Position: {x: 1000, y: 150}
+    JsonData: 
+  - Guid: act_mov
+    NodeType: BTActionMoveEditorNode
+    NodeTitle: Mover (Agressivo)
+    Position: {x: 700, y: 350}
+    JsonData: 
+  NodeLinks:
+  - ParentGuid: root
+    ParentPort: Child
+    ChildGuid: sel
+    ChildPort: Parent
+  - ParentGuid: sel
+    ParentPort: Children
+    ChildGuid: seq
+    ChildPort: Parent
+  - ParentGuid: sel
+    ParentPort: Children
+    ChildGuid: act_mov
+    ChildPort: Parent
+  - ParentGuid: seq
+    ParentPort: Children
+    ChildGuid: cond_range
+    ChildPort: Parent
+  - ParentGuid: seq
+    ParentPort: Children
+    ChildGuid: act_atk
+    ChildPort: Parent

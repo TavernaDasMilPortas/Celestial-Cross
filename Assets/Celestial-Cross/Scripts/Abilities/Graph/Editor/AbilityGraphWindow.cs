@@ -1,4 +1,4 @@
-﻿using UnityEditor;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEditor.Experimental.GraphView;
@@ -63,9 +63,11 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor
             toolbar.Add(_assetField);
 
             var saveButton = new Button(() => { SaveData(); }) { text = "Save Graph" };
+            var saveAsButton = new Button(() => { SaveAsData(); }) { text = "Save As..." };
             var loadButton = new Button(() => { LoadData(); }) { text = "Load Graph" };
 
             toolbar.Add(saveButton);
+            toolbar.Add(saveAsButton);
             toolbar.Add(loadButton);
 
             rootVisualElement.Add(toolbar);
@@ -92,6 +94,30 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor
 
             _graphView.SetGraphAsset(_currentGraphAsset);
             GraphSaveUtility.GetInstance(_graphView).LoadGraph(_currentGraphAsset);
+        }
+
+        private void SaveAsData()
+        {
+            if (_currentGraphAsset == null)
+            {
+                EditorUtility.DisplayDialog("Erro", "Nenhum grafo carregado para salvar cópia.", "OK");
+                return;
+            }
+
+            string path = EditorUtility.SaveFilePanelInProject("Save As...", _currentGraphAsset.name + "_Copy", "asset", "Salve o novo AbilityGraphSO");
+            if (!string.IsNullOrEmpty(path))
+            {
+                var newAsset = Instantiate(_currentGraphAsset);
+                
+                AssetDatabase.CreateAsset(newAsset, path);
+                AssetDatabase.SaveAssets();
+                
+                _currentGraphAsset = newAsset;
+                if (_assetField != null) _assetField.value = newAsset;
+                
+                // Força salvar o estado visual atual em cima da cópia recém-criada
+                SaveData();
+            }
         }
 
         // MÃ©todo para abrir a janela jÃ¡ carregando um asset (Ãºtil para double-click)

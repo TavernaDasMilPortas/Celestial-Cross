@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Celestial_Cross.Scripts.Units.Enemy;
 
 public class BattleLevelBuilder : MonoBehaviour
 {
@@ -213,13 +214,9 @@ public class BattleLevelBuilder : MonoBehaviour
                     if (eUnit != null)
                     {
                         spawnedEnemiesList.Add(eUnit);
-                        if (enemy.OverridePatternData != null)
+                        if (enemy.OverrideBehaviorTree != null)
                         {
-                            eUnit.SetPatternData(enemy.OverridePatternData);
-                        }
-                        else if (enemy.OverrideBehaviorProfile != null)
-                        {
-                            eUnit.SetBehaviorProfile(enemy.OverrideBehaviorProfile);
+                            eUnit.SetBehaviorTree(enemy.OverrideBehaviorTree);
                         }
                     }
                     else

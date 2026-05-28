@@ -626,6 +626,24 @@ public class PassiveManager : MonoBehaviour
         }
     }
 
+    public bool HasPositiveEffects()
+    {
+        for (int i = 0; i < activeGraphConditions.Count; i++)
+            if (activeGraphConditions[i].graph.GetIsBuff()) return true;
+        for (int i = 0; i < activeRuntimeConditions.Count; i++)
+            if (activeRuntimeConditions[i].blueprint.isBuff) return true;
+        return false;
+    }
+
+    public bool HasNegativeEffects()
+    {
+        for (int i = 0; i < activeGraphConditions.Count; i++)
+            if (!activeGraphConditions[i].graph.GetIsBuff()) return true;
+        for (int i = 0; i < activeRuntimeConditions.Count; i++)
+            if (!activeRuntimeConditions[i].blueprint.isBuff) return true;
+        return false;
+    }
+
 
     private RuntimeGraphCondition FindGraphCondition(AbilityGraphSO graph)
     {

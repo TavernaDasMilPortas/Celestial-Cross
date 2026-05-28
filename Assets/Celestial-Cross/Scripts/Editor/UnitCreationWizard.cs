@@ -28,8 +28,7 @@ namespace CelestialCross.Editor
 
         public enum UnitType
         {
-            Player,
-            Enemy
+            Player
         }
 
         public enum WizardViewMode
@@ -454,20 +453,14 @@ namespace CelestialCross.Editor
             {
                 string oldName = unitName;
                 unitName = nextUnitName;
-                RenameUnitFolder(oldName, unitType, unitName, unitType);
+                RenameUnitFolder(oldName, unitName);
             }
 
             displayName = EditorGUILayout.TextField("Nome de Exibição", displayName);
 
             GUILayout.Space(5);
             
-            UnitType nextUnitType = (UnitType)EditorGUILayout.EnumPopup("Tipo de Unidade", unitType);
-            if (nextUnitType != unitType)
-            {
-                UnitType oldType = unitType;
-                unitType = nextUnitType;
-                RenameUnitFolder(unitName, oldType, unitName, unitType);
-            }
+
 
             role = (UnitRole)EditorGUILayout.EnumPopup("Função Tática", role);
             unitClass = (UnitClass)EditorGUILayout.EnumPopup("Classe", unitClass);
@@ -478,7 +471,7 @@ namespace CelestialCross.Editor
             GUILayout.Space(10);
             GUILayout.Label("Caminho de Destino (Visualização):", EditorStyles.boldLabel);
             GUILayout.BeginVertical(EditorStyles.helpBox);
-            string destination = GetUnitFolderPath(unitName, unitType);
+            string destination = GetUnitFolderPath(unitName);
             GUILayout.Label(destination, EditorStyles.wordWrappedLabel);
             GUILayout.Label("Nota: Renomear o ID ou alterar o tipo moverá automaticamente qualquer asset já gerado no disco.", EditorStyles.miniLabel);
             GUILayout.EndVertical();
@@ -490,7 +483,7 @@ namespace CelestialCross.Editor
             displayName = source.displayName;
             
             string path = AssetDatabase.GetAssetPath(source);
-            unitType = path.Contains("Enemies") ? UnitType.Enemy : UnitType.Player;
+            unitType = UnitType.Player;
 
             role = source.role;
             unitClass = source.unitClass;
@@ -588,21 +581,18 @@ namespace CelestialCross.Editor
             ShowNotification(new GUIContent($"Configurações de '{source.name}' carregadas!"));
         }
 
-        private string GetUnitFolderPath(string name, UnitType type)
+        private string GetUnitFolderPath(string name)
         {
-            string root = type == UnitType.Player 
-                ? "Assets/Celestial-Cross/Prefabs/Units/MagicalGirls" 
-                : "Assets/Celestial-Cross/Prefabs/Units/Enemies";
-            
+            string root = "Assets/Celestial-Cross/Prefabs/Units/MagicalGirls";
             return $"{root}/{name}";
         }
 
-        private void RenameUnitFolder(string oldName, UnitType oldType, string newName, UnitType newType)
+        private void RenameUnitFolder(string oldName, string newName)
         {
             if (string.IsNullOrWhiteSpace(oldName) || string.IsNullOrWhiteSpace(newName)) return;
 
-            string oldPath = GetUnitFolderPath(oldName, oldType);
-            string newPath = GetUnitFolderPath(newName, newType);
+            string oldPath = GetUnitFolderPath(oldName);
+            string newPath = GetUnitFolderPath(newName);
 
             if (Directory.Exists(oldPath) && oldPath != newPath)
             {
@@ -628,7 +618,7 @@ namespace CelestialCross.Editor
         {
             if (string.IsNullOrWhiteSpace(unitName)) return;
 
-            string unitFolder = GetUnitFolderPath(unitName, unitType);
+            string unitFolder = GetUnitFolderPath(unitName);
             string dataFolder = $"{unitFolder}/Data";
             string abilitiesFolder = $"{unitFolder}/Abilities";
 
@@ -875,7 +865,7 @@ namespace CelestialCross.Editor
             };
             newGraph.NodeData.Add(startNode);
 
-            string abilitiesFolder = $"{GetUnitFolderPath(unitName, unitType)}/Abilities";
+            string abilitiesFolder = $"{GetUnitFolderPath(unitName)}/Abilities";
             string graphPath = $"{abilitiesFolder}/Ability_{unitName}_{newAbilityName.Replace(" ", "")}.asset";
             graphPath = AssetDatabase.GenerateUniqueAssetPath(graphPath);
 
@@ -1022,6 +1012,8 @@ namespace CelestialCross.Editor
             GUI.enabled = true;
 
             GUILayout.EndVertical();
+
+
         }
 
         private int GetGraphIndexInList(AbilityGraphSO target)
@@ -1124,7 +1116,7 @@ namespace CelestialCross.Editor
 
         private void GenerateUnitAssets()
         {
-            string unitFolder = GetUnitFolderPath(unitName, unitType);
+            string unitFolder = GetUnitFolderPath(unitName);
             string dataFolder = $"{unitFolder}/Data";
 
             try

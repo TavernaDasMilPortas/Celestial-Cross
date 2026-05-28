@@ -36,9 +36,6 @@ public struct EnemySpawnInfo
     public UnitData UnitData;
     public Vector2Int GridPosition;
     
-    [Tooltip("Se preenchido, substitui o perfil de IA padrão desta unidade (útil para chefes ou fases específicas).")]
-    public AIBehaviorProfile OverrideBehaviorProfile;
-
-    [Tooltip("Opcional: Define um Padrão de Fases / Gatilhos (AIPatternData). Suplanta o BehaviorProfile normal se possuir fases.")]
-    public AIPatternData OverridePatternData;
+    [Tooltip("Se preenchido, substitui a Behavior Tree padrão desta unidade (útil para chefes ou fases específicas).")]
+    public Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.BehaviorTreeSO OverrideBehaviorTree;
 }

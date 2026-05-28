@@ -204,6 +204,21 @@ O modal de passivas possuía um layout confuso de colunas que limitava a legibil
 
 ---
 
+## 19. Refatoração Master da Behavior Tree (V2)
+**Data: 28/05/2026**
+### **Problema:**
+A visualização e a modularidade da Behavior Tree eram limitadas. Nós compostos escondiam o fluxo em uma única porta invisível "Children", e havia uma proliferação de nós de condição e ação muito específicos e inflexíveis (ex: `ConditionHPPercent`, `ActionAttack`), tornando difícil a reutilização e criação de lógicas complexas. A interface também era inteiramente em inglês, dificultando a leitura de alguns nós.
+
+### **Solução:**
+*   **Compostos com Portas Dinâmicas:** `Selector` (OU) e `Sequence` (E) agora mostram explicitamente o fluxo através de portas numeradas (`Passo_0`, `Passo_1`, etc.), adicionadas dinamicamente com o botão "+ Adicionar Passo".
+*   **Extração Genérica de Dados:** Implementado o sistema de leitura de dados (`BTGetNumericData`), permitindo extrair HP, Distância, Turnos ou Contagem de aliados vivos no momento exato e de forma independente do controle de fluxo.
+*   **Condições e Switches Modulares:** Criados os nós genéricos `BTCheckValue` e `BTValueSwitch` que avaliam os dados recebidos pelas suas portas de entrada. Os nós antigos rígidos foram deletados e substituídos por essa arquitetura limpa de "Dado + Verificação".
+*   **Ações Consolidadas:** Diversas ações específicas foram mescladas (ex: `Patrol` virou intent `Wander` no `ActionMove`). O `GetTarget` agora suporta filtragem nativa por `Tag`.
+*   **Localização:** Adicionado o `BTLocalizationManager`, permitindo traduzir a UI do editor para português sem quebrar a estrutura de dados.
+*   **Presets Atualizados:** O gerador de IAs padrão (`BTAIPresetGenerator`) foi inteiramente reconstruído para usar essa nova arquitetura de visual scripting puro.
+
+---
+
 ## Próximos Passos
 *   Arrumar anchors da Shop Scene para garantir responsividade em diferentes resoluções.
 *   Aprofundar as mecânicas das Inteligências Artificiais usando o novo sistema de Variáveis de Unidade.

@@ -4,6 +4,7 @@ using UnityEngine;
 using Celestial_Cross.Scripts.Abilities.Graph;
 using Celestial_Cross.Scripts.Combat.Execution;
 using CelestialCross.Combat;
+using Celestial_Cross.Scripts.Units.Enemy;
 
 namespace Celestial_Cross.Scripts.Units
 {
@@ -70,7 +71,7 @@ namespace Celestial_Cross.Scripts.Units
 
                     if (caster.hasMovedThisTurn && caster.hasActedThisTurn)
                     {
-                        if (caster is global::EnemyUnit)
+                        if (caster is Celestial_Cross.Scripts.Units.Enemy.EnemyUnit)
                             TurnManager.Instance.EndTurn();
                         else    
                             PlayerController.Instance.EndTurn();

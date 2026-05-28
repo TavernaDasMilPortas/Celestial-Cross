@@ -1,0 +1,82 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8cf6610ba3c29a74aa7d2416f7a095d4, type: 3}
+  m_Name: Preset_TacticalAssassin
+  m_EditorClassIdentifier: Assembly-CSharp::Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.BehaviorTreeSO
+  treeName: Tactical Assassin
+  description: Foca exclusivamente no inimigo com menor HP. Usa habilidades de dano
+    e flanqueamento.
+  NodeData:
+  - Guid: root
+    NodeType: BTRootEditorNode
+    NodeTitle: Root
+    Position: {x: 100, y: 300}
+    JsonData: 
+  - Guid: selector
+    NodeType: BTSelectorEditorNode
+    NodeTitle: Selector
+    Position: {x: 300, y: 300}
+    JsonData: 
+  - Guid: seq_assassinate
+    NodeType: BTSequenceEditorNode
+    NodeTitle: Sequence Assassinate
+    Position: {x: 550, y: 150}
+    JsonData: 
+  - Guid: cond_atk_ready
+    NodeType: BTConditionAbilityReadyEditorNode
+    NodeTitle: Damage Ready
+    Position: {x: 800, y: 50}
+    JsonData: '{"category":0}'
+  - Guid: act_strike
+    NodeType: BTActionUseAbilityEditorNode
+    NodeTitle: Strike Target
+    Position: {x: 800, y: 200}
+    JsonData: '{"category":0}'
+  - Guid: act_flank
+    NodeType: BTActionMoveEditorNode
+    NodeTitle: Flank Target
+    Position: {x: 550, y: 450}
+    JsonData: '{"intent":2}'
+  - Guid: get_weakest_enemy
+    NodeType: BTGetTargetEditorNode
+    NodeTitle: Get Weakest Enemy
+    Position: {x: 1100, y: 300}
+    JsonData: '{"faction":0,"strategy":2}'
+  NodeLinks:
+  - ParentGuid: root
+    ParentPort: Child
+    ChildGuid: selector
+    ChildPort: Parent
+  - ParentGuid: selector
+    ParentPort: Children
+    ChildGuid: seq_assassinate
+    ChildPort: Parent
+  - ParentGuid: selector
+    ParentPort: Children
+    ChildGuid: act_flank
+    ChildPort: Parent
+  - ParentGuid: seq_assassinate
+    ParentPort: Children
+    ChildGuid: cond_atk_ready
+    ChildPort: Parent
+  - ParentGuid: seq_assassinate
+    ParentPort: Children
+    ChildGuid: act_strike
+    ChildPort: Parent
+  - ParentGuid: get_weakest_enemy
+    ParentPort: Target
+    ChildGuid: act_strike
+    ChildPort: Target
+  - ParentGuid: get_weakest_enemy
+    ParentPort: Target
+    ChildGuid: act_flank
+    ChildPort: Target

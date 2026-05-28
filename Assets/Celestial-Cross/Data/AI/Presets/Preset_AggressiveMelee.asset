@@ -1,0 +1,82 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8cf6610ba3c29a74aa7d2416f7a095d4, type: 3}
+  m_Name: Preset_AggressiveMelee
+  m_EditorClassIdentifier: Assembly-CSharp::Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.BehaviorTreeSO
+  treeName: Aggressive Melee
+  description: "Ataca corpo a corpo se estiver no alcance, se movendo agressivamente
+    caso contr\xE1rio."
+  NodeData:
+  - Guid: root
+    NodeType: BTRootEditorNode
+    NodeTitle: Root
+    Position: {x: 100, y: 300}
+    JsonData: 
+  - Guid: selector
+    NodeType: BTSelectorEditorNode
+    NodeTitle: Selector
+    Position: {x: 300, y: 300}
+    JsonData: 
+  - Guid: seq_attack
+    NodeType: BTSequenceEditorNode
+    NodeTitle: Sequence Attack
+    Position: {x: 500, y: 150}
+    JsonData: 
+  - Guid: cond_range
+    NodeType: BTConditionTargetInRangeEditorNode
+    NodeTitle: Target In Range
+    Position: {x: 750, y: 50}
+    JsonData: 
+  - Guid: act_attack
+    NodeType: BTActionAttackEditorNode
+    NodeTitle: Attack Target
+    Position: {x: 750, y: 200}
+    JsonData: 
+  - Guid: get_target
+    NodeType: BTGetTargetEditorNode
+    NodeTitle: Get Closest Enemy
+    Position: {x: 1050, y: 200}
+    JsonData: '{"faction":0,"strategy":0}'
+  - Guid: act_move
+    NodeType: BTActionMoveEditorNode
+    NodeTitle: Move to Target
+    Position: {x: 500, y: 450}
+    JsonData: '{"intent":0}'
+  NodeLinks:
+  - ParentGuid: root
+    ParentPort: Child
+    ChildGuid: selector
+    ChildPort: Parent
+  - ParentGuid: selector
+    ParentPort: Children
+    ChildGuid: seq_attack
+    ChildPort: Parent
+  - ParentGuid: selector
+    ParentPort: Children
+    ChildGuid: act_move
+    ChildPort: Parent
+  - ParentGuid: seq_attack
+    ParentPort: Children
+    ChildGuid: cond_range
+    ChildPort: Parent
+  - ParentGuid: seq_attack
+    ParentPort: Children
+    ChildGuid: act_attack
+    ChildPort: Parent
+  - ParentGuid: get_target
+    ParentPort: Target
+    ChildGuid: act_attack
+    ChildPort: Target
+  - ParentGuid: get_target
+    ParentPort: Target
+    ChildGuid: act_move
+    ChildPort: Target
