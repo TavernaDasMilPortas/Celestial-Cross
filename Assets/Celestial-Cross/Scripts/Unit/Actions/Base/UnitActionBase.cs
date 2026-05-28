@@ -182,7 +182,7 @@ public abstract class UnitActionBase : MonoBehaviour, IUnitAction
 
     protected void EndTurnProperly()
     {
-        if (unit is EnemyUnit)
+        if (unit is Celestial_Cross.Scripts.Units.Enemy.EnemyUnit)
             TurnManager.Instance.EndTurn();
         else
             PlayerController.Instance.EndTurn();

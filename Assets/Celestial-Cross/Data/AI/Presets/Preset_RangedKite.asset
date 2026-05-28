@@ -1,0 +1,112 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8cf6610ba3c29a74aa7d2416f7a095d4, type: 3}
+  m_Name: Preset_RangedKite
+  m_EditorClassIdentifier: Assembly-CSharp::Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.BehaviorTreeSO
+  treeName: Ranged Kite
+  description: "Ataca \xE0 dist\xE2ncia. Se o inimigo aproximar-se demais, recua."
+  NodeData:
+  - Guid: root
+    NodeType: BTRootEditorNode
+    NodeTitle: Root
+    Position: {x: 100, y: 300}
+    JsonData: 
+  - Guid: selector
+    NodeType: BTSelectorEditorNode
+    NodeTitle: Selector
+    Position: {x: 300, y: 300}
+    JsonData: 
+  - Guid: seq_retreat
+    NodeType: BTSequenceEditorNode
+    NodeTitle: Sequence Retreat
+    Position: {x: 550, y: 100}
+    JsonData: 
+  - Guid: cond_dist
+    NodeType: BTConditionDistanceToTargetEditorNode
+    NodeTitle: Distance <= 2
+    Position: {x: 800, y: -20}
+    JsonData: '{"distance":2,"operatorType":"<="}'
+  - Guid: act_retreat
+    NodeType: BTActionMoveEditorNode
+    NodeTitle: Retreat (Flee)
+    Position: {x: 800, y: 150}
+    JsonData: '{"intent":1}'
+  - Guid: seq_ability
+    NodeType: BTSequenceEditorNode
+    NodeTitle: Sequence Cast Ranged
+    Position: {x: 550, y: 350}
+    JsonData: 
+  - Guid: cond_ready
+    NodeType: BTConditionAbilityReadyEditorNode
+    NodeTitle: Damage Skill Ready
+    Position: {x: 800, y: 280}
+    JsonData: '{"category":0}'
+  - Guid: act_ability
+    NodeType: BTActionUseAbilityEditorNode
+    NodeTitle: Cast Damage Skill
+    Position: {x: 800, y: 420}
+    JsonData: '{"category":0}'
+  - Guid: act_approach
+    NodeType: BTActionMoveEditorNode
+    NodeTitle: Approach Target
+    Position: {x: 550, y: 600}
+    JsonData: '{"intent":0}'
+  - Guid: get_target
+    NodeType: BTGetTargetEditorNode
+    NodeTitle: Get Closest Enemy
+    Position: {x: 1100, y: 300}
+    JsonData: '{"faction":0,"strategy":0}'
+  NodeLinks:
+  - ParentGuid: root
+    ParentPort: Child
+    ChildGuid: selector
+    ChildPort: Parent
+  - ParentGuid: selector
+    ParentPort: Children
+    ChildGuid: seq_retreat
+    ChildPort: Parent
+  - ParentGuid: selector
+    ParentPort: Children
+    ChildGuid: seq_ability
+    ChildPort: Parent
+  - ParentGuid: selector
+    ParentPort: Children
+    ChildGuid: act_approach
+    ChildPort: Parent
+  - ParentGuid: seq_retreat
+    ParentPort: Children
+    ChildGuid: cond_dist
+    ChildPort: Parent
+  - ParentGuid: seq_retreat
+    ParentPort: Children
+    ChildGuid: act_retreat
+    ChildPort: Parent
+  - ParentGuid: seq_ability
+    ParentPort: Children
+    ChildGuid: cond_ready
+    ChildPort: Parent
+  - ParentGuid: seq_ability
+    ParentPort: Children
+    ChildGuid: act_ability
+    ChildPort: Parent
+  - ParentGuid: get_target
+    ParentPort: Target
+    ChildGuid: act_retreat
+    ChildPort: Target
+  - ParentGuid: get_target
+    ParentPort: Target
+    ChildGuid: act_ability
+    ChildPort: Target
+  - ParentGuid: get_target
+    ParentPort: Target
+    ChildGuid: act_approach
+    ChildPort: Target

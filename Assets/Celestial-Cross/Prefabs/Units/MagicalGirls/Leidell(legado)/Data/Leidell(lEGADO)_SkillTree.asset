@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Leidell(lEGADO)_SkillTree
   m_EditorClassIdentifier: Assembly-CSharp::Celestial_Cross.Scripts.Abilities.SkillTree.SkillTreeConfigSO
   characterId: 41ab50bd04fdfce42875fe6724f71972
-  basicAttack: {fileID: 11400000, guid: 660a531ea1a9802449c71c3c4a89e403, type: 2}
-  movementSkill: {fileID: 11400000, guid: 4d060a30e9da47646ae359cf062f8bb1, type: 2}
+  basicAttack: {fileID: 11400000, guid: 4d060a30e9da47646ae359cf062f8bb1, type: 2}
+  movementSkill: {fileID: 11400000, guid: 660a531ea1a9802449c71c3c4a89e403, type: 2}
   combatSkills:
   - {fileID: 11400000, guid: f8976fbac49946d42a1ba3e68c6118a8, type: 2}
   - {fileID: 11400000, guid: 743f84550d77079479449c7485668536, type: 2}

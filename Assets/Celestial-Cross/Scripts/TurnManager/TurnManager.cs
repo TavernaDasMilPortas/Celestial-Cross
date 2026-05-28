@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Celestial_Cross.Scripts.Units.Enemy;
 using CelestialCross.Combat;
 
 public class TurnManager : MonoBehaviour

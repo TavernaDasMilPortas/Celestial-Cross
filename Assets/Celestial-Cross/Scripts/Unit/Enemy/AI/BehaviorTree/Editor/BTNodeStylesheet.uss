@@ -1,0 +1,26 @@
+/* BTNodeStylesheet.uss */
+.node-composite #title {
+    background-color: #3b82f6;
+}
+.node-decorator #title {
+    background-color: #8b5cf6;
+}
+.node-condition #title {
+    background-color: #eab308;
+    color: #1c1917;
+}
+.node-action #title {
+    background-color: #22c55e;
+}
+.node-running {
+    border-color: #eab308;
+    border-width: 2px;
+}
+.node-success {
+    border-color: #22c55e;
+    border-width: 2px;
+}
+.node-failure {
+    border-color: #ef4444;
+    border-width: 2px;
+}

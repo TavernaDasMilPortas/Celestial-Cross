@@ -134,6 +134,7 @@ MonoBehaviour:
     freshApplicationBonus: 15
     targetsFriendlies: 0
     estimatedValue: 10
+    isLocked: 0
   GeneratedDescription: "<b>--- DESCRI\xC7\xC3O AUTOM\xC1TICA ---</b>\r\n- Esta \xE9
     uma habilidade do tipo Passive.\r\n- Desvia o fluxo dependendo do n\xEDvel atual
     da habilidade.\r\n- Modifica 'Bonus' (Set 10).\r\n- Seleciona automaticamente

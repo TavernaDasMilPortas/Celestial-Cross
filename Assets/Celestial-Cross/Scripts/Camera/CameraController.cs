@@ -93,6 +93,11 @@ public class CameraController : MonoBehaviour
         set => targetZoom = value;
     }
 
+    private float[] zoomLevels;
+    private int currentZoomIndex = 1;
+    private float touchZoomAccumulator = 0f;
+    private float pinchThreshold = 100f;
+
     public bool IsDragging => isTouchDragging || isMouseDragging;
 
     Unit followTarget;
@@ -224,13 +229,14 @@ public class CameraController : MonoBehaviour
         switch (cameraMode)
         {
             case CameraMode.Free:
-                // HandleZoom();
-                // HandleMouseZoom();
+                HandleZoom();
+                HandleMouseZoom();
                 break;
 
             case CameraMode.FollowUnit:
                 HandleFollow();
-                // HandleMouseZoom();
+                HandleZoom();
+                HandleMouseZoom();
                 break;
         }
 
@@ -400,7 +406,10 @@ public class CameraController : MonoBehaviour
     void HandleZoom()
     {
         if (Input.touchCount != 2)
+        {
+            touchZoomAccumulator = 0f;
             return;
+        }
 
         Touch t0 = Input.GetTouch(0);
         Touch t1 = Input.GetTouch(1);
@@ -412,8 +421,18 @@ public class CameraController : MonoBehaviour
         float currDist = Vector2.Distance(t0.position, t1.position);
 
         float delta = currDist - prevDist;
+        touchZoomAccumulator += delta;
 
-        UpdateZoomState(-delta * zoomSpeed);
+        if (touchZoomAccumulator >= pinchThreshold)
+        {
+            ChangeZoomLevel(-1); // Zoom In
+            touchZoomAccumulator = 0f;
+        }
+        else if (touchZoomAccumulator <= -pinchThreshold)
+        {
+            ChangeZoomLevel(1); // Zoom Out
+            touchZoomAccumulator = 0f;
+        }
     }
 
     void HandleMouseZoom()
@@ -421,14 +440,40 @@ public class CameraController : MonoBehaviour
         float scroll = Input.GetAxis("Mouse ScrollWheel");
         if (Mathf.Abs(scroll) > 0.001f)
         {
-            UpdateZoomState(-scroll * 10f * zoomSpeed);
+            if (scroll > 0f)
+            {
+                ChangeZoomLevel(-1); // Zoom In
+            }
+            else
+            {
+                ChangeZoomLevel(1); // Zoom Out
+            }
         }
     }
 
-    void UpdateZoomState(float delta)
+    void ChangeZoomLevel(int direction)
     {
-        targetZoom += delta;
-        targetZoom = Mathf.Clamp(targetZoom, minZoom, maxZoom);
+        if (zoomLevels == null || zoomLevels.Length == 0)
+        {
+            float baseZ = targetZoom;
+            zoomLevels = new float[] { baseZ * 0.5f, baseZ, baseZ * 2f };
+            currentZoomIndex = 1;
+        }
+
+        int closestIndex = 0;
+        float minDiff = float.MaxValue;
+        for (int i = 0; i < zoomLevels.Length; i++)
+        {
+            float diff = Mathf.Abs(targetZoom - zoomLevels[i]);
+            if (diff < minDiff)
+            {
+                minDiff = diff;
+                closestIndex = i;
+            }
+        }
+
+        currentZoomIndex = Mathf.Clamp(closestIndex + direction, 0, zoomLevels.Length - 1);
+        targetZoom = zoomLevels[currentZoomIndex];
     }
 
     // =========================
@@ -588,6 +633,11 @@ public class CameraController : MonoBehaviour
         // Começa com a visão configurada (mas garantido de não ultrapassar os limites do mapa inteiro)
         targetZoom = Mathf.Clamp(defaultInitialZoom, minZoom, maxZoom);
         cam.orthographicSize = targetZoom;
+
+        // Inicializa os 3 níveis de zoom baseados no zoom inicial (base)
+        float baseZoom = targetZoom;
+        zoomLevels = new float[] { baseZoom * 0.5f, baseZoom, baseZoom * 2f };
+        currentZoomIndex = 1;
 
         targetProjectedPoint = centerPoint;
         SnapToTarget();
@@ -795,6 +845,9 @@ public class CameraController : MonoBehaviour
         if (unit == null) return;
         Debug.Log($"[CameraController] Solicitação de seguir unidade: {unit.DisplayName}");
 
+        followTarget = unit;
+        cameraMode = CameraMode.FollowUnit;
+
         if (pendingFollowCoroutine != null)
         {
             StopCoroutine(pendingFollowCoroutine);
@@ -812,7 +865,6 @@ public class CameraController : MonoBehaviour
             yield return new WaitUntil(() => !DamagePopupManager.Instance.HasActivePopups);
         }
 
-        followTarget = unit;
         cameraMode = CameraMode.FollowUnit;
         pendingFollowCoroutine = null;
 
@@ -850,12 +902,6 @@ public class CameraController : MonoBehaviour
             return;
         }
 
-        // Foca na unidade dona da ação
-        if (followTarget != null)
-        {
-            targetProjectedPoint = followTarget.transform.position + Vector3.forward * verticalCenterOffset;
-        }
-
         // Só salva o estado original se não estivermos já focados em uma ação
         if (targetedAction == null)
         {
@@ -864,6 +910,13 @@ public class CameraController : MonoBehaviour
         }
 
         targetedAction = action;
+
+        // Foca na unidade dona da ação
+        if (followTarget != null)
+        {
+            targetProjectedPoint = followTarget.transform.position + Vector3.forward * verticalCenterOffset;
+            cameraMode = CameraMode.FollowUnit; // Força voltar a seguir a unidade ao selecionar habilidade
+        }
 
         // Se o alcance for grande, precisamos de uma visão mais ampla ou livre
         if (action.Range >= 4)

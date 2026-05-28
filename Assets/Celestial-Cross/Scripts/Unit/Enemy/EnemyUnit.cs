@@ -1,41 +1,31 @@
 using UnityEngine;
+using Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree;
 
-/// <summary>
-/// Subclasse de Unit para inimigos controlados por IA.
-/// Usa o mesmo pipeline de ações (UnitData + IExecutableDefinitionData) que o player.
-/// O AIBrain é adicionado automaticamente via RequireComponent.
-/// </summary>
-[RequireComponent(typeof(AIBrain))]
-public class EnemyUnit : Unit
+namespace Celestial_Cross.Scripts.Units.Enemy
 {
-    [Header("AI")]
-    [SerializeField] private AIBehaviorProfile behaviorProfile;
-    
-    [Tooltip("Opcional: Padrão avançado de chefes (Gatilhos de Vida e trocas de perfil).")]
-    [SerializeField] private AIPatternData patternData;
-
-    public AIBehaviorProfile BehaviorProfile => behaviorProfile;
-    public AIPatternData PatternData => patternData;
-
-    public AIBrain Brain { get; private set; }
-
-    public void SetBehaviorProfile(AIBehaviorProfile profile)
+    /// <summary>
+    /// Subclasse de Unit para inimigos controlados por IA.
+    /// O AIBrain é adicionado automaticamente via RequireComponent.
+    /// </summary>
+    [RequireComponent(typeof(AIBrain))]
+    public class EnemyUnit : Unit
     {
-        this.behaviorProfile = profile;
-    }
+        [Header("AI")]
+        [SerializeField] private BehaviorTreeSO behaviorTreeSO;
 
-    public void SetPatternData(AIPatternData pattern)
-    {
-        this.patternData = pattern;
-        if (pattern != null && pattern.initialProfile != null)
+        public BehaviorTreeSO BehaviorTree => behaviorTreeSO;
+
+        public AIBrain Brain { get; private set; }
+
+        public void SetBehaviorTree(BehaviorTreeSO tree)
         {
-            this.behaviorProfile = pattern.initialProfile;
+            this.behaviorTreeSO = tree;
         }
-    }
 
-    protected override void Awake()
-    {
-        base.Awake();
-        Brain = GetComponent<AIBrain>();
+        protected override void Awake()
+        {
+            base.Awake();
+            Brain = GetComponent<AIBrain>();
+        }
     }
 }

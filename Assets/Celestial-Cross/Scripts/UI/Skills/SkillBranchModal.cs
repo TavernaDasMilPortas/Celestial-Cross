@@ -115,7 +115,7 @@ namespace CelestialCross.UI.Skills
             if (account == null) return;
             var loadout = account.GetLoadoutForUnit(currentUnitId);
 
-            var branchTiers = currentGraph.GetBranchTiers();
+            var branchTiers = currentGraph.GetRamificationTiers();
 
             if (branchTiers == null || branchTiers.Count == 0)
             {
@@ -143,12 +143,15 @@ namespace CelestialCross.UI.Skills
                     {
                         var optGo = Instantiate(optionPrefab, optionsContainer);
                         optGo.SetActive(true);
+                        
                         var text = optGo.GetComponentInChildren<TextMeshProUGUI>();
                         if (text != null)
                         {
-                            string displayName = string.IsNullOrEmpty(option.branchName) ? option.branchId : option.branchName;
-                            text.text = displayName;
+                            text.text = option.displayName;
                         }
+
+                        // Se quiser atualizar a descrição ou ícone no futuro, adicione a lógica aqui.
+                        // ex: var descText = optGo.transform.Find("DescText")?.GetComponent<TextMeshProUGUI>();
 
                         var btn = optGo.GetComponent<Button>();
                         if (btn != null)
@@ -161,7 +164,7 @@ namespace CelestialCross.UI.Skills
                             bool isSelected = false;
                             if (selection != null && selection.selectedBranchIds.Count > capturedTier.tierIndex)
                             {
-                                isSelected = selection.selectedBranchIds[capturedTier.tierIndex] == capturedOption.branchId;
+                                isSelected = selection.selectedBranchIds[capturedTier.tierIndex] == capturedOption.flowId;
                             }
 
                             var img = optGo.GetComponent<Image>();
@@ -187,7 +190,7 @@ namespace CelestialCross.UI.Skills
                                 {
                                     sel.selectedBranchIds.Add(string.Empty);
                                 }
-                                sel.selectedBranchIds[capturedTier.tierIndex] = capturedOption.branchId;
+                                sel.selectedBranchIds[capturedTier.tierIndex] = capturedOption.flowId;
 
                                 AccountManager.Instance.SaveAccount();
                                 PopulateTiers(); // Atualiza visualmente

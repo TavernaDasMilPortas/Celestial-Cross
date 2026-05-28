@@ -35,6 +35,12 @@ public class UnitData : ScriptableObject
     [Header("Tactical Identity")]
     public UnitRole role;
     public UnitClass unitClass;
+    public int displacement = 3;
+    public int baseRange = 1;
+
+    [Header("AI")]
+    [Tooltip("Árvore de comportamento padrão, caso essa unidade seja inimiga ou use autofarm.")]
+    public Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.BehaviorTreeSO defaultBehaviorTree;
 
     [Header("UI & Visuals")]
     public Sprite icon;

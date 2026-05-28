@@ -102,7 +102,7 @@ namespace Celestial_Cross.Scripts.Units
 
                     if (caster.hasMovedThisTurn && caster.hasActedThisTurn)
                     {
-                        if (caster is global::EnemyUnit)
+                        if (caster is Celestial_Cross.Scripts.Units.Enemy.EnemyUnit)
                             TurnManager.Instance.EndTurn();
                         else    
                             PlayerController.Instance.EndTurn();
