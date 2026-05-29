@@ -55,12 +55,6 @@ namespace CelestialCross.Gacha.Editor
             topRt.offsetMin = topRt.offsetMax = Vector2.zero;
             topBar.GetComponent<Image>().color = new Color(0.05f, 0.05f, 0.08f, 1f);
 
-            var moneyTxt = CreateText(topBar.transform, "MoneyText", 24, new Vector2(0.85f, 0.2f), new Vector2(0.98f, 0.8f), Color.white);
-            so.FindProperty("moneyText").objectReferenceValue = moneyTxt.GetComponent<TextMeshProUGUI>();
-
-            var energyTxt = CreateText(topBar.transform, "EnergyText", 24, new Vector2(0.7f, 0.2f), new Vector2(0.83f, 0.8f), Color.white);
-            // Ignore energy for shop
-
             var stardustTxt = CreateText(topBar.transform, "StardustText", 24, new Vector2(0.55f, 0.2f), new Vector2(0.68f, 0.8f), new Color(1f, 0.6f, 0f));
             so.FindProperty("stardustText").objectReferenceValue = stardustTxt.GetComponent<TextMeshProUGUI>();
 
