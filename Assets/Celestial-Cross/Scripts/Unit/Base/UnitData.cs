@@ -44,7 +44,8 @@ public class UnitData : ScriptableObject
 
     [Header("UI & Visuals")]
     public Sprite icon;
-    
+    public Sprite sprite;
+
     [Tooltip("Animação base usada quando a unidade está apenas esperando.")]
     public AnimationClip idleAnim;
     
