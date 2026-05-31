@@ -18,6 +18,7 @@ namespace CelestialCross.Data.Pets
 
         public string SpeciesName;
         public Sprite Icon;
+        public Sprite sprite;
 
         [Header("Visuals (Combat)")]
         [Tooltip("Define o tipo de locomoção. O Prefab Base lerá isso para se posicionar automaticamente no chão ou voando.")]

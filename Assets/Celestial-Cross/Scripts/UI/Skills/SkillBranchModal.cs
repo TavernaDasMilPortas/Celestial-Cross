@@ -33,7 +33,7 @@ namespace CelestialCross.UI.Skills
         private Action onSelectionComplete;
         private Action onChangeRequested;
 
-        private void Start()
+        private void Awake()
         {
             if (closeButton != null)
                 closeButton.onClick.AddListener(Close);

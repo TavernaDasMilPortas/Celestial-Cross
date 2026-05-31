@@ -14,7 +14,6 @@ namespace CelestialCross.Gacha.UI
         [Header("Top Bar Currencies")]
         [SerializeField] private TextMeshProUGUI starMapsText;
         [SerializeField] private TextMeshProUGUI stardustText;
-        [SerializeField] private TextMeshProUGUI moneyText;
 
         [Header("Abas da Loja")]
         [SerializeField] private Button tabBannersBtn;
@@ -80,7 +79,6 @@ namespace CelestialCross.Gacha.UI
 
             if (starMapsText != null) starMapsText.text = $"{acc.StarMaps}";
             if (stardustText != null) stardustText.text = $"{acc.Stardust}";
-            if (moneyText != null) moneyText.text = $"Dinheiro: {acc.Money}";
 
             if (contentBanners != null && contentBanners.activeSelf && availableBanners != null && availableBanners.Count > 0)
             {

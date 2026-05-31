@@ -10,6 +10,7 @@ namespace CelestialCross.Artifacts
         public string id;
         public string setName;
         [TextArea] public string description;
+        public Sprite setFilterIcon;
 
         [global::System.Serializable]
         public struct SlotIconMapping

@@ -15,6 +15,8 @@ namespace CelestialCross.UI.Skills
         public RectTransform optionsContainer;
         public GameObject optionPrefab;
         public Button closeButton;
+        public Button equipButton;
+        public SkillBranchModal branchModal;
 
         [Header("Data")]
         public UnitCatalog unitCatalog;
@@ -22,18 +24,23 @@ namespace CelestialCross.UI.Skills
         private string currentUnitId;
         private SkillSlotType currentSlot;
         private Action onSelectionComplete;
+        private AbilityGraphSO selectedGraph;
 
-        private void Start()
+        private void Awake()
         {
             if (closeButton != null)
                 closeButton.onClick.AddListener(Close);
+            if (equipButton != null)
+                equipButton.onClick.AddListener(OnEquipClicked);
         }
 
-        public void Open(string unitId, SkillSlotType slot, Action onComplete)
+        public void Open(string unitId, SkillSlotType slot, Action onComplete, SkillBranchModal bModal = null)
         {
             currentUnitId = unitId;
             currentSlot = slot;
             onSelectionComplete = onComplete;
+            if (bModal != null) branchModal = bModal;
+            selectedGraph = null;
             
             modalRoot.SetActive(true);
             PopulateOptions();
@@ -43,6 +50,22 @@ namespace CelestialCross.UI.Skills
         {
             modalRoot.SetActive(false);
             onSelectionComplete?.Invoke();
+        }
+
+        private void OnEquipClicked()
+        {
+            if (selectedGraph != null)
+            {
+                var account = AccountManager.Instance?.PlayerAccount;
+                if (account != null)
+                {
+                    var loadout = account.GetLoadoutForUnit(currentUnitId);
+                    if (currentSlot == SkillSlotType.Slot1) loadout.Slot1SkillId = selectedGraph.name;
+                    else if (currentSlot == SkillSlotType.Slot2) loadout.Slot2SkillId = selectedGraph.name;
+                    AccountManager.Instance.SaveAccount();
+                }
+            }
+            Close();
         }
 
         private void PopulateOptions()
@@ -117,10 +140,23 @@ namespace CelestialCross.UI.Skills
                 go.SetActive(true); // Garante que a opção fique ativa e visível
                 
                 var img = go.GetComponent<Image>();
-                if (img != null && graph.abilityIcon != null)
+                if (img != null)
                 {
-                    img.sprite = graph.abilityIcon;
-                    img.color = Color.white;
+                    if (graph.abilityIcon != null)
+                    {
+                        img.sprite = graph.abilityIcon;
+                        img.color = Color.white;
+                    }
+                    else
+                    {
+                        img.sprite = null;
+                    }
+                    
+                    // Highlight selected
+                    if (selectedGraph == graph)
+                    {
+                        img.color = new Color(0.5f, 0.8f, 0.5f, 1f); // Greenish highlight
+                    }
                 }
 
                 var text = go.GetComponentInChildren<TextMeshProUGUI>();
@@ -134,12 +170,18 @@ namespace CelestialCross.UI.Skills
                 {
                     var capturedGraph = graph;
                     btn.onClick.AddListener(() => {
-                        string skillId = capturedGraph.name; // Usamos o nome do asset como ID
-                        if (currentSlot == SkillSlotType.Slot1) loadout.Slot1SkillId = skillId;
-                        else if (currentSlot == SkillSlotType.Slot2) loadout.Slot2SkillId = skillId;
-
-                        AccountManager.Instance.SaveAccount();
-                        Close();
+                        selectedGraph = capturedGraph;
+                        PopulateOptions(); // refresh visuals
+                        
+                        var tiers = capturedGraph.GetRamificationTiers();
+                        if (tiers != null && tiers.Count > 0 && branchModal != null)
+                        {
+                            modalRoot.SetActive(false);
+                            branchModal.Open(currentUnitId, capturedGraph.name, capturedGraph, currentSlot, () => {
+                                modalRoot.SetActive(true);
+                                PopulateOptions();
+                            });
+                        }
                     });
                 }
             }

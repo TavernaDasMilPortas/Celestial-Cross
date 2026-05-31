@@ -23,7 +23,8 @@ public class HubSceneController : MonoBehaviour
 {
     [Header("Flow")]
     [SerializeField] private string preparationSceneName = "PreparationScene";
-    [SerializeField] private string restSceneName = "RestScene";
+    [SerializeField] private string inventorySceneName = "InventoryScene";
+    [SerializeField] private string unitSceneName = "UnitScene";
     [SerializeField] private string shopSceneName = "ShopScene";
     [SerializeField] private string dialogueSceneName = "DialogueScene";
 
@@ -54,6 +55,7 @@ public class HubSceneController : MonoBehaviour
     [Header("Buttons & Prefabs")]
     [SerializeField] private Button genericButtonPrefab;
     [SerializeField] private Button btnGoInventory;
+    [SerializeField] private Button btnGoUnit;
     [SerializeField] private Button btnGoShop;  // NOVO
     [SerializeField] private Button btnBackFromDungeons;
     [SerializeField] private Button btnBackFromLevels;
@@ -73,6 +75,7 @@ public class HubSceneController : MonoBehaviour
         }
 
         if (btnGoInventory != null) btnGoInventory.onClick.AddListener(GoToInventoryScene);
+        if (btnGoUnit != null) btnGoUnit.onClick.AddListener(GoToUnitScene);
         if (btnGoShop != null) btnGoShop.onClick.AddListener(GoToShopScene);
         if (btnBackFromDungeons != null) btnBackFromDungeons.onClick.AddListener(ShowMainPanel);
         if (btnBackFromLevels != null) btnBackFromLevels.onClick.AddListener(OnBackFromLevels);
@@ -113,8 +116,14 @@ public class HubSceneController : MonoBehaviour
 
     public void GoToInventoryScene()
     {
-        if (!string.IsNullOrEmpty(restSceneName))
-            SceneManager.LoadScene(restSceneName);
+        if (!string.IsNullOrEmpty(inventorySceneName))
+            SceneManager.LoadScene(inventorySceneName);
+    }
+
+    public void GoToUnitScene()
+    {
+        if (!string.IsNullOrEmpty(unitSceneName))
+            SceneManager.LoadScene(unitSceneName);
     }
 
     private void ClearContainer(Transform container)

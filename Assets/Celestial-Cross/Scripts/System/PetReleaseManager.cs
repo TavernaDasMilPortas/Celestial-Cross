@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using CelestialCross.Data.Pets;
 using System.Collections.Generic;
 
@@ -15,9 +15,22 @@ namespace CelestialCross.System
         private void Awake()
         {
             if (Instance != null && Instance != this)
-                Destroy(gameObject);
+            {
+                Debug.LogWarning("[PetReleaseManager] Outra instância ativa detectada no Awake! Destruindo apenas este componente.");
+                Destroy(this);
+            }
             else
+            {
                 Instance = this;
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (Instance == this)
+            {
+                Instance = null;
+            }
         }
 
         public void ReleasePet(string petUUID)

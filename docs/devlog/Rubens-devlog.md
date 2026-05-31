@@ -219,7 +219,22 @@ A visualização e a modularidade da Behavior Tree eram limitadas. Nós composto
 
 ---
 
+## 20. Estabilização da Cena de Inventário, Correção de Escala e Tradução de Filtros
+**Data: 31/05/2026**
+### **Problemas:**
+*   A transição da cena Hub para a cena de Inventário resultava em uma tela vazia. A causa era o `Canvas_Inventory` instanciado com escala `(0.29, 0.29, 0.29)` e posição deslocada `(157, 279)` devido a preview settings ativos no Unity Editor durante a execução do script Builder.
+*   O `PetReleaseManager` no Canvas causava auto-destruição do Canvas inteiro devido a referências estáticas duplicadas que não limpavam após o Play Mode (Domain Reload desativado).
+*   Os dropdowns de filtros de artefatos mostravam strings brutas do enum em inglês, tornando a experiência de usuário confusa.
+
+### **Soluções:**
+*   **Inicialização Segura do Canvas:** Atualizados os construtores de criação de Canvas nos scripts de build (`UIBuilder_InventoryScene.cs` e `UIBuilder_UnitScene.cs`) para redefinir e resetar de forma absoluta o `RectTransform` (pos=(0,0), escala=(1,1,1), e âncoras em full stretch).
+*   **Ajuste de Singleton:** Modificado `PetReleaseManager` para destruir apenas a si mesmo (`Destroy(this)`) em caso de duplicatas e resetar `Instance = null` no `OnDestroy`.
+*   **Tradução Dinâmica dos Dropdowns:** No `ArtifactFilterModal.cs`, adicionado mapeamento dinâmico que puxa os valores de `StatType` e os formata em português amigável (`Vida (Fixo)`, `Ataque (%)`, etc.) nos dropdowns, mapeando de volta para a string do enum bruto no momento de aplicar os filtros no inventário.
+
+---
+
 ## Próximos Passos
+*   Arrumar os dropdowns do filtro de artefatos para que eles apareçam perfeitamente com os nomes amigáveis dos atributos em jogo.
 *   Arrumar anchors da Shop Scene para garantir responsividade em diferentes resoluções.
 *   Aprofundar as mecânicas das Inteligências Artificiais usando o novo sistema de Variáveis de Unidade.
 *   Verificar em Play Mode as transições visuais e o submodal de detalhes de status durante batalhas reais.
