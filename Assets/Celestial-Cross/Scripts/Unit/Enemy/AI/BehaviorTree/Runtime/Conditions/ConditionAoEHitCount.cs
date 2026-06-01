@@ -23,9 +23,14 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Runtime.Conditions
                     }
                 }
 
-                if (hits >= minimumHitCount) return BTResult.Success;
+                if (hits >= minimumHitCount)
+                {
+                    CelestialCross.Combat.CombatLogger.Log($"   Condição AoEHitCount: Atingiria {hits} inimigos (Mínimo: {minimumHitCount}) -> Sucesso", CelestialCross.Combat.LogCategory.AI);
+                    return BTResult.Success;
+                }
             }
 
+            CelestialCross.Combat.CombatLogger.Log($"   Condição AoEHitCount: Nenhum grupo atende ao mínimo de {minimumHitCount} acertos", CelestialCross.Combat.LogCategory.AI);
             return BTResult.Failure;
         }
     }

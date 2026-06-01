@@ -15,15 +15,18 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Runtime.Conditions
                 a.hint.category.ToString() == abilityCategory
             );
 
+            bool isReady = false;
             foreach (var ability in matchingAbilities)
             {
                 if (ability.action != null)
                 {
-                    return BTResult.Success;
+                    isReady = true;
+                    break;
                 }
             }
 
-            return BTResult.Failure;
+            CelestialCross.Combat.CombatLogger.Log($"   Condição AbilityReady ({abilityCategory}): {(isReady ? "Disponível" : "Não disponível/Em cooldown")}", CelestialCross.Combat.LogCategory.AI);
+            return isReady ? BTResult.Success : BTResult.Failure;
         }
     }
 }

@@ -30,6 +30,7 @@ namespace CelestialCross.Editor
             logger.showDamage = GUILayout.Toggle(logger.showDamage, "Damage", "Button", GUILayout.ExpandWidth(true));
             logger.showHealing = GUILayout.Toggle(logger.showHealing, "Heal", "Button", GUILayout.ExpandWidth(true));
             logger.showGraphs = GUILayout.Toggle(logger.showGraphs, "Graph", "Button", GUILayout.ExpandWidth(true));
+            logger.showAI = GUILayout.Toggle(logger.showAI, "AI", "Button", GUILayout.ExpandWidth(true));
             EditorGUILayout.EndHorizontal();
             
             EditorGUILayout.BeginHorizontal();
@@ -65,6 +66,7 @@ namespace CelestialCross.Editor
                     LogCategory.Passive => new Color(0.8f, 0.4f, 0.8f, 0.2f),
                     LogCategory.Condition => new Color(0.8f, 0.8f, 0.2f, 0.2f),
                     LogCategory.Graph => new Color(0.4f, 0.4f, 0.8f, 0.2f),
+                    LogCategory.AI => new Color(1.0f, 0.6f, 0.0f, 0.15f),
                     _ => Color.white
                 };
 
@@ -142,6 +144,7 @@ namespace CelestialCross.Editor
                 LogCategory.Condition => "#FFFF55",
                 LogCategory.Ability => "#55FFFF",
                 LogCategory.Graph => "#a29bfe",
+                LogCategory.AI => "#ffa502",
                 _ => "#FFFFFF"
             };
         }
@@ -158,6 +161,7 @@ namespace CelestialCross.Editor
                 LogCategory.Condition => logger.showConditions,
                 LogCategory.Ability => logger.showAbilities,
                 LogCategory.Graph => logger.showGraphs,
+                LogCategory.AI => logger.showAI,
                 _ => true
             };
         }

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cf6610ba3c29a74aa7d2416f7a095d4, type: 3}
   m_Name: Preset_BossPhased
   m_EditorClassIdentifier: Assembly-CSharp::Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.BehaviorTreeSO
-  treeName: Phased Boss (Complexo)
+  treeName: Phased Boss
   description: "Chefe complexo de 2 fases. Fase 1: Foca em ataques de \xE1rea. Fase
     2 (HP < 40%): Ganha escudo, se cura e ataca intensamente."
   NodeData:
@@ -21,26 +21,36 @@ MonoBehaviour:
     NodeTitle: Root
     Position: {x: 100, y: 300}
     JsonData: 
-  - Guid: switch
-    NodeType: BTSwitchEditorNode
-    NodeTitle: Switch (Phase)
+  - Guid: val_switch
+    NodeType: BTValueSwitchEditorNode
+    NodeTitle: Value Switch
     Position: {x: 300, y: 300}
-    JsonData: '{"blackboardKey":"Phase","cases":["Phase1","Phase2"]}'
+    JsonData: '{"cases":[{"portName":"Fase2","operatorType":1,"threshold":40.0},{"portName":"Fase1","operatorType":4,"threshold":40.0}]}'
+  - Guid: get_hp_boss
+    NodeType: BTGetNumericDataEditorNode
+    NodeTitle: Get Numeric Data
+    Position: {x: 300, y: 500}
+    JsonData: '{"dataType":0}'
   - Guid: sel_phase1
     NodeType: BTSelectorEditorNode
     NodeTitle: Selector Phase 1
     Position: {x: 550, y: 100}
-    JsonData: 
+    JsonData: '{"ports":["Passo_0","Passo_1","Passo_2"]}'
   - Guid: seq_aoe
     NodeType: BTSequenceEditorNode
     NodeTitle: Sequence AoE
     Position: {x: 800, y: -20}
-    JsonData: 
-  - Guid: cond_turn
-    NodeType: BTConditionTurnNumberEditorNode
-    NodeTitle: Turn modular 2
+    JsonData: '{"ports":["Passo_0","Passo_1","Passo_2"]}'
+  - Guid: check_turn
+    NodeType: BTCheckValueEditorNode
+    NodeTitle: Check Value
     Position: {x: 1050, y: -100}
-    JsonData: '{"turnNumber":2,"operatorType":"==","targetTurn":2,"isModulo":true}'
+    JsonData: '{"operatorType":5,"threshold":2.0}'
+  - Guid: get_turn
+    NodeType: BTGetNumericDataEditorNode
+    NodeTitle: Get Numeric Data
+    Position: {x: 1300, y: -100}
+    JsonData: '{"dataType":4}'
   - Guid: cond_aoe_hits
     NodeType: BTConditionAoEHitCountEditorNode
     NodeTitle: AoE Hit Count >= 2
@@ -65,12 +75,12 @@ MonoBehaviour:
     NodeType: BTSelectorEditorNode
     NodeTitle: Selector Phase 2
     Position: {x: 550, y: 600}
-    JsonData: 
+    JsonData: '{"ports":["Passo_0","Passo_1","Passo_2"]}'
   - Guid: seq_shield
     NodeType: BTSequenceEditorNode
     NodeTitle: Sequence Buff Shield
     Position: {x: 800, y: 450}
-    JsonData: 
+    JsonData: '{"ports":["Passo_0","Passo_1"]}'
   - Guid: cond_no_shield
     NodeType: BTConditionTargetHasBuffEditorNode
     NodeTitle: No UltimateShield Buff
@@ -85,12 +95,17 @@ MonoBehaviour:
     NodeType: BTSequenceEditorNode
     NodeTitle: Sequence Panic Heal
     Position: {x: 800, y: 620}
-    JsonData: 
-  - Guid: cond_hp_low
-    NodeType: BTConditionHPPercentEditorNode
-    NodeTitle: HP < 20%
+    JsonData: '{"ports":["Passo_0","Passo_1"]}'
+  - Guid: check_panic
+    NodeType: BTCheckValueEditorNode
+    NodeTitle: Check Value
     Position: {x: 1050, y: 580}
-    JsonData: '{"threshold":20.0,"operatorType":"<"}'
+    JsonData: '{"operatorType":1,"threshold":20.0}'
+  - Guid: get_hp_panic
+    NodeType: BTGetNumericDataEditorNode
+    NodeTitle: Get Numeric Data
+    Position: {x: 1300, y: 580}
+    JsonData: '{"dataType":0}'
   - Guid: act_heal_self
     NodeType: BTActionUseAbilityEditorNode
     NodeTitle: Cast Self Heal
@@ -114,66 +129,78 @@ MonoBehaviour:
   NodeLinks:
   - ParentGuid: root
     ParentPort: Child
-    ChildGuid: switch
+    ChildGuid: val_switch
     ChildPort: Parent
-  - ParentGuid: switch
-    ParentPort: Phase1
+  - ParentGuid: get_hp_boss
+    ParentPort: Value
+    ChildGuid: val_switch
+    ChildPort: Value
+  - ParentGuid: val_switch
+    ParentPort: Fase1
     ChildGuid: sel_phase1
     ChildPort: Parent
-  - ParentGuid: switch
-    ParentPort: Phase2
+  - ParentGuid: val_switch
+    ParentPort: Fase2
     ChildGuid: sel_phase2
     ChildPort: Parent
   - ParentGuid: sel_phase1
-    ParentPort: Children
+    ParentPort: Passo_0
     ChildGuid: seq_aoe
     ChildPort: Parent
   - ParentGuid: sel_phase1
-    ParentPort: Children
+    ParentPort: Passo_1
     ChildGuid: act_atk_weak
     ChildPort: Parent
   - ParentGuid: sel_phase1
-    ParentPort: Children
+    ParentPort: Passo_2
     ChildGuid: act_move_p1
     ChildPort: Parent
   - ParentGuid: seq_aoe
-    ParentPort: Children
-    ChildGuid: cond_turn
+    ParentPort: Passo_0
+    ChildGuid: check_turn
     ChildPort: Parent
+  - ParentGuid: get_turn
+    ParentPort: Value
+    ChildGuid: check_turn
+    ChildPort: Value
   - ParentGuid: seq_aoe
-    ParentPort: Children
+    ParentPort: Passo_1
     ChildGuid: cond_aoe_hits
     ChildPort: Parent
   - ParentGuid: seq_aoe
-    ParentPort: Children
+    ParentPort: Passo_2
     ChildGuid: act_aoe
     ChildPort: Parent
   - ParentGuid: sel_phase2
-    ParentPort: Children
+    ParentPort: Passo_0
     ChildGuid: seq_shield
     ChildPort: Parent
   - ParentGuid: sel_phase2
-    ParentPort: Children
+    ParentPort: Passo_1
     ChildGuid: seq_panic_heal
     ChildPort: Parent
   - ParentGuid: sel_phase2
-    ParentPort: Children
+    ParentPort: Passo_2
     ChildGuid: act_berserk_atk
     ChildPort: Parent
   - ParentGuid: seq_shield
-    ParentPort: Children
+    ParentPort: Passo_0
     ChildGuid: cond_no_shield
     ChildPort: Parent
   - ParentGuid: seq_shield
-    ParentPort: Children
+    ParentPort: Passo_1
     ChildGuid: act_shield
     ChildPort: Parent
   - ParentGuid: seq_panic_heal
-    ParentPort: Children
-    ChildGuid: cond_hp_low
+    ParentPort: Passo_0
+    ChildGuid: check_panic
     ChildPort: Parent
+  - ParentGuid: get_hp_panic
+    ParentPort: Value
+    ChildGuid: check_panic
+    ChildPort: Value
   - ParentGuid: seq_panic_heal
-    ParentPort: Children
+    ParentPort: Passo_1
     ChildGuid: act_heal_self
     ChildPort: Parent
   - ParentGuid: get_weakest

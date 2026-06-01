@@ -4,13 +4,20 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Runtime.Conditions
     {
         public override BTResult Evaluate(AIBlackboard blackboard)
         {
-            // Simple check: is closest enemy within my base range?
-            if (blackboard.closestEnemy == null) return BTResult.Failure;
-            
-            int dist = AIGridUtility.ChebyshevDistance(blackboard.myPosition, blackboard.closestEnemy.GridPosition);
-            if (dist <= blackboard.myBaseRange)
+            if (DataInputs.TryGetValue("Target", out var targetNode) && targetNode is Data.BTGetTargetNode getTarget)
             {
-                return BTResult.Success;
+                getTarget.Evaluate(blackboard);
+                var target = getTarget.TargetResult;
+                if (target == null)
+                {
+                    CelestialCross.Combat.CombatLogger.Log($"   Condição TargetInRange: Sem alvo definido.", CelestialCross.Combat.LogCategory.AI);
+                    return BTResult.Failure;
+                }
+
+                int dist = AIGridUtility.ChebyshevDistance(blackboard.myPosition, target.GridPosition);
+                bool inRange = dist <= blackboard.myBaseRange;
+                CelestialCross.Combat.CombatLogger.Log($"   Condição TargetInRange: Alvo {target.DisplayName} à distância {dist} (Alcance: {blackboard.myBaseRange}) -> {(inRange ? "Dentro" : "Fora")}", CelestialCross.Combat.LogCategory.AI);
+                return inRange ? BTResult.Success : BTResult.Failure;
             }
             return BTResult.Failure;
         }

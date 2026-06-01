@@ -6,7 +6,17 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Runtime.Conditions
 
         public override BTResult Evaluate(AIBlackboard blackboard)
         {
-            if (blackboard.closestEnemy == null || blackboard.closestEnemy.PassiveManager == null) return BTResult.Failure;
+            string shortId = !string.IsNullOrEmpty(Guid) && Guid.Length >= 4 ? Guid.Substring(0, 4) : "Node";
+            if (blackboard.closestEnemy == null)
+            {
+                CelestialCross.Combat.CombatLogger.Log($"   Condição TargetHasBuff ({shortId}): Sem alvo mais próximo.", CelestialCross.Combat.LogCategory.AI);
+                return BTResult.Failure;
+            }
+            if (blackboard.closestEnemy.PassiveManager == null)
+            {
+                CelestialCross.Combat.CombatLogger.Log($"   Condição TargetHasBuff ({shortId}): Alvo {blackboard.closestEnemy.DisplayName} não possui PassiveManager.", CelestialCross.Combat.LogCategory.AI);
+                return BTResult.Failure;
+            }
 
             // Na arquitetura de PassiveManager da CelestialCross, assumindo métodos como HasPositiveEffects
             // Como isso é custom, vamos usar uma heurística simples se não tiver um método pronto.
@@ -14,10 +24,19 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Runtime.Conditions
             bool hasPositive = blackboard.closestEnemy.PassiveManager.HasPositiveEffects();
             bool hasNegative = blackboard.closestEnemy.PassiveManager.HasNegativeEffects();
 
-            if (checkForDebuff && hasNegative) return BTResult.Success;
-            if (!checkForDebuff && hasPositive) return BTResult.Success;
+            bool isMatch = false;
+            if (checkForDebuff)
+            {
+                isMatch = hasNegative;
+                CelestialCross.Combat.CombatLogger.Log($"   Condição TargetHasBuff ({shortId}): Checando Debuff no alvo {blackboard.closestEnemy.DisplayName} -> {(hasNegative ? "Possui debuff" : "Não possui debuff")}", CelestialCross.Combat.LogCategory.AI);
+            }
+            else
+            {
+                isMatch = hasPositive;
+                CelestialCross.Combat.CombatLogger.Log($"   Condição TargetHasBuff ({shortId}): Checando Buff no alvo {blackboard.closestEnemy.DisplayName} -> {(hasPositive ? "Possui buff" : "Não possui buff")}", CelestialCross.Combat.LogCategory.AI);
+            }
 
-            return BTResult.Failure;
+            return isMatch ? BTResult.Success : BTResult.Failure;
         }
     }
 }

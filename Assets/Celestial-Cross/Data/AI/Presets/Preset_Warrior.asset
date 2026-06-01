@@ -10,11 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8cf6610ba3c29a74aa7d2416f7a095d4, type: 3}
-  m_Name: Preset_TacticalAssassin
+  m_Name: Preset_Warrior
   m_EditorClassIdentifier: Assembly-CSharp::Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.BehaviorTreeSO
-  treeName: Tactical Assassin
-  description: Foca exclusivamente no inimigo com menor HP. Usa habilidades de dano
-    e flanqueamento.
+  treeName: Warrior
+  description: "Anda at\xE9 o inimigo mais pr\xF3ximo e depois ataca."
   NodeData:
   - Guid: root
     NodeType: BTRootEditorNode
@@ -26,31 +25,31 @@ MonoBehaviour:
     NodeTitle: Selector
     Position: {x: 300, y: 300}
     JsonData: '{"ports":["Passo_0","Passo_1"]}'
-  - Guid: seq_assassinate
+  - Guid: seq_attack
     NodeType: BTSequenceEditorNode
-    NodeTitle: Sequence Assassinate
-    Position: {x: 550, y: 150}
+    NodeTitle: Sequence Attack
+    Position: {x: 500, y: 150}
     JsonData: '{"ports":["Passo_0","Passo_1"]}'
-  - Guid: cond_atk_ready
-    NodeType: BTConditionAbilityReadyEditorNode
-    NodeTitle: Damage Ready
-    Position: {x: 800, y: 50}
-    JsonData: '{"category":0}'
-  - Guid: act_strike
+  - Guid: cond_range
+    NodeType: BTConditionTargetInRangeEditorNode
+    NodeTitle: Target In Range
+    Position: {x: 750, y: 50}
+    JsonData: 
+  - Guid: act_attack
     NodeType: BTActionUseAbilityEditorNode
-    NodeTitle: Strike Target
-    Position: {x: 800, y: 200}
+    NodeTitle: Cast Damage Skill
+    Position: {x: 750, y: 200}
     JsonData: '{"category":0}'
-  - Guid: act_flank
-    NodeType: BTActionMoveEditorNode
-    NodeTitle: Flank Target
-    Position: {x: 550, y: 450}
-    JsonData: '{"intent":2}'
-  - Guid: get_weakest_enemy
+  - Guid: get_target
     NodeType: BTGetTargetEditorNode
-    NodeTitle: Get Weakest Enemy
-    Position: {x: 1100, y: 300}
-    JsonData: '{"faction":0,"strategy":2}'
+    NodeTitle: Get Closest Enemy
+    Position: {x: 1050, y: 200}
+    JsonData: '{"faction":0,"strategy":0}'
+  - Guid: act_move
+    NodeType: BTActionMoveEditorNode
+    NodeTitle: Move to Target
+    Position: {x: 500, y: 450}
+    JsonData: '{"intent":0}'
   NodeLinks:
   - ParentGuid: root
     ParentPort: Child
@@ -58,25 +57,25 @@ MonoBehaviour:
     ChildPort: Parent
   - ParentGuid: selector
     ParentPort: Passo_0
-    ChildGuid: seq_assassinate
+    ChildGuid: seq_attack
     ChildPort: Parent
   - ParentGuid: selector
     ParentPort: Passo_1
-    ChildGuid: act_flank
+    ChildGuid: act_move
     ChildPort: Parent
-  - ParentGuid: seq_assassinate
+  - ParentGuid: seq_attack
     ParentPort: Passo_0
-    ChildGuid: cond_atk_ready
+    ChildGuid: cond_range
     ChildPort: Parent
-  - ParentGuid: seq_assassinate
+  - ParentGuid: seq_attack
     ParentPort: Passo_1
-    ChildGuid: act_strike
+    ChildGuid: act_attack
     ChildPort: Parent
-  - ParentGuid: get_weakest_enemy
+  - ParentGuid: get_target
     ParentPort: Target
-    ChildGuid: act_strike
+    ChildGuid: act_attack
     ChildPort: Target
-  - ParentGuid: get_weakest_enemy
+  - ParentGuid: get_target
     ParentPort: Target
-    ChildGuid: act_flank
+    ChildGuid: act_move
     ChildPort: Target

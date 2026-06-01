@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEditor.Experimental.GraphView;
+using System.Linq;
 
 namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Editor.Nodes
 {
@@ -54,6 +55,8 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Editor.Nodes
                 {
                     AddOutputPort(port, Port.Capacity.Single);
                 }
+                RefreshExpandedState();
+                RefreshPorts();
             }
         }
     }
@@ -146,6 +149,8 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Editor.Nodes
                 {
                     RenderCase(c);
                 }
+                RefreshExpandedState();
+                RefreshPorts();
             }
         }
     }

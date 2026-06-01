@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace CelestialCross.Combat
 {
-    public enum LogCategory { Damage, Healing, Passive, Condition, Ability, System, Graph }
+    public enum LogCategory { Damage, Healing, Passive, Condition, Ability, System, Graph, AI }
 
     [Serializable]
     public struct LogEntry
@@ -29,6 +29,7 @@ namespace CelestialCross.Combat
                 LogCategory.Condition => "#ffd700", // Dourado
                 LogCategory.Ability => "#00ffff",   // Ciano
                 LogCategory.Graph => "#a29bfe",     // Roxo suave (Grafos)
+                LogCategory.AI => "#ffa502",        // Laranja vibrante para IA
                 _ => "#ffffff"
             };
         }
@@ -49,6 +50,7 @@ namespace CelestialCross.Combat
         [HideInInspector] public bool showConditions = true;
         [HideInInspector] public bool showAbilities = true;
         [HideInInspector] public bool showGraphs = true;
+        [HideInInspector] public bool showAI = true;
         [HideInInspector] public bool showEmptyTriggers = true;
 
         private void Awake()

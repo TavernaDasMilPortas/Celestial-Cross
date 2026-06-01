@@ -43,6 +43,9 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Editor
             // Save Links
             foreach (var edge in edges)
             {
+                if (edge == null || edge.input == null || edge.output == null) continue;
+                if (edge.input.node == null || edge.output.node == null) continue;
+
                 var inputNode = edge.input.node as BTEditorNode;
                 var outputNode = edge.output.node as BTEditorNode;
 
@@ -97,9 +100,9 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Editor
                 tempNode.Initialize(nodeData.NodeTitle, nodeData.Position); 
                 tempNode.Guid = nodeData.Guid;
                 tempNode.NodeType = nodeData.NodeType;
-                tempNode.LoadFromJson(nodeData.JsonData);
 
                 _graphView.CreateNode(tempNode, nodeData.Position);
+                tempNode.LoadFromJson(nodeData.JsonData);
                 generatedNodes.Add(nodeData.Guid, tempNode);
             }
 

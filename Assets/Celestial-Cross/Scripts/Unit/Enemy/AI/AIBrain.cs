@@ -36,6 +36,14 @@ public class AIBrain : MonoBehaviour
         }
     }
 
+    public void ReinitializeTree()
+    {
+        if (enemy != null && enemy.BehaviorTree != null && runner != null)
+        {
+            runner.Initialize(enemy.BehaviorTree);
+        }
+    }
+
     void OnEnable()
     {
         TurnManager.OnTurnEnded += HandleTurnEnded;
@@ -66,7 +74,7 @@ public class AIBrain : MonoBehaviour
 
     public void ExecuteTurn()
     {
-        Debug.Log($"[AIBrain] Iniciando turno de {enemy.DisplayName}");
+        CelestialCross.Combat.CombatLogger.Log($"Iniciando turno de IA de <b>{enemy.DisplayName}</b>", CelestialCross.Combat.LogCategory.AI);
 
         if (enemy.BehaviorTree == null)
         {
@@ -84,7 +92,7 @@ public class AIBrain : MonoBehaviour
         }
         else
         {
-            Debug.Log("[AIBrain] Nenhuma ação viável. Passando turno.");
+            CelestialCross.Combat.CombatLogger.Log($"<b>{enemy.DisplayName}</b>: Nenhuma ação viável. Passando turno.", CelestialCross.Combat.LogCategory.AI);
             TurnManager.Instance.EndTurn();
         }
     }
@@ -137,7 +145,11 @@ public class AIBrain : MonoBehaviour
                 var hint = gw.Graph.aiHint;
                 blackboard.availableAbilities.Add(new AIBlackboard.AbilityInfo { action = act, hint = hint });
             }
-            else if (act.ActionName == "Ataque Básico")
+            else if (act is MoveAction)
+            {
+                blackboard.availableAbilities.Add(new AIBlackboard.AbilityInfo { action = act, hint = null });
+            }
+            else if (act is AttackAction || act.ActionName == "Ataque Básico")
             {
                 var h = new Celestial_Cross.Scripts.Units.Enemy.AI.AIAbilityHint { category = Celestial_Cross.Scripts.Units.Enemy.AI.AIAbilityHint.AbilityCategory.Damage, basePriority = 10 };
                 blackboard.availableAbilities.Add(new AIBlackboard.AbilityInfo { action = act, hint = h });

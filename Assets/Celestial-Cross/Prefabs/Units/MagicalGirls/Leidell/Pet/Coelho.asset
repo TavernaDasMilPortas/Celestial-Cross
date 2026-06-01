@@ -15,6 +15,7 @@ MonoBehaviour:
   id: Coelho
   SpeciesName: Pagem de Ouros
   Icon: {fileID: 21300000, guid: b9cfe6f5455d71a4888a427ec94b9565, type: 3}
+  sprite: {fileID: 21300000, guid: aa04c922b4e79dc4886c79c3416b76b5, type: 3}
   MovementType: 0
   IdleAnimation: {fileID: 7400000, guid: 251b7f934b90f2f45b1f5270506fe31d, type: 2}
   SkillAnimation: {fileID: 7400000, guid: 251b7f934b90f2f45b1f5270506fe31d, type: 2}

@@ -600,7 +600,7 @@ public abstract class Unit : MonoBehaviour
 
         // 5) Executáveis nativos (se houver)
         foreach (var definition in unitData.GetExecutableDefinitions()) {
-            var component = gameObject.AddComponent(definition.GetType()) as IUnitAction;
+            var component = gameObject.AddComponent(definition.GetRuntimeActionType()) as IUnitAction;
             if (component != null)
             {
                 definition.Configure(component);

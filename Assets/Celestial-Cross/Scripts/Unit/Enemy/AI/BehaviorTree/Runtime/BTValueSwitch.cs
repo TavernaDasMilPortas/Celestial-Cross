@@ -12,6 +12,8 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Runtime
             if (Data == null || Data.cases == null || Data.cases.Count == 0) return BTResult.Failure;
 
             float value = 0f;
+            string shortId = !string.IsNullOrEmpty(Guid) && Guid.Length >= 4 ? Guid.Substring(0, 4) : "Node";
+
             if (DataInputs.TryGetValue("Value", out var valNode) && valNode is Data.BTGetNumericDataNode numericNode)
             {
                 numericNode.Evaluate(blackboard);
@@ -19,8 +21,11 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Runtime
             }
             else
             {
+                CelestialCross.Combat.CombatLogger.Log($"-> <b>ValueSwitch ({shortId})</b>: Falha ao obter dados numéricos", CelestialCross.Combat.LogCategory.AI);
                 return BTResult.Failure; // No data provider
             }
+
+            CelestialCross.Combat.CombatLogger.Log($"-> <b>ValueSwitch ({shortId})</b>: Valor avaliado = {value}", CelestialCross.Combat.LogCategory.AI);
 
             foreach (var c in Data.cases)
             {
@@ -37,6 +42,7 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Runtime
 
                 if (isMatch)
                 {
+                    CelestialCross.Combat.CombatLogger.Log($"   Caso correspondente encontrado: '{c.portName}' (Operador: {c.operatorType}, Limiar: {c.threshold})", CelestialCross.Combat.LogCategory.AI);
                     if (ChildNodes.TryGetValue(c.portName, out var childNode))
                     {
                         return childNode.Evaluate(blackboard);
@@ -45,6 +51,7 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Runtime
                 }
             }
 
+            CelestialCross.Combat.CombatLogger.Log($"   ValueSwitch ({shortId}): Nenhum caso correspondente para o valor {value}", CelestialCross.Combat.LogCategory.AI);
             return BTResult.Failure;
         }
     }

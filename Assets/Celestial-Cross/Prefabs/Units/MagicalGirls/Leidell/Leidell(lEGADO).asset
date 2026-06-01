@@ -16,7 +16,11 @@ MonoBehaviour:
   displayName: Leidell
   role: 0
   unitClass: 0
+  displacement: 3
+  baseRange: 1
+  defaultBehaviorTree: {fileID: 0}
   icon: {fileID: 21300000, guid: 6c0f467186696f64ea6f117122847d44, type: 3}
+  sprite: {fileID: 21300000, guid: df397f5aadb78b746bb25e0dc6a217b7, type: 3}
   idleAnim: {fileID: 7400000, guid: 9745dc52f2b71c64b90b4740e3101456, type: 2}
   combatIdleAnim: {fileID: 7400000, guid: 9745dc52f2b71c64b90b4740e3101456, type: 2}
   baseStats:

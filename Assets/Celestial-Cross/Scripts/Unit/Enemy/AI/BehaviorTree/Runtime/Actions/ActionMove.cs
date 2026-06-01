@@ -11,7 +11,11 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Runtime.Actions
 
         public override BTResult Evaluate(AIBlackboard blackboard)
         {
-            if (blackboard.reachableTiles == null || blackboard.reachableTiles.Count == 0) return BTResult.Failure;
+            if (blackboard.reachableTiles == null || blackboard.reachableTiles.Count == 0)
+            {
+                CelestialCross.Combat.CombatLogger.Log($"   Ação ActionMove ({Data.intent}): Nenhum tile alcançável.", CelestialCross.Combat.LogCategory.AI);
+                return BTResult.Failure;
+            }
 
             if (Data.intent == BTMoveIntent.Wander)
             {
@@ -26,6 +30,7 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Runtime.Actions
                     targetUnit = null,
                     moveTarget = randomTile
                 };
+                CelestialCross.Combat.CombatLogger.Log($"   Ação ActionMove (Wander): Escolheu andar aleatoriamente para {randomTile}", CelestialCross.Combat.LogCategory.AI);
                 return BTResult.Success;
             }
 
@@ -65,7 +70,11 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Runtime.Actions
                 }
             }
 
-            if (bestTile == blackboard.myPosition) return BTResult.Failure;
+            if (bestTile == blackboard.myPosition)
+            {
+                CelestialCross.Combat.CombatLogger.Log($"   Ação ActionMove ({Data.intent}): Já está na melhor posição.", CelestialCross.Combat.LogCategory.AI);
+                return BTResult.Failure;
+            }
 
             var moveAction = blackboard.availableAbilities.FirstOrDefault(a => a.action != null && a.action.GetType().Name == "MoveAction");
             if (moveAction == null || moveAction.action == null) return BTResult.Failure;
@@ -76,6 +85,7 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Runtime.Actions
                 moveTarget = bestTile
             };
 
+            CelestialCross.Combat.CombatLogger.Log($"   Ação ActionMove ({Data.intent}): Planejou mover-se para {bestTile} em relação a {targetUnit?.DisplayName}", CelestialCross.Combat.LogCategory.AI);
             return BTResult.Success;
         }
     }

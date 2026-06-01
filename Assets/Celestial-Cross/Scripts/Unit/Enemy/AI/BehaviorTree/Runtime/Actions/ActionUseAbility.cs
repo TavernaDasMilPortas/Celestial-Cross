@@ -10,13 +10,12 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Runtime.Actions
         {
             if (blackboard.availableAbilities == null) return BTResult.Failure;
 
-            // Na arquitetura real, o IsOnCooldown precisa ser tratado pela interface IUnitAction ou por reflection
-            // Para fim de compilação sem saber a interface exata, não chamaremos IsOnCooldown diretamente se ela não existir.
-            // Pelo log anterior, a AI mantinha um AICooldownTracker para monitorar os turnos.
-            // Para simplificar, vou ignorar o cooldown aqui e deixar o BTCooldownDecorator lidar com isso.
-            
             var abilities = blackboard.availableAbilities.Where(a => a.hint != null && a.hint.category == category).ToList();
-            if (abilities.Count == 0) return BTResult.Failure;
+            if (abilities.Count == 0)
+            {
+                CelestialCross.Combat.CombatLogger.Log($"   Ação ActionUseAbility ({category}): Nenhuma habilidade disponível nesta categoria.", CelestialCross.Combat.LogCategory.AI);
+                return BTResult.Failure;
+            }
 
             var bestAbility = abilities.OrderByDescending(a => a.hint.basePriority).First();
 
@@ -42,7 +41,11 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Runtime.Actions
                 }
             }
 
-            if (target == null) return BTResult.Failure;
+            if (target == null)
+            {
+                CelestialCross.Combat.CombatLogger.Log($"   Ação ActionUseAbility ({category}): Alvo nulo.", CelestialCross.Combat.LogCategory.AI);
+                return BTResult.Failure;
+            }
 
             blackboard.bestPlan = new AIBlackboard.PlannedAction {
                 actionToExecute = bestAbility.action,
@@ -50,6 +53,8 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Runtime.Actions
                 moveTarget = null
             };
 
+            string abilityName = bestAbility.action != null ? bestAbility.action.ActionName : "Desconhecida";
+            CelestialCross.Combat.CombatLogger.Log($"   Ação ActionUseAbility ({category}): Planejou usar '{abilityName}' em <b>{target.DisplayName}</b>", CelestialCross.Combat.LogCategory.AI);
             return BTResult.Success;
         }
     }

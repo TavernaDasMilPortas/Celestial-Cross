@@ -96,6 +96,7 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Runtime
             if (editorType == "BTValueSwitchEditorNode") return "BTValueSwitch";
             if (editorType == "BTCheckValueEditorNode") return "BTCheckValue";
             if (editorType == "BTGetNumericDataEditorNode") return "BTGetNumericDataNode";
+            if (editorType == "BTGetTargetEditorNode") return "BTGetTargetNode";
             if (editorType.StartsWith("BTAction")) return editorType.Replace("BTAction", "Action").Replace("EditorNode", "");
             if (editorType.StartsWith("BTCondition")) return editorType.Replace("BTCondition", "Condition").Replace("EditorNode", "");
             return editorType.Replace("EditorNode", "");

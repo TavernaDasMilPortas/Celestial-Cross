@@ -46,20 +46,20 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Editor
                 so.NodeData = new System.Collections.Generic.List<BTNodeData>
                 {
                     new BTNodeData { Guid = "root", NodeTitle = "Root", NodeType = "BTRootEditorNode", Position = new Vector2(100, 200), JsonData = "" },
-                    new BTNodeData { Guid = "sel", NodeTitle = "Selector", NodeType = "BTSelectorEditorNode", Position = new Vector2(400, 200), JsonData = "" },
-                    new BTNodeData { Guid = "seq", NodeTitle = "Sequence", NodeType = "BTSequenceEditorNode", Position = new Vector2(700, 50), JsonData = "" },
+                    new BTNodeData { Guid = "sel", NodeTitle = "Selector", NodeType = "BTSelectorEditorNode", Position = new Vector2(400, 200), JsonData = "{\"ports\":[\"Passo_0\",\"Passo_1\"]}" },
+                    new BTNodeData { Guid = "seq", NodeTitle = "Sequence", NodeType = "BTSequenceEditorNode", Position = new Vector2(700, 50), JsonData = "{\"ports\":[\"Passo_0\",\"Passo_1\"]}" },
                     new BTNodeData { Guid = "cond_range", NodeTitle = "Alvo no Alcance", NodeType = "BTConditionTargetInRangeEditorNode", Position = new Vector2(1000, -50), JsonData = "" },
-                    new BTNodeData { Guid = "act_atk", NodeTitle = "Atacar", NodeType = "BTActionAttackEditorNode", Position = new Vector2(1000, 150), JsonData = "" },
-                    new BTNodeData { Guid = "act_mov", NodeTitle = "Mover (Agressivo)", NodeType = "BTActionMoveEditorNode", Position = new Vector2(700, 350), JsonData = "" }
+                    new BTNodeData { Guid = "act_atk", NodeTitle = "Cast Damage Skill", NodeType = "BTActionUseAbilityEditorNode", Position = new Vector2(1000, 150), JsonData = "{\"category\":0}" },
+                    new BTNodeData { Guid = "act_mov", NodeTitle = "Move to Target", NodeType = "BTActionMoveEditorNode", Position = new Vector2(700, 350), JsonData = "{\"intent\":0}" }
                 };
 
                 so.NodeLinks = new System.Collections.Generic.List<BTLinkData>
                 {
                     new BTLinkData { ParentGuid = "root", ParentPort = "Child", ChildGuid = "sel", ChildPort = "Parent" },
-                    new BTLinkData { ParentGuid = "sel", ParentPort = "Children", ChildGuid = "seq", ChildPort = "Parent" },
-                    new BTLinkData { ParentGuid = "sel", ParentPort = "Children", ChildGuid = "act_mov", ChildPort = "Parent" },
-                    new BTLinkData { ParentGuid = "seq", ParentPort = "Children", ChildGuid = "cond_range", ChildPort = "Parent" },
-                    new BTLinkData { ParentGuid = "seq", ParentPort = "Children", ChildGuid = "act_atk", ChildPort = "Parent" }
+                    new BTLinkData { ParentGuid = "sel", ParentPort = "Passo_0", ChildGuid = "seq", ChildPort = "Parent" },
+                    new BTLinkData { ParentGuid = "sel", ParentPort = "Passo_1", ChildGuid = "act_mov", ChildPort = "Parent" },
+                    new BTLinkData { ParentGuid = "seq", ParentPort = "Passo_0", ChildGuid = "cond_range", ChildPort = "Parent" },
+                    new BTLinkData { ParentGuid = "seq", ParentPort = "Passo_1", ChildGuid = "act_atk", ChildPort = "Parent" }
                 };
                 
                 EditorUtility.SetDirty(so);

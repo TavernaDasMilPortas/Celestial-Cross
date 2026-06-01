@@ -38,6 +38,7 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Runtime
                     Vector2Int next = pos + d;
                     if (visited.Contains(next)) continue;
 
+                    if (!gridMap.TileExists(next)) continue;
                     GridTile nextTile = gridMap.GetTile(next);
                     if (nextTile == null || nextTile.IsOccupied) continue;
 
