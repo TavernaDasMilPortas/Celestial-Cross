@@ -32,6 +32,7 @@ namespace CelestialCross.Scenes.Inventory
         [Header("Actions")]
         public Button applyFilterButton;
         public Button closeButton;
+        public Button resetButton;
 
         private List<string> selectedSetIDs = new List<string>();
         private List<ArtifactType> selectedTypes = new List<ArtifactType>();
@@ -40,6 +41,7 @@ namespace CelestialCross.Scenes.Inventory
         {
             if (applyFilterButton != null) applyFilterButton.onClick.AddListener(ApplyFilter);
             if (closeButton != null) closeButton.onClick.AddListener(Hide);
+            if (resetButton != null) resetButton.onClick.AddListener(ResetFilter);
 
             SetupDropdownListeners();
         }
@@ -334,12 +336,12 @@ namespace CelestialCross.Scenes.Inventory
         {
             var data = new ArtifactFilterData();
             
-            string selectedMainFriendly = mainStatDropdown != null ? mainStatDropdown.options[mainStatDropdown.value].text : "Qualquer";
+            string selectedMainFriendly = mainStatDropdown != null && mainStatDropdown.options.Count > 0 ? mainStatDropdown.options[mainStatDropdown.value].text : "Qualquer";
             var mainType = GetStatTypeFromFriendlyName(selectedMainFriendly);
             data.mainStat = mainType.HasValue ? mainType.Value.ToString() : "Qualquer";
 
             for(int i=0; i<4; i++) {
-                if (subStatsDropdowns[i] != null) {
+                if (subStatsDropdowns[i] != null && subStatsDropdowns[i].options.Count > 0) {
                     string sFriendly = subStatsDropdowns[i].options[subStatsDropdowns[i].value].text;
                     var subType = GetStatTypeFromFriendlyName(sFriendly);
                     if (subType.HasValue) data.subStats.Add(subType.Value.ToString());
@@ -350,6 +352,23 @@ namespace CelestialCross.Scenes.Inventory
 
             OnFilterApplied?.Invoke(data);
             Hide();
+        }
+
+        public void ResetFilter()
+        {
+            selectedSetIDs.Clear();
+            selectedTypes.Clear();
+
+            isUpdatingDropdowns = true;
+            if (mainStatDropdown != null && mainStatDropdown.options.Count > 0) mainStatDropdown.value = 0;
+            for (int i = 0; i < subStatsDropdowns.Length; i++)
+            {
+                if (subStatsDropdowns[i] != null && subStatsDropdowns[i].options.Count > 0) subStatsDropdowns[i].value = 0;
+            }
+            isUpdatingDropdowns = false;
+
+            UpdateDropdownOptions();
+            UpdateGridHighlights();
         }
     }
 }

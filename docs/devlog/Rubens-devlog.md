@@ -231,11 +231,28 @@ A visualização e a modularidade da Behavior Tree eram limitadas. Nós composto
 *   **Ajuste de Singleton:** Modificado `PetReleaseManager` para destruir apenas a si mesmo (`Destroy(this)`) em caso de duplicatas e resetar `Instance = null` no `OnDestroy`.
 *   **Tradução Dinâmica dos Dropdowns:** No `ArtifactFilterModal.cs`, adicionado mapeamento dinâmico que puxa os valores de `StatType` e os formata em português amigável (`Vida (Fixo)`, `Ataque (%)`, etc.) nos dropdowns, mapeando de volta para a string do enum bruto no momento de aplicar os filtros no inventário.
 
+## 21. Fluxo de Câmera e Foco da Inteligência Artificial (AI)
+**Data: 02/06/2026**
+### **Problema:**
+*   A IA agia instantaneamente ou sem feedback visual claro, impossibilitando que o jogador acompanhasse qual inimigo estava agindo, qual habilidade usava e qual o seu respectivo alvo.
+*   Erros de compilação relacionados à proteção de acesso (`CameraController.targetProjectedPoint`) bloqueavam a compilação do projeto ao tentar referenciar posições de câmera diretamente no script da IA.
+
+### **Solução:**
+*   **Fluxo Sequencial de Câmera em 4 Passos:** Implementado no `AIBrain.ExecutePlanRoutine` uma rotina visual para ações de inimigos:
+    1. A câmera foca no inimigo conjurador por um tempo determinado.
+    2. A área/alcance de ação da IA é exibida. Caso a habilidade possua alcance longo, o zoom da câmera é reduzido automaticamente para mostrar o contexto da ação.
+    3. A câmera foca na posição do alvo escolhido (unidade ou tile) e restaura o zoom anterior.
+    4. A ação é finalmente executada.
+*   **Ajuste de Acessibilidade:** Corrigido o acesso de proteção em `AIBrain.cs` alterando a chamada para a propriedade pública `TargetProjectedPoint` no `CameraController`.
+*   **Filtro de Foco por Turno:** Atualizado o `CameraController.SetActionFocus` para ignorar snaps de câmera indesejados durante o turno de IA inimiga.
+
 ---
 
 ## Próximos Passos
+*   **Ajuste do Fluxo de Fim de Combate / TurnManager:** Corrigir o fluxo de combate onde a UI de finalização de partida (modal de vitória/derrota) é aberta, mas o `TurnManager` e elementos de UI de combate (como o combat text e indicadores de turno) continuam atualizando infinitamente por baixo.
 *   Arrumar os dropdowns do filtro de artefatos para que eles apareçam perfeitamente com os nomes amigáveis dos atributos em jogo.
 *   Arrumar anchors da Shop Scene para garantir responsividade em diferentes resoluções.
 *   Aprofundar as mecânicas das Inteligências Artificiais usando o novo sistema de Variáveis de Unidade.
 *   Verificar em Play Mode as transições visuais e o submodal de detalhes de status durante batalhas reais.
+
 
