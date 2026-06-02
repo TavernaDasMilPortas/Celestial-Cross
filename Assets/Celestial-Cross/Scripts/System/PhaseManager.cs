@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using CelestialCross.System;
@@ -36,11 +36,13 @@ public class PhaseManager : MonoBehaviour
         {
             if (!playerUnits.Contains(unit))
                 playerUnits.Add(unit);
+            Debug.Log($"[PhaseManager] Player Unit Registrada: {unit.DisplayName}. Total Player Units: {playerUnits.Count}");
         }
         else if (unit.Team == Team.Enemy)
         {
             if (!enemyUnits.Contains(unit))
                 enemyUnits.Add(unit);
+            Debug.Log($"[PhaseManager] Enemy Unit Registrada: {unit.DisplayName}. Total Enemy Units: {enemyUnits.Count}");
         }
     }
 
@@ -49,16 +51,40 @@ public class PhaseManager : MonoBehaviour
         if (unit.Team == Team.Player)
         {
             playerUnits.Remove(unit);
+            Debug.Log($"[PhaseManager] Player Unit Desregistrada: {unit.DisplayName}. Restantes: {playerUnits.Count}");
         }
         else if (unit.Team == Team.Enemy)
         {
             enemyUnits.Remove(unit);
+            Debug.Log($"[PhaseManager] Enemy Unit Desregistrada: {unit.DisplayName}. Restantes: {enemyUnits.Count}");
         }
         CheckForGameEnd();
     }
 
-    private void CheckForGameEnd()
+    public bool IsUnitRegistered(Unit unit)
     {
+        if (unit.Team == Team.Player) return playerUnits.Contains(unit);
+        if (unit.Team == Team.Enemy) return enemyUnits.Contains(unit);
+        return false;
+    }
+
+    public void CheckForGameEnd()
+    {
+        playerUnits.RemoveAll(u => u == null || u.Health == null || u.Health.CurrentHealth <= 0 || !u.gameObject.activeInHierarchy);
+        enemyUnits.RemoveAll(u => u == null || u.Health == null || u.Health.CurrentHealth <= 0 || !u.gameObject.activeInHierarchy);
+
+        Debug.Log($"[PhaseManager] Checking game end. Player units count: {playerUnits.Count}, Enemy units count: {enemyUnits.Count}");
+        for (int i = 0; i < playerUnits.Count; i++)
+        {
+            if (playerUnits[i] != null)
+                Debug.Log($" - Player Unit [{i}]: {playerUnits[i].DisplayName} | HP: {playerUnits[i].Health?.CurrentHealth} | Active: {playerUnits[i].gameObject.activeInHierarchy}");
+        }
+        for (int i = 0; i < enemyUnits.Count; i++)
+        {
+            if (enemyUnits[i] != null)
+                Debug.Log($" - Enemy Unit [{i}]: {enemyUnits[i].DisplayName} | HP: {enemyUnits[i].Health?.CurrentHealth} | Active: {enemyUnits[i].gameObject.activeInHierarchy}");
+        }
+
         if (playerUnits.Count == 0)
         {
             EndPhase(Team.Enemy); // Inimigos venceram
@@ -102,12 +128,13 @@ public class PhaseManager : MonoBehaviour
                     ReturnToHub();
             }, isVictory);
         }
-        else if (!string.IsNullOrWhiteSpace(hubSceneName))
+        else
         {
             // Derrota ou sem erro/loot especial: Mostra ui de derrota vazia
             CelestialCross.Giulia_UI.VictoryRewardUI.ShowVictoryUIWithXP(null, null, () => 
             {
-                ReturnToHub();
+                if (!string.IsNullOrWhiteSpace(hubSceneName))
+                    ReturnToHub();
             }, isVictory);
         }
     }

@@ -18,9 +18,13 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Runtime
         public int currentTurnNumber;
         public Vector2Int myPosition;
         public int myBaseRange;
+        public Unit MyUnit;
         
         public class AbilityInfo {
             public IUnitAction action;
+            public AbilitySubtype subtype;
+            public int range;
+            public AreaPatternData areaPattern;
             public AIAbilityHint hint;
         }
         public List<AbilityInfo> availableAbilities = new List<AbilityInfo>();

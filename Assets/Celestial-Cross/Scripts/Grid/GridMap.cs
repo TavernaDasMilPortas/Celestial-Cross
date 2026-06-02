@@ -128,6 +128,19 @@ public class GridMap : MonoBehaviour
         var unitObj = Instantiate(prefab, worldPos, Quaternion.identity, transform);
         spawnedUnits.Add(unitObj);
 
+        var unit = unitObj.GetComponent<Unit>();
+        if (unit == null)
+        {
+            Debug.LogWarning($"[GridMap] Prefab '{prefab.name}' não possui componente Unit.");
+            Destroy(unitObj);
+            return null;
+        }
+
+        unit.Team = team;
+        unit.GridPosition = gridPos;
+        tile.IsOccupied = true;
+        tile.OccupyingUnit = unit;
+
         var configurator = unitObj.GetComponent<UnitRuntimeConfigurator>();
         if (configurator == null)
         {
@@ -137,18 +150,6 @@ public class GridMap : MonoBehaviour
         }
 
         configurator.Initialize(unitData, runtimePetData, petSpeciesData);
-
-        var unit = unitObj.GetComponent<Unit>();
-        if (unit == null)
-        {
-            Debug.LogWarning($"[GridMap] Prefab '{prefab.name}' não possui componente Unit.");
-            return null;
-        }
-
-        unit.Team = team;
-        unit.GridPosition = gridPos;
-        tile.IsOccupied = true;
-        tile.OccupyingUnit = unit;
         
         var visual = unitObj.GetComponentInChildren<UnitVisualController>();
         if (visual != null && phaseMap != null)
@@ -459,6 +460,7 @@ public class GridMap : MonoBehaviour
                 u.GridPosition = spawn.gridPosition;
                 tiles[spawn.gridPosition].IsOccupied = true;
                 tiles[spawn.gridPosition].OccupyingUnit = u;
+                u.Initialize();
             }
         }
     }

@@ -18,14 +18,14 @@ MonoBehaviour:
   unitClass: 0
   displacement: 3
   baseRange: 1
-  defaultBehaviorTree: {fileID: 11400000, guid: 1f89f9f7c9cc9ab4093336e6e0ef88bc, type: 2}
+  defaultBehaviorTree: {fileID: 11400000, guid: b0faee783a4de594596afdcb3bceb014, type: 2}
   icon: {fileID: 21300000, guid: 238f041d6a6113a45b128674deb101e6, type: 3}
   sprite: {fileID: 0}
   idleAnim: {fileID: 7400000, guid: e1b5aa6273945c742876809cba01a93b, type: 2}
   combatIdleAnim: {fileID: 7400000, guid: e1b5aa6273945c742876809cba01a93b, type: 2}
   baseStats:
     health: 300
-    attack: 10
+    attack: 100
     defense: 10
     speed: 8
     criticalChance: 10
@@ -34,7 +34,7 @@ MonoBehaviour:
     effectResistance: 0
   maxStats:
     health: 300
-    attack: 10
+    attack: 100
     defense: 10
     speed: 8
     criticalChance: 10

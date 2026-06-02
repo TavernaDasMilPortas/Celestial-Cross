@@ -24,17 +24,22 @@ MonoBehaviour:
     NodeType: BTSelectorEditorNode
     NodeTitle: Selector
     Position: {x: 300, y: 300}
-    JsonData: 
+    JsonData: '{"ports":["Passo_0","Passo_1","Passo_2"]}'
   - Guid: seq_retreat
     NodeType: BTSequenceEditorNode
     NodeTitle: Sequence Retreat
     Position: {x: 550, y: 100}
-    JsonData: 
-  - Guid: cond_dist
-    NodeType: BTConditionDistanceToTargetEditorNode
-    NodeTitle: Distance <= 2
+    JsonData: '{"ports":["Passo_0","Passo_1"]}'
+  - Guid: check_dist
+    NodeType: BTCheckValueEditorNode
+    NodeTitle: Check Value
     Position: {x: 800, y: -20}
-    JsonData: '{"distance":2,"operatorType":"<="}'
+    JsonData: '{"operatorType":2,"threshold":2.0}'
+  - Guid: get_dist
+    NodeType: BTGetNumericDataEditorNode
+    NodeTitle: Get Numeric Data
+    Position: {x: 1100, y: -20}
+    JsonData: '{"dataType":3}'
   - Guid: act_retreat
     NodeType: BTActionMoveEditorNode
     NodeTitle: Retreat (Flee)
@@ -44,7 +49,7 @@ MonoBehaviour:
     NodeType: BTSequenceEditorNode
     NodeTitle: Sequence Cast Ranged
     Position: {x: 550, y: 350}
-    JsonData: 
+    JsonData: '{"ports":["Passo_0","Passo_1"]}'
   - Guid: cond_ready
     NodeType: BTConditionAbilityReadyEditorNode
     NodeTitle: Damage Skill Ready
@@ -71,31 +76,35 @@ MonoBehaviour:
     ChildGuid: selector
     ChildPort: Parent
   - ParentGuid: selector
-    ParentPort: Children
+    ParentPort: Passo_0
     ChildGuid: seq_retreat
     ChildPort: Parent
   - ParentGuid: selector
-    ParentPort: Children
+    ParentPort: Passo_1
     ChildGuid: seq_ability
     ChildPort: Parent
   - ParentGuid: selector
-    ParentPort: Children
+    ParentPort: Passo_2
     ChildGuid: act_approach
     ChildPort: Parent
   - ParentGuid: seq_retreat
-    ParentPort: Children
-    ChildGuid: cond_dist
+    ParentPort: Passo_0
+    ChildGuid: check_dist
     ChildPort: Parent
   - ParentGuid: seq_retreat
-    ParentPort: Children
+    ParentPort: Passo_1
     ChildGuid: act_retreat
     ChildPort: Parent
+  - ParentGuid: get_dist
+    ParentPort: Value
+    ChildGuid: check_dist
+    ChildPort: Value
   - ParentGuid: seq_ability
-    ParentPort: Children
+    ParentPort: Passo_0
     ChildGuid: cond_ready
     ChildPort: Parent
   - ParentGuid: seq_ability
-    ParentPort: Children
+    ParentPort: Passo_1
     ChildGuid: act_ability
     ChildPort: Parent
   - ParentGuid: get_target

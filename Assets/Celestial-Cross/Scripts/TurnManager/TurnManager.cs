@@ -32,6 +32,28 @@ public class TurnManager : MonoBehaviour
     // COMBAT FLOW
     // =============================
 
+    void OnEnable()
+    {
+        if (PhaseManager.Instance != null)
+            PhaseManager.Instance.OnPhaseEnded += HandlePhaseEnded;
+    }
+
+    void OnDisable()
+    {
+        if (PhaseManager.Instance != null)
+            PhaseManager.Instance.OnPhaseEnded -= HandlePhaseEnded;
+    }
+
+    private void HandlePhaseEnded(Team winningTeam)
+    {
+        combatStarted = false;
+        StopAllCoroutines();
+        turnQueue.Clear();
+        actedUnits.Clear();
+        CurrentUnit = null;
+        Debug.Log("[TurnManager] Combate encerrado. Filas de turnos limpas e coroutines paradas.");
+    }
+
     public void StartCombat(List<Unit> units)
     {
         if (units == null || units.Count == 0)
@@ -44,7 +66,7 @@ public class TurnManager : MonoBehaviour
         actedUnits.Clear();
         roundStartUnit = turnQueue.FirstOrDefault();
         RoundCounter = 1;
-        combatStarted = false;
+        combatStarted = true; // Iniciou o combate! Agora NextTurn pode rodar.
 
         Debug.Log($"[TurnManager] Combate iniciado. Rodada {RoundCounter}");
         OnQueueChanged?.Invoke(turnQueue);
@@ -61,6 +83,13 @@ public class TurnManager : MonoBehaviour
 
     void NextTurn()
     {
+        if (PhaseManager.Instance != null)
+        {
+            PhaseManager.Instance.CheckForGameEnd();
+        }
+
+        if (!combatStarted) return;
+
         // 1. Limpar unidades mortas ou inativas de ambas as listas
         turnQueue.RemoveAll(u => u == null || !u.gameObject.activeInHierarchy);
         actedUnits.RemoveAll(u => u == null || !u.gameObject.activeInHierarchy);
@@ -139,11 +168,13 @@ public class TurnManager : MonoBehaviour
 
     public void EndTurn()
     {
+        if (!combatStarted) return;
         StartCoroutine(CoEndTurn());
     }
 
     private IEnumerator CoEndTurn()
     {
+        if (!combatStarted) yield break;
         if (CurrentUnit != null)
             CurrentUnit.GetComponentInChildren<UnitVisualController>()?.SetCombatState(false);
             
@@ -158,6 +189,7 @@ public class TurnManager : MonoBehaviour
         // Pequeno delay para a UI respirar antes do próximo turno
         yield return new WaitForSeconds(0.5f);
 
+        if (!combatStarted) yield break;
         NextTurn();
     }
 

@@ -22,7 +22,9 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Runtime.Actions
                 var tilesList = blackboard.reachableTiles.ToList();
                 var randomTile = tilesList[UnityEngine.Random.Range(0, tilesList.Count)];
                 
-                var wMoveAction = blackboard.availableAbilities.FirstOrDefault(a => a.action != null && a.action.GetType().Name == "MoveAction");
+                var wMoveAction = blackboard.availableAbilities.FirstOrDefault(a => a.action != null && (a.action is Celestial_Cross.Scripts.Units.GraphActionWrapper gw && gw.Subtype == AbilitySubtype.Movement)) 
+                               ?? blackboard.availableAbilities.FirstOrDefault(a => a.action != null && a.action.GetType().Name == "MoveAction");
+
                 if (wMoveAction == null || wMoveAction.action == null) return BTResult.Failure;
 
                 blackboard.bestPlan = new AIBlackboard.PlannedAction {
@@ -50,6 +52,31 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Runtime.Actions
             Vector2Int bestTile = blackboard.myPosition;
             int bestScore = -9999;
 
+            if (targetUnit != null)
+            {
+                int myDist = AIGridUtility.ChebyshevDistance(blackboard.myPosition, targetUnit.GridPosition);
+                if (Data.intent == BTMoveIntent.Approach)
+                {
+                    int idealRange = 1;
+                    var offensiveAbilities = blackboard.availableAbilities.Where(a => a.subtype == AbilitySubtype.Attack || a.subtype == AbilitySubtype.Debuff).ToList();
+                    if (offensiveAbilities.Count > 0)
+                        idealRange = offensiveAbilities.Max(a => a.range);
+
+                    if (myDist > idealRange)
+                        bestScore = -myDist;
+                    else
+                        bestScore = 1000 - ((idealRange - myDist) * 10);
+                }
+                else if (Data.intent == BTMoveIntent.Flee)
+                {
+                    bestScore = myDist;
+                }
+            }
+            else
+            {
+                bestScore = 0; // Sem alvo, a melhor opção é ficar parado (score 0)
+            }
+
             foreach (var tile in blackboard.reachableTiles)
             {
                 int score = 0;
@@ -58,7 +85,23 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Runtime.Actions
                 {
                     int dist = AIGridUtility.ChebyshevDistance(tile, targetUnit.GridPosition);
                     if (Data.intent == BTMoveIntent.Approach)
-                        score = -dist; // Closer is better
+                    {
+                        int idealRange = 1;
+                        var offensiveAbilities = blackboard.availableAbilities.Where(a => a.subtype == AbilitySubtype.Attack || a.subtype == AbilitySubtype.Debuff).ToList();
+                        if (offensiveAbilities.Count > 0)
+                            idealRange = offensiveAbilities.Max(a => a.range);
+
+                        if (dist > idealRange)
+                        {
+                            score = -dist; // Longe do ideal: quanto mais perto, melhor
+                        }
+                        else
+                        {
+                            // Dentro do alcance de ataque! 
+                            // Ranged preferem ficar no limite do range para não tomar dano melee.
+                            score = 1000 - ((idealRange - dist) * 10);
+                        }
+                    }
                     else if (Data.intent == BTMoveIntent.Flee)
                         score = dist; // Farther is better
                 }
@@ -70,13 +113,17 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Runtime.Actions
                 }
             }
 
+            Debug.Log($"[ActionMove] Caster: {blackboard.MyUnit.DisplayName} at {blackboard.myPosition}. Reachable tiles count: {blackboard.reachableTiles.Count}. Best tile selected: {bestTile} with score {bestScore}.");
+
             if (bestTile == blackboard.myPosition)
             {
                 CelestialCross.Combat.CombatLogger.Log($"   Ação ActionMove ({Data.intent}): Já está na melhor posição.", CelestialCross.Combat.LogCategory.AI);
                 return BTResult.Failure;
             }
 
-            var moveAction = blackboard.availableAbilities.FirstOrDefault(a => a.action != null && a.action.GetType().Name == "MoveAction");
+            var moveAction = blackboard.availableAbilities.FirstOrDefault(a => a.action != null && (a.action is Celestial_Cross.Scripts.Units.GraphActionWrapper gw && gw.Subtype == AbilitySubtype.Movement)) 
+                          ?? blackboard.availableAbilities.FirstOrDefault(a => a.action != null && a.action.GetType().Name == "MoveAction");
+
             if (moveAction == null || moveAction.action == null) return BTResult.Failure;
 
             blackboard.bestPlan = new AIBlackboard.PlannedAction {

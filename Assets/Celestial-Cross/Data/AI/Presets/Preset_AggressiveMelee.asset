@@ -25,22 +25,22 @@ MonoBehaviour:
     NodeType: BTSelectorEditorNode
     NodeTitle: Selector
     Position: {x: 300, y: 300}
-    JsonData: 
+    JsonData: '{"ports":["Passo_0","Passo_1"]}'
   - Guid: seq_attack
     NodeType: BTSequenceEditorNode
     NodeTitle: Sequence Attack
     Position: {x: 500, y: 150}
-    JsonData: 
+    JsonData: '{"ports":["Passo_0","Passo_1"]}'
   - Guid: cond_range
     NodeType: BTConditionTargetInRangeEditorNode
     NodeTitle: Target In Range
     Position: {x: 750, y: 50}
     JsonData: 
   - Guid: act_attack
-    NodeType: BTActionAttackEditorNode
-    NodeTitle: Attack Target
+    NodeType: BTActionUseAbilityEditorNode
+    NodeTitle: Cast Damage Skill
     Position: {x: 750, y: 200}
-    JsonData: 
+    JsonData: '{"category":0}'
   - Guid: get_target
     NodeType: BTGetTargetEditorNode
     NodeTitle: Get Closest Enemy
@@ -57,19 +57,19 @@ MonoBehaviour:
     ChildGuid: selector
     ChildPort: Parent
   - ParentGuid: selector
-    ParentPort: Children
+    ParentPort: Passo_0
     ChildGuid: seq_attack
     ChildPort: Parent
   - ParentGuid: selector
-    ParentPort: Children
+    ParentPort: Passo_1
     ChildGuid: act_move
     ChildPort: Parent
   - ParentGuid: seq_attack
-    ParentPort: Children
+    ParentPort: Passo_0
     ChildGuid: cond_range
     ChildPort: Parent
   - ParentGuid: seq_attack
-    ParentPort: Children
+    ParentPort: Passo_1
     ChildGuid: act_attack
     ChildPort: Parent
   - ParentGuid: get_target
@@ -79,4 +79,8 @@ MonoBehaviour:
   - ParentGuid: get_target
     ParentPort: Target
     ChildGuid: act_move
+    ChildPort: Target
+  - ParentGuid: get_target
+    ParentPort: Target
+    ChildGuid: cond_range
     ChildPort: Target

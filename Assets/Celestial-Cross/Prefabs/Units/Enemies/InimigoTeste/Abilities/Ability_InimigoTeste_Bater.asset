@@ -17,31 +17,23 @@ MonoBehaviour:
   abilityDescription: Ability description here...
   displayRange: 1
   NodeLinks:
-  - BaseNodeGuid: 36db5073-6145-44aa-add8-a5157089d29d
-    PortName: Out
-    TargetNodeGuid: 4d020f68-6960-4b3c-9a23-e3dfe0eaf357
-    TargetPortName: In
   - BaseNodeGuid: 4d020f68-6960-4b3c-9a23-e3dfe0eaf357
     PortName: Out
     TargetNodeGuid: 4a6b544b-5d32-4acc-bc5a-9f790e3fc13f
     TargetPortName: In
+  - BaseNodeGuid: 6c716545-3b99-483f-a602-c0509f367c23
+    PortName: Out
+    TargetNodeGuid: 4d020f68-6960-4b3c-9a23-e3dfe0eaf357
+    TargetPortName: In
   - BaseNodeGuid: 4a6b544b-5d32-4acc-bc5a-9f790e3fc13f
+    PortName: Out
+    TargetNodeGuid: a19f98d8-1e35-4835-ace2-06ebcfc2811d
+    TargetPortName: In
+  - BaseNodeGuid: a19f98d8-1e35-4835-ace2-06ebcfc2811d
     PortName: Out
     TargetNodeGuid: f915a1fb-0e94-4394-b0bc-f9294a5721e3
     TargetPortName: In
   NodeData:
-  - Guid: 6c716545-3b99-483f-a602-c0509f367c23
-    NodeType: StartNode
-    NodeTitle: Start
-    Position: {x: 100, y: 200}
-    JsonData: '{"type":1,"subtype":0,"isBuff":false}'
-    areaPattern: {fileID: 0}
-  - Guid: 36db5073-6145-44aa-add8-a5157089d29d
-    NodeType: StartNode
-    NodeTitle: Start
-    Position: {x: 517, y: 152}
-    JsonData: '{"type":0,"subtype":0,"isBuff":true}'
-    areaPattern: {fileID: 0}
   - Guid: 4d020f68-6960-4b3c-9a23-e3dfe0eaf357
     NodeType: TriggerNode
     NodeTitle: Trigger Event
@@ -54,11 +46,23 @@ MonoBehaviour:
     Position: {x: 1077, y: 169}
     JsonData: '{"reusePrevious":false,"sourceType":0,"mode":0,"range":3,"multipleTargets":false,"maxTargets":1,"origin":1,"strategy":0,"attributeType":0,"factionType":2,"targetCount":1,"autoRotate":true,"preferredDirection":0,"patternReferenceId":"","areaPattern":{"instanceID":0},"rangeVariable":"","maxTargetsVariable":"max_targets_4a6b","useExtraRangeVariable":false}'
     areaPattern: {fileID: 0}
+  - Guid: 6c716545-3b99-483f-a602-c0509f367c23
+    NodeType: StartNode
+    NodeTitle: Start
+    Position: {x: 378, y: 185}
+    JsonData: '{"type":1,"subtype":1,"isBuff":false}'
+    areaPattern: {fileID: 0}
+  - Guid: a19f98d8-1e35-4835-ace2-06ebcfc2811d
+    NodeType: VariableModifierNode
+    NodeTitle: Modifier
+    Position: {x: 1321, y: 135}
+    JsonData: '{"variableName":"Damage","operation":0,"value":1.2000000476837159,"valueVariableReference":""}'
+    areaPattern: {fileID: 0}
   - Guid: f915a1fb-0e94-4394-b0bc-f9294a5721e3
     NodeType: DamageEffectNode
     NodeTitle: Damage Effect
-    Position: {x: 1448, y: 203}
-    JsonData: '{"variableReference":"dmg_amount_f915","scalings":[{"statType":3,"percentage":100.0,"useTargetStat":false}],"scaleWithDistance":false,"distanceScaleFactor":0.10000000149011612}'
+    Position: {x: 1572, y: 169}
+    JsonData: '{"variableReference":"Damage","scalings":[{"statType":3,"percentage":100.0,"useTargetStat":false}],"scaleWithDistance":false,"distanceScaleFactor":0.10000000149011612}'
     areaPattern: {fileID: 0}
   Dependencies: []
   Variables:
@@ -67,6 +71,9 @@ MonoBehaviour:
     description: 
   - name: dmg_amount_f915
     initialValue: 10
+    description: 
+  - name: Damage
+    initialValue: 0
     description: 
   MaxLevel: 1
   aiHint:
@@ -79,4 +86,6 @@ MonoBehaviour:
     estimatedValue: 10
     isLocked: 0
   GeneratedDescription: "<b>--- DESCRI\xC7\xC3O AUTOM\xC1TICA ---</b>\r\n- Esta \xE9
-    uma habilidade do tipo Active. Subtipo: None.\r\n"
+    uma habilidade do tipo Active. Subtipo: Attack.\r\n- Escolhe manualmente unidade(s)
+    a um range de 3 a partir de Point.\r\n- Modifica 'Damage' (Set 1,2).\r\n- Dano
+    escalado (1 stats).\r\n"

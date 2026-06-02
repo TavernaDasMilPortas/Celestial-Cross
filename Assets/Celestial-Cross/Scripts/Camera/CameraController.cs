@@ -909,6 +909,13 @@ public class CameraController : MonoBehaviour
             originalMode = cameraMode;
         }
 
+        // Se for o turno da IA (Inimigo), não alteramos o foco ou modo de câmera
+        if (TurnManager.Instance != null && TurnManager.Instance.CurrentUnit != null && TurnManager.Instance.CurrentUnit.Team == Team.Enemy)
+        {
+            targetedAction = action;
+            return;
+        }
+
         targetedAction = action;
 
         // Foca na unidade dona da ação

@@ -226,6 +226,15 @@ public abstract class Unit : MonoBehaviour
         VariableStore = new UnitVariableStore(this);
     }
  
+    protected virtual void Start()
+    {
+        // Safe fallback in case it wasn't spawned by a manager that calls Initialize
+        if (PhaseManager.Instance != null && !PhaseManager.Instance.IsUnitRegistered(this))
+        {
+            Initialize();
+        }
+    }
+
     public virtual void Initialize()
     {
         if (PhaseManager.Instance != null)
@@ -674,6 +683,17 @@ public abstract class Unit : MonoBehaviour
         // 1. Desativar componentes
         GetComponent<Collider>().enabled = false;
         // Adicione aqui outros componentes a serem desativados, como IA, scripts de movimento, etc.
+
+        // Limpar o Grid
+        if (GridMap.Instance != null)
+        {
+            var tile = GridMap.Instance.GetTile(GridPosition);
+            if (tile != null && tile.OccupyingUnit == this)
+            {
+                tile.IsOccupied = false;
+                tile.OccupyingUnit = null;
+            }
+        }
 
         // 2. Ativar animação/efeito de morte
         // Ex: GetComponent<Animator>().SetTrigger("Die");

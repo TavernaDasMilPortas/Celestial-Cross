@@ -19,11 +19,5 @@ MonoBehaviour:
   Enemies:
   - UnitData: {fileID: 11400000, guid: 44b481785305ce14896d60bc64211682, type: 2}
     GridPosition: {x: 5, y: 4}
-    OverrideBehaviorTree: {fileID: 11400000, guid: 1f89f9f7c9cc9ab4093336e6e0ef88bc, type: 2}
-  - UnitData: {fileID: 11400000, guid: 44b481785305ce14896d60bc64211682, type: 2}
-    GridPosition: {x: 5, y: 3}
-    OverrideBehaviorTree: {fileID: 11400000, guid: 1f89f9f7c9cc9ab4093336e6e0ef88bc, type: 2}
-  - UnitData: {fileID: 11400000, guid: 44b481785305ce14896d60bc64211682, type: 2}
-    GridPosition: {x: 5, y: 2}
-    OverrideBehaviorTree: {fileID: 11400000, guid: 1f89f9f7c9cc9ab4093336e6e0ef88bc, type: 2}
+    OverrideBehaviorTree: {fileID: 11400000, guid: 25b178091dd086d419a0b800c0fa9232, type: 2}
   VictoryRewards: {fileID: 0}

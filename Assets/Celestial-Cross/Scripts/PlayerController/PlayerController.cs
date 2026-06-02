@@ -104,33 +104,10 @@ public class PlayerController : MonoBehaviour
         // Se estamos clicando fora da grid, podemos simplesmente ignorar
         if (targetPos.x == -1 && targetPos.y == -1) return;
 
-        if (targetPos == activeUnit.CurrentAction.Target)
-        {
-            // O HighlightArea foi desativado aqui para não colidir com o TargetSelector!
-            return;
-        }
-
-        activeUnit.CurrentAction.Target = targetPos;
-        
-        var pattern = activeUnit.CurrentAction.GetAreaPattern();
-        if (pattern != null && pattern.canRotate)
-        {
-            var direction = GetDirection(activeUnit.GridPosition, targetPos);
-            _currentArea = AreaResolver.ResolveCells(targetPos, pattern, direction);
-        }
-        else
-        {
-            _currentArea = AreaResolver.ResolveCells(targetPos, pattern);
-        }
-        
-        // Seção removida: PlayerController não deve mais tentar manipular o grid visualmente
-        // e apagar as camadas. O TargetSelector cuida disso de forma não destrutiva.
-        /*
-        if (GridMap.Instance != null)
-        {
-            GridMap.Instance.HighlightArea(_currentArea);
-        }
-        */
+        // O TargetSelector cuida ativamente do targeting agora.
+        // Caching activeUnit.CurrentAction.Target aqui causa conflito com o AbilityExecutor 
+        // em turnos subsequentes, pois a ação acha que a IA ou o tutorial pre-setou um alvo!
+        // activeUnit.CurrentAction.Target = targetPos; 
     }
 
     private Direction GetDirection(Vector2Int origin, Vector2Int target)

@@ -16,13 +16,52 @@ namespace Celestial_Cross.Scripts.Units
         public string ActionName => string.IsNullOrEmpty(Graph.abilityName) ? Graph.name : Graph.abilityName;
         public Sprite ActionIcon => Graph.abilityIcon;
         public string ActionDescription => Graph.abilityDescription;
-        public int Range => Graph.displayRange;
+        public int Range
+        {
+            get
+            {
+                if (Graph != null && Graph.NodeData != null)
+                {
+                    foreach (var node in Graph.NodeData)
+                    {
+                        if (node.NodeType == "TargetNode")
+                        {
+                            var targetData = JsonUtility.FromJson<Celestial_Cross.Scripts.Abilities.Graph.Runtime.TargetNodeData>(node.JsonData);
+                            if (targetData != null && targetData.range > 0)
+                                return targetData.range;
+                        }
+                        if (node.NodeType == "MoveEffectNode")
+                        {
+                            var moveData = JsonUtility.FromJson<Celestial_Cross.Scripts.Abilities.Graph.Runtime.MoveEffectNodeData>(node.JsonData);
+                            if (moveData != null && moveData.range > 0)
+                                return moveData.range;
+                        }
+                    }
+                }
+                return Graph != null && Graph.displayRange > 0 ? Graph.displayRange : 1;
+            }
+        }
 
         public int Level { get; set; } = 1;
-        public Vector2Int Target { get; set; }
+
+        private Vector2Int target = new Vector2Int(-999, -999);
+        public Vector2Int Target { get => target; set => target = value; }
         public string SlotId { get; set; } = "";
 
         public event Action<ActionForecast> OnForecastUpdated;
+
+        public AbilitySubtype Subtype
+        {
+            get
+            {
+                var startNode = Graph.NodeData.FirstOrDefault(n => n.NodeType == "StartNode");
+                if (startNode != null) {
+                    var data = JsonUtility.FromJson<Celestial_Cross.Scripts.Abilities.Graph.Runtime.StartNodeData>(startNode.JsonData);
+                    return data.subtype;
+                }
+                return AbilitySubtype.None;
+            }
+        }
 
         public GraphActionWrapper(global::Unit caster, AbilityGraphSO graph)
         {
@@ -51,6 +90,10 @@ namespace Celestial_Cross.Scripts.Units
         {
             if (AbilityExecutor.Instance != null)
             {
+                Vector2Int? presetTarget = (target.x != -999 && target.y != -999) ? target : (Vector2Int?)null;
+                
+                // Limpa o target para não influenciar execuções futuras da mesma ação
+                target = new Vector2Int(-999, -999);
                 AbilityExecutor.Instance.ExecuteGraph(caster, Graph, CombatHook.OnManualCast, () => {
                     // Reset focus
                     CameraController.Instance?.ResetFocus();
@@ -80,7 +123,7 @@ namespace Celestial_Cross.Scripts.Units
                     {
                         PlayerController.Instance?.RefreshUI();
                     }
-                }, Level, SlotId);
+                }, Level, SlotId, presetTarget);
             }
             else
             {

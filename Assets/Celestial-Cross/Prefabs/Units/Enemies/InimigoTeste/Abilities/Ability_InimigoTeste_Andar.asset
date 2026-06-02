@@ -34,7 +34,7 @@ MonoBehaviour:
     NodeType: StartNode
     NodeTitle: Start
     Position: {x: 100, y: 200}
-    JsonData: '{"type":1,"subtype":0,"isBuff":false}'
+    JsonData: '{"type":1,"subtype":2,"isBuff":false}'
     areaPattern: {fileID: 0}
   - Guid: 8f99e4c5-9466-4e2a-815d-7da8b181dd82
     NodeType: TriggerNode
@@ -73,5 +73,5 @@ MonoBehaviour:
     estimatedValue: 10
     isLocked: 0
   GeneratedDescription: "<b>--- DESCRI\xC7\xC3O AUTOM\xC1TICA ---</b>\r\n- Esta \xE9
-    uma habilidade do tipo Active. Subtipo: None.\r\n- Seleciona automaticamente
+    uma habilidade do tipo Active. Subtipo: Movement.\r\n- Seleciona automaticamente
     a si mesmo.\r\n"

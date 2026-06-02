@@ -85,6 +85,7 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Editor
                 new BTLinkData { ParentGuid = "seq_attack", ParentPort = "Passo_0", ChildGuid = "cond_range", ChildPort = "Parent" },
                 new BTLinkData { ParentGuid = "seq_attack", ParentPort = "Passo_1", ChildGuid = "act_attack", ChildPort = "Parent" },
 
+                new BTLinkData { ParentGuid = "get_target", ParentPort = "Target", ChildGuid = "cond_range", ChildPort = "Target" },
                 new BTLinkData { ParentGuid = "get_target", ParentPort = "Target", ChildGuid = "act_attack", ChildPort = "Target" },
                 new BTLinkData { ParentGuid = "get_target", ParentPort = "Target", ChildGuid = "act_move", ChildPort = "Target" }
             });

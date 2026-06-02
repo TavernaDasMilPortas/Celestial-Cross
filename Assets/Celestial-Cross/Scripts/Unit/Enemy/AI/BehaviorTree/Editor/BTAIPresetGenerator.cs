@@ -92,7 +92,8 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Editor
 
                 // Links de dados do Get Target
                 new BTLinkData { ParentGuid = "get_target", ParentPort = "Target", ChildGuid = "act_attack", ChildPort = "Target" },
-                new BTLinkData { ParentGuid = "get_target", ParentPort = "Target", ChildGuid = "act_move", ChildPort = "Target" }
+                new BTLinkData { ParentGuid = "get_target", ParentPort = "Target", ChildGuid = "act_move", ChildPort = "Target" },
+                new BTLinkData { ParentGuid = "get_target", ParentPort = "Target", ChildGuid = "cond_range", ChildPort = "Target" }
             });
 
             EditorUtility.SetDirty(so);

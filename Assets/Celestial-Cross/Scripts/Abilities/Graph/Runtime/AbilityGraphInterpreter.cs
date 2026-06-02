@@ -39,7 +39,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                 Destroy(gameObject);
             }
         }
-        public IEnumerator ExecuteGraphCoroutine(Unit caster, AbilityGraphSO graph, CombatHook hook, Action onComplete, int level = 1, string slotId = "")
+        public IEnumerator ExecuteGraphCoroutine(Unit caster, AbilityGraphSO graph, CombatHook hook, Action onComplete, int level = 1, string slotId = "", Vector2Int? presetTargetPos = null)
         {
             if (graph == null || graph.NodeData.Count == 0)
             {
@@ -53,6 +53,17 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
             var context = new CombatContext(caster);
             context.abilityLevel = level;
             context.slotId = slotId;
+
+            if (presetTargetPos.HasValue)
+            {
+                context.targetPos = presetTargetPos.Value;
+                var presetUnit = GridMap.Instance?.GetTile(presetTargetPos.Value)?.OccupyingUnit;
+                if (presetUnit != null)
+                {
+                    context.target = presetUnit;
+                    context.targets.Add(presetUnit);
+                }
+            }
 
             // Inicializar Blackboard com valores do SO
             foreach (var variable in graph.Variables)
@@ -700,7 +711,39 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
         {
             if (data.reusePrevious && context.targets != null && context.targets.Count > 0) yield break;
 
-            if (data.sourceType == GraphTargetSourceType.Manual && currentHook == CombatHook.OnManualCast)
+            if (context.source != null && context.source.Team != Team.Player)
+            {
+                // Para a IA, se o Behavior Tree forneceu um alvo explícito (targetPos), ele tem prioridade
+                if (context.targetPos.HasValue)
+                {
+                    Debug.Log($"[Interpreter] Usando alvo do Behavior Tree ({context.targetPos.Value}) para a IA.");
+                    
+                    // Se for um ataque em área, calcular os alvos na área a partir do ponto central
+                    if (data.mode == GraphTargetMode.Area && data.areaPattern != null)
+                    {
+                        var areaPoints = AreaResolver.ResolveCells(context.targetPos.Value, data.areaPattern, data.preferredDirection);
+                        context.targets.Clear();
+                        if (GridMap.Instance != null)
+                        {
+                            foreach (var pt in areaPoints)
+                            {
+                                var tile = GridMap.Instance.GetTile(pt);
+                                if (tile != null && tile.OccupyingUnit != null)
+                                {
+                                    bool isAlly = tile.OccupyingUnit.Team == context.source.Team;
+                                    if (data.factionType == GraphFactionType.Ally && !isAlly) continue;
+                                    if (data.factionType == GraphFactionType.Enemy && isAlly) continue;
+                                    
+                                    context.targets.Add(tile.OccupyingUnit);
+                                }
+                            }
+                        }
+                    }
+                    yield break;
+                }
+            }
+
+            if (data.sourceType == GraphTargetSourceType.Manual && currentHook == CombatHook.OnManualCast && context.source != null && context.source.Team == Team.Player)
             {
                 TargetingRuleData rule = new TargetingRuleData();
                 rule.mode = data.mode == GraphTargetMode.Single ? TargetingMode.Unit : TargetingMode.Area;
@@ -844,25 +887,32 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
 
                 if (data.manualDestination && AbilityExecutor.Instance != null)
                 {
-                    TargetingRuleData rule = new TargetingRuleData();
-                    rule.mode = TargetingMode.Area;
-                    rule.origin = TargetOrigin.Point;
-                    rule.allowMultiple = false;
-                    rule.maxTargets = 1;
-
-                    // Gerar whitelist se não permitir ocupados
-                    List<GridTile> whitelist = null;
-                    if (!data.allowOccupiedTiles && GridMap.Instance != null)
+                    if (context.targetPos.HasValue)
                     {
-                        whitelist = GridMap.Instance.GetAllTiles().Where(t => t != null && t.IsWalkable && (!t.IsOccupied || t.OccupyingUnit == subject)).ToList();
+                        destination = context.targetPos.Value;
                     }
+                    else
+                    {
+                        TargetingRuleData rule = new TargetingRuleData();
+                        rule.mode = TargetingMode.Area;
+                        rule.origin = TargetOrigin.Point;
+                        rule.allowMultiple = false;
+                        rule.maxTargets = 1;
 
-                    Vector2Int selectedPoint = subject.GridPosition;
-                    yield return StartCoroutine(PerformManualTargeting(context.source, subject, resolvedRange, rule, context, (units, points) => {
-                        if (points.Count > 0) selectedPoint = points[0];
-                    }, null, false, Direction.N, whitelist));
-                    
-                    destination = selectedPoint;
+                        // Gerar whitelist se não permitir ocupados
+                        List<GridTile> whitelist = null;
+                        if (!data.allowOccupiedTiles && GridMap.Instance != null)
+                        {
+                            whitelist = GridMap.Instance.GetAllTiles().Where(t => t != null && t.IsWalkable && (!t.IsOccupied || t.OccupyingUnit == subject)).ToList();
+                        }
+
+                        Vector2Int selectedPoint = subject.GridPosition;
+                        yield return StartCoroutine(PerformManualTargeting(context.source, subject, resolvedRange, rule, context, (units, points) => {
+                            if (points.Count > 0) selectedPoint = points[0];
+                        }, null, false, Direction.N, whitelist));
+                        
+                        destination = selectedPoint;
+                    }
                 }
                 else
                 {
@@ -1320,6 +1370,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
             
             // Filtro de Facção
             var filteredUnits = allUnits.Where(u => {
+                if (u == null || !u.gameObject.activeInHierarchy || (u.Health != null && u.Health.CurrentHealth <= 0)) return false;
                 if (data.factionType == GraphFactionType.Any) return true;
                 bool isAlly = u.Team == source.Team;
                 if (data.factionType == GraphFactionType.Ally) return isAlly;

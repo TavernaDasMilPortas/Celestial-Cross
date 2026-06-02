@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cf6610ba3c29a74aa7d2416f7a095d4, type: 3}
   m_Name: Preset_BossPhased
   m_EditorClassIdentifier: Assembly-CSharp::Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.BehaviorTreeSO
-  treeName: Phased Boss
+  treeName: Phased Boss (Complexo)
   description: "Chefe complexo de 2 fases. Fase 1: Foca em ataques de \xE1rea. Fase
     2 (HP < 40%): Ganha escudo, se cura e ataca intensamente."
   NodeData:

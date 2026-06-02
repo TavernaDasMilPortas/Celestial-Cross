@@ -25,17 +25,22 @@ MonoBehaviour:
     NodeType: BTSelectorEditorNode
     NodeTitle: Selector
     Position: {x: 300, y: 350}
-    JsonData: 
+    JsonData: '{"ports":["Passo_0","Passo_1","Passo_2"]}'
   - Guid: seq_heal
     NodeType: BTSequenceEditorNode
     NodeTitle: Sequence Heal
     Position: {x: 550, y: 100}
-    JsonData: 
-  - Guid: cond_ally_hp
-    NodeType: BTConditionAllyNeedsHealEditorNode
-    NodeTitle: Ally HP < 50%
+    JsonData: '{"ports":["Passo_0","Passo_1"]}'
+  - Guid: check_hp
+    NodeType: BTCheckValueEditorNode
+    NodeTitle: Check Value
     Position: {x: 800, y: 0}
-    JsonData: '{"hpThreshold":50.0,"threshold":50.0}'
+    JsonData: '{"operatorType":1,"threshold":50.0}'
+  - Guid: get_hp
+    NodeType: BTGetNumericDataEditorNode
+    NodeTitle: Get Numeric Data
+    Position: {x: 1100, y: 0}
+    JsonData: '{"dataType":2}'
   - Guid: act_heal
     NodeType: BTActionUseAbilityEditorNode
     NodeTitle: Cast Heal
@@ -50,12 +55,17 @@ MonoBehaviour:
     NodeType: BTSequenceEditorNode
     NodeTitle: Sequence Flee
     Position: {x: 550, y: 350}
-    JsonData: 
-  - Guid: cond_dist
-    NodeType: BTConditionDistanceToTargetEditorNode
-    NodeTitle: Enemy Distance <= 2
+    JsonData: '{"ports":["Passo_0","Passo_1"]}'
+  - Guid: check_dist
+    NodeType: BTCheckValueEditorNode
+    NodeTitle: Check Value
     Position: {x: 800, y: 300}
-    JsonData: '{"distance":2,"operatorType":"<="}'
+    JsonData: '{"operatorType":2,"threshold":2.0}'
+  - Guid: get_dist
+    NodeType: BTGetNumericDataEditorNode
+    NodeTitle: Get Numeric Data
+    Position: {x: 1100, y: 300}
+    JsonData: '{"dataType":3}'
   - Guid: act_flee
     NodeType: BTActionMoveEditorNode
     NodeTitle: Flee (Flee)
@@ -82,37 +92,45 @@ MonoBehaviour:
     ChildGuid: selector
     ChildPort: Parent
   - ParentGuid: selector
-    ParentPort: Children
+    ParentPort: Passo_0
     ChildGuid: seq_heal
     ChildPort: Parent
   - ParentGuid: selector
-    ParentPort: Children
+    ParentPort: Passo_1
     ChildGuid: seq_flee
     ChildPort: Parent
   - ParentGuid: selector
-    ParentPort: Children
+    ParentPort: Passo_2
     ChildGuid: act_damage
     ChildPort: Parent
   - ParentGuid: seq_heal
-    ParentPort: Children
-    ChildGuid: cond_ally_hp
+    ParentPort: Passo_0
+    ChildGuid: check_hp
     ChildPort: Parent
   - ParentGuid: seq_heal
-    ParentPort: Children
+    ParentPort: Passo_1
     ChildGuid: act_heal
     ChildPort: Parent
+  - ParentGuid: get_hp
+    ParentPort: Value
+    ChildGuid: check_hp
+    ChildPort: Value
   - ParentGuid: get_weakest_ally
     ParentPort: Target
     ChildGuid: act_heal
     ChildPort: Target
   - ParentGuid: seq_flee
-    ParentPort: Children
-    ChildGuid: cond_dist
+    ParentPort: Passo_0
+    ChildGuid: check_dist
     ChildPort: Parent
   - ParentGuid: seq_flee
-    ParentPort: Children
+    ParentPort: Passo_1
     ChildGuid: act_flee
     ChildPort: Parent
+  - ParentGuid: get_dist
+    ParentPort: Value
+    ChildGuid: check_dist
+    ChildPort: Value
   - ParentGuid: get_closest_enemy
     ParentPort: Target
     ChildGuid: act_flee

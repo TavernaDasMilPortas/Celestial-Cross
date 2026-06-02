@@ -32,6 +32,8 @@ namespace Celestial_Cross.Scripts.Combat.Execution
         public static event Action<AbilityBlueprint, List<Unit>> OnTargetPreviewChanged;
 
         private Coroutine activeAbilityRoutine;
+        
+        public bool IsExecuting => activeAbilityRoutine != null;
 
         private void Awake()
         {
@@ -74,40 +76,47 @@ namespace Celestial_Cross.Scripts.Combat.Execution
             activeAbilityRoutine = StartCoroutine(ExecuteBlueprintCoroutine(caster, blueprint, currentHook, onComplete));
         }
 
-        public void ExecuteGraph(Unit caster, AbilityGraphSO graph, CombatHook currentHook = CombatHook.OnManualCast, Action onComplete = null, int level = 1, string slotId = "")
+        public void ExecuteGraph(Unit caster, AbilityGraphSO graph, CombatHook currentHook = CombatHook.OnManualCast, Action onComplete = null, int level = 1, string slotId = "", Vector2Int? presetTargetPos = null)
         {
             if (currentHook == CombatHook.OnManualCast)
             {
                 AbortCurrentAbility();
             }
 
-            activeAbilityRoutine = StartCoroutine(ExecuteGraphCoroutine(caster, graph, currentHook, onComplete, level, slotId));
+            activeAbilityRoutine = StartCoroutine(ExecuteGraphCoroutine(caster, graph, currentHook, onComplete, level, slotId, presetTargetPos));
         }
 
-        private IEnumerator ExecuteGraphCoroutine(Unit caster, AbilityGraphSO graph, CombatHook currentHook, Action onComplete, int level = 1, string slotId = "")
+        private IEnumerator ExecuteGraphCoroutine(Unit caster, AbilityGraphSO graph, CombatHook currentHook, Action onComplete, int level = 1, string slotId = "", Vector2Int? presetTargetPos = null)
         {
-            CombatLogger.Log($"<color=white>[AbilityExecutor]</color> Iniciando grafo: <b>{graph.name}</b> (Hook: {currentHook})", LogCategory.Ability);
-            
-            if (AbilityGraphInterpreter.Instance != null)
+            try
             {
-                yield return StartCoroutine(AbilityGraphInterpreter.Instance.ExecuteGraphCoroutine(caster, graph, currentHook, onComplete, level, slotId));
-            }
-            else
-            {
-                Debug.LogError("[AbilityExecutor] AbilityGraphInterpreter não encontrado!");
-                onComplete?.Invoke();
-            }
+                CombatLogger.Log($"<color=white>[AbilityExecutor]</color> Iniciando grafo: <b>{graph.name}</b> (Hook: {currentHook})", LogCategory.Ability);
+                
+                if (AbilityGraphInterpreter.Instance != null)
+                {
+                    yield return StartCoroutine(AbilityGraphInterpreter.Instance.ExecuteGraphCoroutine(caster, graph, currentHook, onComplete, level, slotId, presetTargetPos));
+                }
+                else
+                {
+                    Debug.LogError("[AbilityExecutor] AbilityGraphInterpreter não encontrado!");
+                    onComplete?.Invoke();
+                }
 
-            // Espera todos os popups de dano sumirem antes de focar ou concluir
-            if (DamagePopupManager.Instance != null)
-            {
-                yield return new WaitUntil(() => !DamagePopupManager.Instance.HasActivePopups);
-            }
+                // Espera todos os popups de dano sumirem antes de focar ou concluir
+                if (DamagePopupManager.Instance != null)
+                {
+                    yield return new WaitUntil(() => !DamagePopupManager.Instance.HasActivePopups);
+                }
 
-            // Ao fim da ação, focar novamente no caster se o turno dele não acabou
-            if (caster != null && (caster.hasActedThisTurn == false || caster.hasMovedThisTurn == false))
+                // Ao fim da ação, focar novamente no caster se o turno dele não acabou
+                if (caster != null && (caster.hasActedThisTurn == false || caster.hasMovedThisTurn == false))
+                {
+                    CameraController.Instance?.Follow(caster);
+                }
+            }
+            finally
             {
-                CameraController.Instance?.Follow(caster);
+                activeAbilityRoutine = null;
             }
         }
 
@@ -277,6 +286,7 @@ namespace Celestial_Cross.Scripts.Combat.Execution
                 CameraController.Instance?.Follow(caster);
             }
 
+            activeAbilityRoutine = null;
             onComplete?.Invoke();
         }
     }
