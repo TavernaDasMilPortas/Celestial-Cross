@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using CelestialCross.UnitVisuals;
 
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(SpriteRenderer))]
@@ -21,6 +22,16 @@ public class UnitVisualController : MonoBehaviour
         if (unit.UnitData != null)
         {
             ApplyAnimations(unit.UnitData);
+        }
+
+        CharacterVFXManager.Instance.RegisterRenderer(unit, spriteRenderer);
+    }
+
+    private void OnDestroy()
+    {
+        if (parentUnit != null)
+        {
+            CharacterVFXManager.Instance.UnregisterRenderer(parentUnit);
         }
     }
 
