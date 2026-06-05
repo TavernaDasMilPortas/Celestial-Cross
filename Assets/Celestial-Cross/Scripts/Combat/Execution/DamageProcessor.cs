@@ -1,5 +1,6 @@
 using UnityEngine;
 using CelestialCross.Combat;
+using CelestialCross.UnitVisuals;
 
 namespace Celestial_Cross.Scripts.Combat.Execution
 {
@@ -55,6 +56,9 @@ namespace Celestial_Cross.Scripts.Combat.Execution
             // 7. Aplica na Vida Real
             context.target.Health.TakeDamage(finalDamage, context.isCritical, context.source);
 
+            // Toca efeito visual
+            CharacterVFXManager.Instance.PlayDamageEffect(context.target, context.isCritical);
+
             // 8. Hooks Pos-Dano
             context.source?.TriggerPassives(CombatHook.OnAfterDealDamage, context);
             context.target?.TriggerPassives(CombatHook.OnAfterTakeDamage, context);
@@ -96,6 +100,9 @@ namespace Celestial_Cross.Scripts.Combat.Execution
 
             // 3. Aplica na Vida
             context.target.Health.Heal(finalHeal);
+
+            // Toca efeito visual
+            CharacterVFXManager.Instance.PlayHealEffect(context.target);
 
             // 4. Hooks Pos-Cura
             context.source?.TriggerPassives(CombatHook.OnAfterDealHeal, context);
