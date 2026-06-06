@@ -166,7 +166,11 @@ public class AccountManager : MonoBehaviour
         PlayerAccount = new Account
         {
             Money = debugProfile.Money,
-            Energy = debugProfile.Energy,
+            EnergyInfo = new CelestialCross.Data.Energy.EnergyData { 
+                CurrentEnergy = debugProfile.Energy,
+                LastRegenTimestampUTC = System.DateTime.UtcNow.ToString("O"),
+                LastServerTimestampUTC = System.DateTime.UtcNow.ToString("O")
+            },
             Stardust = debugProfile.Stardust,
             StarMaps = debugProfile.StarMaps,
             OwnedUnitIDs = debugProfile.OwnedUnits.Select(u => u.UnitID).ToList(),
@@ -288,32 +292,7 @@ public class AccountManager : MonoBehaviour
 
     public void ApplyRewards(CelestialCross.Data.Dungeon.RuntimeReward reward)
     {
-        if (reward == null || PlayerAccount == null)
-            return;
-
-        PlayerAccount.Money += reward.Money;
-        PlayerAccount.Energy += reward.Energy;
-        PlayerAccount.Stardust += reward.Stardust;
-
-        if (reward.GeneratedArtifacts != null && reward.GeneratedArtifacts.Count > 0)
-        {
-            if (PlayerAccount.OwnedArtifacts == null)
-            {
-                PlayerAccount.OwnedArtifacts = new global::System.Collections.Generic.List<CelestialCross.Artifacts.ArtifactInstanceData>();
-            }
-            PlayerAccount.OwnedArtifacts.AddRange(reward.GeneratedArtifacts);
-        }
-        
-        if (reward.GeneratedPets != null && reward.GeneratedPets.Count > 0)
-        {
-            if (PlayerAccount.OwnedRuntimePets == null)
-            {
-                PlayerAccount.OwnedRuntimePets = new global::System.Collections.Generic.List<CelestialCross.Data.Pets.RuntimePetData>();
-            }
-            PlayerAccount.OwnedRuntimePets.AddRange(reward.GeneratedPets);
-        }
-
-        SaveAccount();
+        CelestialCross.System.RewardService.ApplyRuntimeRewardToAccount(reward);
     }
 
     void ApplyBootstrap(AccountBootstrapConfig config)
@@ -322,7 +301,15 @@ public class AccountManager : MonoBehaviour
             return;
 
         PlayerAccount.Money = config.StartingMoney;
-        PlayerAccount.Energy = config.StartingEnergy;
+        if (PlayerAccount.EnergyInfo == null)
+        {
+            PlayerAccount.EnergyInfo = new CelestialCross.Data.Energy.EnergyData
+            {
+                CurrentEnergy = config.StartingEnergyConfig != null ? config.StartingEnergyConfig.MaxEnergy : 100,
+                LastRegenTimestampUTC = System.DateTime.UtcNow.ToString("O"),
+                LastServerTimestampUTC = System.DateTime.UtcNow.ToString("O")
+            };
+        }
         PlayerAccount.Stardust = config.StartingStardust;
         PlayerAccount.StarMaps = config.StartingStarMaps;
 

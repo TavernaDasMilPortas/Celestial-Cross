@@ -43,7 +43,12 @@ public class Account
     public UserProfile Profile = new UserProfile();
 
     public int Money;
-    public int Energy;
+    public CelestialCross.Data.Energy.EnergyData EnergyInfo;
+    public int Energy 
+    { 
+        get => EnergyInfo != null ? EnergyInfo.CurrentEnergy : 0;
+        set { if (EnergyInfo != null) EnergyInfo.CurrentEnergy = value; }
+    }
     public int Stardust;
     public int StarMaps; // Moeda premium/invocao do gacha
 
@@ -61,6 +66,9 @@ public class Account
     
     [Header("Progresso História")]
     public List<string> CompletedNodeIDs = new List<string>();
+    public Dictionary<string, int> NodeCompletionCounts = new Dictionary<string, int>();
+    public Dictionary<string, string> NodeLastCompletionTime = new Dictionary<string, string>();
+    public List<string> UnlockedDiaryNodeIDs = new List<string>();
 
     [Header("Meta")]
     public string LastSaveTime;
@@ -82,6 +90,9 @@ public class Account
         UnitLoadouts = new List<UnitLoadout>();
         GachaPityStates = new List<CelestialCross.Gacha.GachaPityState>();
         CompletedNodeIDs = new List<string>();
+        NodeCompletionCounts = new Dictionary<string, int>();
+        NodeLastCompletionTime = new Dictionary<string, string>();
+        UnlockedDiaryNodeIDs = new List<string>();
         OwnedItems = new List<ItemQuantity>();
     }
 
@@ -97,6 +108,9 @@ public class Account
         UnitLoadouts ??= new List<UnitLoadout>();
         GachaPityStates ??= new List<CelestialCross.Gacha.GachaPityState>();
         CompletedNodeIDs ??= new List<string>();
+        NodeCompletionCounts ??= new Dictionary<string, int>();
+        NodeLastCompletionTime ??= new Dictionary<string, string>();
+        UnlockedDiaryNodeIDs ??= new List<string>();
         OwnedItems ??= new List<ItemQuantity>();
 
         // Migrar units legacy

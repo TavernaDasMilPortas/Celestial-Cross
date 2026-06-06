@@ -88,7 +88,7 @@ namespace CelestialCross.Editor
         private GUIStyle subtitleStyle;
         private GUIStyle richTextStyle;
 
-        [MenuItem("Celestial Cross/Editors/Enemy Creation Wizard")]
+        [MenuItem("Celestial Cross/1. Editors/Wizards/Enemy Creation Wizard")]
         public static void OpenWindow()
         {
             var window = GetWindow<EnemyCreationWizard>("Enemy Wizard");

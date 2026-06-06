@@ -31,6 +31,22 @@ public class PreparationSceneController : MonoBehaviour
     {
         BuildOwnedUnitButtons();
 
+        // Add fixed slots
+        if (GameFlowManager.Instance != null && GameFlowManager.Instance.FixedSlots != null)
+        {
+            foreach (var fixedSlot in GameFlowManager.Instance.FixedSlots)
+            {
+                if (fixedSlot != null && fixedSlot.UnitRef != null)
+                {
+                    string fId = fixedSlot.UnitRef.UnitID;
+                    if (!selectedUnitIds.Contains(fId))
+                    {
+                        SelectUnit(fId);
+                    }
+                }
+            }
+        }
+
         if (startBattleButton != null)
             startBattleButton.onClick.AddListener(StartBattle);
 
@@ -112,6 +128,15 @@ public class PreparationSceneController : MonoBehaviour
 
     void ToggleSelectUnit(string unitId)
     {
+        if (GameFlowManager.Instance != null && GameFlowManager.Instance.FixedSlots != null)
+        {
+            if (GameFlowManager.Instance.FixedSlots.Exists(s => s.UnitRef != null && s.UnitRef.UnitID == unitId && s.IsLocked))
+            {
+                Debug.Log($"[PreparationScene] Unidade {unitId} é obrigatória e não pode ser removida.");
+                return;
+            }
+        }
+
         if (selectedUnitIds.Contains(unitId))
         {
             DeselectUnit(unitId);

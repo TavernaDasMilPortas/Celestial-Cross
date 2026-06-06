@@ -16,7 +16,7 @@ namespace CelestialCross.Dialogue.Graph.Editor
         private DialogueGraphView _graphView;
         private DialogueGraph _currentGraph;
 
-        [MenuItem("Celestial Cross/Editors/Dialogue Graph Editor")]
+        [MenuItem("Celestial Cross/1. Editors/Dialogue Graph Editor")]
         public static void OpenWindow()
         {
             var window = GetWindow<DialogueGraphWindow>();

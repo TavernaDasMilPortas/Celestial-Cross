@@ -7,7 +7,7 @@ namespace CelestialCross.Gacha.Editor
 {
     public class UIBuilder_ShopScene
     {
-        [MenuItem("Celestial Cross/UI Builders/Screens/Shop Scene Layout")]
+        [MenuItem("Celestial Cross/3. UI Builders/1. Screens/Shop Scene Layout")]
         public static void GenerateShopUI()
         {
             Canvas canvas = GameObject.FindObjectOfType<Canvas>();

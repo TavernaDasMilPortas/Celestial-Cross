@@ -12,7 +12,7 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Editor
         private BehaviorTreeSO _currentAsset;
         private ObjectField _assetField;
 
-        [MenuItem("Celestial Cross/Editors/Behavior Tree Editor")]
+        [MenuItem("Celestial Cross/1. Editors/Behavior Tree Editor")]
         public static void OpenWindow()
         {
             var window = GetWindow<BTEditorWindow>();

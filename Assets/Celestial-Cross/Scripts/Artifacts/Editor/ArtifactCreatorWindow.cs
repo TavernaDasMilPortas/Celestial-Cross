@@ -12,7 +12,7 @@ namespace CelestialCross.Artifacts.Editor
         private ArtifactStars selectedStars = ArtifactStars.One;
         private StatType selectedMainStat;
 
-        [MenuItem("Celestial Cross/Artifacts/Artifact Creator")]
+        [MenuItem("Celestial Cross/2. Data & Assets/Artifacts/Artifact Creator")]
         public static void ShowWindow()
         {
             GetWindow<ArtifactCreatorWindow>("Artifact Forger");

@@ -10,7 +10,7 @@ namespace CelestialCross.Editor
 {
     public class TilePrefabPreparer : OdinEditorWindow
     {
-        [MenuItem("Celestial Cross/Utils/Tile Prefab Preparer")]
+        [MenuItem("Celestial Cross/4. Tools/Misc/Tile Prefab Preparer")]
         private static void OpenWindow()
         {
             var window = GetWindow<TilePrefabPreparer>("Tile Preparer");

@@ -7,7 +7,7 @@ namespace CelestialCross.UI.Builders
 {
     public static class HoleBackgroundUIBuilder
     {
-        [MenuItem("Celestial Cross/UI Builders/Screens/Generate Scrolling Hole Background")]
+        [MenuItem("Celestial Cross/3. UI Builders/1. Screens/Generate Scrolling Hole Background")]
         public static void GenerateUI()
         {
             // 1. Procurar ou criar Canvas

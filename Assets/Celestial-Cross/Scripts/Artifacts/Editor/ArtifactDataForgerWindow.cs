@@ -27,7 +27,7 @@ namespace CelestialCross.Artifacts.Editor
 
         private string lastLog;
 
-        [MenuItem("Celestial Cross/Artifacts/Artifact Data Forger (Option B)")]
+        [MenuItem("Celestial Cross/2. Data & Assets/Artifacts/Artifact Data Forger (Option B)")]
         public static void ShowWindow()
         {
             GetWindow<ArtifactDataForgerWindow>("Artifact Data Forger");

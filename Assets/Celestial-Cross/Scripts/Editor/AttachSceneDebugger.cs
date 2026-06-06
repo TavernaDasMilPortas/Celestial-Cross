@@ -2,6 +2,7 @@
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using CelestialCross.Scenes.Hub;
 
 namespace CelestialCross.Editor
 {
@@ -9,7 +10,7 @@ namespace CelestialCross.Editor
     {
         private const string HubScenePath = "Assets/Celestial-Cross/Scenes/HubScene.unity";
 
-        [MenuItem("Celestial Cross/Debug/Attach Scene Debugger to Hub")]
+        [MenuItem("Celestial Cross/5. Debug/Attach Scene Debugger to Hub")]
         public static void AttachDebugger()
         {
             // Salva cena aberta atualmente

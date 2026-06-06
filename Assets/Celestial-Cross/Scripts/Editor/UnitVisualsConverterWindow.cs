@@ -8,7 +8,7 @@ public class UnitVisualsConverterWindow : EditorWindow
     private GameObject sourcePrefab;
     private string saveFolder = "Assets/Celestial-Cross/Prefabs/Units/2D";
 
-    [MenuItem("Celestial Cross/Utils/Unit 2D Converter")]
+    [MenuItem("Celestial Cross/4. Tools/Misc/Unit 2D Converter")]
     public static void ShowWindow()
     {
         GetWindow<UnitVisualsConverterWindow>("Unit 2D Converter");

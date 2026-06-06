@@ -9,7 +9,7 @@ namespace CelestialCross.Editor.Utils
 {
     public class HubAuthUIBuilder : EditorWindow
     {
-        [MenuItem("Celestial Cross/Utils/Update Hub with Auth Layer")]
+        [MenuItem("Celestial Cross/4. Tools/Misc/Update Hub with Auth Layer")]
         public static void UpdateHubScene()
         {
             // 1. Achar o Root da UI no Hub

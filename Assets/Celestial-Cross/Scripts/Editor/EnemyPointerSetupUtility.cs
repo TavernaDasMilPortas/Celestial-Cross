@@ -8,7 +8,7 @@ using UnityEditor;
 /// </summary>
 public class EnemyPointerSetupUtility : Editor
 {
-    [MenuItem("Celestial Cross/Utilities/Setup Enemy Pointers")]
+    [MenuItem("Celestial Cross/4. Tools/Misc/Setup Enemy Pointers")]
     public static void SetupSystem()
     {
         // 1. Localiza o Canvas ativo na cena

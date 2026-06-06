@@ -7,7 +7,7 @@ public class PhaseManager : MonoBehaviour
 {
     public static PhaseManager Instance { get; private set; }
 
-    [SerializeField] private RewardPackage victoryRewards;
+    [SerializeField] private List<CelestialCross.Data.Rewards.RewardDefinition> fallbackVictoryRewards = new List<CelestialCross.Data.Rewards.RewardDefinition>();
 
     [Header("Flow")]
     [SerializeField] private string hubSceneName = "HubScene";
@@ -146,15 +146,17 @@ public class PhaseManager : MonoBehaviour
 
     private CelestialCross.Data.Dungeon.RuntimeReward GrantRewards()
     {
-        RewardPackage baseReward = null;
+        List<CelestialCross.Data.Rewards.RewardDefinition> baseRewards = fallbackVictoryRewards;
 
         if (GameFlowManager.Instance != null && GameFlowManager.Instance.SelectedLevel != null)
-            baseReward = GameFlowManager.Instance.SelectedLevel.VictoryRewards;
+        {
+            if (GameFlowManager.Instance.SelectedLevel.FirstClearRewards != null && GameFlowManager.Instance.SelectedLevel.FirstClearRewards.Count > 0)
+            {
+                baseRewards = GameFlowManager.Instance.SelectedLevel.FirstClearRewards;
+            }
+        }
 
-        if (baseReward == null)
-            baseReward = victoryRewards;
-
-        var rewardToGrant = new CelestialCross.Data.Dungeon.RuntimeReward(baseReward);
+        var rewardToGrant = CelestialCross.System.RewardService.CreateRuntimeReward(baseRewards);
 
         // --- GERAÇÃO DE LOOT PROCEDURAL E DINÂMICO ---
         if (GameFlowManager.Instance != null && GameFlowManager.Instance.SelectedDungeon != null && GameFlowManager.Instance.SelectedDungeonNode != null)

@@ -4,7 +4,7 @@ using UnityEditor;
 
 public class RenderTextureUIBuilder : EditorWindow
 {
-    [MenuItem("Celestial Cross/Setup Render Texture UI")]
+    [MenuItem("Celestial Cross/3. UI Builders/4. Utilities/Setup Render Texture UI")]
     public static void CreateRenderTextureUI()
     {
         // 1. Encontrar ou criar o Canvas Principal

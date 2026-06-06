@@ -8,7 +8,7 @@ namespace CelestialCross.Editor
 {
     public class SkillBranchUIUpdater : MonoBehaviour
     {
-        [MenuItem("Celestial Cross/UI/Update Skill Branch Modal Prefab")]
+        [MenuItem("Celestial Cross/3. UI Builders/2. Modals/Update Skill Branch Modal Prefab")]
         public static void UpdateSkillBranchModalPrefab()
         {
             // As this is a generic project update utility we can guide the designer here

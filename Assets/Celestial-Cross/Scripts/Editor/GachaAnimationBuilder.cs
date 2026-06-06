@@ -10,7 +10,7 @@ namespace CelestialCross.EditorTools
 {
     public class GachaAnimationBuilder : OdinEditorWindow
     {
-        [MenuItem("Celestial Cross/Utils/Gacha Animation Builder")]
+        [MenuItem("Celestial Cross/4. Tools/Misc/Gacha Animation Builder")]
         private static void OpenWindow()
         {
             GetWindow<GachaAnimationBuilder>("Gacha Builder").Show();

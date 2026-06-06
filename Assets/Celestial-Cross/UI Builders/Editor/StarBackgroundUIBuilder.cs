@@ -6,7 +6,7 @@ namespace CelestialCross.UI.Builders
 {
     public static class StarBackgroundUIBuilder
     {
-        [MenuItem("Celestial Cross/UI Builders/Screens/Generate Star Background")]
+        [MenuItem("Celestial Cross/3. UI Builders/1. Screens/Generate Star Background")]
         public static void GenerateUI()
         {
             Canvas canvas = GameObject.FindObjectOfType<Canvas>();

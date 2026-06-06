@@ -8,7 +8,7 @@ namespace CelestialCross.EditorArea
 {
     public class InventorySceneSetupUtility : EditorWindow
     {
-        [MenuItem("Celestial Cross/UI Builders/Skills/Setup Inventory Skill UI")]
+        [MenuItem("Celestial Cross/3. UI Builders/5. Skills/Setup Inventory Skill UI")]
         public static void SetupSkillUI()
         {
             var canvas = Object.FindObjectOfType<Canvas>();

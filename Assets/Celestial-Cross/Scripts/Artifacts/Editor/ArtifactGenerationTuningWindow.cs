@@ -11,7 +11,7 @@ namespace CelestialCross.Artifacts.Editor
         private ArtifactGenerationTuning tuning;
         private UnityEditor.Editor tuningEditor;
 
-        [MenuItem("Celestial Cross/Artifacts/Artifact Generation Tuning")]
+        [MenuItem("Celestial Cross/2. Data & Assets/Artifacts/Artifact Generation Tuning")]
         public static void ShowWindow()
         {
             GetWindow<ArtifactGenerationTuningWindow>("Tuning de Artefatos");

@@ -12,7 +12,7 @@ namespace CelestialCross.EditorArea
 {
     public class InventorySceneInspector : EditorWindow
     {
-        [MenuItem("Celestial Cross/UI Builders/Utils/Inspect Active Scene Inventory")]
+        [MenuItem("Celestial Cross/3. UI Builders/4. Utilities/Inspect Active Scene Inventory")]
         public static void InspectInventoryScene()
         {
             var now = global::System.DateTime.Now;

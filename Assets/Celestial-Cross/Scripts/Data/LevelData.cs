@@ -20,7 +20,8 @@ public class LevelData : ScriptableObject
     public List<EnemySpawnInfo> Enemies;
 
     [Header("Rewards")]
-    public RewardPackage VictoryRewards;
+    public List<CelestialCross.Data.Rewards.RewardDefinition> FirstClearRewards = new List<CelestialCross.Data.Rewards.RewardDefinition>();
+    public List<CelestialCross.Data.Rewards.RewardDefinition> RepeatRewards = new List<CelestialCross.Data.Rewards.RewardDefinition>();
 }
 
 [System.Serializable]

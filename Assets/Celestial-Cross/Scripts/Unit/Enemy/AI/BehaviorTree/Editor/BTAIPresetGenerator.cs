@@ -7,7 +7,7 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Editor
 {
     public static class BTAIPresetGenerator
     {
-        [MenuItem("Celestial Cross/AI/Generate 5 AI Presets")]
+        [MenuItem("Celestial Cross/2. Data & Assets/AI/Generate 5 AI Presets")]
         public static void GeneratePresets()
         {
             string folder = "Assets/Celestial-Cross/Data/AI";

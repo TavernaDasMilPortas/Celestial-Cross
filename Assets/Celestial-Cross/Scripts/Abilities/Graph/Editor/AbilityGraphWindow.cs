@@ -12,7 +12,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor
         private AbilityGraphSO _currentGraphAsset;
         private ObjectField _assetField;
 
-        [MenuItem("Celestial Cross/Editors/Ability Graph Editor")]
+        [MenuItem("Celestial Cross/1. Editors/Ability Graph Editor")]
         public static void OpenWindow()
         {
             var window = GetWindow<AbilityGraphWindow>();

@@ -6,7 +6,7 @@ using CelestialCross.Data.Pets;
 public class AccountBootstrapConfig : ScriptableObject
 {
     public int StartingMoney = 100;
-    public int StartingEnergy = 50;
+    public CelestialCross.Data.Energy.EnergyConfig StartingEnergyConfig;
     public int StartingStardust = 0;
     public int StartingStarMaps = 10; // Mapas das Estrelas Iniciais
 

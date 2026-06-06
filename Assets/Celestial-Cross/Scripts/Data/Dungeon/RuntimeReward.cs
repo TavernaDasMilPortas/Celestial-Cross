@@ -15,6 +15,7 @@ namespace CelestialCross.Data.Dungeon
         public int Stardust;
         public int XP;
 
+        public List<CelestialCross.Data.Rewards.RewardDefinition> SourceDefinitions = new List<CelestialCross.Data.Rewards.RewardDefinition>();
         public List<ArtifactInstanceData> GeneratedArtifacts = new List<ArtifactInstanceData>();
         public List<RuntimePetData> GeneratedPets = new List<RuntimePetData>();
         

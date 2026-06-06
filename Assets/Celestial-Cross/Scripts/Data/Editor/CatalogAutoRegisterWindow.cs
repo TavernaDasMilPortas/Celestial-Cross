@@ -10,7 +10,7 @@ namespace CelestialCross.Editor
         public UnitCatalog unitCatalog;
         public PetCatalog petCatalog;
 
-        [MenuItem("Celestial Cross/Data Config/Auto-Register Catalogs")]
+        [MenuItem("Celestial Cross/2. Data & Assets/Config/Auto-Register Catalogs")]
         public static void ShowWindow()
         {
             GetWindow<CatalogAutoRegisterWindow>("Catalog Auto-Register");

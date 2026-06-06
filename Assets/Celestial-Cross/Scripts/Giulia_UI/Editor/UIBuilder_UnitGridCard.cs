@@ -7,7 +7,7 @@ namespace CelestialCross.EditorArea
 {
     public static class UIBuilder_UnitGridCard
     {
-        [MenuItem("Celestial Cross/UI Builders/Components/Unit Grid Card Prefab")]
+        [MenuItem("Celestial Cross/3. UI Builders/3. Components/Unit Grid Card Prefab")]
         public static void GenerateUnitGridCard()
         {
             InventoryUI inventory = Object.FindObjectOfType<InventoryUI>();

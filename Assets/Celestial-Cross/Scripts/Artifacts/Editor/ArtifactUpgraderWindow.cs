@@ -10,7 +10,7 @@ namespace CelestialCross.Artifacts.Editor
         private ArtifactInstance targetArtifact;
         private string lastUpgradeLog = "";
 
-        [MenuItem("Celestial Cross/Artifacts/Artifact Upgrader")]
+        [MenuItem("Celestial Cross/2. Data & Assets/Artifacts/Artifact Upgrader")]
         public static void ShowWindow()
         {
             GetWindow<ArtifactUpgraderWindow>("Artifact Upgrader");

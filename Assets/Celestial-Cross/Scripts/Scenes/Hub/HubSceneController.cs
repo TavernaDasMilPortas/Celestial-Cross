@@ -4,383 +4,233 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
+using CelestialCross.Progression;
 
-[Serializable]
-public class HubCategory
+namespace CelestialCross.Scenes.Hub
 {
-    public string categoryName;
-    [Tooltip("Deixe preenchido para modos com várias masmorras.")]
-    public CelestialCross.Data.DungeonCatalog dungeonCatalog;
-    [Tooltip("Deixe preenchido para modos de história diretos (sem masmorras).")]
-    public LevelCatalog levelCatalog;
-    [Tooltip("Deixe preenchido para o Catálogo de Diários.")]
-    public CelestialCross.Dialogue.Data.DiaryCatalog diaryCatalog;
-    [Tooltip("Deixe preenchido para o novo Sistema de Capítulos (História/Diários).")]
-    public CelestialCross.Progression.ChapterCatalog chapterCatalog;
-}
-
-public class HubSceneController : MonoBehaviour
-{
-    [Header("Flow")]
-    [SerializeField] private string preparationSceneName = "PreparationScene";
-    [SerializeField] private string inventorySceneName = "InventoryScene";
-    [SerializeField] private string unitSceneName = "UnitScene";
-    [SerializeField] private string shopSceneName = "ShopScene";
-    [SerializeField] private string dialogueSceneName = "DialogueScene";
-
-    [Header("Categories Config")]
-    [SerializeField] private List<HubCategory> hubCategories = new List<HubCategory>();
-
-    [Header("Top Bar UI")]
-    [SerializeField] private TMP_Text moneyText;
-    [SerializeField] private TMP_Text energyText;
-
-    [Header("Panels")]
-    [SerializeField] private GameObject mainPanel;
-    [SerializeField] private GameObject dungeonsPanel;
-    [SerializeField] private GameObject levelsPanel;
-    [SerializeField] private GameObject diaryPanel;
-
-    [Header("Titles")]
-    [SerializeField] private TMP_Text dungeonsPanelTitle;
-    [SerializeField] private TMP_Text levelsPanelTitle;
-    [SerializeField] private TMP_Text diaryPanelTitle;
-
-    [Header("Containers")]
-    [SerializeField] private Transform mainCategoriesContainer;
-    [SerializeField] private Transform dungeonsContainer;
-    [SerializeField] private Transform levelsContainer;
-    [SerializeField] private Transform diaryContainer;
-    
-    [Header("Buttons & Prefabs")]
-    [SerializeField] private Button genericButtonPrefab;
-    [SerializeField] private Button btnGoInventory;
-    [SerializeField] private Button btnGoUnit;
-    [SerializeField] private Button btnGoShop;  // NOVO
-    [SerializeField] private Button btnBackFromDungeons;
-    [SerializeField] private Button btnBackFromLevels;
-    [SerializeField] private Button btnBackFromDiary;
-
-    private bool levelsCameFromDungeon = false;
-
-    void Start()
+    public class HubSceneController : MonoBehaviour
     {
-        if (AccountManager.Instance != null && AccountManager.Instance.PlayerAccount != null)
+        [Header("Flow")]
+        [SerializeField] private string preparationSceneName = "PreparationScene";
+        [SerializeField] private string inventorySceneName = "InventoryScene";
+        [SerializeField] private string unitSceneName = "UnitScene";
+        [SerializeField] private string shopSceneName = "ShopScene";
+
+        [Header("Data")]
+        [SerializeField] private List<HubCategorySO> categories = new List<HubCategorySO>();
+
+        [Header("Top Bar")]
+        [SerializeField] private TMP_Text moneyText;
+        [SerializeField] private TMP_Text energyText;
+        [SerializeField] private Button btnGoInventory;
+        [SerializeField] private Button btnGoUnit;
+        [SerializeField] private Button btnGoShop;
+
+        [Header("Stack Panel")]
+        [SerializeField] private GameObject stackPanel;
+        [SerializeField] private TMP_Text stackTitleText;
+        [SerializeField] private Transform stackContentContainer;
+        [SerializeField] private Button btnBack;
+
+        [Header("Cards & Bottom Sheet")]
+        [SerializeField] private HubCardUI genericCardPrefab;
+        [SerializeField] private BottomSheetController bottomSheet;
+
+        private Stack<Action> navigationStack = new Stack<Action>();
+        private string currentTitle = "";
+
+        void Start()
         {
+            if (AccountManager.Instance != null && AccountManager.Instance.PlayerAccount != null)
+                RefreshAccountUI();
+            else
+                AccountManager.OnAccountReady += HandleAccountReady;
+
+            if (btnGoInventory != null) btnGoInventory.onClick.AddListener(GoToInventoryScene);
+            if (btnGoUnit != null) btnGoUnit.onClick.AddListener(GoToUnitScene);
+            if (btnGoShop != null) btnGoShop.onClick.AddListener(GoToShopScene);
+            if (btnBack != null) btnBack.onClick.AddListener(PopScreen);
+
+            // Initial state
+            PushScreen("Modo de Jogo", BuildCategoryCards);
+        }
+
+        private void HandleAccountReady()
+        {
+            AccountManager.OnAccountReady -= HandleAccountReady;
             RefreshAccountUI();
         }
-        else
+
+        private void OnDestroy()
         {
-            AccountManager.OnAccountReady += HandleAccountReady;
+            AccountManager.OnAccountReady -= HandleAccountReady;
         }
 
-        if (btnGoInventory != null) btnGoInventory.onClick.AddListener(GoToInventoryScene);
-        if (btnGoUnit != null) btnGoUnit.onClick.AddListener(GoToUnitScene);
-        if (btnGoShop != null) btnGoShop.onClick.AddListener(GoToShopScene);
-        if (btnBackFromDungeons != null) btnBackFromDungeons.onClick.AddListener(ShowMainPanel);
-        if (btnBackFromLevels != null) btnBackFromLevels.onClick.AddListener(OnBackFromLevels);
-        if (btnBackFromDiary != null) btnBackFromDiary.onClick.AddListener(ShowMainPanel);
-
-        BuildCategoryButtons();
-        ShowMainPanel();
-    }
-
-    private void HandleAccountReady()
-    {
-        AccountManager.OnAccountReady -= HandleAccountReady;
-        RefreshAccountUI();
-    }
-
-    private void OnDestroy()
-    {
-        AccountManager.OnAccountReady -= HandleAccountReady;
-    }
-
-    public void GoToShopScene()
-    {
-        if (!string.IsNullOrEmpty(shopSceneName))
-            SceneManager.LoadScene(shopSceneName);
-    }
-
-    public void RefreshAccountUI()
-    {
-        if (AccountManager.Instance == null || AccountManager.Instance.PlayerAccount == null)
-            return;
-
-        if (moneyText != null)
-            moneyText.text = $"Dinheiro: {AccountManager.Instance.PlayerAccount.Money}";
-
-        if (energyText != null)
-            energyText.text = $"Energia: {AccountManager.Instance.PlayerAccount.Energy}";
-    }
-
-    public void GoToInventoryScene()
-    {
-        if (!string.IsNullOrEmpty(inventorySceneName))
-            SceneManager.LoadScene(inventorySceneName);
-    }
-
-    public void GoToUnitScene()
-    {
-        if (!string.IsNullOrEmpty(unitSceneName))
-            SceneManager.LoadScene(unitSceneName);
-    }
-
-    private void ClearContainer(Transform container)
-    {
-        if (container == null) return;
-        foreach (Transform child in container)
-            Destroy(child.gameObject);
-    }
-
-    private void BuildCategoryButtons()
-    {
-        ClearContainer(mainCategoriesContainer);
-
-        if (hubCategories == null) return;
-
-        foreach (var cat in hubCategories)
+        public void RefreshAccountUI()
         {
-            Button btn = Instantiate(genericButtonPrefab, mainCategoriesContainer);
-            btn.gameObject.SetActive(true);
-
-            TMP_Text label = btn.GetComponentInChildren<TMP_Text>();
-            if (label != null) label.text = cat.categoryName;
-
-            btn.onClick.AddListener(() => OnCategoryClicked(cat));
+            if (AccountManager.Instance == null || AccountManager.Instance.PlayerAccount == null) return;
+            if (moneyText != null) moneyText.text = $"Dinheiro: {AccountManager.Instance.PlayerAccount.Money}";
+            if (energyText != null) energyText.text = $"Energia: {AccountManager.Instance.PlayerAccount.Energy}";
         }
-    }
 
-    private void OnCategoryClicked(HubCategory category)
-    {
-        if (category.dungeonCatalog != null)
+        #region Navigation Stack
+        public void PushScreen(string title, Action buildAction)
         {
-            if (dungeonsPanelTitle != null) dungeonsPanelTitle.text = category.categoryName;
-            BuildDungeonButtons(category.dungeonCatalog);
-            ShowDungeonsPanel();
+            navigationStack.Push(buildAction);
+            currentTitle = title;
+            ExecuteCurrentScreen();
         }
-        else if (category.levelCatalog != null)
+
+        public void PopScreen()
         {
-            if (levelsPanelTitle != null) levelsPanelTitle.text = category.categoryName;
-            levelsCameFromDungeon = false;
-            BuildLevelButtonsForCatalog(category.levelCatalog);
-            ShowLevelsPanel();
-        }
-        else if (category.diaryCatalog != null)
-        {
-            if (diaryPanelTitle != null) diaryPanelTitle.text = category.categoryName;
-            BuildDiaryButtons(category.diaryCatalog);
-            ShowDiaryPanel();
-        }
-        else if (category.chapterCatalog != null)
-        {
-            if (diaryPanelTitle != null) diaryPanelTitle.text = category.categoryName;
-            BuildChapterButtons(category.chapterCatalog);
-            ShowDiaryPanel(); // Usamos o painel de diário por enquanto, ou um específico no futuro
-        }
-        else
-        {
-            Debug.LogWarning($"[HubSceneController] Categoria '{category.categoryName}' não tem catálogo configurado.");
-        }
-    }
-
-    private void BuildChapterButtons(CelestialCross.Progression.ChapterCatalog catalog)
-    {
-        ClearContainer(diaryContainer);
-        if (catalog == null) return;
-
-        // Pegar dados de progresso e unidades para filtrar
-        var account = AccountManager.Instance?.PlayerAccount;
-        HashSet<string> completedNodes = new HashSet<string>(account?.CompletedNodeIDs ?? new List<string>());
-        List<string> ownedUnits = account?.OwnedUnitIDs ?? new List<string>();
-
-        // Usar o método de filtro do catálogo
-        var availableChapters = catalog.GetUnlockedChapters(completedNodes, ownedUnits);
-
-        foreach (var chapter in availableChapters)
-        {
-            Button btn = Instantiate(genericButtonPrefab, diaryContainer);
-            btn.gameObject.SetActive(true);
-
-            TMP_Text label = btn.GetComponentInChildren<TMP_Text>();
-            if (label != null) label.text = chapter.ChapterTitle;
-
-            // Ao clicar no capítulo, abrimos a lista de nós (Nodes) dele
-            // Aqui poderíamos ter uma tela específica, mas para simplificar, 
-            // vamos carregar o primeiro nó não concluído do capítulo.
-            btn.onClick.AddListener(() => {
-                Debug.Log($"Abrindo Capítulo: {chapter.ChapterTitle}");
-                // Lógica personalizada de navegação de capítulo...
-            });
-        }
-    }
-
-    public void ShowMainPanel()
-    {
-        if (mainPanel != null) mainPanel.SetActive(true);
-        if (dungeonsPanel != null) dungeonsPanel.SetActive(false);
-        if (levelsPanel != null) levelsPanel.SetActive(false);
-        if (diaryPanel != null) diaryPanel.SetActive(false);
-    }
-
-    public void ShowDungeonsPanel()
-    {
-        if (mainPanel != null) mainPanel.SetActive(false);
-        if (dungeonsPanel != null) dungeonsPanel.SetActive(true);
-        if (levelsPanel != null) levelsPanel.SetActive(false);
-        if (diaryPanel != null) diaryPanel.SetActive(false);
-    }
-
-    public void ShowLevelsPanel()
-    {
-        if (mainPanel != null) mainPanel.SetActive(false);
-        if (dungeonsPanel != null) dungeonsPanel.SetActive(false);
-        if (levelsPanel != null) levelsPanel.SetActive(true);
-        if (diaryPanel != null) diaryPanel.SetActive(false);
-    }
-
-    public void ShowDiaryPanel()
-    {
-        if (mainPanel != null) mainPanel.SetActive(false);
-        if (dungeonsPanel != null) dungeonsPanel.SetActive(false);
-        if (levelsPanel != null) levelsPanel.SetActive(false);
-        if (diaryPanel != null) diaryPanel.SetActive(true);
-    }
-
-    private void OnBackFromLevels()
-    {
-        if (levelsCameFromDungeon)
-            ShowDungeonsPanel();
-        else
-            ShowMainPanel();
-    }
-
-    private void BuildDungeonButtons(CelestialCross.Data.DungeonCatalog catalog)
-    {
-        ClearContainer(dungeonsContainer);
-
-        if (catalog == null || catalog.Dungeons == null) return;
-
-        foreach (var dungeon in catalog.Dungeons)
-        {
-            if (dungeon == null) continue;
-
-            Button btn = Instantiate(genericButtonPrefab, dungeonsContainer);
-            btn.gameObject.SetActive(true);
-
-            TMP_Text label = btn.GetComponentInChildren<TMP_Text>();
-            if (label != null)
-                label.text = string.IsNullOrWhiteSpace(dungeon.DungeonName) ? dungeon.name : dungeon.DungeonName;
-
-            btn.onClick.AddListener(() => 
+            if (navigationStack.Count > 1)
             {
-                if (levelsPanelTitle != null) levelsPanelTitle.text = label.text;
-                levelsCameFromDungeon = true;
-                BuildLevelButtonsForDungeon(dungeon);
-                ShowLevelsPanel();
-            });
+                navigationStack.Pop(); // Remove current
+                ExecuteCurrentScreen();
+            }
         }
-    }
 
-    private void BuildLevelButtonsForDungeon(CelestialCross.Data.Dungeon.DungeonBaseSO dungeon)
-    {
-        ClearContainer(levelsContainer);
-
-        if (dungeon == null || dungeon.Levels == null) return;
-
-        foreach (var node in dungeon.Levels)
+        private void ExecuteCurrentScreen()
         {
-            if (node == null || node.LevelRef == null) continue;
+            if (navigationStack.Count == 0) return;
 
-            Button btn = Instantiate(genericButtonPrefab, levelsContainer);
-            btn.gameObject.SetActive(true);
-            
-            TMP_Text label = btn.GetComponentInChildren<TMP_Text>();
-            if (label != null)
-                label.text = string.IsNullOrWhiteSpace(node.LevelRef.LevelName) ? node.LevelRef.name : node.LevelRef.LevelName;
+            ClearContainer();
+            if (bottomSheet != null) bottomSheet.Hide();
 
-            btn.onClick.AddListener(() => SelectLevelAndGo(node.LevelRef, dungeon, node));
+            if (stackTitleText != null) stackTitleText.text = currentTitle;
+            if (btnBack != null) btnBack.gameObject.SetActive(navigationStack.Count > 1);
+
+            Action buildAction = navigationStack.Peek();
+            buildAction?.Invoke();
         }
-    }
 
-    private void BuildLevelButtonsForCatalog(LevelCatalog catalog)
-    {
-        ClearContainer(levelsContainer);
-
-        if (catalog == null || catalog.Levels == null) return;
-
-        foreach (var level in catalog.Levels)
+        private void ClearContainer()
         {
-            if (level == null) continue;
-
-            Button btn = Instantiate(genericButtonPrefab, levelsContainer);
-            btn.gameObject.SetActive(true);
-            
-            TMP_Text label = btn.GetComponentInChildren<TMP_Text>();
-            if (label != null)
-                label.text = string.IsNullOrWhiteSpace(level.LevelName) ? level.name : level.LevelName;
-
-            btn.onClick.AddListener(() => SelectLevelAndGo(level, null, null));
+            if (stackContentContainer == null) return;
+            foreach (Transform child in stackContentContainer)
+                Destroy(child.gameObject);
         }
-    }
+        #endregion
 
-    private void BuildDiaryButtons(CelestialCross.Dialogue.Data.DiaryCatalog catalog)
-    {
-        ClearContainer(diaryContainer);
-        if (catalog == null || catalog.entries == null) return;
-
-        foreach (var entry in catalog.entries)
+        #region Builders
+        private void BuildCategoryCards()
         {
-            if (entry == null || entry.dialogueGraph == null) continue;
+            if (categories == null) return;
+            var account = AccountManager.Instance?.PlayerAccount;
 
-            Button btn = Instantiate(genericButtonPrefab, diaryContainer);
-            btn.gameObject.SetActive(true);
+            foreach (var cat in categories)
+            {
+                if (cat == null) continue;
 
-            TMP_Text label = btn.GetComponentInChildren<TMP_Text>();
-            if (label != null)
-                label.text = string.IsNullOrWhiteSpace(entry.diaryName) ? entry.dialogueGraph.name : entry.diaryName;
+                HubCardUI card = Instantiate(genericCardPrefab, stackContentContainer);
+                card.gameObject.SetActive(true);
 
-            btn.onClick.AddListener(() => StartDiary(entry));
+                var (completed, total) = cat.GetProgress(account);
+                card.SetupAsCategory(cat, completed, total);
+
+                card.buttonComponent.onClick.AddListener(() => 
+                {
+                    currentTitle = cat.CategoryName;
+                    PushScreen(cat.CategoryName, () => BuildChapterCards(cat));
+                });
+            }
         }
-    }
 
-    private void StartDiary(CelestialCross.Dialogue.Data.DiaryEntry entry)
-    {
-        if (entry == null || entry.dialogueGraph == null) return;
-
-        CelestialCross.Dialogue.Manager.DialogueManager.Instance?.StartDialogue(entry.dialogueGraph);
-        CelestialCross.Dialogue.Manager.DialogueManager.NextGraphToLoad = entry.dialogueGraph;
-
-        if (string.IsNullOrWhiteSpace(dialogueSceneName))
+        private void BuildChapterCards(HubCategorySO category)
         {
-            Debug.LogError("[HubSceneController] dialogueSceneName vazio.");
-            return;
+            if (category == null || category.Chapters == null) return;
+            var account = AccountManager.Instance?.PlayerAccount;
+            var completedSet = new HashSet<string>(account?.CompletedNodeIDs ?? new List<string>());
+            var ownedUnits = account?.OwnedUnitIDs ?? new List<string>();
+
+            foreach (var chapter in category.Chapters)
+            {
+                if (chapter == null) continue;
+
+                HubCardUI card = Instantiate(genericCardPrefab, stackContentContainer);
+                card.gameObject.SetActive(true);
+
+                int total = chapter.Nodes != null ? chapter.Nodes.Count : 0;
+                int completed = 0;
+                if (chapter.Nodes != null)
+                {
+                    foreach (var n in chapter.Nodes)
+                    {
+                        if (n != null && completedSet.Contains(n.NodeID)) completed++;
+                    }
+                }
+
+                bool isLocked = false;
+                if (CelestialCross.System.ProgressionService.Instance != null)
+                    isLocked = !CelestialCross.System.ProgressionService.Instance.IsChapterUnlocked(chapter);
+
+                card.SetupAsChapter(chapter, completed, total, isLocked);
+
+                card.buttonComponent.onClick.AddListener(() => 
+                {
+                    currentTitle = chapter.ChapterTitle;
+                    PushScreen(chapter.ChapterTitle, () => BuildNodeCards(chapter));
+                });
+            }
         }
 
-        SceneManager.LoadScene(dialogueSceneName);
-    }
-
-    private void SelectLevelAndGo(LevelData level, CelestialCross.Data.Dungeon.DungeonBaseSO dungeon, CelestialCross.Data.Dungeon.DungeonLevelNode node)
-    {
-        if (GameFlowManager.Instance == null)
+        private void BuildNodeCards(ChapterData chapter)
         {
-            Debug.LogError("[HubSceneController] GameFlowManager não encontrado na cena.");
-            return;
+            if (chapter == null || chapter.Nodes == null) return;
+
+            foreach (var node in chapter.Nodes)
+            {
+                if (node == null) continue;
+
+                HubCardUI card = Instantiate(genericCardPrefab, stackContentContainer);
+                card.gameObject.SetActive(true);
+
+                bool isCompleted = false;
+                int remainingAttempts = -1;
+                bool isLocked = false;
+
+                if (CelestialCross.System.ProgressionService.Instance != null)
+                {
+                    isCompleted = CelestialCross.System.ProgressionService.Instance.IsNodeCompleted(node.NodeID);
+                    int completions = CelestialCross.System.ProgressionService.Instance.GetCompletionCount(node);
+                    if (node.MaxCompletions != -1)
+                        remainingAttempts = Mathf.Max(0, node.MaxCompletions - completions);
+
+                    // A node is locked if it has a requirement and the previous node is not completed
+                    if (node.Requirement != null && node.Requirement.RequiresPreviousNode && !string.IsNullOrEmpty(node.Requirement.PreviousNodeID))
+                    {
+                        isLocked = !CelestialCross.System.ProgressionService.Instance.IsNodeCompleted(node.Requirement.PreviousNodeID);
+                    }
+                }
+
+                card.SetupAsNode(node, isCompleted, isLocked, remainingAttempts);
+
+                card.buttonComponent.onClick.AddListener(() => 
+                {
+                    if (bottomSheet != null)
+                        bottomSheet.Show(node);
+                    else
+                        CelestialCross.System.ProgressionService.Instance?.TryStartNode(node);
+                });
+            }
         }
+        #endregion
 
-        GameFlowManager.Instance.SelectedLevel = level;
-        GameFlowManager.Instance.SelectedDungeon = dungeon;
-        GameFlowManager.Instance.SelectedDungeonNode = node;
-
-        GameFlowManager.Instance.SelectedUnitIDs.Clear();
-        GameFlowManager.Instance.PlayerFormation.Clear();
-
-        if (string.IsNullOrWhiteSpace(preparationSceneName))
+        #region Scene Navigation
+        public void GoToShopScene()
         {
-            Debug.LogError("[HubSceneController] preparationSceneName vazio.");
-            return;
+            if (!string.IsNullOrEmpty(shopSceneName)) SceneManager.LoadScene(shopSceneName);
         }
 
-        SceneManager.LoadScene(preparationSceneName);
+        public void GoToInventoryScene()
+        {
+            if (!string.IsNullOrEmpty(inventorySceneName)) SceneManager.LoadScene(inventorySceneName);
+        }
+
+        public void GoToUnitScene()
+        {
+            if (!string.IsNullOrEmpty(unitSceneName)) SceneManager.LoadScene(unitSceneName);
+        }
+        #endregion
     }
 }

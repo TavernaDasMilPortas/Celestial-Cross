@@ -54,7 +54,7 @@ MonoBehaviour:
   componentCulling: 1
   reuseTabs: 0
   overrideSceneTools: 0
-  sessionsMode: 0
+  sessionsMode: 1
   tabCompactMode: 1
   doubleClickMode: 1
   scrollSpeedX: 2
@@ -66,71 +66,37 @@ MonoBehaviour:
   - tracker:
       mostClicked:
       - paths:
-        - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/TopPanelContainer[0]/TopContent_Pets[0]/InfoArea[0]/StatsText[0]"}'
-        count: 8
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/ModalsContainer[0]"}'
-        count: 4
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/TopPanelContainer[0]/TopContent_Pets[0]/PetSprite[0]"}'
-        count: 3
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/TabBarContainer[0]"}'
-        count: 2
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/TopPanelContainer[0]/TopContent_Pets[0]/InfoArea[0]/StarsContainer[0]"}'
+        - 
         count: 1
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/TopPanelContainer[0]/TopContent_Pets[0]/InfoArea[0]/SkillDesc[0]"}'
-        count: 1
-        gameObjects:
-        - {fileID: 0}
+        gameObjects: []
       recentlyClicked:
       - paths:
-        - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/TopPanelContainer[0]/TopContent_Pets[0]/InfoArea[0]/StatsText[0]"}'
+        - 
         count: 1
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/TopPanelContainer[0]/TopContent_Pets[0]/InfoArea[0]/SkillDesc[0]"}'
+        gameObjects: []
+      - paths: []
         count: 1
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/TopPanelContainer[0]/TopContent_Pets[0]/InfoArea[0]/StarsContainer[0]"}'
+        gameObjects: []
+      - paths: []
         count: 1
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/TopPanelContainer[0]/TopContent_Pets[0]/PetSprite[0]"}'
+        gameObjects: []
+      - paths: []
         count: 1
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/ModalsContainer[0]"}'
+        gameObjects: []
+      - paths: []
         count: 1
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/TabBarContainer[0]"}'
+        gameObjects: []
+      - paths: []
         count: 1
-        gameObjects:
-        - {fileID: 0}
+        gameObjects: []
+      - paths: []
+        count: 1
+        gameObjects: []
       mostClickedContents: []
       recentlyClickedContents: []
     sceneGUID: 03d58314661be71469defb5607568be7
     sceneName: InventoryScene
-    lastSaveTimePrint: 11:20 PM (June 2, 2026)
+    lastSaveTimePrint: 07:53 PM (June 5, 2026)
     gracePeriod: 3
     activeIndex: 0
     checkingToLoad: 0
@@ -139,18 +105,18 @@ MonoBehaviour:
     maximizedAssetView: 0
     showImportSettings: 0
     suggestedHeight: 0
-    userAssetViewSize: -1
+    userAssetViewSize: 116.00003
     previewHeight: 0
     scrollPosition: {x: 0, y: 270}
     toolbarScrollPosition: {x: 0, y: 0}
     rawUserHeight: 0
-    lastValidTabWidth: 78
+    lastValidTabWidth: 76
     alreadyCalculatedHeight: 0
     lastKnownHeight: 0
     tabs:
     - path: '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/TopPanelContainer[0]/TopContent_Pets[0]/InfoArea[0]/StatsText[0]"}'
       paths: []
-      tabWidth: 75
+      tabWidth: 73
       name: StatsText
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: StatsText
@@ -255,7 +221,14 @@ MonoBehaviour:
     closedTabs: []
     playModeTransforms: []
     historyAssets:
-    - assetGUIDs: []
+    - assetGUIDs:
+      - a9b503e6bc5b5ca4a8bd7511f926893a
+    - assetGUIDs:
+      - 29d39f77466a86646951c2e0a8bb3974
+    - assetGUIDs:
+      - 8105016687592461f977c054a80ce2f2
+    - assetGUIDs:
+      - aae55989abe44784197dd80958fdd0f5
     - assetGUIDs:
       - 1c4f1b892b6e20245a0e9ec4a942e09d
     - assetGUIDs:
@@ -280,39 +253,123 @@ MonoBehaviour:
       - 69fcdee7970da37439e423c6e15da857
     - assetGUIDs:
       - 83bf9a4f9d335bd49a1ad59b7e21dfd1
-    - assetGUIDs:
-      - 25b178091dd086d419a0b800c0fa9232
-    targetObject: {fileID: 0}
+    targetObject: {fileID: 11400000, guid: a9b503e6bc5b5ca4a8bd7511f926893a, type: 2}
     targetObjects: []
-    lastSelectedAsset: 
+    lastSelectedAsset: Assets/Celestial-Cross/Prefabs/Units/MagicalGirls/Damien/Data/Damien_SkillTree.asset
     lastClickedTab: -1
     previousTab: 0
   - tracker:
-      mostClicked: []
+      mostClicked:
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"_HubSceneManager[0]/ChapterMenuUI[0]"}'
+        count: 7
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/Container[0]/StackPanel[0]/StackScrollView[0]"}'
+        count: 5
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"_HubSceneManager[0]"}'
+        count: 4
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"_Menu[0]"}'
+        count: 3
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/Container[0]"}'
+        count: 2
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]"}'
+        count: 2
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/HubCardPrefab[0]"}'
+        count: 2
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/Container[0]/TopBar[0]/Btn_Inventory[0]"}'
+        count: 1
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/Container[0]/TopBar[0]/Btn_Shop[0]"}'
+        count: 1
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/Container[0]/TopBar[0]/Btn_Inventory[0]"}'
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/Container[0]/TopBar[0]/Btn_Unit[0]"}'
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/Container[0]/TopBar[0]/Btn_Shop[0]"}'
+        count: 1
+        gameObjects:
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
       recentlyClicked:
-      - paths: []
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/Container[0]/StackPanel[0]/StackScrollView[0]"}'
         count: 1
-        gameObjects: []
-      - paths: []
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/HubCardPrefab[0]"}'
         count: 1
-        gameObjects: []
-      - paths: []
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/HubCardPrefab[0]/ProgressBG[0]"}'
         count: 1
-        gameObjects: []
-      - paths: []
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/HubCardPrefab[0]/ProgressBG[0]/ProgressFill[0]"}'
         count: 1
-        gameObjects: []
-      - paths: []
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/HubCardPrefab[0]/LockOverlay[0]"}'
         count: 1
-        gameObjects: []
-      - paths: []
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/HubCardPrefab[0]/EnergyText[0]"}'
         count: 1
-        gameObjects: []
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/HubCardPrefab[0]/Subtitle[0]"}'
+        count: 1
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/HubCardPrefab[0]/Title[0]"}'
+        count: 1
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]"}'
+        count: 1
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/Container[0]"}'
+        count: 1
+        gameObjects:
+        - {fileID: 0}
       mostClickedContents: []
       recentlyClickedContents: []
     sceneGUID: aae55989abe44784197dd80958fdd0f5
     sceneName: HubScene
-    lastSaveTimePrint: 11:20 PM (June 2, 2026)
+    lastSaveTimePrint: 10:13 PM (June 5, 2026)
     gracePeriod: 3
     activeIndex: 0
     checkingToLoad: 0
@@ -326,32 +383,32 @@ MonoBehaviour:
     scrollPosition: {x: 0, y: 0}
     toolbarScrollPosition: {x: 0, y: 0}
     rawUserHeight: 0
-    lastValidTabWidth: 64
+    lastValidTabWidth: 115
     alreadyCalculatedHeight: 0
     lastKnownHeight: 0
     tabs:
-    - path: 
+    - path: '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/Container[0]/StackPanel[0]/StackScrollView[0]"}'
       paths: []
-      tabWidth: 61
-      name: New Tab
-      icon: {fileID: 0}
-      shortName: New Tab
+      tabWidth: 112
+      name: StackScrollView
+      icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: StackScrollView
       filterString: 
-      newTab: 1
+      newTab: 0
       scrollPosition: 0
       isSelected: 0
       allCollapsed: 0
       runtimeFoldouts: 
       runtimeMultiComponents: []
       tabTextContent:
-        m_Text: New Tab
+        m_Text: StackScrollView
         m_Image: {fileID: 0}
         m_Tooltip: 
-        m_TextWithWhitespace: "New Tab\u200B"
+        m_TextWithWhitespace: "StackScrollView\u200B"
       multiEditMode: 0
       locked: 0
       hasPreview: 0
-      previewHeight: 150
+      previewHeight: 13
       debug: 0
       filtering: 0
       prefab: 0
@@ -386,13 +443,91 @@ MonoBehaviour:
       savePlayModeTransform: 0
       index: 0
       historyPosition: 0
-      componentMaps: []
-      historyPaths: []
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasrenderer
+        niceComponentName: canvas renderer
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: betterimage
+        niceComponentName: better image
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: scrollrect
+        niceComponentName: scroll rect
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/Container[0]/StackPanel[0]/StackScrollView[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/HubCardPrefab[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/HubCardPrefab[0]/ProgressBG[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/HubCardPrefab[0]/ProgressBG[0]/ProgressFill[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/HubCardPrefab[0]/LockOverlay[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/HubCardPrefab[0]/EnergyText[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/HubCardPrefab[0]/Subtitle[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/HubCardPrefab[0]/Title[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/Container[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/Container[0]/StackPanel[0]"}'
+        prefab: 0
       owner: {fileID: 0}
     closedTabs: []
     playModeTransforms: []
     historyAssets:
-    - assetGUIDs: []
+    - assetGUIDs:
+      - aa9d5c055ab8c8f40a7ee30ead82c12c
+    - assetGUIDs:
+      - a9b503e6bc5b5ca4a8bd7511f926893a
+    - assetGUIDs:
+      - 29d39f77466a86646951c2e0a8bb3974
+    - assetGUIDs:
+      - 8105016687592461f977c054a80ce2f2
+    - assetGUIDs:
+      - aae55989abe44784197dd80958fdd0f5
     - assetGUIDs:
       - 1c4f1b892b6e20245a0e9ec4a942e09d
     - assetGUIDs:
@@ -415,13 +550,9 @@ MonoBehaviour:
       - 140ced9bbd8982243b49a9ae3cc59249
     - assetGUIDs:
       - 69fcdee7970da37439e423c6e15da857
-    - assetGUIDs:
-      - 83bf9a4f9d335bd49a1ad59b7e21dfd1
-    - assetGUIDs:
-      - 25b178091dd086d419a0b800c0fa9232
-    targetObject: {fileID: 0}
+    targetObject: {fileID: 11400000, guid: aa9d5c055ab8c8f40a7ee30ead82c12c, type: 2}
     targetObjects: []
-    lastSelectedAsset: 
+    lastSelectedAsset: Assets/Celestial-Cross/Data/Progression/NewChapter.asset
     lastClickedTab: -1
     previousTab: 0
   - tracker:
@@ -431,7 +562,7 @@ MonoBehaviour:
       recentlyClickedContents: []
     sceneGUID: 41797f812614b484c878b87c4d6155a1
     sceneName: PreparationScene
-    lastSaveTimePrint: 11:20 PM (June 2, 2026)
+    lastSaveTimePrint: 12:54 PM (June 5, 2026)
     gracePeriod: 3
     activeIndex: 0
     checkingToLoad: 0
@@ -511,7 +642,14 @@ MonoBehaviour:
     closedTabs: []
     playModeTransforms: []
     historyAssets:
-    - assetGUIDs: []
+    - assetGUIDs:
+      - a9b503e6bc5b5ca4a8bd7511f926893a
+    - assetGUIDs:
+      - 29d39f77466a86646951c2e0a8bb3974
+    - assetGUIDs:
+      - 8105016687592461f977c054a80ce2f2
+    - assetGUIDs:
+      - aae55989abe44784197dd80958fdd0f5
     - assetGUIDs:
       - 1c4f1b892b6e20245a0e9ec4a942e09d
     - assetGUIDs:
@@ -536,11 +674,9 @@ MonoBehaviour:
       - 69fcdee7970da37439e423c6e15da857
     - assetGUIDs:
       - 83bf9a4f9d335bd49a1ad59b7e21dfd1
-    - assetGUIDs:
-      - 25b178091dd086d419a0b800c0fa9232
-    targetObject: {fileID: 0}
+    targetObject: {fileID: 11400000, guid: a9b503e6bc5b5ca4a8bd7511f926893a, type: 2}
     targetObjects: []
-    lastSelectedAsset: 
+    lastSelectedAsset: Assets/Celestial-Cross/Prefabs/Units/MagicalGirls/Damien/Data/Damien_SkillTree.asset
     lastClickedTab: -1
     previousTab: 0
   - tracker:
@@ -662,6 +798,254 @@ MonoBehaviour:
     lastSelectedAsset: 
     lastClickedTab: -1
     previousTab: 0
-  tipsShown: 01000000000000000000000001000000000000000000000000000000000000000000000000000000000000000100000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000
+  - tracker:
+      mostClicked: []
+      recentlyClicked: []
+      mostClickedContents: []
+      recentlyClickedContents: []
+    sceneGUID: e625a3e42d710e542b4c986f567fb23b
+    sceneName: UnitScene
+    lastSaveTimePrint: 07:53 PM (June 5, 2026)
+    gracePeriod: 3
+    activeIndex: 0
+    checkingToLoad: 0
+    assetsCollapsed: 0
+    lockedAsset: 0
+    maximizedAssetView: 0
+    showImportSettings: 0
+    suggestedHeight: 0
+    userAssetViewSize: 116.00003
+    previewHeight: 0
+    scrollPosition: {x: 0, y: 0}
+    toolbarScrollPosition: {x: 0, y: 0}
+    rawUserHeight: 0
+    lastValidTabWidth: 61
+    alreadyCalculatedHeight: 0
+    lastKnownHeight: 0
+    tabs:
+    - path: 
+      paths: []
+      tabWidth: 58
+      name: 
+      icon: {fileID: 0}
+      shortName: New Tab
+      filterString: 
+      newTab: 1
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: New Tab
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "New Tab\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 150
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 0
+      historyPosition: 0
+      componentMaps: []
+      historyPaths: []
+      owner: {fileID: 0}
+    closedTabs: []
+    playModeTransforms: []
+    historyAssets:
+    - assetGUIDs:
+      - a9b503e6bc5b5ca4a8bd7511f926893a
+    - assetGUIDs:
+      - 29d39f77466a86646951c2e0a8bb3974
+    - assetGUIDs:
+      - 8105016687592461f977c054a80ce2f2
+    - assetGUIDs:
+      - aae55989abe44784197dd80958fdd0f5
+    - assetGUIDs:
+      - 1c4f1b892b6e20245a0e9ec4a942e09d
+    - assetGUIDs:
+      - 69fcdee7970da37439e423c6e15da857
+      - 140ced9bbd8982243b49a9ae3cc59249
+      - 2422cf388adea53469fed23a44c78ae5
+      - 67c74467c88382b4e97ec531fb2825b0
+      - 83bf9a4f9d335bd49a1ad59b7e21dfd1
+    - assetGUIDs:
+      - 69fcdee7970da37439e423c6e15da857
+      - 140ced9bbd8982243b49a9ae3cc59249
+      - 2422cf388adea53469fed23a44c78ae5
+      - 67c74467c88382b4e97ec531fb2825b0
+    - assetGUIDs:
+      - 69fcdee7970da37439e423c6e15da857
+      - 140ced9bbd8982243b49a9ae3cc59249
+      - 2422cf388adea53469fed23a44c78ae5
+    - assetGUIDs:
+      - 69fcdee7970da37439e423c6e15da857
+      - 140ced9bbd8982243b49a9ae3cc59249
+    - assetGUIDs:
+      - 69fcdee7970da37439e423c6e15da857
+    - assetGUIDs:
+      - 83bf9a4f9d335bd49a1ad59b7e21dfd1
+    targetObject: {fileID: 11400000, guid: a9b503e6bc5b5ca4a8bd7511f926893a, type: 2}
+    targetObjects: []
+    lastSelectedAsset: Assets/Celestial-Cross/Prefabs/Units/MagicalGirls/Damien/Data/Damien_SkillTree.asset
+    lastClickedTab: -1
+    previousTab: 0
+  - tracker:
+      mostClicked: []
+      recentlyClicked: []
+      mostClickedContents: []
+      recentlyClickedContents: []
+    sceneGUID: 3bea51b30b1a74742b70e245c7a07f9c
+    sceneName: ShopScene
+    lastSaveTimePrint: 07:53 PM (June 5, 2026)
+    gracePeriod: 3
+    activeIndex: 0
+    checkingToLoad: 0
+    assetsCollapsed: 0
+    lockedAsset: 0
+    maximizedAssetView: 0
+    showImportSettings: 0
+    suggestedHeight: 0
+    userAssetViewSize: 116.00003
+    previewHeight: 0
+    scrollPosition: {x: 0, y: 0}
+    toolbarScrollPosition: {x: 0, y: 0}
+    rawUserHeight: 0
+    lastValidTabWidth: 61
+    alreadyCalculatedHeight: 0
+    lastKnownHeight: 0
+    tabs:
+    - path: 
+      paths: []
+      tabWidth: 58
+      name: 
+      icon: {fileID: 0}
+      shortName: New Tab
+      filterString: 
+      newTab: 1
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: New Tab
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "New Tab\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 150
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 0
+      historyPosition: 0
+      componentMaps: []
+      historyPaths: []
+      owner: {fileID: 0}
+    closedTabs: []
+    playModeTransforms: []
+    historyAssets:
+    - assetGUIDs:
+      - a9b503e6bc5b5ca4a8bd7511f926893a
+    - assetGUIDs:
+      - 29d39f77466a86646951c2e0a8bb3974
+    - assetGUIDs:
+      - 8105016687592461f977c054a80ce2f2
+    - assetGUIDs:
+      - aae55989abe44784197dd80958fdd0f5
+    - assetGUIDs:
+      - 1c4f1b892b6e20245a0e9ec4a942e09d
+    - assetGUIDs:
+      - 69fcdee7970da37439e423c6e15da857
+      - 140ced9bbd8982243b49a9ae3cc59249
+      - 2422cf388adea53469fed23a44c78ae5
+      - 67c74467c88382b4e97ec531fb2825b0
+      - 83bf9a4f9d335bd49a1ad59b7e21dfd1
+    - assetGUIDs:
+      - 69fcdee7970da37439e423c6e15da857
+      - 140ced9bbd8982243b49a9ae3cc59249
+      - 2422cf388adea53469fed23a44c78ae5
+      - 67c74467c88382b4e97ec531fb2825b0
+    - assetGUIDs:
+      - 69fcdee7970da37439e423c6e15da857
+      - 140ced9bbd8982243b49a9ae3cc59249
+      - 2422cf388adea53469fed23a44c78ae5
+    - assetGUIDs:
+      - 69fcdee7970da37439e423c6e15da857
+      - 140ced9bbd8982243b49a9ae3cc59249
+    - assetGUIDs:
+      - 69fcdee7970da37439e423c6e15da857
+    - assetGUIDs:
+      - 83bf9a4f9d335bd49a1ad59b7e21dfd1
+    targetObject: {fileID: 11400000, guid: a9b503e6bc5b5ca4a8bd7511f926893a, type: 2}
+    targetObjects: []
+    lastSelectedAsset: Assets/Celestial-Cross/Prefabs/Units/MagicalGirls/Damien/Data/Damien_SkillTree.asset
+    lastClickedTab: -1
+    previousTab: 0
+  tipsShown: 01000000000000000000000001000000010000000000000000000000000000000000000000000000000000000100000000000000010000000100000000000000000000000100000000000000000000000000000000000000000000000100000001000000010000000100000000000000010000000000000000000000000000000000000001000000010000000000000000000000010000000100000001000000000000000000000000000000000000000100000001000000
   playModeStartScene: {}
   enteringPlayMode: 0

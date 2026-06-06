@@ -8,7 +8,7 @@ namespace CelestialCross.EditorArea
 {
     public class CombatUISetupUtility : EditorWindow
     {
-        [MenuItem("Celestial Cross/UI Builders/Skills/Setup Combat Passives UI")]
+        [MenuItem("Celestial Cross/3. UI Builders/5. Skills/Setup Combat Passives UI")]
         public static void SetupPassivesUI()
         {
             var canvas = Object.FindObjectOfType<Canvas>();

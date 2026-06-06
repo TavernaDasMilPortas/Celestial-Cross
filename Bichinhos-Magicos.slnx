@@ -13,6 +13,7 @@
   <Project Path="Unity.PerformanceTesting.Editor.csproj" />
   <Project Path="Unity.Notifications.iOS.csproj" />
   <Project Path="Unity.Burst.csproj" />
+  <Project Path="DrawXXL.csproj" />
   <Project Path="Unity.Services.Core.Environments.Editor.csproj" />
   <Project Path="Unity.VisualScripting.Flow.Editor.csproj" />
   <Project Path="Unity.VisualStudio.Editor.csproj" />
@@ -24,6 +25,7 @@
   <Project Path="Unity.VisualScripting.Core.csproj" />
   <Project Path="Unity.LevelPlay.Editor.csproj" />
   <Project Path="Unity.VisualScripting.State.Editor.csproj" />
+  <Project Path="DrawXXL-Editor.csproj" />
   <Project Path="Unity.Services.Core.Editor.csproj" />
   <Project Path="Unity.Burst.CodeGen.csproj" />
   <Project Path="Unity.LevelPlay.csproj" />
@@ -40,6 +42,8 @@
   <Project Path="Unity.Services.Authentication.PlayerAccounts.Editor.csproj" />
   <Project Path="Unity.Services.Core.Configuration.Editor.csproj" />
   <Project Path="Unity.Services.Core.Configuration.csproj" />
+  <Project Path="Assembly-CSharp-firstpass.csproj" />
+  <Project Path="MPUIKit.Editor.csproj" />
   <Project Path="Unity.Services.Core.Environments.Internal.csproj" />
   <Project Path="Unity.Notifications.Unified.csproj" />
   <Project Path="Unity.InputSystem.ForUI.csproj" />
@@ -50,10 +54,12 @@
   <Project Path="Unity.Mathematics.Editor.csproj" />
   <Project Path="Unity.VisualScripting.SettingsProvider.Editor.csproj" />
   <Project Path="Unity.Services.Core.Threading.csproj" />
+  <Project Path="CoInspector.csproj" />
   <Project Path="Unity.InputSystem.TestFramework.csproj" />
   <Project Path="Unity.VisualScripting.Shared.Editor.csproj" />
   <Project Path="Unity.Services.Core.Device.csproj" />
   <Project Path="Unity.Services.Core.Analytics.csproj" />
+  <Project Path="MPUIKit.csproj" />
   <Project Path="Unity.Services.CloudSave.Editor.csproj" />
   <Project Path="Unity.CollabProxy.Editor.csproj" />
   <Project Path="Unity.Services.Authentication.Editor.Shared.csproj" />
@@ -63,7 +69,6 @@
   <Project Path="Unity.Services.Core.Networking.csproj" />
   <Project Path="Unity.VisualScripting.DocCodeExamples.csproj" />
   <Project Path="Unity.PlasticSCM.Editor.Entities.csproj" />
-  <Project Path="Assembly-CSharp-firstpass.csproj" />
   <Project Path="Unity.Services.Core.Environments.csproj" />
   <Project Path="Unity.Collections.Editor.csproj" />
 </Solution>

@@ -8,7 +8,7 @@ namespace CelestialCross.EditorUtils
 {
     public class ArtifactFilterSetupUtility : EditorWindow
     {
-        [MenuItem("Celestial Cross/UI/Setup Artifact Filter Component")]
+        [MenuItem("Celestial Cross/3. UI Builders/3. Components/Setup Artifact Filter Component")]
         public static void SetupArtifactFilter()
         {
             ArtifactFilterModal modal = FindObjectOfType<ArtifactFilterModal>(true);

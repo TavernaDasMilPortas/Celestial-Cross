@@ -12,6 +12,12 @@ public class GameFlowManager : MonoBehaviour
     public DungeonBaseSO SelectedDungeon { get; set; }
     public DungeonLevelNode SelectedDungeonNode { get; set; }
 
+    // Progresso de História
+    public CelestialCross.Progression.ChapterData CurrentChapter { get; set; }
+    public int CurrentNodeIndex { get; set; }
+    public System.Collections.Generic.List<CelestialCross.Progression.FixedUnitSlot> FixedSlots { get; set; } = new System.Collections.Generic.List<CelestialCross.Progression.FixedUnitSlot>();
+    public string ReturnAreaID { get; set; }
+
     // Filled in PreparationScene (unit selection), consumed by PlacementManager.
     public List<string> SelectedUnitIDs { get; set; } = new List<string>();
 

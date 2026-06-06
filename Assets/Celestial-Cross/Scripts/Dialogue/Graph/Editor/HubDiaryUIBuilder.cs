@@ -3,12 +3,13 @@ using UnityEditor;
 using UnityEngine.UI;
 using TMPro;
 using CelestialCross.Dialogue.Data;
+using CelestialCross.Scenes.Hub;
 
 namespace CelestialCross.Dialogue.Editor
 {
     public class HubDiaryUIBuilder
     {
-        [MenuItem("Celestial Cross/Utils/Update Hub with Diary Catalog")]
+        [MenuItem("Celestial Cross/4. Tools/Misc/Update Hub with Diary Catalog")]
         public static void UpdateHub()
         {
             // 1. Achar o HubSceneController

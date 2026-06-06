@@ -13,7 +13,7 @@ namespace CelestialCross.Editor
     {
         private const string ScenePath = "Assets/Celestial-Cross/Scenes/InventoryScene.unity";
 
-        [MenuItem("Celestial Cross/Debug/Inspect Inventory Scene")]
+        [MenuItem("Celestial Cross/5. Debug/Inspect Inventory Scene")]
         public static void InspectScene()
         {
             var activeScene = EditorSceneManager.GetActiveScene();

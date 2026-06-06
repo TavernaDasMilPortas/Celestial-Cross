@@ -7,7 +7,7 @@ namespace CelestialCross.Pets.Editor
 {
     public class PetUniversalPrefabGenerator
     {
-        [MenuItem("Celestial Cross/Pets/Generate Universal Base Pet Prefab")]
+        [MenuItem("Celestial Cross/2. Data & Assets/Pets/Generate Universal Base Pet Prefab")]
         public static void GenerateUniversalPetPrefab()
         {
             string basePath = "Assets/Celestial-Cross";

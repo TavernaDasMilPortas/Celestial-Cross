@@ -20,7 +20,7 @@ namespace CelestialCross.Artifacts.Editor
         private Vector2 consoleScroll;
         private bool scrollConsoleToBottom;
 
-        [MenuItem("Celestial Cross/Artifacts/Artifact Data Upgrader (Option B)")]
+        [MenuItem("Celestial Cross/2. Data & Assets/Artifacts/Artifact Data Upgrader (Option B)")]
         public static void ShowWindow()
         {
             GetWindow<ArtifactDataUpgraderWindow>("Artifact Data Upgrader");

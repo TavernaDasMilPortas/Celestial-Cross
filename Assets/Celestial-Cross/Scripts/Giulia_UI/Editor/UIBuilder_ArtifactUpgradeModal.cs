@@ -7,7 +7,7 @@ namespace CelestialCross.Giulia_UI.Editor
 {
     public class UIBuilder_ArtifactUpgradeModal
     {
-        [MenuItem("Celestial Cross/UI Builders/Modals/Artifact Upgrade Modal")]
+        [MenuItem("Celestial Cross/3. UI Builders/2. Modals/Artifact Upgrade Modal")]
         public static void BuildModal()
         {
             // Tenta encontrar um Canvas na cena atual

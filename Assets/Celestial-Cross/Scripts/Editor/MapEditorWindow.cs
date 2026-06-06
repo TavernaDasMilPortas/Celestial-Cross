@@ -15,7 +15,7 @@ public class MapEditorWindow : OdinEditorWindow
 {
     // ─── Menu Item ────────────────────────────────────────────────────────────
 
-    [MenuItem("Celestial Cross/Editors/Map Editor")]
+    [MenuItem("Celestial Cross/1. Editors/Map Editor")]
     private static void OpenWindow()
     {
         var window = GetWindow<MapEditorWindow>("Map Editor");

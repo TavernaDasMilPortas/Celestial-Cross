@@ -7,7 +7,7 @@ namespace CelestialCross.Giulia_UI.Editor
 {
     public static class VictoryRewardUIBuilder
     {
-        [MenuItem("Celestial Cross/UI Builders/Modals/Victory Reward UI")]
+        [MenuItem("Celestial Cross/3. UI Builders/2. Modals/Victory Reward UI")]
         public static void GenerateUI()
         {
             Canvas canvas = GameObject.FindObjectOfType<Canvas>();

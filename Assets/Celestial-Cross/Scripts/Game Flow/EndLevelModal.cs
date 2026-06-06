@@ -26,12 +26,17 @@ namespace CelestialCross.Progression
             if (modalPanel != null) modalPanel.SetActive(false);
         }
 
-        public void Show(bool success, string message, StoryNode nextNode = null)
+        public void Show(bool success, string message, string currentNodeID = null, StoryNode nextNode = null)
         {
             if (modalPanel == null) return;
             
             modalPanel.SetActive(true);
             if (statusText != null) statusText.text = success ? "Vitória!" : "Derrota...";
+            
+            if (success && !string.IsNullOrEmpty(currentNodeID))
+            {
+                CelestialCross.System.ProgressionService.Instance.CompleteNode(currentNodeID);
+            }
             
             _nextAvailableNode = nextNode;
             
@@ -41,7 +46,7 @@ namespace CelestialCross.Progression
                 nextStepButton.onClick.RemoveAllListeners();
                 nextStepButton.onClick.AddListener(() => {
                     modalPanel.SetActive(false);
-                    _nextAvailableNode.Execute();
+                    CelestialCross.System.ProgressionService.Instance.TryStartNode(_nextAvailableNode);
                 });
             }
 

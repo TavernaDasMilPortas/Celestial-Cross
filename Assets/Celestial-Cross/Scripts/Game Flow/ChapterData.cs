@@ -42,5 +42,35 @@ namespace CelestialCross.Progression
 
             return false;
         }
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            // Gera um ID para o capítulo se estiver vazio
+            if (string.IsNullOrEmpty(ChapterID))
+            {
+                ChapterID = global::System.Guid.NewGuid().ToString();
+                UnityEditor.EditorUtility.SetDirty(this);
+            }
+
+            // Gera IDs únicos para todos os nós dentro do capítulo se estiverem vazios
+            if (Nodes != null)
+            {
+                bool isDirty = false;
+                foreach (var node in Nodes)
+                {
+                    if (node != null && string.IsNullOrEmpty(node.NodeID))
+                    {
+                        node.NodeID = global::System.Guid.NewGuid().ToString();
+                        isDirty = true;
+                    }
+                }
+                if (isDirty)
+                {
+                    UnityEditor.EditorUtility.SetDirty(this);
+                }
+            }
+        }
+#endif
     }
 }

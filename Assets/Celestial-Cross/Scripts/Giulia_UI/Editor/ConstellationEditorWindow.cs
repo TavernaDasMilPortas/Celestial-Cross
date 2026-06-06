@@ -20,7 +20,7 @@ namespace CelestialCross.EditorArea
         private float zoom = 1.0f;
         private Vector2 scrollPos = Vector2.zero;
 
-        [MenuItem("Celestial Cross/Editors/Constellation & Banner Designer")]
+        [MenuItem("Celestial Cross/1. Editors/Constellation & Banner Designer")]
         public static void ShowWindow()
         {
             var window = GetWindow<ConstellationEditorWindow>("Star Designer");

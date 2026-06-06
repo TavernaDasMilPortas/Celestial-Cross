@@ -11,7 +11,7 @@ public class PetAnimationUtility : EditorWindow
     private float frameRate = 12f;
     private bool loop = true;
 
-    [MenuItem("Celestial Cross/Utilities/Pet Animation Generator")]
+    [MenuItem("Celestial Cross/4. Tools/Misc/Pet Animation Generator")]
     public static void ShowWindow()
     {
         GetWindow<PetAnimationUtility>("Pet Anim Gen");

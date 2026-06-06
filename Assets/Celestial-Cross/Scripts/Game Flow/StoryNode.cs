@@ -13,6 +13,19 @@ namespace CelestialCross.Progression
         public string Title;
         public bool IsAutoPlay = false;
 
+        public NodeEntryCost EntryCost = new NodeEntryCost();
+        public NodeRewardConfig Rewards = new NodeRewardConfig();
+        
+        [Tooltip("-1 significa tentativas infinitas. Qualquer outro valor limita quantas vezes o nó pode ser completado.")]
+        public int MaxCompletions = -1;
+        
+        public CompletionResetPolicy ResetPolicy = new CompletionResetPolicy();
+        
+        [Tooltip("Ícone opcional para representar este nó na UI do Hub.")]
+        public Sprite NodeIcon;
+        
+        public DiaryNodeRequirement Requirement = new DiaryNodeRequirement();
+
         public abstract void Execute();
     }
 
@@ -24,8 +37,7 @@ namespace CelestialCross.Progression
         public override void Execute()
         {
             if (DialogueGraph == null) return;
-            CelestialCross.Dialogue.Manager.DialogueManager.NextGraphToLoad = DialogueGraph;
-            UnityEngine.SceneManagement.SceneManager.LoadScene("DialogueScene"); // Nome padrão da cena
+            CelestialCross.System.StoryFlowController.Instance?.StartDialogueNode(this);
         }
     }
 
@@ -34,12 +46,12 @@ namespace CelestialCross.Progression
     {
         public LevelData LevelRef;
         public DungeonBaseSO DungeonRef;
+        
+        public global::System.Collections.Generic.List<FixedUnitSlot> FixedSlots = new global::System.Collections.Generic.List<FixedUnitSlot>();
 
         public override void Execute()
         {
-            // Lógica para iniciar combate
-            // Aqui integraríamos com o seu PlacementManager ou SceneLoader de combate
-            Debug.Log($"Iniciando Combate: {Title}");
+            CelestialCross.System.StoryFlowController.Instance?.StartCombatNode(this);
         }
     }
 }

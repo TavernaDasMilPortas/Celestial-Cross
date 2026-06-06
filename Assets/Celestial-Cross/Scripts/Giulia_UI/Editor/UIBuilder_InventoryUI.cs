@@ -9,7 +9,7 @@ using System.Collections.Generic;
 namespace CelestialCross.EditorArea {
     public class UIBuilder_InventoryUI : EditorWindow {
         
-        [MenuItem("Celestial Cross/UI Builders/Screens/Rest Scene Layout (Inventory)")]
+        [MenuItem("Celestial Cross/3. UI Builders/1. Screens/Rest Scene Layout (Inventory)")]
         public static void GenerateInventoryUI() {
             var canvas = Object.FindObjectOfType<Canvas>();
             if (canvas == null) {
@@ -1059,7 +1059,7 @@ namespace CelestialCross.EditorArea {
             return go.GetComponent<Button>();
         }
 
-        [MenuItem("Celestial Cross/UI Builders/Utils/Add Manage Artifact Button")]
+        [MenuItem("Celestial Cross/3. UI Builders/4. Utilities/Add Manage Artifact Button")]
         public static void CreateManageArtifactButton() {
             var activeObj = UnityEditor.Selection.activeGameObject;
             if (activeObj == null) {

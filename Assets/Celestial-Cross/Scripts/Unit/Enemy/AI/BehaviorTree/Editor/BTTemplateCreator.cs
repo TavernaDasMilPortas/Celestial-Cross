@@ -6,7 +6,7 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Editor
 {
     public static class BTTemplateCreator
     {
-        [MenuItem("Celestial Cross/AI/Generate BT Templates")]
+        [MenuItem("Celestial Cross/2. Data & Assets/AI/Generate BT Templates")]
         public static void GenerateTemplates()
         {
             string folder = "Assets/Celestial-Cross/Data/AI";

@@ -7,7 +7,7 @@ namespace CelestialCross.Giulia_UI.Editor
 {
     public class VictoryUIUtility
     {
-        [MenuItem("Celestial Cross/UI Builders/Utils/Auto-Link Victory Modal Components")]
+        [MenuItem("Celestial Cross/3. UI Builders/4. Utilities/Auto-Link Victory Modal Components")]
         public static void AutoLinkVictoryComponents()
         {
             var victoryUI = Object.FindFirstObjectByType<VictoryRewardUI>();

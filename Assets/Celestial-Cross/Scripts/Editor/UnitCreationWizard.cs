@@ -97,7 +97,8 @@ namespace CelestialCross.Editor
         private GUIStyle subtitleStyle;
         private GUIStyle richTextStyle;
 
-        [MenuItem("Celestial Cross/Editors/Unit Creation Wizard")]
+        // Menu path para abrir o Wizard
+        [MenuItem("Celestial Cross/1. Editors/Wizards/Unit Creation Wizard")]
         public static void OpenWindow()
         {
             var window = GetWindow<UnitCreationWizard>("Unit Wizard");
