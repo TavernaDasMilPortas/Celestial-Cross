@@ -311,7 +311,7 @@ MonoBehaviour:
       recentlyClickedContents: []
     sceneGUID: aae55989abe44784197dd80958fdd0f5
     sceneName: HubScene
-    lastSaveTimePrint: 12:26 AM (June 7, 2026)
+    lastSaveTimePrint: 12:27 AM (June 7, 2026)
     gracePeriod: 3
     activeIndex: 0
     checkingToLoad: 0
@@ -325,13 +325,13 @@ MonoBehaviour:
     scrollPosition: {x: 0, y: 0}
     toolbarScrollPosition: {x: 0, y: 0}
     rawUserHeight: 0
-    lastValidTabWidth: 61
+    lastValidTabWidth: 65
     alreadyCalculatedHeight: 0
     lastKnownHeight: 0
     tabs:
     - path: 
       paths: []
-      tabWidth: 58
+      tabWidth: 62
       name: New Tab
       icon: {fileID: 0}
       shortName: New Tab
@@ -684,13 +684,18 @@ MonoBehaviour:
   - tracker:
       mostClicked:
       - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/Modals_Container[0]"}'
+        count: 4
+        gameObjects:
+        - {fileID: 0}
+      - paths:
         - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitListScroll[0]/Viewport[0]"}'
         count: 3
         gameObjects:
         - {fileID: 0}
       - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/Modals_Container[0]"}'
-        count: 2
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitListScroll[0]/Viewport[0]/Content[0]"}'
+        count: 3
         gameObjects:
         - {fileID: 0}
       - paths:
@@ -709,11 +714,31 @@ MonoBehaviour:
         gameObjects:
         - {fileID: 0}
       - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitListScroll[0]/Viewport[0]/Content[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_3[0]"}'
+        count: 1
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]"}'
         count: 1
         gameObjects:
         - {fileID: 0}
       recentlyClicked:
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]"}'
+        count: 1
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/Modals_Container[0]"}'
+        count: 1
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_3[0]"}'
+        count: 1
+        gameObjects:
+        - {fileID: 0}
       - paths:
         - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitListScroll[0]/Viewport[0]/Content[0]"}'
         count: 1
@@ -730,11 +755,6 @@ MonoBehaviour:
         gameObjects:
         - {fileID: 0}
       - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/Modals_Container[0]"}'
-        count: 1
-        gameObjects:
-        - {fileID: 0}
-      - paths:
         - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/Background[0]"}'
         count: 1
         gameObjects:
@@ -744,12 +764,6 @@ MonoBehaviour:
         count: 1
         gameObjects:
         - {fileID: 0}
-      - paths: []
-        count: 1
-        gameObjects: []
-      - paths: []
-        count: 1
-        gameObjects: []
       - paths: []
         count: 1
         gameObjects: []
@@ -760,7 +774,7 @@ MonoBehaviour:
       recentlyClickedContents: []
     sceneGUID: e625a3e42d710e542b4c986f567fb23b
     sceneName: UnitScene
-    lastSaveTimePrint: 12:26 AM (June 7, 2026)
+    lastSaveTimePrint: 12:30 AM (June 7, 2026)
     gracePeriod: 3
     activeIndex: 9
     checkingToLoad: 0
@@ -772,9 +786,9 @@ MonoBehaviour:
     userAssetViewSize: -1
     previewHeight: 0
     scrollPosition: {x: 0, y: 0}
-    toolbarScrollPosition: {x: 166.19995, y: 0}
+    toolbarScrollPosition: {x: 170.19995, y: 0}
     rawUserHeight: 0
-    lastValidTabWidth: 566
+    lastValidTabWidth: 570
     alreadyCalculatedHeight: 0
     lastKnownHeight: 0
     tabs:
@@ -1762,12 +1776,12 @@ MonoBehaviour:
         - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]"}'
         prefab: 0
       owner: {fileID: 0}
-    - path: '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitListScroll[0]/Viewport[0]/Content[0]"}'
+    - path: '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]"}'
       paths: []
-      tabWidth: 62
-      name: Content
-      icon: {fileID: 7334568976493443608, guid: 0000000000000000d000000000000000, type: 0}
-      shortName: "Cont\u2026"
+      tabWidth: 66
+      name: UnitMainPanel
+      icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Moda\u2026"
       filterString: 
       newTab: 0
       scrollPosition: 0
@@ -1776,10 +1790,10 @@ MonoBehaviour:
       runtimeFoldouts: 
       runtimeMultiComponents: []
       tabTextContent:
-        m_Text: "Cont\u2026"
+        m_Text: "Unit\u2026"
         m_Image: {fileID: 0}
         m_Tooltip: 
-        m_TextWithWhitespace: "Cont\u2026\u200B"
+        m_TextWithWhitespace: "Unit\u2026\u200B"
       multiEditMode: 0
       locked: 0
       hasPreview: 0
@@ -1828,16 +1842,16 @@ MonoBehaviour:
         hidden: 0
         componentName: recttransform
         niceComponentName: rect transform
-      - index: 0
-        component: {fileID: 0}
-        missingComponentID: -1
-        foldout: 1
-        focusAfter: 0
-        awaitingScroll: 0
-        hidden: 0
-        componentName: horizontallayoutgroup
-        niceComponentName: horizontal layout group
       historyPaths:
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/Modals_Container[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_3[0]"}'
+        prefab: 0
       - paths:
         - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitListScroll[0]/Viewport[0]/Content[0]"}'
         prefab: 0
@@ -1846,9 +1860,6 @@ MonoBehaviour:
         prefab: 0
       - paths:
         - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitListScroll[0]"}'
-        prefab: 0
-      - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/Modals_Container[0]"}'
         prefab: 0
       - paths:
         - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/Background[0]"}'
@@ -2047,6 +2058,6 @@ MonoBehaviour:
     lastSelectedAsset: Assets/CoInspector/Editor/Core/Helpers/MissingScriptManager.asset
     lastClickedTab: -1
     previousTab: 0
-  tipsShown: 01000000010000000000000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+  tipsShown: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
   playModeStartScene: {}
   enteringPlayMode: 0
