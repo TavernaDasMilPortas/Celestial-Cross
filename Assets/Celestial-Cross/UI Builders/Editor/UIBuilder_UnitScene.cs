@@ -143,28 +143,25 @@ namespace CelestialCross.UIBuilders.Editor
             mainPanel.unitNameText = CreateText(mainPanelObj.transform, "UnitName", new Vector2(0.5f, 0.7f), new Vector2(0.95f, 0.95f), "Nome", 36);
             mainPanel.unitLevelText = CreateText(mainPanelObj.transform, "UnitLevel", new Vector2(0.5f, 0.5f), new Vector2(0.95f, 0.7f), "Lv. 1", 24);
 
-            var xpSliderGO = new GameObject("XpSlider", typeof(RectTransform), typeof(Slider));
-            xpSliderGO.transform.SetParent(mainPanelObj.transform, false);
-            var xpRT = xpSliderGO.GetComponent<RectTransform>();
+            var xpBarGO = new GameObject("XpBar", typeof(RectTransform), typeof(Image));
+            xpBarGO.transform.SetParent(mainPanelObj.transform, false);
+            var xpRT = xpBarGO.GetComponent<RectTransform>();
             xpRT.anchorMin = new Vector2(0.5f, 0.35f); xpRT.anchorMax = new Vector2(0.95f, 0.45f);
             xpRT.offsetMin = xpRT.offsetMax = Vector2.zero;
-            
-            var bgGO2 = new GameObject("Background", typeof(RectTransform), typeof(Image));
-            bgGO2.transform.SetParent(xpSliderGO.transform, false);
-            SetFullscreen(bgGO2.GetComponent<RectTransform>());
-            bgGO2.GetComponent<Image>().color = Color.black;
+            xpBarGO.GetComponent<Image>().color = Color.black; // Background
 
-            var fillArea = new GameObject("Fill Area", typeof(RectTransform));
-            fillArea.transform.SetParent(xpSliderGO.transform, false);
-            SetFullscreen(fillArea.GetComponent<RectTransform>());
-            
             var fill = new GameObject("Fill", typeof(RectTransform), typeof(Image));
-            fill.transform.SetParent(fillArea.transform, false);
+            fill.transform.SetParent(xpBarGO.transform, false);
             SetFullscreen(fill.GetComponent<RectTransform>());
-            fill.GetComponent<Image>().color = Color.yellow;
             
-            mainPanel.unitXpSlider = xpSliderGO.GetComponent<Slider>();
-            mainPanel.unitXpSlider.fillRect = fill.GetComponent<RectTransform>();
+            var fillImage = fill.GetComponent<Image>();
+            fillImage.color = Color.yellow;
+            fillImage.type = Image.Type.Filled;
+            fillImage.fillMethod = Image.FillMethod.Horizontal;
+            fillImage.fillOrigin = (int)Image.OriginHorizontal.Left;
+            fillImage.fillAmount = 0f;
+            
+            mainPanel.unitXpFillImage = fillImage;
 
             mainPanel.unitXpText = CreateText(mainPanelObj.transform, "XpText", new Vector2(0.5f, 0.2f), new Vector2(0.95f, 0.3f), "0 / 100", 18);
 

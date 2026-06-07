@@ -10,7 +10,7 @@ namespace CelestialCross.Scenes.Unit
         public Image unitSpriteImage; // Usará unitData.sprite
         public TextMeshProUGUI unitNameText;
         public TextMeshProUGUI unitLevelText;
-        public Slider unitXpSlider;
+        public Image unitXpFillImage;
         public TextMeshProUGUI unitXpText;
 
         [Header("Tabs")]

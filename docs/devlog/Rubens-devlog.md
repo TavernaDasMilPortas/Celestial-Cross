@@ -246,6 +246,21 @@ A visualização e a modularidade da Behavior Tree eram limitadas. Nós composto
 *   **Ajuste de Acessibilidade:** Corrigido o acesso de proteção em `AIBrain.cs` alterando a chamada para a propriedade pública `TargetProjectedPoint` no `CameraController`.
 *   **Filtro de Foco por Turno:** Atualizado o `CameraController.SetActionFocus` para ignorar snaps de câmera indesejados durante o turno de IA inimiga.
 
+## 22. Ferramentas de Produtividade UI e Correção de Migração
+**Data: 06/06/2026**
+### **Problema:**
+*   A ferramenta de migração de `Image` para `BetterImage` falhava em manter as cores customizadas porque o pacote BetterUI usava setters internos em C# (`Config.Set`) que a serialização de cópia nativa do Unity ignorava.
+*   Ajustar âncoras manualmente para interface responsiva tornava o processo de UI muito lento.
+*   Importar novas fontes e criar os Font Assets do TextMeshPro era um processo manual, repetitivo e demorado.
+*   O componente de XP no `UnitMainPanel` usava o antigo `Slider` nativo, o que impedia animações modernas de interface (requerendo `Image.Filled`).
+
+### **Solução:**
+*   **Refatoração do Migration Tool:** O script `BetterUIMigrationTool` foi reescrito para utilizar atribuição direta das propriedades em C# (`newComp.color = savedColor;`), acionando os callbacks corretos do BetterUI e corrigindo definitivamente a perda de cores.
+*   **Auto-Anchor Tool:** Desenvolvido o `RectTransformAnchorTools.cs` com atalhos de teclado (`Ctrl + ]` e `Ctrl + Shift + ]`) para grudar automaticamente as âncoras da UI nos limites visuais da tela.
+*   **Batch Font Creator:** Criado o utilitário `BatchFontAssetCreator.cs`, permitindo selecionar dezenas de fontes (TTF/OTF) na aba Project e gerar todos os Font Assets SDF do TextMeshPro de uma só vez (via clique direito).
+*   **XP Bar Atualizada:** O construtor `UIBuilder_UnitScene` e o painel principal foram alterados para abandonar o Slider e gerar uma barra de progresso horizontal moderna baseada em `Image (Filled)`.
+*   **Sistematização de Máscaras e Sombras:** Esclarecimento e documentação sobre o funcionamento do `Mask` nativo (Stencil) do Unity com o BetterUI, estabelecendo o uso do `MPUIKit` para Drop Shadows suaves via GPU e técnicas de PNG "Baked" para sombras em sprites complexos.
+
 ---
 
 ## Próximos Passos
