@@ -303,8 +303,38 @@ namespace CelestialCross.UIBuilders.Editor
             comp.petSpriteImage = sprite.GetComponent<Image>();
             comp.petSpriteImage.preserveAspect = true;
 
-            comp.petNameText = CreateText(equipped.transform, "PetName", new Vector2(0.5f, 0.7f), new Vector2(0.9f, 0.9f), "Nome do Pet", 30);
-            comp.petStatsText = CreateText(equipped.transform, "PetStats", new Vector2(0.5f, 0.5f), new Vector2(0.9f, 0.7f), "HP: 0 | ATK: 0", 20);
+            comp.petNameText = CreateText(equipped.transform, "PetName", new Vector2(0.5f, 0.75f), new Vector2(0.9f, 0.95f), "Nome do Pet", 30);
+            
+            var statsGridGO = new GameObject("StatsGrid", typeof(RectTransform), typeof(GridLayoutGroup));
+            statsGridGO.transform.SetParent(equipped.transform, false);
+            var gridRT = statsGridGO.GetComponent<RectTransform>();
+            gridRT.anchorMin = new Vector2(0.45f, 0.45f);
+            gridRT.anchorMax = new Vector2(0.95f, 0.75f);
+            gridRT.offsetMin = gridRT.offsetMax = Vector2.zero;
+
+            var glg = statsGridGO.GetComponent<GridLayoutGroup>();
+            glg.cellSize = new Vector2(100, 30);
+            glg.spacing = new Vector2(10, 5);
+            glg.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+            glg.constraintCount = 2;
+
+            comp.hpText = CreateText(statsGridGO.transform, "HPText", Vector2.zero, Vector2.zero, "HP: 0", 16);
+            comp.atkText = CreateText(statsGridGO.transform, "ATKText", Vector2.zero, Vector2.zero, "ATK: 0", 16);
+            comp.defText = CreateText(statsGridGO.transform, "DEFText", Vector2.zero, Vector2.zero, "DEF: 0", 16);
+            comp.spdText = CreateText(statsGridGO.transform, "SPDText", Vector2.zero, Vector2.zero, "SPD: 0", 16);
+            comp.critChanceText = CreateText(statsGridGO.transform, "CRateText", Vector2.zero, Vector2.zero, "CRIT: 0%", 16);
+            comp.critDmgText = CreateText(statsGridGO.transform, "CDmgText", Vector2.zero, Vector2.zero, "C.DMG: 0%", 16);
+            comp.accText = CreateText(statsGridGO.transform, "ACCText", Vector2.zero, Vector2.zero, "ACC: 0%", 16);
+            comp.resText = CreateText(statsGridGO.transform, "RESText", Vector2.zero, Vector2.zero, "RES: 0%", 16);
+            
+            comp.hpText.alignment = TextAlignmentOptions.Left;
+            comp.atkText.alignment = TextAlignmentOptions.Left;
+            comp.defText.alignment = TextAlignmentOptions.Left;
+            comp.spdText.alignment = TextAlignmentOptions.Left;
+            comp.critChanceText.alignment = TextAlignmentOptions.Left;
+            comp.critDmgText.alignment = TextAlignmentOptions.Left;
+            comp.accText.alignment = TextAlignmentOptions.Left;
+            comp.resText.alignment = TextAlignmentOptions.Left;
 
             var skillIcon = new GameObject("SkillIcon", typeof(RectTransform), typeof(Image));
             skillIcon.transform.SetParent(equipped.transform, false);
@@ -315,14 +345,20 @@ namespace CelestialCross.UIBuilders.Editor
 
             comp.skillDescText = CreateText(equipped.transform, "SkillDesc", new Vector2(0.65f, 0.2f), new Vector2(0.95f, 0.4f), "Descricao...", 16);
 
-            var btnGO = new GameObject("Btn_SelectPet", typeof(RectTransform), typeof(Image), typeof(Button));
-            btnGO.transform.SetParent(go.transform, false);
+            var btnGO = new GameObject("Btn_InvisibleSelectPet", typeof(RectTransform), typeof(Image), typeof(Button));
+            btnGO.transform.SetParent(equipped.transform, false);
             var btnRT = btnGO.GetComponent<RectTransform>();
-            btnRT.anchorMin = new Vector2(0.3f, 0.05f); btnRT.anchorMax = new Vector2(0.7f, 0.15f);
-            btnRT.offsetMin = btnRT.offsetMax = Vector2.zero;
-            btnGO.GetComponent<Image>().color = new Color(0.2f, 0.5f, 0.3f, 1f);
-            CreateText(btnGO.transform, "Text", Vector2.zero, Vector2.one, "Selecionar Pet", 24).alignment = TextAlignmentOptions.Center;
-            comp.selectPetButton = btnGO.GetComponent<Button>();
+            btnRT.anchorMin = sRT.anchorMin;
+            btnRT.anchorMax = sRT.anchorMax;
+            btnRT.offsetMin = sRT.offsetMin;
+            btnRT.offsetMax = sRT.offsetMax;
+            btnGO.GetComponent<Image>().color = new Color(0, 0, 0, 0); // Invisível
+
+            var pText = CreateText(btnGO.transform, "PlusText", Vector2.zero, Vector2.one, "+", 60);
+            pText.alignment = TextAlignmentOptions.Center;
+            pText.color = new Color(1, 1, 1, 0.3f);
+            
+            comp.petImageButton = btnGO.GetComponent<Button>();
 
             go.SetActive(false);
             return comp;

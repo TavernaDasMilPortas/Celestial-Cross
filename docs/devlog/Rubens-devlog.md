@@ -263,11 +263,42 @@ A visualização e a modularidade da Behavior Tree eram limitadas. Nós composto
 
 ---
 
+## 23. Correção do Sistema de Recompensas e Loot (ProgressionService)
+**Data: 08/06/2026**
+### **Problemas:**
+*   As **LootTables procedurais** estavam gerando os mesmos itens duas vezes após os combates (causado por múltiplos inimigos morrendo no mesmo frame, disparando a rotina de vitória mais de uma vez).
+*   Na primeira vitória de uma fase (First Clear), a economia base configurada (Dinheiro e XP) desaparecia do log de recompensas.
+
+### **Soluções:**
+*   **Trava de Segurança:** Criada a flag `isPhaseEnded` no `PhaseManager` para garantir que os prêmios só sejam calculados e distribuídos exatamente 1 vez por combate, cortando o loop de mortes múltiplas.
+*   **Refatoração do ProgressionService:** Removida a lógica mutuamente exclusiva (`if/else`) entre as recompensas. Agora a economia base (`RepeatRewards`) é **sempre** distribuída. O bônus de primeira vitória (`FirstClearRewards`) entra como uma soma adicional apenas na primeira vez em que a fase é jogada.
+
+---
+
+## 24. BetterUI: Depuração do "White Flash" e Transições
+**Data: 08/06/2026**
+### **Problema:**
+*   Ícones baseados em `BetterImage` piscavam uma caixa branca ao carregar a tela pela primeira vez. Ao tentar contornar via script forçando re-renderização, os ícones dinâmicos passaram a sumir misteriosamente ou serem sobrescritos por placeholders após 0.1 segundos.
+
+### **Solução:**
+*   **Ajuste do Fixer:** O `BetterUIFixer` foi refatorado. Removemos os hacks agressivos (`sprite = null` e `enabled = false/true`) que estavam corrompendo a máquina de transições do BetterUI. Agora ele usa apenas chamadas nativas pesadas da GPU (`SetAllDirty()` e `SetMaterialDirty()`).
+*   **Componente Plug & Play:** Criado o `BetterUIAutoRefresher`, um componente que pode ser anexado a qualquer Modal problemático. Ao dar `OnEnable`, ele espera 0.2s e re-renderiza apenas as BetterImages filhas daquele modal automaticamente.
+*   **Descoberta Arquitetural:** Validado que a máquina de estados (`Transitions`) do BetterUI substitui imagens injetadas via código. A solução para animações dinâmicas é desmarcar a transição de **Sprite** no Inspector, ou preencher o Prefab com uma imagem placeholder (nunca `None`).
+
+---
+
+## 25. Correções Locais (Interface e Gameplay)
+**Data: 08/06/2026**
+### **Problemas Resolvidos:**
+*   **Sincronização de Pets:** Pets equipados em unidades não eram levados para o tabuleiro de combate. (Resolvido).
+*   **Trava Fantasma de Energia:** O sistema impedia o início da fase por falta de energia, mesmo quando a UI exibia 50 de energia na conta. (Resolvido).
+*   **Modal de Habilidades do Pet:** Finalização e ajustes na interface de visualização de skills dos pets. (Resolvido).
+
+---
+
 ## Próximos Passos
-*   **Ajuste do Fluxo de Fim de Combate / TurnManager:** Corrigir o fluxo de combate onde a UI de finalização de partida (modal de vitória/derrota) é aberta, mas o `TurnManager` e elementos de UI de combate (como o combat text e indicadores de turno) continuam atualizando infinitamente por baixo.
-*   Arrumar os dropdowns do filtro de artefatos para que eles apareçam perfeitamente com os nomes amigáveis dos atributos em jogo.
-*   Arrumar anchors da Shop Scene para garantir responsividade em diferentes resoluções.
-*   Aprofundar as mecânicas das Inteligências Artificiais usando o novo sistema de Variáveis de Unidade.
+*   Aprofundar a arquitetura de features futuras para Pets e Habilidades.
+*   Polimento visual e transições utilizando a nova fundação segura do BetterUI.
 *   Verificar em Play Mode as transições visuais e o submodal de detalhes de status durante batalhas reais.
 
 

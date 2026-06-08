@@ -20,11 +20,41 @@ namespace TransformIsolator.Editor
         {
             public Vector3 position;
             public Quaternion rotation;
+            public Vector3 lossyScale;
+            public bool isRect;
+            public Vector2 rectSize;
 
             public TransformData(Transform t)
             {
                 position = t.position;
                 rotation = t.rotation;
+                lossyScale = t.lossyScale;
+
+                RectTransform rt = t as RectTransform;
+                if (rt != null)
+                {
+                    isRect = true;
+                    rectSize = rt.rect.size;
+                }
+                else
+                {
+                    isRect = false;
+                    rectSize = Vector2.zero;
+                }
+            }
+
+            public bool HasChanged(Transform t)
+            {
+                if (t.position != position) return true;
+                if (t.rotation != rotation) return true;
+                if (t.lossyScale != lossyScale) return true;
+                
+                if (isRect)
+                {
+                    RectTransform rt = t as RectTransform;
+                    if (rt != null && rt.rect.size != rectSize) return true;
+                }
+                return false;
             }
         }
 
@@ -111,7 +141,7 @@ namespace TransformIsolator.Editor
                 Transform t = obj.transform;
                 if (selectedTransforms.TryGetValue(t, out TransformData cachedParent))
                 {
-                    if (t.position != cachedParent.position || t.rotation != cachedParent.rotation)
+                    if (cachedParent.HasChanged(t))
                     {
                         anyChanged = true;
 
@@ -125,6 +155,23 @@ namespace TransformIsolator.Editor
                                 // Actually, Unity's drag operation groups undos automatically.
                                 Undo.RecordObject(child, "Transform Isolator Restore");
                                 
+                                // Restore scale
+                                Vector3 parentLossy = t.lossyScale;
+                                Vector3 targetScale = cachedChild.lossyScale;
+                                child.localScale = new Vector3(
+                                    parentLossy.x == 0 ? 0 : targetScale.x / parentLossy.x,
+                                    parentLossy.y == 0 ? 0 : targetScale.y / parentLossy.y,
+                                    parentLossy.z == 0 ? 0 : targetScale.z / parentLossy.z
+                                );
+
+                                // Restore RectTransform properties if applicable
+                                RectTransform rt = child as RectTransform;
+                                if (rt != null && cachedChild.isRect)
+                                {
+                                    rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, cachedChild.rectSize.x);
+                                    rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, cachedChild.rectSize.y);
+                                }
+
                                 child.position = cachedChild.position;
                                 child.rotation = cachedChild.rotation;
                             }

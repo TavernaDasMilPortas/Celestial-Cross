@@ -47,6 +47,10 @@ namespace CelestialCross.Progression
         public LevelData LevelRef;
         public DungeonBaseSO DungeonRef;
         
+        [Header("Loot Procedural")]
+        [SerializeReference]
+        public global::System.Collections.Generic.List<CelestialCross.Data.Loot.BaseLootTable> SpecificLootTables = new global::System.Collections.Generic.List<CelestialCross.Data.Loot.BaseLootTable>();
+
         public global::System.Collections.Generic.List<FixedUnitSlot> FixedSlots = new global::System.Collections.Generic.List<FixedUnitSlot>();
 
         public override void Execute()

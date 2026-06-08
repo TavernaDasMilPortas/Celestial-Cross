@@ -11,7 +11,14 @@ namespace TransformIsolator.Editor
         // Ajuste esse valor para mover o botão mais para a esquerda ou direita.
         // Isso ajuda a alinhar perfeitamente com os botões do Hierarchy Designer.
         // -------------------------------------------------------------------
-        private const float X_OFFSET_FROM_RIGHT = 18f;
+        // O Hierarchy tem "slots" da direita para a esquerda.
+        // Cada ícone padrão ocupa cerca de 18 pixels de largura.
+        // Coluna 0 = Extrema Direita (Geralmente o Olho)
+        // Coluna 1 = Ao lado do Olho (Geralmente o Cadeado)
+        // Coluna 2 = Terceiro espaço
+        // Coluna 3 = Quarto espaço... etc.
+        private const int COLUMN_INDEX = 2;
+        private const float X_OFFSET_FROM_RIGHT = COLUMN_INDEX * 18f;
         private const float BUTTON_WIDTH = 16f;
 
         private static GUIContent linkedIcon;
@@ -44,9 +51,17 @@ namespace TransformIsolator.Editor
             GameObject go = EditorUtility.InstanceIDToObject(instanceID) as GameObject;
             if (go == null) return;
 
-            // Define o rect do botão na extrema direita da Hierarchy
+            // Em vez de alinhar pela direita (que conflita com ícones de componentes variáveis do Hierarchy Designer),
+            // vamos calcular a largura do nome do GameObject e desenhar o ícone logo após o texto!
+            GUIStyle labelStyle = new GUIStyle(GUI.skin.label);
+            float textWidth = labelStyle.CalcSize(new GUIContent(go.name)).x;
+            
+            // selectionRect.x já contém a indentação correta da árvore.
+            // O Unity adiciona um ícone de ~16px antes do texto, mais uns ~4px de margem.
+            float startX = selectionRect.x + textWidth + 24f;
+
             Rect buttonRect = new Rect(
-                selectionRect.xMax - X_OFFSET_FROM_RIGHT,
+                startX,
                 selectionRect.y,
                 BUTTON_WIDTH,
                 selectionRect.height

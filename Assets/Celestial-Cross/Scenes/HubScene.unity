@@ -279,7 +279,7 @@ MonoBehaviour:
   flippingMode: 0
   materialProperties:
     FloatProperties: []
-  materialType: 
+  materialType: Default
   materialEffect: 0
   materialProperty1: 0
   materialProperty2: 0
@@ -738,7 +738,7 @@ MonoBehaviour:
   flippingMode: 0
   materialProperties:
     FloatProperties: []
-  materialType: 
+  materialType: Default
   materialEffect: 0
   materialProperty1: 0
   materialProperty2: 0
@@ -987,7 +987,8 @@ MonoBehaviour:
   inventorySceneName: InventoryScene
   unitSceneName: UnitScene
   shopSceneName: ShopScene
-  categories: []
+  categories:
+  - {fileID: 11400000, guid: 7ae324cccbef89349a6be98a24ae0d9e, type: 2}
   moneyText: {fileID: 698238841}
   energyText: {fileID: 1405131620}
   btnGoInventory: {fileID: 2138286186}
@@ -1166,7 +1167,7 @@ GameObject:
   m_Component:
   - component: {fileID: 448315946}
   - component: {fileID: 448315948}
-  - component: {fileID: 448315947}
+  - component: {fileID: 448315949}
   m_Layer: 0
   m_Name: Icon
   m_TagString: Untagged
@@ -1193,7 +1194,15 @@ RectTransform:
   m_AnchoredPosition: {x: -350, y: 0}
   m_SizeDelta: {x: 150, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &448315947
+--- !u!222 &448315948
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 448315945}
+  m_CullTransparentMesh: 1
+--- !u!114 &448315949
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1202,9 +1211,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 448315945}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a132ebb16d23354b841b6618f4fa0e5, type: 3}
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TheraBytes.BetterUi.BetterImage
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
@@ -1213,7 +1222,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 78a7dd1798b716e4abd47b746b07d6c1, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1223,94 +1232,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
-  raycastPaddingFallback:
-    screenConfigName: 
-    OptimizedSize:
-      left: 0
-      right: 0
-      top: 0
-      bottom: 0
-    MinSize:
-      left: -1000
-      right: -1000
-      top: -1000
-      bottom: -1000
-    MaxSize:
-      left: 1000
-      right: 1000
-      top: 1000
-      bottom: 1000
-    UseMinSize: 0
-    UseMaxSize: 0
-    ModLeft:
-      ExponentialScale: 1
-      SizeModifiers:
-      - Mode: 1
-        Impact: 1
-    ModRight:
-      ExponentialScale: 1
-      SizeModifiers:
-      - Mode: 1
-        Impact: 1
-    ModTop:
-      ExponentialScale: 1
-      SizeModifiers:
-      - Mode: 1
-        Impact: 1
-    ModBottom:
-      ExponentialScale: 1
-      SizeModifiers:
-      - Mode: 1
-        Impact: 1
-  raycastPaddingSizers:
-    items: []
-  colorMode: 0
-  secondColor: {r: 1, g: 1, b: 1, a: 1}
-  flippingMode: 0
-  materialProperties:
-    FloatProperties: []
-  materialType: 
-  materialEffect: 0
-  materialProperty1: 0
-  materialProperty2: 0
-  materialProperty3: 0
-  keepBorderAspectRatio: 0
-  spriteBorderScaleFallback:
-    screenConfigName: 
-    OptimizedSize: {x: 1, y: 1}
-    MinSize: {x: 0, y: 0}
-    MaxSize: {x: 3, y: 3}
-    UseMinSize: 0
-    UseMaxSize: 0
-    ModX:
-      ExponentialScale: 1
-      SizeModifiers:
-      - Mode: 0
-        Impact: 1
-    ModY:
-      ExponentialScale: 1
-      SizeModifiers:
-      - Mode: 0
-        Impact: 1
-  customBorderScales:
-    items: []
-  fallbackSpriteSettings:
-    Sprite: {fileID: 0}
-    ColorMode: 0
-    PrimaryColor: {r: 1, g: 1, b: 1, a: 1}
-    SecondaryColor: {r: 1, g: 1, b: 1, a: 1}
-    FlippingMode: 0
-    screenConfigName: 
-  customSpriteSettings:
-    items: []
---- !u!222 &448315948
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 448315945}
-  m_CullTransparentMesh: 1
 --- !u!1 &484295734
 GameObject:
   m_ObjectHideFlags: 0
@@ -3770,7 +3691,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f96aa5b562b00394c8c8cb1422f42fd1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CelestialCross.Scenes.Hub.HubCardUI
-  iconImage: {fileID: 448315947}
+  iconImage: {fileID: 448315949}
   titleText: {fileID: 519396449}
   subtitleText: {fileID: 1916746994}
   progressBar: {fileID: 1927534770}
@@ -4178,6 +4099,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2018823325}
+  - {fileID: 1832988143}
   - {fileID: 801982185}
   - {fileID: 2055819006}
   - {fileID: 1311438020}
@@ -5133,7 +5055,7 @@ MonoBehaviour:
   flippingMode: 0
   materialProperties:
     FloatProperties: []
-  materialType: 
+  materialType: Default
   materialEffect: 0
   materialProperty1: 0
   materialProperty2: 0
@@ -5321,7 +5243,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1832988142}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -5335,7 +5257,7 @@ RectTransform:
   - {fileID: 1907813854}
   - {fileID: 100691953}
   - {fileID: 102137263}
-  m_Father: {fileID: 2018823325}
+  m_Father: {fileID: 1332321520}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -6104,7 +6026,6 @@ RectTransform:
   m_Children:
   - {fileID: 444995405}
   - {fileID: 236621359}
-  - {fileID: 1832988143}
   - {fileID: 2138286185}
   - {fileID: 2129697424}
   - {fileID: 1456445789}

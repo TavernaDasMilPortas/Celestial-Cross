@@ -102,6 +102,11 @@ namespace CelestialCross.Scenes.Hub
 
             Action buildAction = navigationStack.Peek();
             buildAction?.Invoke();
+
+            if (CelestialCross.System.BetterUIFixer.Instance != null && stackContentContainer != null)
+            {
+                CelestialCross.System.BetterUIFixer.Instance.RefreshImages(stackContentContainer.gameObject);
+            }
         }
 
         private void ClearContainer()

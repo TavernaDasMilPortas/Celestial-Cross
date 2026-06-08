@@ -43,7 +43,7 @@ public class PlacementManager : MonoBehaviour
 #if UNITY_EDITOR
         if (petCatalog == null)
         {
-            petCatalog = UnityEditor.AssetDatabase.LoadAssetAtPath<PetCatalog>("Assets/Celestial-Cross/Prefabs/PetCatalog.asset");
+            petCatalog = UnityEditor.AssetDatabase.LoadAssetAtPath<PetCatalog>("Assets/Celestial-Cross/Data/Catalogs/PetCatalog.asset");
         }
 #endif
     }

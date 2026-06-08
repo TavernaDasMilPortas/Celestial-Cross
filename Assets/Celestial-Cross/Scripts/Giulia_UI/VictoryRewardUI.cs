@@ -302,7 +302,16 @@ namespace CelestialCross.Giulia_UI
             var titleTxt = rootContainer.transform.Find("MainScrollView/Viewport/Content/ModalTitle")?.GetComponent<TextMeshProUGUI>();
             if (titleTxt != null)
             {
-                titleTxt.text = isVictory ? "VITÓRIA!" : "DERROTA...";
+                string nodeName = "";
+                if (GameFlowManager.Instance != null && GameFlowManager.Instance.SelectedStoryNode != null)
+                {
+                    nodeName = $"\n<size=50%>{GameFlowManager.Instance.SelectedStoryNode.Title}</size>";
+                }
+                else if (GameFlowManager.Instance != null && GameFlowManager.Instance.SelectedDungeonNode != null && GameFlowManager.Instance.SelectedDungeonNode.LevelRef != null)
+                {
+                    nodeName = $"\n<size=50%>{GameFlowManager.Instance.SelectedDungeonNode.LevelRef.LevelName}</size>";
+                }
+                titleTxt.text = isVictory ? $"VITÓRIA!{nodeName}" : $"DERROTA...{nodeName}";
                 titleTxt.color = isVictory ? Color.yellow : Color.red;
             }
 
@@ -443,6 +452,75 @@ namespace CelestialCross.Giulia_UI
                         Button btn = go.GetComponent<Button>();
                         if (btn == null) btn = go.AddComponent<Button>();
                         btn.onClick.AddListener(() => OpenPetModal(p, go));
+                    }
+                }
+
+                if (reward.SourceDefinitions != null)
+                {
+                    foreach (var def in reward.SourceDefinitions)
+                    {
+                        if (def.Type == CelestialCross.Data.Rewards.RewardType.Unit && def.UnitRef != null)
+                        {
+                            hasLoot = true;
+                            var go = Instantiate(artifactItemPrefab, itemsContent);
+                            go.name = "Unit_" + def.UnitRef.UnitID;
+                            go.SetActive(true);
+                            spawnedItems.Add(go);
+                            TMP_Text[] texts = go.GetComponentsInChildren<TMP_Text>();
+
+                            Sprite uIcon = def.UnitRef.icon;
+                            if (uIcon != null) {
+                                Transform iconTransform = go.transform.Find("Icon");
+                                if (iconTransform != null) {
+                                    Image img = iconTransform.GetComponent<Image>();
+                                    if (img != null) {
+                                        img.sprite = uIcon;
+                                    }
+                                    iconTransform.gameObject.SetActive(true);
+                                }
+                            }
+
+                            if (texts.Length > 0)
+                            {
+                                texts[0].text = "<color=#AA00FF><b>" + def.UnitRef.displayName + "</b></color>";
+                                texts[0].alignment = TextAlignmentOptions.Bottom;
+                                texts[0].enableWordWrapping = false;
+                            }
+                            if (texts.Length > 1)
+                            {
+                                texts[1].gameObject.SetActive(false);
+                            }
+                            Image bg = go.GetComponent<Image>();
+                            if (bg != null) bg.color = new Color(0.3f, 0.1f, 0.5f, 1f); // Roxo para units
+                        }
+                        else if (def.Type == CelestialCross.Data.Rewards.RewardType.Item)
+                        {
+                            hasLoot = true;
+                            var go = Instantiate(artifactItemPrefab, itemsContent);
+                            go.name = "Item_" + def.ReferenceID;
+                            go.SetActive(true);
+                            spawnedItems.Add(go);
+                            TMP_Text[] texts = go.GetComponentsInChildren<TMP_Text>();
+
+                            // Oculta ícone, já que mostramos só texto
+                            Transform iconTransform = go.transform.Find("Icon");
+                            if (iconTransform != null) {
+                                iconTransform.gameObject.SetActive(false);
+                            }
+
+                            if (texts.Length > 0)
+                            {
+                                texts[0].text = $"<color=#00FFFF><b>+{def.Amount}\n{def.ReferenceID}</b></color>";
+                                texts[0].alignment = TextAlignmentOptions.Center;
+                                texts[0].enableWordWrapping = true;
+                            }
+                            if (texts.Length > 1)
+                            {
+                                texts[1].gameObject.SetActive(false);
+                            }
+                            Image bg = go.GetComponent<Image>();
+                            if (bg != null) bg.color = new Color(0.1f, 0.3f, 0.4f, 1f); // Azul/Teal para itens
+                        }
                     }
                 }
             }

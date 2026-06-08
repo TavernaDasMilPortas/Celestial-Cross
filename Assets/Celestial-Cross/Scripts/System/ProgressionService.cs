@@ -314,15 +314,19 @@ namespace CelestialCross.System
             var rewards = new List<RewardDefinition>();
 
             // Base rewards
-            if (IsNodeCompleted(node.NodeID))
+            // Base rewards (sempre concedidos)
+            if (node.Rewards.RepeatRewards != null)
             {
-                if (node.Rewards.RepeatRewards != null)
-                    rewards.AddRange(node.Rewards.RepeatRewards);
+                rewards.AddRange(node.Rewards.RepeatRewards);
             }
-            else
+
+            // First Clear Rewards (bônus da primeira vez)
+            if (!IsNodeCompleted(node.NodeID))
             {
                 if (node.Rewards.FirstClearRewards != null)
+                {
                     rewards.AddRange(node.Rewards.FirstClearRewards);
+                }
             }
 
             // Milestone rewards
@@ -338,6 +342,24 @@ namespace CelestialCross.System
                 }
             }
 
+            // Loot Tables Procedurais (rodam SEMPRE, independente de first clear ou repeat)
+            if (node.Rewards.LootTables != null)
+            {
+                foreach (var table in node.Rewards.LootTables)
+                {
+                    if (table != null)
+                    {
+                        rewards.Add(new RewardDefinition
+                        {
+                            Type = RewardType.LootTable,
+                            Amount = 1,
+                            LootTableRef = table
+                        });
+                    }
+                }
+            }
+
+            Debug.Log($"[ProgressionService] GetRewardsForNode('{node.NodeID}'). Base Rewards count: {rewards.Count}");
             return rewards;
         }
     }

@@ -30,6 +30,9 @@ namespace CelestialCross.Scenes.Unit
         public PetCatalog petCatalog;
         public ArtifactSetCatalog artifactSetCatalog;
 
+        private UnitData currentLoadedUnit;
+        private CelestialCross.Data.RuntimeUnitData currentLoadedRuntime;
+
         private void Awake()
         {
             if (Instance == null) Instance = this;
@@ -101,6 +104,9 @@ namespace CelestialCross.Scenes.Unit
 
         private void LoadUnit(UnitData unitSO, CelestialCross.Data.RuntimeUnitData runtimeData)
         {
+            currentLoadedUnit = unitSO;
+            currentLoadedRuntime = runtimeData;
+
             if (unitSO != null && mainPanel != null)
             {
                 mainPanel.LoadUnit(unitSO, runtimeData);
@@ -152,14 +158,45 @@ namespace CelestialCross.Scenes.Unit
             if (constellationDetailPanel) constellationDetailPanel.SetActive(false);
             if (abilitiesDetailPanel) abilitiesDetailPanel.SetActive(false);
 
-            // Mostrar ativado
+            // Mostrar ativado e Forçar Refresh para consertar o bug do BetterUI limpando as imagens
             switch (tabIndex)
             {
-                case 0: if (attributesDetailPanel) attributesDetailPanel.SetActive(true); break;
-                case 1: if (petDetailPanel) petDetailPanel.SetActive(true); break;
-                case 2: if (equipmentDetailPanel) equipmentDetailPanel.SetActive(true); break;
-                case 3: if (constellationDetailPanel) constellationDetailPanel.SetActive(true); break;
-                case 4: if (abilitiesDetailPanel) abilitiesDetailPanel.SetActive(true); break;
+                case 0: 
+                    if (attributesDetailPanel) 
+                    { 
+                        attributesDetailPanel.SetActive(true); 
+                        attributesDetailPanel.GetComponent<UnitDetailPanel_Attributes>()?.Refresh(currentLoadedUnit, currentLoadedRuntime);
+                    } 
+                    break;
+                case 1: 
+                    if (petDetailPanel) 
+                    { 
+                        petDetailPanel.SetActive(true); 
+                        petDetailPanel.GetComponent<UnitDetailPanel_Pet>()?.Refresh(currentLoadedUnit, currentLoadedRuntime, petCatalog);
+                    } 
+                    break;
+                case 2: 
+                    if (equipmentDetailPanel) 
+                    { 
+                        equipmentDetailPanel.SetActive(true); 
+                        equipmentDetailPanel.GetComponent<UnitDetailPanel_Equipment>()?.Refresh(currentLoadedUnit, currentLoadedRuntime, artifactSetCatalog);
+                    } 
+                    break;
+                case 3: 
+                    if (constellationDetailPanel) 
+                    { 
+                        constellationDetailPanel.SetActive(true); 
+                        constellationDetailPanel.GetComponent<UnitDetailPanel_Constellation>()?.Refresh(currentLoadedUnit, currentLoadedRuntime);
+                    } 
+                    break;
+                case 4: 
+                    if (abilitiesDetailPanel) 
+                    { 
+                        abilitiesDetailPanel.SetActive(true); 
+                        var ab = abilitiesDetailPanel.GetComponent<UnitDetailPanel_Abilities>();
+                        if (ab != null) { ab.unitCatalog = unitCatalog; ab.Refresh(currentLoadedUnit, currentLoadedRuntime, petCatalog); }
+                    } 
+                    break;
             }
         }
 

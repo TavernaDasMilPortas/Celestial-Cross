@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO
   abilityName: "\xC9 Tarde"
   abilityIcon: {fileID: 21300000, guid: 24fd09d03a383ad4b98bb10156a8950e, type: 3}
-  abilityDescription: 
+  abilityDescription: "Ao fim do turno aumenta a velocidade da personagem em 10%,
+    estacando at\xE9 10 vezes."
   displayRange: 0
   NodeLinks:
   - BaseNodeGuid: d11aa7d0-77cf-41a9-995f-6fd22d506fe5
@@ -91,6 +92,7 @@ MonoBehaviour:
     freshApplicationBonus: 15
     targetsFriendlies: 0
     estimatedValue: 10
+    isLocked: 0
   GeneratedDescription: "<b>--- DESCRI\xC7\xC3O AUTOM\xC1TICA ---</b>\r\n- Esta \xE9
     uma habilidade do tipo Passive.\r\n- Desvia o fluxo dependendo do n\xEDvel atual
     da habilidade.\r\n- Seleciona automaticamente a si mesmo.\r\n"

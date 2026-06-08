@@ -95,14 +95,25 @@ public class PhaseManager : MonoBehaviour
         }
     }
 
+    private bool isPhaseEnded = false;
+
     private void EndPhase(Team winningTeam)
     {
+        if (isPhaseEnded) return;
+        isPhaseEnded = true;
+
         CelestialCross.Data.Dungeon.RuntimeReward finalReward = null;
 
         if (winningTeam == Team.Player)
         {
             Debug.Log("Fase concluída! Vitória do Jogador!");
             finalReward = GrantRewards();
+
+            // Gravar conclusão do StoryNode após pegar os rewards (para garantir que pegamos o FirstClear antes do +1)
+            if (GameFlowManager.Instance != null && GameFlowManager.Instance.SelectedStoryNode != null)
+            {
+                CelestialCross.System.ProgressionService.Instance?.RecordNodeCompletion(GameFlowManager.Instance.SelectedStoryNode);
+            }
         }
         else
         {
@@ -144,45 +155,92 @@ public class PhaseManager : MonoBehaviour
         SceneManager.LoadScene(hubSceneName);
     }
 
-    private CelestialCross.Data.Dungeon.RuntimeReward GrantRewards()
+    public CelestialCross.Data.Dungeon.RuntimeReward GrantRewards()
     {
-        List<CelestialCross.Data.Rewards.RewardDefinition> baseRewards = fallbackVictoryRewards;
+        Debug.Log("[PhaseManager] GrantRewards INICIADO!");
 
+        List<CelestialCross.Data.Rewards.RewardDefinition> baseRewards = new List<CelestialCross.Data.Rewards.RewardDefinition>();
+
+        bool usedNodeRewards = false;
+
+        if (GameFlowManager.Instance != null && GameFlowManager.Instance.SelectedStoryNode != null)
+        {
+            Debug.Log($"[PhaseManager] Gerando rewards para StoryNode: {GameFlowManager.Instance.SelectedStoryNode.NodeID}");
+            var nodeRewards = CelestialCross.System.ProgressionService.Instance?.GetRewardsForNode(GameFlowManager.Instance.SelectedStoryNode);
+            if (nodeRewards != null && nodeRewards.Count > 0)
+            {
+                baseRewards.AddRange(nodeRewards);
+                usedNodeRewards = true;
+            }
+        }
+        
         if (GameFlowManager.Instance != null && GameFlowManager.Instance.SelectedLevel != null)
         {
+            Debug.Log($"[PhaseManager] Gerando rewards para LevelData: {GameFlowManager.Instance.SelectedLevel.name}");
             if (GameFlowManager.Instance.SelectedLevel.FirstClearRewards != null && GameFlowManager.Instance.SelectedLevel.FirstClearRewards.Count > 0)
             {
-                baseRewards = GameFlowManager.Instance.SelectedLevel.FirstClearRewards;
+                baseRewards.AddRange(GameFlowManager.Instance.SelectedLevel.FirstClearRewards);
+                usedNodeRewards = true;
             }
         }
 
+        // Se a fase não retornou NENHUM reward específico (ou se quisermos garantir que o fallback atue como base),
+        // no passado, se a lista estivesse vazia, caíamos no fallback. 
+        // Agora, como as LootTables garantem que a lista nunca seja vazia, precisamos checar se existem rewards do tipo Money/XP/etc.
+        bool hasBaseEconomy = baseRewards.Exists(r => r.Type == CelestialCross.Data.Rewards.RewardType.Money || r.Type == CelestialCross.Data.Rewards.RewardType.Energy || r.Type == CelestialCross.Data.Rewards.RewardType.XP);
+        if (!hasBaseEconomy && fallbackVictoryRewards != null)
+        {
+            Debug.Log("[PhaseManager] Fase não possui economia base explícita. Adicionando FallbackVictoryRewards.");
+            baseRewards.AddRange(fallbackVictoryRewards);
+        }
+
+        Debug.Log($"[PhaseManager] Criando RuntimeReward com {baseRewards.Count} base rewards...");
+        for (int i = 0; i < baseRewards.Count; i++)
+        {
+            if (baseRewards[i] != null)
+            {
+                Debug.Log($"[PhaseManager] Item [{i}]: Type={baseRewards[i].Type}, Amount={baseRewards[i].Amount}");
+            }
+            else
+            {
+                Debug.Log($"[PhaseManager] Item [{i}]: NULL");
+            }
+        }
         var rewardToGrant = CelestialCross.System.RewardService.CreateRuntimeReward(baseRewards);
 
         // --- GERAÇÃO DE LOOT PROCEDURAL E DINÂMICO ---
-        if (GameFlowManager.Instance != null && GameFlowManager.Instance.SelectedDungeon != null && GameFlowManager.Instance.SelectedDungeonNode != null)
+        // NOTA: As LootTables do StoryNode.Rewards.LootTables já são processadas via
+        // GetRewardsForNode() → RewardService.CreateRuntimeReward(), então NÃO devem ser
+        // processadas aqui novamente para evitar drops duplicados.
+        if (GameFlowManager.Instance != null)
         {
-            var dungeon = GameFlowManager.Instance.SelectedDungeon;
-            var node = GameFlowManager.Instance.SelectedDungeonNode;
-
-            // 1. Processar Drop Tables Globais (Nova Arquitetura)
-            if (dungeon.GlobalLootTables != null)
+            // 1. Processar Drop Tables Globais do Dungeon (Apenas se for uma run de Masmorra!)
+            if (GameFlowManager.Instance.SelectedDungeon != null && GameFlowManager.Instance.SelectedDungeonNode != null)
             {
-                foreach (var table in dungeon.GlobalLootTables)
+                var dungeon = GameFlowManager.Instance.SelectedDungeon;
+                if (dungeon.GlobalLootTables != null)
                 {
-                    if (table != null) table.GenerateLoot(rewardToGrant);
+                    foreach (var table in dungeon.GlobalLootTables)
+                    {
+                        if (table != null) table.GenerateLoot(rewardToGrant);
+                    }
                 }
             }
 
-            // 2. Processar Drop Tables Específicos deste Andar (Nova Arquitetura)
-            if (node.SpecificLootTables != null)
+            // 2. Processar Drop Tables Específicos deste Andar do Dungeon
+            if (GameFlowManager.Instance.SelectedDungeonNode != null)
             {
-                foreach (var table in node.SpecificLootTables)
+                var node = GameFlowManager.Instance.SelectedDungeonNode;
+                if (node.SpecificLootTables != null)
                 {
-                    if (table != null) table.GenerateLoot(rewardToGrant);
+                    foreach (var table in node.SpecificLootTables)
+                    {
+                        if (table != null) table.GenerateLoot(rewardToGrant);
+                    }
                 }
             }
 
-            Debug.Log($"[PhaseManager] Recompensa gerada! Artefatos totais: {rewardToGrant.GeneratedArtifacts.Count}");
+            Debug.Log($"[PhaseManager] Recompensa procedural gerada! Artefatos: {rewardToGrant.GeneratedArtifacts.Count}, Pets: {rewardToGrant.GeneratedPets.Count}, Defs: {rewardToGrant.SourceDefinitions.Count}");
         }
 
         if (rewardToGrant != null)

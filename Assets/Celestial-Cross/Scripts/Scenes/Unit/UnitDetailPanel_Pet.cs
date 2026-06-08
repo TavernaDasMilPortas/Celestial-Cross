@@ -14,12 +14,29 @@ namespace CelestialCross.Scenes.Unit
         
         public Image petSpriteImage;
         public TextMeshProUGUI petNameText;
-        public TextMeshProUGUI petStatsText;
+        [Header("Atributos do Pet")]
+        public TextMeshProUGUI hpText;
+        public TextMeshProUGUI atkText;
+        public TextMeshProUGUI defText;
+        public TextMeshProUGUI spdText;
+        public TextMeshProUGUI critChanceText;
+        public TextMeshProUGUI critDmgText;
+        public TextMeshProUGUI accText;
+        public TextMeshProUGUI resText;
+
+        [Header("Estrelas")]
+        public Transform starsContainer;
+        public GameObject starPrefab;
+
+        [Header("Habilidade")]
         public Image skillIconImage;
+        public Button skillIconButton;
         public TextMeshProUGUI skillDescText;
+        public CelestialCross.Scenes.Inventory.PetSkillModal petSkillModal;
         
         [Header("Ações")]
-        public Button selectPetButton;
+        public Button petImageButton;
+        public Button emptySlotButton;
         public UnitPetSelectModal petSelectModal;
 
         private UnitData currentUnitData;
@@ -29,8 +46,14 @@ namespace CelestialCross.Scenes.Unit
 
         private void Awake()
         {
-            if (selectPetButton != null)
-                selectPetButton.onClick.AddListener(OnSelectPetClicked);
+            if (petImageButton != null)
+                petImageButton.onClick.AddListener(OnSelectPetClicked);
+            
+            if (emptySlotButton != null)
+                emptySlotButton.onClick.AddListener(OnSelectPetClicked);
+
+            if (skillIconButton != null)
+                skillIconButton.onClick.AddListener(OnSkillIconClicked);
         }
 
         public void Refresh(UnitData unitData, RuntimeUnitData runtimeData, PetCatalog petCatalog)
@@ -81,22 +104,44 @@ namespace CelestialCross.Scenes.Unit
 
             if (petSpriteImage != null) petSpriteImage.sprite = speciesSO.sprite;
             if (petNameText != null) petNameText.text = speciesSO.SpeciesName;
-            if (petStatsText != null) petStatsText.text = $"HP: {petData.Health} | ATK: {petData.Attack}";
+
+            if (hpText != null) hpText.text = $"HP: {petData.Health}";
+            if (atkText != null) atkText.text = $"ATK: {petData.Attack}";
+            if (defText != null) defText.text = $"DEF: {petData.Defense}";
+            if (spdText != null) spdText.text = $"SPD: {petData.Speed}";
+            if (critChanceText != null) critChanceText.text = $"CRIT: {petData.CriticalChance}%";
+            if (critDmgText != null) critDmgText.text = $"C.DMG: {petData.CriticalDamage}%";
+            if (accText != null) accText.text = $"ACC: {petData.EffectAccuracy}%";
+            if (resText != null) resText.text = $"RES: {petData.EffectResistance}%";
             
-            // Skill info: Pega a primeira ativa se houver
-            if (speciesSO.ActiveSkills != null && speciesSO.ActiveSkills.Count > 0 && speciesSO.ActiveSkills[0] != null)
+            // Skill info: Pega do Graph primário se houver
+            if (speciesSO.AbilityGraphs != null && speciesSO.AbilityGraphs.Count > 0 && speciesSO.AbilityGraphs[0] != null)
             {
+                var graph = speciesSO.AbilityGraphs[0];
                 if (skillIconImage != null)
                 {
                     skillIconImage.gameObject.SetActive(true);
-                    skillIconImage.sprite = speciesSO.ActiveSkills[0].abilityIcon;
+                    skillIconImage.sprite = graph.abilityIcon;
                 }
-                if (skillDescText != null) skillDescText.text = speciesSO.ActiveSkills[0].abilityDescription;
+                if (skillDescText != null) skillDescText.text = graph.abilityDescription;
             }
             else
             {
                 if (skillIconImage != null) skillIconImage.gameObject.SetActive(false);
-                if (skillDescText != null) skillDescText.text = "Nenhuma habilidade ativa.";
+                if (skillDescText != null) skillDescText.text = "Nenhuma habilidade associada.";
+            }
+
+            if (starsContainer != null && starPrefab != null)
+            {
+                foreach (Transform child in starsContainer)
+                {
+                    Destroy(child.gameObject);
+                }
+                for (int i = 0; i < petData.RarityStars; i++)
+                {
+                    var star = Instantiate(starPrefab, starsContainer);
+                    star.SetActive(true);
+                }
             }
         }
 
@@ -111,6 +156,27 @@ namespace CelestialCross.Scenes.Unit
                         if (attr != null) attr.Refresh(currentUnitData, currentRuntimeData);
                     }
                 });
+        }
+
+        private void OnSkillIconClicked()
+        {
+            if (petSkillModal == null) return;
+            var account = AccountManager.Instance?.PlayerAccount;
+            var loadout = account?.GetLoadoutForUnit(currentUnitId);
+            if (loadout == null || string.IsNullOrEmpty(loadout.PetID)) return;
+
+            var petInstance = account.GetPetByUUID(loadout.PetID);
+            if (petInstance == null) return;
+
+            var petSpecies = currentPetCatalog?.GetPetSpecies(petInstance.SpeciesID);
+            if (petSpecies != null && petSpecies.AbilityGraphs != null && petSpecies.AbilityGraphs.Count > 0)
+            {
+                var graph = petSpecies.AbilityGraphs[0];
+                if (graph != null)
+                {
+                    petSkillModal.Show(graph.name, graph.abilityIcon, graph.abilityDescription);
+                }
+            }
         }
     }
 }

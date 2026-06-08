@@ -98,49 +98,291 @@ MonoBehaviour:
       - paths: []
         count: 1
         gameObjects: []
+      - paths: []
+        count: 1
+        gameObjects: []
       mostClickedContents: []
       recentlyClickedContents: []
     sceneGUID: 03d58314661be71469defb5607568be7
     sceneName: InventoryScene
-    lastSaveTimePrint: 12:16 AM (June 7, 2026)
+    lastSaveTimePrint: 01:41 AM (June 8, 2026)
     gracePeriod: 3
     activeIndex: 0
     checkingToLoad: 0
-    assetsCollapsed: 1
+    assetsCollapsed: 0
     lockedAsset: 0
     maximizedAssetView: 0
     showImportSettings: 1
     suggestedHeight: 0
-    userAssetViewSize: -1
+    userAssetViewSize: 212
     previewHeight: 0
-    scrollPosition: {x: 0, y: 270}
+    scrollPosition: {x: 0, y: 5}
     toolbarScrollPosition: {x: 0, y: 0}
     rawUserHeight: 0
-    lastValidTabWidth: 76
+    lastValidTabWidth: 95
     alreadyCalculatedHeight: 0
     lastKnownHeight: 0
     tabs:
-    - path: '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/TopPanelContainer[0]/TopContent_Pets[0]/InfoArea[0]/StatsText[0]"}'
+    - path: '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"EventSystem[0]"}'
       paths: []
-      tabWidth: 73
-      name: StatsText
-      icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
-      shortName: StatsText
+      tabWidth: 92
+      name: EventSystem
+      icon: {fileID: -4387529911086606607, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: EventSystem
       filterString: 
       newTab: 0
-      scrollPosition: 270
+      scrollPosition: 5
       isSelected: 0
       allCollapsed: 0
       runtimeFoldouts: 
       runtimeMultiComponents: []
       tabTextContent:
-        m_Text: StatsText
+        m_Text: EventSystem
         m_Image: {fileID: 0}
         m_Tooltip: 
-        m_TextWithWhitespace: "StatsText\u200B"
+        m_TextWithWhitespace: "EventSystem\u200B"
       multiEditMode: 0
       locked: 0
-      hasPreview: 0
+      hasPreview: 1
+      previewHeight: 13
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 0
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: transform
+        niceComponentName: transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: eventsystem
+        niceComponentName: event system
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: standaloneinputmodule
+        niceComponentName: standalone input module
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: baseinput
+        niceComponentName: base input
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"EventSystem[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/TopPanelContainer[0]/TopContent_Pets[0]/InfoArea[0]/StatsText[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/TopPanelContainer[0]/TopContent_Pets[0]/InfoArea[0]/SkillDesc[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/TopPanelContainer[0]/TopContent_Pets[0]/InfoArea[0]/StarsContainer[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/TopPanelContainer[0]/TopContent_Pets[0]/PetSprite[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/ModalsContainer[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/TabBarContainer[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    closedTabs: []
+    playModeTransforms: []
+    historyAssets:
+    - assetGUIDs:
+      - 66d33cd4e53f2a64b9d5484bc2a8e6b0
+    - assetGUIDs:
+      - 5ce4d2489b6654048a704997ca5ba3fc
+    - assetGUIDs:
+      - 7ae324cccbef89349a6be98a24ae0d9e
+    - assetGUIDs:
+      - aa84a7dcbee22b84ebe4ed90ff5c0a6b
+    - assetGUIDs:
+      - 5b3c0b90a8bd3984bb1bc99003a34ba7
+    - assetGUIDs:
+      - 41ab50bd04fdfce42875fe6724f71972
+    - assetGUIDs:
+      - 25b178091dd086d419a0b800c0fa9232
+    - assetGUIDs:
+      - fe01ac299cb9a564ebd46ef65d9fe68a
+    - assetGUIDs:
+      - 44b481785305ce14896d60bc64211682
+    - assetGUIDs:
+      - 2630c83ded303e24ca23dc9d17848f02
+    - assetGUIDs:
+      - aae55989abe44784197dd80958fdd0f5
+    targetObject: {fileID: 11500000, guid: 66d33cd4e53f2a64b9d5484bc2a8e6b0, type: 3}
+    targetObjects: []
+    lastSelectedAsset: Packages/com.unity.shadergraph/Editor/Data/Nodes/UV/ParallaxOcclusionMappingNode.cs
+    lastClickedTab: -1
+    previousTab: 0
+  - tracker:
+      mostClicked:
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/HubCardPrefab[0]/Icon[0]"}'
+        count: 11
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/HubCardPrefab[0]"}'
+        count: 9
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/RewardIconPrefab[0]"}'
+        count: 1
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/HubCardPrefab[0]/ProgressBG[0]"}'
+        count: 1
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/HubCardPrefab[0]/StatusIcon[0]"}'
+        count: 1
+        gameObjects:
+        - {fileID: 0}
+      recentlyClicked:
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/HubCardPrefab[0]/Icon[0]"}'
+        count: 1
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/HubCardPrefab[0]/StatusIcon[0]"}'
+        count: 1
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/HubCardPrefab[0]/ProgressBG[0]"}'
+        count: 1
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/HubCardPrefab[0]"}'
+        count: 1
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/RewardIconPrefab[0]"}'
+        count: 1
+        gameObjects:
+        - {fileID: 0}
+      - paths: []
+        count: 1
+        gameObjects: []
+      - paths: []
+        count: 1
+        gameObjects: []
+      - paths: []
+        count: 1
+        gameObjects: []
+      - paths: []
+        count: 1
+        gameObjects: []
+      - paths: []
+        count: 1
+        gameObjects: []
+      mostClickedContents: []
+      recentlyClickedContents: []
+    sceneGUID: aae55989abe44784197dd80958fdd0f5
+    sceneName: HubScene
+    lastSaveTimePrint: 02:01 AM (June 8, 2026)
+    gracePeriod: 3
+    activeIndex: 0
+    checkingToLoad: 0
+    assetsCollapsed: 0
+    lockedAsset: 0
+    maximizedAssetView: 0
+    showImportSettings: 1
+    suggestedHeight: 0
+    userAssetViewSize: 212
+    previewHeight: 0
+    scrollPosition: {x: 0, y: 22}
+    toolbarScrollPosition: {x: 0, y: 0}
+    rawUserHeight: 0
+    lastValidTabWidth: 52
+    alreadyCalculatedHeight: 0
+    lastKnownHeight: 0
+    tabs:
+    - path: '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/HubCardPrefab[0]/Icon[0]"}'
+      paths: []
+      tabWidth: 49
+      name: Icon
+      icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: Icon
+      filterString: 
+      newTab: 0
+      scrollPosition: 22
+      isSelected: 1
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: Icon
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Icon\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 1
       previewHeight: 13
       debug: 0
       filtering: 0
@@ -202,240 +444,71 @@ MonoBehaviour:
         focusAfter: 0
         awaitingScroll: 0
         hidden: 0
-        componentName: textmeshprougui
-        niceComponentName: text mesh pro ugui
+        componentName: image
+        niceComponentName: image
       historyPaths:
       - paths:
-        - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/TopPanelContainer[0]/TopContent_Pets[0]/InfoArea[0]/StatsText[0]"}'
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/HubCardPrefab[0]/Icon[0]"}'
         prefab: 0
       - paths:
-        - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/TopPanelContainer[0]/TopContent_Pets[0]/InfoArea[0]/SkillDesc[0]"}'
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/HubCardPrefab[0]/StatusIcon[0]"}'
         prefab: 0
       - paths:
-        - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/TopPanelContainer[0]/TopContent_Pets[0]/InfoArea[0]/StarsContainer[0]"}'
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/HubCardPrefab[0]/ProgressBG[0]"}'
         prefab: 0
       - paths:
-        - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/TopPanelContainer[0]/TopContent_Pets[0]/PetSprite[0]"}'
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/HubCardPrefab[0]"}'
         prefab: 0
       - paths:
-        - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/ModalsContainer[0]"}'
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/RewardIconPrefab[0]"}'
         prefab: 0
       - paths:
-        - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/TabBarContainer[0]"}'
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/HubCardPrefab[0]/LockOverlay[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/ItemCostPrefab[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/Container[0]/StackPanel[0]/StackTitle[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"_HubSceneManager[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"_Managers[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/BottomSheet[0]/Btn_Start[0]"}'
         prefab: 0
       owner: {fileID: 0}
     closedTabs: []
     playModeTransforms: []
     historyAssets:
     - assetGUIDs:
-      - 3350c704c222d33479c001ed1af95400
+      - 66d33cd4e53f2a64b9d5484bc2a8e6b0
     - assetGUIDs:
-      - 78aed5621bc2dfe4da6b2ac537ce16b4
+      - 5ce4d2489b6654048a704997ca5ba3fc
     - assetGUIDs:
-      - 2c8a530883610634aaf0a88bbd27ddeb
+      - 7ae324cccbef89349a6be98a24ae0d9e
     - assetGUIDs:
-      - 36ebbb67929f6d34f9bad15946ebe28f
+      - aa84a7dcbee22b84ebe4ed90ff5c0a6b
     - assetGUIDs:
-      - 7bd578e37ab60c240b270441ee2e41c8
+      - 5b3c0b90a8bd3984bb1bc99003a34ba7
     - assetGUIDs:
-      - cdc66209f852d8e43879598e80c6d73e
-      - c1a55e44447cbd047b814ede182f7915
-      - 334b71c894110624395d4657469e47ba
-      - 1d655e9491ac6814d99037c680a41917
-      - d2a25557c61c91d459c9f49294450080
-      - b4a91b7038a2a6642891118bfc61f6d6
-      - 60e5cb0e02d792442ac013a8deb66119
-      - 43d8ad76707367c4eb062db897ad8820
-      - 0830b4e206162e144bc5c2de8c2cc9aa
-      - a9f68e0de0687b946b727f35ff7d4816
-      - 84cb86893bcf59849a7ca5c643e1f3d2
-      - cf2ccf372b29f11498fc1dcefec35733
-      - 4dc4976cd397c174aa763e5f32c5a40c
-      - 2b652fdcbbc48c24fa3707563313942c
-      - f32c847eb8a6b3b4b82124ae8c7a4e0f
-      - a41430e198052d44c8067895e985e9a4
-      - 2a267d1be358e69479c99122080bbf81
-      - 9ea351e5b647db947bcf3f3b2e74e8f0
-      - 8d68ef1811cb3cd42bfa9a3ffc474357
-      - 65de5a8472b833d4fb8f834a6e175b19
-      - 0fdeb5cc388882547a911a3cdbcf69b6
+      - 41ab50bd04fdfce42875fe6724f71972
     - assetGUIDs:
-      - 0fdeb5cc388882547a911a3cdbcf69b6
+      - 25b178091dd086d419a0b800c0fa9232
     - assetGUIDs:
-      - cdc66209f852d8e43879598e80c6d73e
+      - fe01ac299cb9a564ebd46ef65d9fe68a
     - assetGUIDs:
-      - c1a55e44447cbd047b814ede182f7915
+      - 44b481785305ce14896d60bc64211682
     - assetGUIDs:
-      - 1f7c4508fbace374897f9a67d26eb0ab
+      - 2630c83ded303e24ca23dc9d17848f02
     - assetGUIDs:
-      - b6a716b8a13911a46b6f3719a23d2026
-    targetObject: {fileID: 11400000, guid: a9644b9cf968da748bbf12a4c0810c07, type: 2}
+      - aae55989abe44784197dd80958fdd0f5
+    targetObject: {fileID: 11500000, guid: 66d33cd4e53f2a64b9d5484bc2a8e6b0, type: 3}
     targetObjects: []
-    lastSelectedAsset: Assets/CoInspector/Editor/Core/Helpers/MissingScriptManager.asset
-    lastClickedTab: -1
-    previousTab: 0
-  - tracker:
-      mostClicked: []
-      recentlyClicked:
-      - paths: []
-        count: 1
-        gameObjects: []
-      - paths: []
-        count: 1
-        gameObjects: []
-      - paths: []
-        count: 1
-        gameObjects: []
-      - paths: []
-        count: 1
-        gameObjects: []
-      - paths: []
-        count: 1
-        gameObjects: []
-      - paths: []
-        count: 1
-        gameObjects: []
-      - paths: []
-        count: 1
-        gameObjects: []
-      - paths: []
-        count: 1
-        gameObjects: []
-      - paths: []
-        count: 1
-        gameObjects: []
-      - paths: []
-        count: 1
-        gameObjects: []
-      mostClickedContents: []
-      recentlyClickedContents: []
-    sceneGUID: aae55989abe44784197dd80958fdd0f5
-    sceneName: HubScene
-    lastSaveTimePrint: 12:27 AM (June 7, 2026)
-    gracePeriod: 3
-    activeIndex: 0
-    checkingToLoad: 0
-    assetsCollapsed: 1
-    lockedAsset: 0
-    maximizedAssetView: 0
-    showImportSettings: 1
-    suggestedHeight: 0
-    userAssetViewSize: -1
-    previewHeight: 0
-    scrollPosition: {x: 0, y: 0}
-    toolbarScrollPosition: {x: 0, y: 0}
-    rawUserHeight: 0
-    lastValidTabWidth: 65
-    alreadyCalculatedHeight: 0
-    lastKnownHeight: 0
-    tabs:
-    - path: 
-      paths: []
-      tabWidth: 62
-      name: New Tab
-      icon: {fileID: 0}
-      shortName: New Tab
-      filterString: 
-      newTab: 1
-      scrollPosition: 0
-      isSelected: 0
-      allCollapsed: 0
-      runtimeFoldouts: 
-      runtimeMultiComponents: []
-      tabTextContent:
-        m_Text: New Tab
-        m_Image: {fileID: 0}
-        m_Tooltip: 
-        m_TextWithWhitespace: "New Tab\u200B"
-      multiEditMode: 0
-      locked: 0
-      hasPreview: 0
-      previewHeight: 150
-      debug: 0
-      filtering: 0
-      prefab: 0
-      multiFoldout: 1
-      target: {fileID: 0}
-      targets: []
-      linkedPrefabs: []
-      trackMultiTarget: {fileID: 0}
-      serializedTransform:
-        owner: {fileID: 0}
-        localPosition: {x: 0, y: 0, z: 0}
-        localRotation: {x: 0, y: 0, z: 0, w: 0}
-        localScale: {x: 0, y: 0, z: 0}
-        originalPosition: {x: 0, y: 0, z: 0}
-        originalRotation: {x: 0, y: 0, z: 0, w: 0}
-        originalLocalScale: {x: 0, y: 0, z: 0}
-        anchorMin: {x: 0, y: 0}
-        anchorMax: {x: 0, y: 0}
-        anchoredPosition: {x: 0, y: 0}
-        sizeDelta: {x: 0, y: 0}
-        pivot: {x: 0, y: 0}
-        originalAnchorMin: {x: 0, y: 0}
-        originalAnchorMax: {x: 0, y: 0}
-        originalAnchoredPosition: {x: 0, y: 0}
-        originalSizeDelta: {x: 0, y: 0}
-        originalPivot: {x: 0, y: 0}
-        isRectTransform: 0
-        appliedTransform: 0
-        undidTransform: 0
-        autoSave: 0
-      serializedTransforms: []
-      savePlayModeTransform: 0
-      index: 0
-      historyPosition: 0
-      componentMaps: []
-      historyPaths: []
-      owner: {fileID: 0}
-    closedTabs: []
-    playModeTransforms: []
-    historyAssets:
-    - assetGUIDs:
-      - 3350c704c222d33479c001ed1af95400
-    - assetGUIDs:
-      - 78aed5621bc2dfe4da6b2ac537ce16b4
-    - assetGUIDs:
-      - 2c8a530883610634aaf0a88bbd27ddeb
-    - assetGUIDs:
-      - 36ebbb67929f6d34f9bad15946ebe28f
-    - assetGUIDs:
-      - 7bd578e37ab60c240b270441ee2e41c8
-    - assetGUIDs:
-      - cdc66209f852d8e43879598e80c6d73e
-      - c1a55e44447cbd047b814ede182f7915
-      - 334b71c894110624395d4657469e47ba
-      - 1d655e9491ac6814d99037c680a41917
-      - d2a25557c61c91d459c9f49294450080
-      - b4a91b7038a2a6642891118bfc61f6d6
-      - 60e5cb0e02d792442ac013a8deb66119
-      - 43d8ad76707367c4eb062db897ad8820
-      - 0830b4e206162e144bc5c2de8c2cc9aa
-      - a9f68e0de0687b946b727f35ff7d4816
-      - 84cb86893bcf59849a7ca5c643e1f3d2
-      - cf2ccf372b29f11498fc1dcefec35733
-      - 4dc4976cd397c174aa763e5f32c5a40c
-      - 2b652fdcbbc48c24fa3707563313942c
-      - f32c847eb8a6b3b4b82124ae8c7a4e0f
-      - a41430e198052d44c8067895e985e9a4
-      - 2a267d1be358e69479c99122080bbf81
-      - 9ea351e5b647db947bcf3f3b2e74e8f0
-      - 8d68ef1811cb3cd42bfa9a3ffc474357
-      - 65de5a8472b833d4fb8f834a6e175b19
-      - 0fdeb5cc388882547a911a3cdbcf69b6
-    - assetGUIDs:
-      - 0fdeb5cc388882547a911a3cdbcf69b6
-    - assetGUIDs:
-      - cdc66209f852d8e43879598e80c6d73e
-    - assetGUIDs:
-      - c1a55e44447cbd047b814ede182f7915
-    - assetGUIDs:
-      - 1f7c4508fbace374897f9a67d26eb0ab
-    - assetGUIDs:
-      - b6a716b8a13911a46b6f3719a23d2026
-    targetObject: {fileID: 11400000, guid: a9644b9cf968da748bbf12a4c0810c07, type: 2}
-    targetObjects: []
-    lastSelectedAsset: Assets/CoInspector/Editor/Core/Helpers/MissingScriptManager.asset
+    lastSelectedAsset: Packages/com.unity.shadergraph/Editor/Data/Nodes/UV/ParallaxOcclusionMappingNode.cs
     lastClickedTab: -1
     previousTab: 0
   - tracker:
@@ -445,14 +518,14 @@ MonoBehaviour:
       recentlyClickedContents: []
     sceneGUID: 41797f812614b484c878b87c4d6155a1
     sceneName: PreparationScene
-    lastSaveTimePrint: 12:54 PM (June 5, 2026)
+    lastSaveTimePrint: 01:30 AM (June 8, 2026)
     gracePeriod: 3
     activeIndex: 0
     checkingToLoad: 0
     assetsCollapsed: 0
     lockedAsset: 0
     maximizedAssetView: 0
-    showImportSettings: 0
+    showImportSettings: 1
     suggestedHeight: 0
     userAssetViewSize: -1
     previewHeight: 0
@@ -526,40 +599,30 @@ MonoBehaviour:
     playModeTransforms: []
     historyAssets:
     - assetGUIDs:
-      - a9b503e6bc5b5ca4a8bd7511f926893a
+      - 66d33cd4e53f2a64b9d5484bc2a8e6b0
     - assetGUIDs:
-      - 29d39f77466a86646951c2e0a8bb3974
+      - 5ce4d2489b6654048a704997ca5ba3fc
     - assetGUIDs:
-      - 8105016687592461f977c054a80ce2f2
+      - 7ae324cccbef89349a6be98a24ae0d9e
+    - assetGUIDs:
+      - aa84a7dcbee22b84ebe4ed90ff5c0a6b
+    - assetGUIDs:
+      - 5b3c0b90a8bd3984bb1bc99003a34ba7
+    - assetGUIDs:
+      - 41ab50bd04fdfce42875fe6724f71972
+    - assetGUIDs:
+      - 25b178091dd086d419a0b800c0fa9232
+    - assetGUIDs:
+      - fe01ac299cb9a564ebd46ef65d9fe68a
+    - assetGUIDs:
+      - 44b481785305ce14896d60bc64211682
+    - assetGUIDs:
+      - 2630c83ded303e24ca23dc9d17848f02
     - assetGUIDs:
       - aae55989abe44784197dd80958fdd0f5
-    - assetGUIDs:
-      - 1c4f1b892b6e20245a0e9ec4a942e09d
-    - assetGUIDs:
-      - 69fcdee7970da37439e423c6e15da857
-      - 140ced9bbd8982243b49a9ae3cc59249
-      - 2422cf388adea53469fed23a44c78ae5
-      - 67c74467c88382b4e97ec531fb2825b0
-      - 83bf9a4f9d335bd49a1ad59b7e21dfd1
-    - assetGUIDs:
-      - 69fcdee7970da37439e423c6e15da857
-      - 140ced9bbd8982243b49a9ae3cc59249
-      - 2422cf388adea53469fed23a44c78ae5
-      - 67c74467c88382b4e97ec531fb2825b0
-    - assetGUIDs:
-      - 69fcdee7970da37439e423c6e15da857
-      - 140ced9bbd8982243b49a9ae3cc59249
-      - 2422cf388adea53469fed23a44c78ae5
-    - assetGUIDs:
-      - 69fcdee7970da37439e423c6e15da857
-      - 140ced9bbd8982243b49a9ae3cc59249
-    - assetGUIDs:
-      - 69fcdee7970da37439e423c6e15da857
-    - assetGUIDs:
-      - 83bf9a4f9d335bd49a1ad59b7e21dfd1
-    targetObject: {fileID: 11400000, guid: a9b503e6bc5b5ca4a8bd7511f926893a, type: 2}
+    targetObject: {fileID: 11500000, guid: 66d33cd4e53f2a64b9d5484bc2a8e6b0, type: 3}
     targetObjects: []
-    lastSelectedAsset: Assets/Celestial-Cross/Prefabs/Units/MagicalGirls/Damien/Data/Damien_SkillTree.asset
+    lastSelectedAsset: Packages/com.unity.shadergraph/Editor/Data/Nodes/UV/ParallaxOcclusionMappingNode.cs
     lastClickedTab: -1
     previousTab: 0
   - tracker:
@@ -569,14 +632,14 @@ MonoBehaviour:
       recentlyClickedContents: []
     sceneGUID: 8e33882f7fba925478cbd19e61365198
     sceneName: Teste 1
-    lastSaveTimePrint: 11:20 PM (June 2, 2026)
+    lastSaveTimePrint: 01:31 AM (June 8, 2026)
     gracePeriod: 3
     activeIndex: 0
     checkingToLoad: 0
     assetsCollapsed: 0
     lockedAsset: 0
     maximizedAssetView: 0
-    showImportSettings: 0
+    showImportSettings: 1
     suggestedHeight: 0
     userAssetViewSize: -1
     previewHeight: 0
@@ -649,121 +712,65 @@ MonoBehaviour:
     closedTabs: []
     playModeTransforms: []
     historyAssets:
-    - assetGUIDs: []
     - assetGUIDs:
-      - 1c4f1b892b6e20245a0e9ec4a942e09d
+      - 66d33cd4e53f2a64b9d5484bc2a8e6b0
     - assetGUIDs:
-      - 69fcdee7970da37439e423c6e15da857
-      - 140ced9bbd8982243b49a9ae3cc59249
-      - 2422cf388adea53469fed23a44c78ae5
-      - 67c74467c88382b4e97ec531fb2825b0
-      - 83bf9a4f9d335bd49a1ad59b7e21dfd1
+      - 5ce4d2489b6654048a704997ca5ba3fc
     - assetGUIDs:
-      - 69fcdee7970da37439e423c6e15da857
-      - 140ced9bbd8982243b49a9ae3cc59249
-      - 2422cf388adea53469fed23a44c78ae5
-      - 67c74467c88382b4e97ec531fb2825b0
+      - 7ae324cccbef89349a6be98a24ae0d9e
     - assetGUIDs:
-      - 69fcdee7970da37439e423c6e15da857
-      - 140ced9bbd8982243b49a9ae3cc59249
-      - 2422cf388adea53469fed23a44c78ae5
+      - aa84a7dcbee22b84ebe4ed90ff5c0a6b
     - assetGUIDs:
-      - 69fcdee7970da37439e423c6e15da857
-      - 140ced9bbd8982243b49a9ae3cc59249
+      - 5b3c0b90a8bd3984bb1bc99003a34ba7
     - assetGUIDs:
-      - 69fcdee7970da37439e423c6e15da857
-    - assetGUIDs:
-      - 83bf9a4f9d335bd49a1ad59b7e21dfd1
+      - 41ab50bd04fdfce42875fe6724f71972
     - assetGUIDs:
       - 25b178091dd086d419a0b800c0fa9232
-    targetObject: {fileID: 0}
+    - assetGUIDs:
+      - fe01ac299cb9a564ebd46ef65d9fe68a
+    - assetGUIDs:
+      - 44b481785305ce14896d60bc64211682
+    - assetGUIDs:
+      - 2630c83ded303e24ca23dc9d17848f02
+    - assetGUIDs:
+      - aae55989abe44784197dd80958fdd0f5
+    targetObject: {fileID: 11500000, guid: 66d33cd4e53f2a64b9d5484bc2a8e6b0, type: 3}
     targetObjects: []
-    lastSelectedAsset: 
+    lastSelectedAsset: Packages/com.unity.shadergraph/Editor/Data/Nodes/UV/ParallaxOcclusionMappingNode.cs
     lastClickedTab: -1
     previousTab: 0
   - tracker:
       mostClicked:
       - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/Modals_Container[0]"}'
-        count: 4
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitListScroll[0]/Viewport[0]"}'
-        count: 3
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitListScroll[0]/Viewport[0]/Content[0]"}'
-        count: 3
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitNameContainerBorder[0]/UnitNameContainer[0]/UnitName[0]"}'
+        - 
         count: 1
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/Background[0]"}'
-        count: 1
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitListScroll[0]"}'
-        count: 1
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_3[0]"}'
-        count: 1
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]"}'
-        count: 1
-        gameObjects:
-        - {fileID: 0}
+        gameObjects: []
       recentlyClicked:
       - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]"}'
+        - 
         count: 1
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/Modals_Container[0]"}'
+        gameObjects: []
+      - paths: []
         count: 1
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_3[0]"}'
+        gameObjects: []
+      - paths: []
         count: 1
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitListScroll[0]/Viewport[0]/Content[0]"}'
+        gameObjects: []
+      - paths: []
         count: 1
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitListScroll[0]/Viewport[0]"}'
+        gameObjects: []
+      - paths: []
         count: 1
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitListScroll[0]"}'
+        gameObjects: []
+      - paths: []
         count: 1
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/Background[0]"}'
+        gameObjects: []
+      - paths: []
         count: 1
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitNameContainerBorder[0]/UnitNameContainer[0]/UnitName[0]"}'
+        gameObjects: []
+      - paths: []
         count: 1
-        gameObjects:
-        - {fileID: 0}
+        gameObjects: []
       - paths: []
         count: 1
         gameObjects: []
@@ -774,21 +781,21 @@ MonoBehaviour:
       recentlyClickedContents: []
     sceneGUID: e625a3e42d710e542b4c986f567fb23b
     sceneName: UnitScene
-    lastSaveTimePrint: 12:30 AM (June 7, 2026)
+    lastSaveTimePrint: 01:41 AM (June 8, 2026)
     gracePeriod: 3
     activeIndex: 9
     checkingToLoad: 0
-    assetsCollapsed: 1
+    assetsCollapsed: 0
     lockedAsset: 0
     maximizedAssetView: 0
     showImportSettings: 1
     suggestedHeight: 0
-    userAssetViewSize: -1
+    userAssetViewSize: 212
     previewHeight: 0
-    scrollPosition: {x: 0, y: 0}
-    toolbarScrollPosition: {x: 170.19995, y: 0}
+    scrollPosition: {x: 0, y: 486}
+    toolbarScrollPosition: {x: 15, y: 0}
     rawUserHeight: 0
-    lastValidTabWidth: 570
+    lastValidTabWidth: 553
     alreadyCalculatedHeight: 0
     lastKnownHeight: 0
     tabs:
@@ -925,7 +932,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_0[0]"}'
       paths: []
-      tabWidth: 58
+      tabWidth: 57
       name: Tab_0
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: Tab_0
@@ -1039,7 +1046,7 @@ MonoBehaviour:
     - path: '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/Fill
         Background[0]/Fill[0]"}'
       paths: []
-      tabWidth: 42
+      tabWidth: 41
       name: Fill
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: Fill
@@ -1129,7 +1136,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_0[0]"}'
       paths: []
-      tabWidth: 58
+      tabWidth: 57
       name: Tab_0
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: Tab_0
@@ -1227,7 +1234,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_0[0]"}'
       paths: []
-      tabWidth: 58
+      tabWidth: 57
       name: Tab_0
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: Tab_0
@@ -1322,7 +1329,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_0[0]"}'
       paths: []
-      tabWidth: 58
+      tabWidth: 57
       name: Tab_0
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: Tab_0
@@ -1417,7 +1424,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_0[0]/Text[0]"}'
       paths: []
-      tabWidth: 50
+      tabWidth: 47
       name: Text
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: Text
@@ -1649,7 +1656,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitListScroll[0]/Viewport[0]"}'
       paths: []
-      tabWidth: 61
+      tabWidth: 62
       name: Viewport
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "View\u2026"
@@ -1776,24 +1783,24 @@ MonoBehaviour:
         - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]"}'
         prefab: 0
       owner: {fileID: 0}
-    - path: '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]"}'
+    - path: '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Pet[0]/EquippedContainer[0]/SkillDesc[0]"}'
       paths: []
-      tabWidth: 66
-      name: UnitMainPanel
+      tabWidth: 56
+      name: SkillDesc
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
-      shortName: "Moda\u2026"
+      shortName: "Skil\u2026"
       filterString: 
       newTab: 0
-      scrollPosition: 0
-      isSelected: 1
+      scrollPosition: 486
+      isSelected: 0
       allCollapsed: 0
       runtimeFoldouts: 
       runtimeMultiComponents: []
       tabTextContent:
-        m_Text: "Unit\u2026"
+        m_Text: "Skil\u2026"
         m_Image: {fileID: 0}
         m_Tooltip: 
-        m_TextWithWhitespace: "Unit\u2026\u200B"
+        m_TextWithWhitespace: "Skil\u2026\u200B"
       multiEditMode: 0
       locked: 0
       hasPreview: 0
@@ -1842,86 +1849,87 @@ MonoBehaviour:
         hidden: 0
         componentName: recttransform
         niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasrenderer
+        niceComponentName: canvas renderer
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: textmeshprougui
+        niceComponentName: text mesh pro ugui
       historyPaths:
       - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Pet[0]/EquippedContainer[0]/SkillDesc[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Pet[0]/EmptyContainer[0]"}'
         prefab: 0
       - paths:
         - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/Modals_Container[0]"}'
         prefab: 0
       - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_3[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Pet[0]/EquippedContainer[0]/SkillIcon[0]"}'
         prefab: 0
       - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitListScroll[0]/Viewport[0]/Content[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Pet[0]/EquippedContainer[0]/Name_Stars_Container[0]"}'
         prefab: 0
       - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitListScroll[0]/Viewport[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Pet[0]/EquippedContainer[0]/Name_Stars_Container[0]/StarsContainer[0]"}'
         prefab: 0
       - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitListScroll[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Pet[0]/EquippedContainer[0]/Name_Stars_Container[0]/PetName[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Pet[0]/EmptyContainer[0]/EmptyText[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/DefaultStarPrefab[0]"}'
         prefab: 0
       - paths:
         - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/Background[0]"}'
-        prefab: 0
-      - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitNameContainerBorder[0]/UnitNameContainer[0]/UnitName[0]"}'
-        prefab: 0
-      - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]"}'
-        prefab: 0
-      - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/Stars[0]"}'
         prefab: 0
       owner: {fileID: 0}
     closedTabs: []
     playModeTransforms: []
     historyAssets:
     - assetGUIDs:
-      - 3350c704c222d33479c001ed1af95400
+      - 66d33cd4e53f2a64b9d5484bc2a8e6b0
     - assetGUIDs:
-      - 78aed5621bc2dfe4da6b2ac537ce16b4
+      - 5ce4d2489b6654048a704997ca5ba3fc
     - assetGUIDs:
-      - 2c8a530883610634aaf0a88bbd27ddeb
+      - 7ae324cccbef89349a6be98a24ae0d9e
     - assetGUIDs:
-      - 36ebbb67929f6d34f9bad15946ebe28f
+      - aa84a7dcbee22b84ebe4ed90ff5c0a6b
     - assetGUIDs:
-      - 7bd578e37ab60c240b270441ee2e41c8
+      - 5b3c0b90a8bd3984bb1bc99003a34ba7
     - assetGUIDs:
-      - cdc66209f852d8e43879598e80c6d73e
-      - c1a55e44447cbd047b814ede182f7915
-      - 334b71c894110624395d4657469e47ba
-      - 1d655e9491ac6814d99037c680a41917
-      - d2a25557c61c91d459c9f49294450080
-      - b4a91b7038a2a6642891118bfc61f6d6
-      - 60e5cb0e02d792442ac013a8deb66119
-      - 43d8ad76707367c4eb062db897ad8820
-      - 0830b4e206162e144bc5c2de8c2cc9aa
-      - a9f68e0de0687b946b727f35ff7d4816
-      - 84cb86893bcf59849a7ca5c643e1f3d2
-      - cf2ccf372b29f11498fc1dcefec35733
-      - 4dc4976cd397c174aa763e5f32c5a40c
-      - 2b652fdcbbc48c24fa3707563313942c
-      - f32c847eb8a6b3b4b82124ae8c7a4e0f
-      - a41430e198052d44c8067895e985e9a4
-      - 2a267d1be358e69479c99122080bbf81
-      - 9ea351e5b647db947bcf3f3b2e74e8f0
-      - 8d68ef1811cb3cd42bfa9a3ffc474357
-      - 65de5a8472b833d4fb8f834a6e175b19
-      - 0fdeb5cc388882547a911a3cdbcf69b6
+      - 41ab50bd04fdfce42875fe6724f71972
     - assetGUIDs:
-      - 0fdeb5cc388882547a911a3cdbcf69b6
+      - 25b178091dd086d419a0b800c0fa9232
     - assetGUIDs:
-      - cdc66209f852d8e43879598e80c6d73e
+      - fe01ac299cb9a564ebd46ef65d9fe68a
     - assetGUIDs:
-      - c1a55e44447cbd047b814ede182f7915
+      - 44b481785305ce14896d60bc64211682
     - assetGUIDs:
-      - 1f7c4508fbace374897f9a67d26eb0ab
+      - 2630c83ded303e24ca23dc9d17848f02
     - assetGUIDs:
-      - b6a716b8a13911a46b6f3719a23d2026
-    targetObject: {fileID: 11400000, guid: a9644b9cf968da748bbf12a4c0810c07, type: 2}
+      - aae55989abe44784197dd80958fdd0f5
+    targetObject: {fileID: 11500000, guid: 66d33cd4e53f2a64b9d5484bc2a8e6b0, type: 3}
     targetObjects: []
-    lastSelectedAsset: Assets/CoInspector/Editor/Core/Helpers/MissingScriptManager.asset
+    lastSelectedAsset: Packages/com.unity.shadergraph/Editor/Data/Nodes/UV/ParallaxOcclusionMappingNode.cs
     lastClickedTab: -1
     previousTab: 0
   - tracker:
@@ -1931,11 +1939,11 @@ MonoBehaviour:
       recentlyClickedContents: []
     sceneGUID: 3bea51b30b1a74742b70e245c7a07f9c
     sceneName: ShopScene
-    lastSaveTimePrint: 12:24 AM (June 7, 2026)
+    lastSaveTimePrint: 12:47 AM (June 8, 2026)
     gracePeriod: 3
     activeIndex: 0
     checkingToLoad: 0
-    assetsCollapsed: 1
+    assetsCollapsed: 0
     lockedAsset: 0
     maximizedAssetView: 0
     showImportSettings: 1
@@ -2012,52 +2020,32 @@ MonoBehaviour:
     playModeTransforms: []
     historyAssets:
     - assetGUIDs:
-      - 3350c704c222d33479c001ed1af95400
+      - 66d33cd4e53f2a64b9d5484bc2a8e6b0
     - assetGUIDs:
-      - 78aed5621bc2dfe4da6b2ac537ce16b4
+      - 41ab50bd04fdfce42875fe6724f71972
     - assetGUIDs:
-      - 2c8a530883610634aaf0a88bbd27ddeb
+      - 5ce4d2489b6654048a704997ca5ba3fc
     - assetGUIDs:
-      - 36ebbb67929f6d34f9bad15946ebe28f
+      - 7ae324cccbef89349a6be98a24ae0d9e
     - assetGUIDs:
-      - 7bd578e37ab60c240b270441ee2e41c8
+      - 25b178091dd086d419a0b800c0fa9232
     - assetGUIDs:
-      - cdc66209f852d8e43879598e80c6d73e
-      - c1a55e44447cbd047b814ede182f7915
-      - 334b71c894110624395d4657469e47ba
-      - 1d655e9491ac6814d99037c680a41917
-      - d2a25557c61c91d459c9f49294450080
-      - b4a91b7038a2a6642891118bfc61f6d6
-      - 60e5cb0e02d792442ac013a8deb66119
-      - 43d8ad76707367c4eb062db897ad8820
-      - 0830b4e206162e144bc5c2de8c2cc9aa
-      - a9f68e0de0687b946b727f35ff7d4816
-      - 84cb86893bcf59849a7ca5c643e1f3d2
-      - cf2ccf372b29f11498fc1dcefec35733
-      - 4dc4976cd397c174aa763e5f32c5a40c
-      - 2b652fdcbbc48c24fa3707563313942c
-      - f32c847eb8a6b3b4b82124ae8c7a4e0f
-      - a41430e198052d44c8067895e985e9a4
-      - 2a267d1be358e69479c99122080bbf81
-      - 9ea351e5b647db947bcf3f3b2e74e8f0
-      - 8d68ef1811cb3cd42bfa9a3ffc474357
-      - 65de5a8472b833d4fb8f834a6e175b19
-      - 0fdeb5cc388882547a911a3cdbcf69b6
+      - fe01ac299cb9a564ebd46ef65d9fe68a
     - assetGUIDs:
-      - 0fdeb5cc388882547a911a3cdbcf69b6
+      - 44b481785305ce14896d60bc64211682
     - assetGUIDs:
-      - cdc66209f852d8e43879598e80c6d73e
+      - 2630c83ded303e24ca23dc9d17848f02
     - assetGUIDs:
-      - c1a55e44447cbd047b814ede182f7915
+      - 5b3c0b90a8bd3984bb1bc99003a34ba7
     - assetGUIDs:
-      - 1f7c4508fbace374897f9a67d26eb0ab
+      - aae55989abe44784197dd80958fdd0f5
     - assetGUIDs:
-      - b6a716b8a13911a46b6f3719a23d2026
-    targetObject: {fileID: 11400000, guid: a9644b9cf968da748bbf12a4c0810c07, type: 2}
+      - 8e33882f7fba925478cbd19e61365198
+    targetObject: {fileID: 11500000, guid: 66d33cd4e53f2a64b9d5484bc2a8e6b0, type: 3}
     targetObjects: []
-    lastSelectedAsset: Assets/CoInspector/Editor/Core/Helpers/MissingScriptManager.asset
+    lastSelectedAsset: Packages/com.unity.shadergraph/Editor/Data/Nodes/UV/ParallaxOcclusionMappingNode.cs
     lastClickedTab: -1
     previousTab: 0
-  tipsShown: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+  tipsShown: 01000000000000000100000000000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000000000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000000000001000000010000000100000001000000000000000000000001000000010000000100000001000000010000000100000001000000000000000100000001000000
   playModeStartScene: {}
   enteringPlayMode: 0

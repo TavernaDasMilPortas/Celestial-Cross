@@ -81,7 +81,10 @@ namespace CelestialCross.System
                         {
                             for (int i = 0; i < Mathf.Max(1, reward.Amount); i++)
                             {
+                                Debug.Log($"[RewardService] Gerando LootTable {reward.LootTableRef.GetType().Name} via RewardDefinition...");
+                                int prevArtCount = runtimeReward.GeneratedArtifacts.Count;
                                 reward.LootTableRef.GenerateLoot(runtimeReward);
+                                Debug.Log($"[RewardService] LootTable gerou {runtimeReward.GeneratedArtifacts.Count - prevArtCount} artefatos.");
                             }
                         }
                         break;

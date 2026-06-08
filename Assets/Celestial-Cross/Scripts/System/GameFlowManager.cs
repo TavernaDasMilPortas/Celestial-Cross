@@ -11,6 +11,7 @@ public class GameFlowManager : MonoBehaviour
     // Novas propriedades (Dungeon Context)
     public DungeonBaseSO SelectedDungeon { get; set; }
     public DungeonLevelNode SelectedDungeonNode { get; set; }
+    public CelestialCross.Progression.StoryNode SelectedStoryNode { get; set; }
 
     // Progresso de História
     public CelestialCross.Progression.ChapterData CurrentChapter { get; set; }

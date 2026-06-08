@@ -24,8 +24,8 @@ MonoBehaviour:
   idleAnim: {fileID: 7400000, guid: e1b5aa6273945c742876809cba01a93b, type: 2}
   combatIdleAnim: {fileID: 7400000, guid: e1b5aa6273945c742876809cba01a93b, type: 2}
   baseStats:
-    health: 300
-    attack: 100
+    health: 10
+    attack: 10
     defense: 10
     speed: 8
     criticalChance: 10

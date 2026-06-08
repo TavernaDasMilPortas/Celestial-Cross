@@ -21,10 +21,17 @@ namespace CelestialCross.System
 
         public void StartCombatNode(CombatStoryNode node)
         {
-            if (GameFlowManager.Instance == null) return;
+            if (GameFlowManager.Instance == null) 
+            {
+                Debug.LogError("[StoryFlowController] GameFlowManager.Instance is NULL. Cannot start combat node.");
+                return;
+            }
 
+            Debug.Log($"[StoryFlowController] Starting Combat Node: {node.Title}. Loading PreparationScene...");
             GameFlowManager.Instance.SelectedLevel = node.LevelRef;
             GameFlowManager.Instance.SelectedDungeon = node.DungeonRef;
+            GameFlowManager.Instance.SelectedDungeonNode = null; // LIMPA o lingering node
+            GameFlowManager.Instance.SelectedStoryNode = node;
             GameFlowManager.Instance.FixedSlots = node.FixedSlots;
             
             // Assume preparation scene is generically PreparationScene
@@ -36,7 +43,12 @@ namespace CelestialCross.System
 
         public void StartDialogueNode(DialogueStoryNode node)
         {
-            if (node.DialogueGraph == null) return;
+            if (node.DialogueGraph == null) 
+            {
+                Debug.LogError("[StoryFlowController] DialogueGraph is NULL. Cannot start dialogue.");
+                return;
+            }
+            Debug.Log($"[StoryFlowController] Starting Dialogue Node: {node.Title}. Loading DialogueScene...");
             CelestialCross.Dialogue.Manager.DialogueManager.NextGraphToLoad = node.DialogueGraph;
             SceneManager.LoadScene("DialogueScene"); // Nome padrão da cena
         }

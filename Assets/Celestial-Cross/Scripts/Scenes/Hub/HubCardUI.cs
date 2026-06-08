@@ -118,7 +118,7 @@ namespace CelestialCross.Scenes.Hub
             if (energyText != null)
             {
                 int energyCost = node.EntryCost != null ? node.EntryCost.EnergyCost : 0;
-                energyText.text = energyCost > 0 ? $"⚡ {energyCost}" : "⚡ Grátis";
+                energyText.text = energyCost > 0 ? $"Energia: {energyCost}" : "Energia: Grátis";
                 energyText.gameObject.SetActive(true);
             }
 

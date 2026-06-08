@@ -107,6 +107,11 @@ namespace CelestialCross.Scenes.Hub
             }
 
             isShowing = true;
+
+            if (CelestialCross.System.BetterUIFixer.Instance != null)
+            {
+                CelestialCross.System.BetterUIFixer.Instance.RefreshImages(gameObject);
+            }
         }
 
         public void Hide()

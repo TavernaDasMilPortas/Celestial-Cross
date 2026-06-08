@@ -19,21 +19,21 @@ namespace CelestialCross.Data.Dungeon
     public class PetDropEntry
     {
         public PetSpeciesSO Species;
-        [Tooltip("Peso de chance de drop desta esp√©cie em rela√ß√£o √†s outras da mesma lista")]
+        [Tooltip("Peso de chance de drop desta espÈcie em relaÁ„o ‡s outras da mesma lista")]
         public float Weight = 10f;
     }
 
     [global::System.Serializable]
     public class PetLootTable : CelestialCross.Data.Loot.BaseLootTable
     {
-        [Header("Global Loot Pool da Masmorra ou Regi√£o (Pets Poss√≠veis)")]
+        [Header("Global Loot Pool da Masmorra ou Regi„o (Pets PossÌveis)")]
         public List<PetDropEntry> AllowedPets = new List<PetDropEntry>();
 
         [Header("Tabela de Chance Base")]
-        public PetDropMatrix DropMatrix;
+        public PetDropMatrix DropMatrix = new PetDropMatrix();
 
-        [Header("Configura√ß√µes Gerais")]
-        [Tooltip("Quantidade a ser gerada por padr√£o")]
+        [Header("ConfiguraÁıes Gerais")]
+        [Tooltip("Quantidade a ser gerada por padr„o")]
         public int NumberOfRolls = 1;
 
         public override void GenerateLoot(RuntimeReward rewardData)

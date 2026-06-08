@@ -11,6 +11,17 @@ namespace CelestialCross.System
 
         [SerializeField] private EnergyConfig config;
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        private static void AutoInitialize()
+        {
+            if (Instance == null)
+            {
+                var go = new GameObject("EnergyService");
+                Instance = go.AddComponent<EnergyService>();
+                DontDestroyOnLoad(go);
+            }
+        }
+
         public event Action<int, int> OnEnergyChanged;
         public event Action<int> OnEnergyInsufficient;
 
@@ -90,17 +101,18 @@ namespace CelestialCross.System
 
             energyData.LastServerTimestampUTC = now.ToString("O");
 
-            if (energyData.CurrentEnergy < config.MaxEnergy)
+            if (energyData.CurrentEnergy < GetMaxEnergy())
             {
                 if (DateTime.TryParse(energyData.LastRegenTimestampUTC, out DateTime lastRegenTime))
                 {
                     TimeSpan passed = now - lastRegenTime;
-                    int energyToAdd = (int)(passed.TotalSeconds / config.RegenIntervalSeconds);
+                    float regenInterval = config != null ? config.RegenIntervalSeconds : 300f; // 5 minutes default
+                    int energyToAdd = (int)(passed.TotalSeconds / regenInterval);
 
                     if (energyToAdd > 0)
                     {
-                        energyData.CurrentEnergy = Mathf.Min(config.MaxEnergy, energyData.CurrentEnergy + energyToAdd);
-                        DateTime newRegenTime = lastRegenTime.AddSeconds(energyToAdd * config.RegenIntervalSeconds);
+                        energyData.CurrentEnergy = Mathf.Min(GetMaxEnergy(), energyData.CurrentEnergy + energyToAdd);
+                        DateTime newRegenTime = lastRegenTime.AddSeconds(energyToAdd * regenInterval);
                         energyData.LastRegenTimestampUTC = newRegenTime.ToString("O");
                         AccountManager.Instance.SaveAccount();
                     }
@@ -134,20 +146,22 @@ namespace CelestialCross.System
                     continue;
                 }
 
-                if (config == null || AccountManager.Instance == null || AccountManager.Instance.PlayerAccount == null) continue;
+                // Continue regenerating even if config is null (using defaults)
+                if (AccountManager.Instance == null || AccountManager.Instance.PlayerAccount == null) continue;
 
                 var energyData = AccountManager.Instance.PlayerAccount.EnergyInfo;
                 if (energyData == null) continue;
 
-                if (energyData.CurrentEnergy < config.MaxEnergy)
+                if (energyData.CurrentEnergy < GetMaxEnergy())
                 {
                     DateTime now = DateTime.UtcNow;
                     if (DateTime.TryParse(energyData.LastRegenTimestampUTC, out DateTime lastRegenTime))
                     {
-                        if ((now - lastRegenTime).TotalSeconds >= config.RegenIntervalSeconds)
+                        float regenInterval = config != null ? config.RegenIntervalSeconds : 300f;
+                        if ((now - lastRegenTime).TotalSeconds >= regenInterval)
                         {
                             energyData.CurrentEnergy++;
-                            energyData.LastRegenTimestampUTC = lastRegenTime.AddSeconds(config.RegenIntervalSeconds).ToString("O");
+                            energyData.LastRegenTimestampUTC = lastRegenTime.AddSeconds(regenInterval).ToString("O");
                             energyData.LastServerTimestampUTC = now.ToString("O");
                             
                             AccountManager.Instance.SaveAccount();
@@ -173,7 +187,8 @@ namespace CelestialCross.System
             {
                 account.EnergyInfo.CurrentEnergy -= amount;
                 
-                if (account.EnergyInfo.CurrentEnergy + amount >= config.MaxEnergy && account.EnergyInfo.CurrentEnergy < config.MaxEnergy)
+                int maxE = GetMaxEnergy();
+                if (account.EnergyInfo.CurrentEnergy + amount >= maxE && account.EnergyInfo.CurrentEnergy < maxE)
                 {
                     account.EnergyInfo.LastRegenTimestampUTC = DateTime.UtcNow.ToString("O");
                 }
