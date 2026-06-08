@@ -37,6 +37,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor
                 new SearchTreeEntry(new GUIContent("Ramification")) { userData = typeof(RamificationNode), level = 2 },
                 new SearchTreeEntry(new GUIContent("Ramification Spec")) { userData = typeof(RamificationSpecNode), level = 2 },
                 new SearchTreeEntry(new GUIContent("Unit Variable")) { userData = typeof(UnitVariableNode), level = 2 },
+                new SearchTreeEntry(new GUIContent("Schedule Execution")) { userData = typeof(ScheduleExecutionNode), level = 2 },
 
                 new SearchTreeGroupEntry(new GUIContent("Effects"), 1),
                 new SearchTreeEntry(new GUIContent("Damage Effect")) { userData = typeof(DamageEffectNode), level = 2 },
@@ -48,6 +49,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor
                 new SearchTreeEntry(new GUIContent("VFX / Animation")) { userData = typeof(VfxNode), level = 2 },
                 new SearchTreeEntry(new GUIContent("Cost / Cooldown")) { userData = typeof(CostNode), level = 2 },
                 new SearchTreeEntry(new GUIContent("Variable Modifier")) { userData = typeof(VariableModifierNode), level = 2 },
+                new SearchTreeEntry(new GUIContent("Modify AP")) { userData = typeof(ModifyAPNode), level = 2 },
 
                 new SearchTreeGroupEntry(new GUIContent("Conditions / Data"), 1),
                 new SearchTreeEntry(new GUIContent("Attribute Condition")) { userData = typeof(AttributeConditionNode), level = 2 },
@@ -55,7 +57,8 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor
                 new SearchTreeEntry(new GUIContent("Faction Condition")) { userData = typeof(FactionConditionNode), level = 2 },
                 new SearchTreeEntry(new GUIContent("Range Count Condition")) { userData = typeof(RangeConditionNode), level = 2 },
                 new SearchTreeEntry(new GUIContent("Speed Advantage")) { userData = typeof(SpeedAdvantageConditionNode), level = 2 },
-                new SearchTreeEntry(new GUIContent("Turn Order Condition")) { userData = typeof(TurnOrderConditionNode), level = 2 }
+                new SearchTreeEntry(new GUIContent("Turn Order Condition")) { userData = typeof(TurnOrderConditionNode), level = 2 },
+                new SearchTreeEntry(new GUIContent("Limit Per Turn")) { userData = typeof(LimitPerTurnNode), level = 2 }
             };
 
             return tree;

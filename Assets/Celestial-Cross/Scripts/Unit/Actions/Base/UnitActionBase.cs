@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Celestial_Cross.Scripts.Combat.Execution;
 
 public enum UnitActionCategory
 {
@@ -163,18 +164,34 @@ public abstract class UnitActionBase : MonoBehaviour, IUnitAction
     {
         CameraController.Instance?.ResetFocus();
 
-        if (ActionCategory == UnitActionCategory.Movement)
+        bool isEnemy = unit is Celestial_Cross.Scripts.Units.Enemy.EnemyUnit;
+        if (!isEnemy && ActionCategory == UnitActionCategory.Movement && !unit.hasMovedThisTurn)
+        {
             unit.hasMovedThisTurn = true;
+            // Movimento gratuito (0 AP)
+        }
         else
-            unit.hasActedThisTurn = true;
+        {
+            if (ActionCategory == UnitActionCategory.Movement) unit.hasMovedThisTurn = true;
+            else unit.hasActedThisTurn = true;
+            
+            unit.CurrentAP--;
+        }
 
-        if (unit.hasMovedThisTurn && unit.hasActedThisTurn)
+        AbilityExecutor.Instance.StartCoroutine(HandleTurnEnd(unit));
+    }
+
+    private IEnumerator HandleTurnEnd(Unit unit)
+    {
+        yield return new WaitUntil(() => !AbilityExecutor.Instance.IsExecuting);
+
+        if (unit.CurrentAP <= 0)
         {
             EndTurnProperly();
         }
         else
         {
-            Debug.Log($"[UnitActionBase] Ação '{ActionName}' concluída. Unidade ainda pode {(unit.hasMovedThisTurn ? "agir" : "se mover")}.");
+            Debug.Log($"[UnitActionBase] Ação '{ActionName}' concluída. AP restante: {unit.CurrentAP}.");
             // Notificar PlayerController/UI para atualizar botões
             PlayerController.Instance?.RefreshUI();
         }

@@ -59,5 +59,20 @@ namespace CelestialCross.Combat
             this.loopCounters = new global::System.Collections.Generic.Dictionary<string, int>();
             this.conditionPool = new global::System.Collections.Generic.List<Celestial_Cross.Scripts.Abilities.Conditions.AbilityConditionData>();
         }
+
+        public CombatContext Clone()
+        {
+            var clone = new CombatContext(source, target, amount, action);
+            clone.targets = new global::System.Collections.Generic.List<global::Unit>(targets);
+            clone.isCritical = isCritical;
+            clone.abilityLevel = abilityLevel;
+            clone.slotId = slotId;
+            clone.targetPos = targetPos;
+            clone.hasTriggeredPetAnimation = hasTriggeredPetAnimation;
+            clone.Variables = new global::System.Collections.Generic.Dictionary<string, float>(Variables);
+            clone.loopCounters = new global::System.Collections.Generic.Dictionary<string, int>(loopCounters);
+            clone.conditionPool = new global::System.Collections.Generic.List<Celestial_Cross.Scripts.Abilities.Conditions.AbilityConditionData>(conditionPool);
+            return clone;
+        }
     }
 }

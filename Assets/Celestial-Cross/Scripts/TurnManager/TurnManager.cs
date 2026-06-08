@@ -129,6 +129,7 @@ public class TurnManager : MonoBehaviour
         current.GetComponentInChildren<UnitVisualController>()?.SetCombatState(true);
         current.hasMovedThisTurn = false;
         current.hasActedThisTurn = false;
+        current.CurrentAP = current.MaxAP;
 
         CombatLogger.CurrentUnit = current;
         CombatLogger.Log($"<color=#00ffff>[Turno]</color> Início do turno de <b>{current.DisplayName}</b>", LogCategory.Ability);

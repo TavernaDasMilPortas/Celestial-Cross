@@ -112,6 +112,12 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                 string nextPort = "Out";
                 yield return StartCoroutine(ProcessNode(graph, currentNodeData, context, hook, (port) => nextPort = port));
 
+                if (nextPort == "Scheduled") 
+                {
+                    Debug.Log("[Interpreter] Fluxo suspenso por ScheduleExecution.");
+                    break;
+                }
+
                 Debug.Log($"[Interpreter] Procurando link saindo de {currentNodeData.Guid} pela porta '{nextPort}'");
                 var link = connections.FirstOrDefault(l => l.BaseNodeGuid == currentNodeData.Guid && l.PortName == nextPort);
                 
@@ -138,6 +144,48 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
             }
 
             Debug.Log("<color=cyan>[Interpreter]</color> Execução finalizada.");
+            onComplete?.Invoke();
+        }
+
+        public IEnumerator ExecuteFromNode(Unit caster, AbilityGraphSO graph, AbilityNodeData startNode, CombatContext context, Action onComplete = null)
+        {
+            if (graph == null || startNode == null)
+            {
+                onComplete?.Invoke();
+                yield break;
+            }
+
+            CombatLogger.Log($"<color=#a29bfe>[Graph]</color> Retomando <b>{graph.name}</b> a partir do nó {startNode.NodeType}", LogCategory.Graph);
+
+            var nodeMap = graph.NodeData.ToDictionary(n => n.Guid);
+            var connections = graph.NodeLinks;
+            AbilityNodeData currentNodeData = startNode;
+
+            while (currentNodeData != null)
+            {
+                Debug.Log($"[Interpreter] Executando nó: {currentNodeData.NodeType} ({currentNodeData.Guid})");
+                
+                string nextPort = "Out";
+                yield return StartCoroutine(ProcessNode(graph, currentNodeData, context, CombatHook.OnManualCast, (port) => nextPort = port));
+
+                if (nextPort == "Scheduled") 
+                {
+                    Debug.Log("[Interpreter] Fluxo suspenso por ScheduleExecution.");
+                    break;
+                }
+
+                var link = connections.FirstOrDefault(l => l.BaseNodeGuid == currentNodeData.Guid && l.PortName == nextPort);
+                if (link != null)
+                {
+                    currentNodeData = nodeMap[link.TargetNodeGuid];
+                }
+                else
+                {
+                    currentNodeData = null;
+                }
+            }
+
+            Debug.Log("<color=cyan>[Interpreter]</color> Execução retomada finalizada.");
             onComplete?.Invoke();
         }
 
@@ -244,6 +292,11 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                 case "HealEffectNode":
                     var healData = JsonUtility.FromJson<HealNodeData>(node.JsonData);
                     ExecuteHeal(healData, context);
+                    break;
+
+                case "ModifyAPNode":
+                    var modifyAPData = JsonUtility.FromJson<ModifyAPNodeData>(node.JsonData);
+                    ExecuteModifyAP(modifyAPData, context);
                     break;
 
                 case "ConditionalFlowNode":
@@ -410,6 +463,21 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                     ExecuteApplyModifier(applyModData, node, graph, context);
                     break;
 
+                case "LimitPerTurnNode":
+                    var limitData = JsonUtility.FromJson<LimitPerTurnNodeData>(node.JsonData);
+                    string key = $"Limit_{node.Guid}_{TurnManager.Instance.RoundCounter}";
+                    float uses = context.source?.VariableStore != null ? context.source.VariableStore.GetGlobalVar(key) : 0;
+                    if (uses < limitData.maxExecutionsPerTurn)
+                    {
+                        context.source?.VariableStore?.SetGlobalVar(key, uses + 1);
+                        resultPort = "True";
+                    }
+                    else
+                    {
+                        resultPort = "False";
+                    }
+                    break;
+
                 case "VfxNode":
                     var vfxData = JsonUtility.FromJson<VfxNodeData>(node.JsonData);
                     ExecuteVfx(vfxData, context);
@@ -565,6 +633,11 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                     ExecuteCost(costData, context);
                     break;
 
+                case "ModifyAPNode":
+                    var modifyAPData = JsonUtility.FromJson<ModifyAPNodeData>(node.JsonData);
+                    ExecuteModifyAP(modifyAPData, context);
+                    break;
+
                 case "CleanseStatusNode":
                     var cleanseData = JsonUtility.FromJson<CleanseStatusNodeData>(node.JsonData);
                     ExecuteCleanse(cleanseData, context);
@@ -698,6 +771,36 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                 case "ApplyModifierNode":
                     var applyModData = JsonUtility.FromJson<ApplyModifierNodeData>(node.JsonData);
                     ExecuteApplyModifier(applyModData, node, graph, context);
+                    break;
+
+                case "LimitPerTurnNode":
+                    var limitData = JsonUtility.FromJson<LimitPerTurnNodeData>(node.JsonData);
+                    string key = $"Limit_{node.Guid}_{TurnManager.Instance.RoundCounter}";
+                    float uses = context.source?.VariableStore != null ? context.source.VariableStore.GetGlobalVar(key) : 0;
+                    if (uses < limitData.maxExecutionsPerTurn)
+                    {
+                        context.source?.VariableStore?.SetGlobalVar(key, uses + 1);
+                        resultPort = "True";
+                    }
+                    else
+                    {
+                        resultPort = "False";
+                    }
+                    break;
+                    
+                case "ScheduleExecutionNode":
+                    var schedData = JsonUtility.FromJson<ScheduleExecutionNodeData>(node.JsonData);
+                    // Pega o guid do próximo nó a ser executado
+                    var nextLink = graph.NodeLinks.FirstOrDefault(l => l.BaseNodeGuid == node.Guid && l.PortName == "Out");
+                    if (nextLink != null)
+                    {
+                        var nextNode = graph.NodeData.FirstOrDefault(n => n.Guid == nextLink.TargetNodeGuid);
+                        if (nextNode != null && PreparedActionManager.Instance != null)
+                        {
+                            PreparedActionManager.Instance.ScheduleAction(context.source, graph, context, nextNode, schedData.delayTurns);
+                            resultPort = "Scheduled";
+                        }
+                    }
                     break;
             }
 
@@ -1309,6 +1412,20 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
 
         #endregion
 
+        private void ExecuteModifyAP(ModifyAPNodeData data, CombatContext context)
+        {
+            if (context.source == null) return;
+            
+            if (data.modifyMax)
+            {
+                context.source.MaxAP += data.amount;
+            }
+            else
+            {
+                context.source.CurrentAP += data.amount;
+            }
+            CelestialCross.Combat.CombatLogger.Log($"<color=orange>[AP]</color> {context.source.DisplayName} teve {(data.modifyMax ? "MaxAP" : "CurrentAP")} modificado em {data.amount}.", CelestialCross.Combat.LogCategory.System);
+        }
 
         #region Blackboard Helpers
 
@@ -1389,7 +1506,29 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                     var closest = filteredUnits.Where(u => u != source).OrderBy(u => Vector2Int.Distance(source.GridPosition, u.GridPosition)).FirstOrDefault();
                     if (closest != null) results.Add(closest);
                     break;
-                // ... outras estratégias usariam filteredUnits
+                case GraphAutoStrategyType.FarthestUnit:
+                    var farthest = filteredUnits.Where(u => u != source).OrderByDescending(u => Vector2Int.Distance(source.GridPosition, u.GridPosition)).FirstOrDefault();
+                    if (farthest != null) results.Add(farthest);
+                    break;
+                case GraphAutoStrategyType.LowestAttribute:
+                    // Fallback para HP para manter simplificado se não passarmos o enum extra
+                    var lowest = filteredUnits.Where(u => u != source).OrderBy(u => u.Health.CurrentHealth).FirstOrDefault();
+                    if (lowest != null) results.Add(lowest);
+                    break;
+                case GraphAutoStrategyType.HighestAttribute:
+                    var highest = filteredUnits.Where(u => u != source).OrderByDescending(u => u.Health.CurrentHealth).FirstOrDefault();
+                    if (highest != null) results.Add(highest);
+                    break;
+                case GraphAutoStrategyType.RandomTarget:
+                    var valids = filteredUnits.Where(u => u != source).ToList();
+                    if (valids.Count > 0)
+                    {
+                        for (int i = 0; i < data.targetCount; i++)
+                        {
+                            results.Add(valids[UnityEngine.Random.Range(0, valids.Count)]);
+                        }
+                    }
+                    break;
             }
 
             return results;

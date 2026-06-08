@@ -51,6 +51,9 @@ public abstract class Unit : MonoBehaviour
     public bool hasMovedThisTurn { get; set; }
     public bool hasActedThisTurn { get; set; }
 
+    public int MaxAP { get; set; } = 1;
+    public int CurrentAP { get; set; } = 0;
+
     // =========================
     // PROPERTIES
     // =========================
@@ -249,17 +252,24 @@ public abstract class Unit : MonoBehaviour
         // Garante que passivas de set (artefatos) estejam ativas no PassiveManager.
         ApplyArtifactSetPassives();
         
-        // Aplica passivas de habilidades inatas (Via Grafos)
+        // Aplica passivas de habilidades inatas (Via Grafos) apenas se for inimigo. 
+        // Players usam slots, pets, artefatos e constelações.
         if (unitData != null)
         {
-            var graphs = unitData.GetAbilityGraphs();
-            if (graphs != null)
+            MaxAP = unitData.maxAP;
+            CurrentAP = MaxAP;
+            bool isEnemy = this is Celestial_Cross.Scripts.Units.Enemy.EnemyUnit;
+            if (isEnemy)
             {
-                foreach (var g in graphs)
+                var graphs = unitData.GetAbilityGraphs();
+                if (graphs != null)
                 {
-                    if (g != null && g.IsPassive)
+                    foreach (var g in graphs)
                     {
-                        PassiveManager?.ApplyGraphCondition(g, this);
+                        if (g != null && g.IsPassive)
+                        {
+                            PassiveManager?.ApplyGraphCondition(g, this);
+                        }
                     }
                 }
             }
@@ -568,15 +578,19 @@ public abstract class Unit : MonoBehaviour
         }
 
         // 3) Outras habilidades da própria unidade (apenas ativas)
-        var graphs = unitData.GetAbilityGraphs();
-        if (graphs != null)
+        bool isEnemy = this is Celestial_Cross.Scripts.Units.Enemy.EnemyUnit;
+        if (isEnemy)
         {
-            foreach (var g in graphs)
+            var graphs = unitData.GetAbilityGraphs();
+            if (graphs != null)
             {
-                if (g != null && !g.IsPassive && !addedGraphs.Contains(g))
+                foreach (var g in graphs)
                 {
-                    actions.Add(new GraphActionWrapper(this, g));
-                    addedGraphs.Add(g);
+                    if (g != null && !g.IsPassive && !addedGraphs.Contains(g))
+                    {
+                        actions.Add(new GraphActionWrapper(this, g));
+                        addedGraphs.Add(g);
+                    }
                 }
             }
         }

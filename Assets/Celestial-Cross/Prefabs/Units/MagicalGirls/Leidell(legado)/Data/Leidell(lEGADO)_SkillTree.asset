@@ -18,7 +18,9 @@ MonoBehaviour:
   combatSkills:
   - {fileID: 11400000, guid: f8976fbac49946d42a1ba3e68c6118a8, type: 2}
   - {fileID: 11400000, guid: 743f84550d77079479449c7485668536, type: 2}
+  - {fileID: 11400000, guid: 2931711c8603b0a418e1dc7ac82c972f, type: 2}
   slot1Skills:
   - {fileID: 11400000, guid: f8976fbac49946d42a1ba3e68c6118a8, type: 2}
   slot2Skills:
   - {fileID: 11400000, guid: 743f84550d77079479449c7485668536, type: 2}
+  - {fileID: 11400000, guid: 2931711c8603b0a418e1dc7ac82c972f, type: 2}

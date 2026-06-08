@@ -23,27 +23,22 @@ MonoBehaviour:
     JsonData: 
   - Guid: act_mov
     NodeType: BTActionMoveEditorNode
-    NodeTitle: Action Move
+    NodeTitle: "A\xE7\xE3o: Mover"
     Position: {x: 629, y: 454}
     JsonData: '{"intent":0}'
-  - Guid: c55c97ff-6166-4c2d-abb2-2778f2a2e2ca
-    NodeType: BTActionUseAbilityEditorNode
-    NodeTitle: Action Use Ability
-    Position: {x: 873, y: 211}
-    JsonData: '{"category":0}'
   - Guid: 350ced60-b0ef-44fa-80c1-992dbfdb58c3
     NodeType: BTGetTargetEditorNode
-    NodeTitle: Get Target
+    NodeTitle: 'Dado: Obter Alvo'
     Position: {x: 300, y: 508}
     JsonData: '{"faction":0,"strategy":0,"requiredTag":""}'
   - Guid: 83aa1e96-549c-4de9-91b2-5b24e5d16cdb
     NodeType: BTGetTargetEditorNode
-    NodeTitle: Get Target
+    NodeTitle: 'Dado: Obter Alvo'
     Position: {x: 603, y: 280}
     JsonData: '{"faction":0,"strategy":0,"requiredTag":""}'
   - Guid: sel
     NodeType: BTSelectorEditorNode
-    NodeTitle: Selector
+    NodeTitle: Fallback (OU)
     Position: {x: 173, y: 80}
     JsonData: '{"ports":["Passo_0","Passo_1"]}'
   - Guid: root
@@ -53,9 +48,14 @@ MonoBehaviour:
     JsonData: 
   - Guid: seq
     NodeType: BTSequenceEditorNode
-    NodeTitle: Sequence
+    NodeTitle: Sequence (E)
     Position: {x: 649, y: 98}
     JsonData: '{"ports":["Passo_0","Passo_1"]}'
+  - Guid: c55c97ff-6166-4c2d-abb2-2778f2a2e2ca
+    NodeType: BTActionUseAbilityEditorNode
+    NodeTitle: "A\xE7\xE3o: Usar Habilidade"
+    Position: {x: 884, y: 280}
+    JsonData: '{"category":0}'
   NodeLinks:
   - ParentGuid: root
     ParentPort: Child
@@ -84,4 +84,8 @@ MonoBehaviour:
   - ParentGuid: 83aa1e96-549c-4de9-91b2-5b24e5d16cdb
     ParentPort: Target
     ChildGuid: c55c97ff-6166-4c2d-abb2-2778f2a2e2ca
+    ChildPort: Target
+  - ParentGuid: 83aa1e96-549c-4de9-91b2-5b24e5d16cdb
+    ParentPort: Target
+    ChildGuid: cond_range
     ChildPort: Target

@@ -31,9 +31,10 @@ namespace Celestial_Cross.Scripts.Combat.Execution
 
         public static event Action<AbilityBlueprint, List<Unit>> OnTargetPreviewChanged;
 
-        private Coroutine activeAbilityRoutine;
+        private int executionCount = 0;
+        private Coroutine activeAbilityRoutine; // Mantido para Abort
         
-        public bool IsExecuting => activeAbilityRoutine != null;
+        public bool IsExecuting => executionCount > 0;
 
         private void Awake()
         {
@@ -43,10 +44,11 @@ namespace Celestial_Cross.Scripts.Combat.Execution
 
         public void AbortCurrentAbility()
         {
-            if (activeAbilityRoutine != null)
+            if (activeAbilityRoutine != null || executionCount > 0)
             {
-                StopCoroutine(activeAbilityRoutine);
+                StopAllCoroutines(); // Para todas as execuções filhas e passivas
                 activeAbilityRoutine = null;
+                executionCount = 0;
                 
                 // Limpa seletores residuais em QUALQUER objeto (anteriormente s buscava no singleton)
                 var allSelectors = FindObjectsByType<TargetSelector>(FindObjectsSortMode.None);
@@ -90,6 +92,7 @@ namespace Celestial_Cross.Scripts.Combat.Execution
         {
             try
             {
+                executionCount++;
                 CombatLogger.Log($"<color=white>[AbilityExecutor]</color> Iniciando grafo: <b>{graph.name}</b> (Hook: {currentHook})", LogCategory.Ability);
                 
                 if (AbilityGraphInterpreter.Instance != null)
@@ -116,18 +119,21 @@ namespace Celestial_Cross.Scripts.Combat.Execution
             }
             finally
             {
-                activeAbilityRoutine = null;
+                executionCount--;
+                if (executionCount == 0) activeAbilityRoutine = null;
             }
         }
 
         private IEnumerator ExecuteBlueprintCoroutine(Unit caster, AbilityBlueprint blueprint, CombatHook currentHook, Action onComplete)
         {
+            executionCount++;
             CombatLogger.Log($"<color=white>[AbilityExecutor]</color> Iniciando habilidade: <b>{blueprint.name}</b> (Hook: {currentHook})", LogCategory.Ability);
 
             // Prioridade para o Sistema de Grafo
             if (blueprint.abilityGraph != null && AbilityGraphInterpreter.Instance != null)
             {
                 yield return StartCoroutine(AbilityGraphInterpreter.Instance.ExecuteGraphCoroutine(caster, blueprint.abilityGraph, currentHook, onComplete));
+                executionCount--;
                 yield break;
             }
 
@@ -286,7 +292,8 @@ namespace Celestial_Cross.Scripts.Combat.Execution
                 CameraController.Instance?.Follow(caster);
             }
 
-            activeAbilityRoutine = null;
+            executionCount--;
+            if (executionCount == 0) activeAbilityRoutine = null;
             onComplete?.Invoke();
         }
     }

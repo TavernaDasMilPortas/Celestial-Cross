@@ -20,6 +20,11 @@ public class GridTile : MonoBehaviour
     [SerializeField] private Color executionColor = new Color(0.15f, 0.15f, 0.15f, 1f);
     [SerializeField] private Color confirmedColor = new Color(0.1f, 0.7f, 0.1f, 1f);
 
+    [Header("Telegraph Colors")]
+    [SerializeField] private Color telegraphColor1 = new Color(1f, 0f, 0f, 0.8f); // 1 turno (Vermelho)
+    [SerializeField] private Color telegraphColor2 = new Color(1f, 0.5f, 0f, 0.8f); // 2 turnos (Laranja)
+    [SerializeField] private Color telegraphColor3 = new Color(1f, 0.9f, 0f, 0.8f); // 3+ turnos (Amarelo)
+
     private MaterialPropertyBlock propertyBlock;
 
     private static readonly int ColorId = Shader.PropertyToID("_Color");
@@ -33,6 +38,8 @@ public class GridTile : MonoBehaviour
     private bool isAreaPreview = false;
     private bool isHighlight = false;
     private bool isConfirmed = false;
+    private bool isTelegraphed = false;
+    private int telegraphTurns = 0;
 
     // ─────────────────────────────────────────────────────────────────────────
     // INIT
@@ -179,6 +186,22 @@ public class GridTile : MonoBehaviour
         isAreaPreview = false;
         isHighlight = false;
         isConfirmed = false;
+        isTelegraphed = false;
+        telegraphTurns = 0;
+        UpdateVisuals();
+    }
+
+    public void ApplyTelegraph(int turnsLeft)
+    {
+        isTelegraphed = true;
+        telegraphTurns = turnsLeft;
+        UpdateVisuals();
+    }
+
+    public void ClearTelegraph()
+    {
+        isTelegraphed = false;
+        telegraphTurns = 0;
         UpdateVisuals();
     }
 
@@ -189,9 +212,14 @@ public class GridTile : MonoBehaviour
 
     void UpdateVisuals()
     {
-        // Only the execution darken affects the base tile material.
         if (isExecution)
             ApplyColor(executionColor);
+        else if (isTelegraphed)
+        {
+            if (telegraphTurns <= 1) ApplyColor(telegraphColor1);
+            else if (telegraphTurns == 2) ApplyColor(telegraphColor2);
+            else ApplyColor(telegraphColor3);
+        }
         else
             ApplyColor(baseColor);
             

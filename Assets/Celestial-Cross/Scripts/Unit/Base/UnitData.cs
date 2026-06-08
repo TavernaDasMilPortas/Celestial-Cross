@@ -42,6 +42,11 @@ public class UnitData : ScriptableObject
     [Tooltip("Árvore de comportamento padrão, caso essa unidade seja inimiga ou use autofarm.")]
     public Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.BehaviorTreeSO defaultBehaviorTree;
 
+    [Header("Stats Base")]
+    public int maxAP = 1;
+    public int maxHealth = 10;
+    public int physicalAttack = 5;
+
     [Header("UI & Visuals")]
     public Sprite icon;
     public Sprite sprite;

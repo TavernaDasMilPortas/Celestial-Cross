@@ -51,6 +51,7 @@ namespace CelestialCross.Editor
 
         // Step 2: Stats (Enemies only have flat stats, no leveling scaling difference)
         private CombatStats enemyStats = new CombatStats(50, 15, 5, 10, 5, 0, 50, 0);
+        private int maxAP = 1;
 
         // Step 3: Abilities
         private List<AbilityGraphSO> associatedGraphs = new List<AbilityGraphSO>();
@@ -528,6 +529,7 @@ namespace CelestialCross.Editor
             role = source.role;
             unitClass = source.unitClass;
             enemyStats = source.baseStats; // Enemies use flat stats
+            maxAP = source.maxAP;
             
             associatedGraphs = new List<AbilityGraphSO>(source.abilityGraphs);
             unitIcon = source.icon;
@@ -594,6 +596,7 @@ namespace CelestialCross.Editor
             GUILayout.BeginVertical(cardStyle);
 
             DrawStatIntRow("Health (Vida)", ref enemyStats.health, 1, 99999);
+            DrawStatIntRow("Max AP (Ações)", ref maxAP, 1, 99);
             DrawStatIntRow("Attack (Ataque)", ref enemyStats.attack, 0, 9999);
             DrawStatIntRow("Defense (Defesa)", ref enemyStats.defense, 0, 9999);
             DrawStatIntRow("Speed (Velocidade)", ref enemyStats.speed, -100, 500);
@@ -608,6 +611,7 @@ namespace CelestialCross.Editor
         private void SetStatsPreset(int hp, int atk, int def, int spd, int crit, int acc)
         {
             enemyStats = new CombatStats(hp, atk, def, spd, crit, acc, 50, 0);
+            maxAP = 1;
         }
 
         private void DrawStatIntRow(string label, ref int val, int minLimit, int maxLimit)
@@ -767,7 +771,7 @@ namespace CelestialCross.Editor
             GUILayout.Label($"<b>ID/Nome:</b> {unitName}", richTextStyle);
             GUILayout.Label($"<b>Nome de Exibição:</b> {displayName}", richTextStyle);
             GUILayout.Label($"<b>Tipo:</b> Inimigo | <b>Função:</b> {role} | <b>Classe:</b> {unitClass}", richTextStyle);
-            GUILayout.Label($"<b>Stats:</b> {enemyStats.health} HP / {enemyStats.attack} ATK / {enemyStats.defense} DEF / {enemyStats.speed} SPD", richTextStyle);
+            GUILayout.Label($"<b>Stats:</b> {enemyStats.health} HP / {maxAP} AP / {enemyStats.attack} ATK / {enemyStats.defense} DEF / {enemyStats.speed} SPD", richTextStyle);
             GUILayout.Label($"<b>Behavior Tree:</b> {(defaultBehaviorTree != null ? defaultBehaviorTree.name : "NENHUMA (Aviso)")}", richTextStyle);
             GUILayout.Label($"<b>Habilidades Vinculadas:</b> {associatedGraphs.Count}", richTextStyle);
             GUILayout.Label($"<b>Modo de Salvamento:</b> {(loadedUnitData != null ? "<color=yellow>Atualizar Inimigo Existente</color>" : "<color=green>Criar Novo Inimigo</color>")}", richTextStyle);
@@ -825,6 +829,7 @@ namespace CelestialCross.Editor
                 unitData.idleAnim = idleAnim;
                 unitData.combatIdleAnim = combatIdleAnim;
                 unitData.baseStats = enemyStats;
+                unitData.maxAP = maxAP;
                 unitData.maxStats = enemyStats; // Flat stats for enemies
                 unitData.abilityGraphs = associatedGraphs;
                 unitData.defaultBehaviorTree = defaultBehaviorTree;

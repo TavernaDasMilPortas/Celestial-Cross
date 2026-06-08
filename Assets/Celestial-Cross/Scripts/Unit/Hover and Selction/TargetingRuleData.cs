@@ -7,6 +7,7 @@ public class TargetingRuleData
     public TargetingMode mode = TargetingMode.Unit;
     public TargetOrigin origin = TargetOrigin.Point;
     public bool allowMultiple;
+    public bool allowSameTargetMultipleTimes;
     [Min(1)] public int minTargets = 1;
     [Min(1)] public int maxTargets = 1;
     public bool canTargetSelf;
@@ -19,6 +20,7 @@ public class TargetingRuleData
             mode = mode,
             origin = origin,
             allowMultiple = allowMultiple,
+            allowSameTargetMultipleTimes = allowSameTargetMultipleTimes,
             minTargets = minTargets,
             maxTargets = maxTargets,
             canTargetSelf = canTargetSelf,

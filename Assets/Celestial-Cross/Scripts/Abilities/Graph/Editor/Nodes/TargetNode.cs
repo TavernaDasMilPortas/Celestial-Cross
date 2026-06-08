@@ -16,6 +16,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
         private EnumField modeDropdown;
         private IntegerField rangeField;
         private Toggle multipleTargetsToggle;
+        private Toggle allowSameTargetToggle;
         private IntegerField maxTargetsField;
         private TextField maxTargetsVarField;
         private Toggle useExtraRangeVariableToggle;
@@ -93,6 +94,13 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
             });
             manualContainer.Add(multipleTargetsToggle);
 
+            allowSameTargetToggle = new Toggle("Allow Same Target Multiple Times");
+            allowSameTargetToggle.value = nodeData.allowSameTargetMultipleTimes;
+            allowSameTargetToggle.RegisterValueChangedCallback(evt => {
+                nodeData.allowSameTargetMultipleTimes = evt.newValue;
+            });
+            manualContainer.Add(allowSameTargetToggle);
+
             maxTargetsField = new IntegerField("Max Targets");
             maxTargetsField.value = nodeData.maxTargets;
             maxTargetsField.RegisterValueChangedCallback(evt => nodeData.maxTargets = evt.newValue);
@@ -163,6 +171,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
             }
 
             // Múltiplos alvos
+            allowSameTargetToggle.style.display = nodeData.multipleTargets ? DisplayStyle.Flex : DisplayStyle.None;
             maxTargetsField.style.display = nodeData.multipleTargets ? DisplayStyle.Flex : DisplayStyle.None;
             if (maxTargetsVarField != null) maxTargetsVarField.style.display = nodeData.multipleTargets ? DisplayStyle.Flex : DisplayStyle.None;
 
@@ -213,6 +222,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
             rangeField.value = nodeData.range;
             if (useExtraRangeVariableToggle != null) useExtraRangeVariableToggle.value = nodeData.useExtraRangeVariable;
             multipleTargetsToggle.value = nodeData.multipleTargets;
+            if (allowSameTargetToggle != null) allowSameTargetToggle.value = nodeData.allowSameTargetMultipleTimes;
             maxTargetsField.value = nodeData.maxTargets;
             areaPatternField.value = nodeData.areaPattern;
             autoRotateToggle.value = nodeData.autoRotate;

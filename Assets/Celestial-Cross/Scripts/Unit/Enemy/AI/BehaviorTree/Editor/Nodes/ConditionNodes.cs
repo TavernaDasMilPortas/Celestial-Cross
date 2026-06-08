@@ -18,7 +18,16 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Editor.Nodes
         }
     }
 
-    public class BTConditionTargetInRangeEditorNode : BTConditionBaseEditorNode { }
+    public class BTConditionTargetInRangeEditorNode : BTConditionBaseEditorNode 
+    {
+        public override void Initialize(string nodeName, Vector2 position)
+        {
+            base.Initialize(nodeName, position);
+            AddDataInputPort("Target", UnityEditor.Experimental.GraphView.Port.Capacity.Single);
+            RefreshExpandedState();
+            RefreshPorts();
+        }
+    }
 
     public class BTConditionTargetHasBuffEditorNode : BTConditionBaseEditorNode
     {

@@ -35,6 +35,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
         public GraphTargetMode mode = GraphTargetMode.Single;
         public int range = 3;
         public bool multipleTargets = false;
+        public bool allowSameTargetMultipleTimes = false;
         public int maxTargets = 1;
         public GraphTargetOrigin origin = GraphTargetOrigin.Unit;
         public GraphAutoStrategyType strategy = GraphAutoStrategyType.ClosestUnit;
@@ -111,6 +112,13 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
     }
 
     [Serializable]
+    public class ModifyAPNodeData
+    {
+        public int amount = 1;
+        public bool modifyMax = false;
+    }
+
+    [Serializable]
     public class CostNodeData
     {
         public int manaCost;
@@ -176,6 +184,18 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
     {
         public bool allPositive = false;
         public bool allNegative = false;
+    }
+
+    [Serializable]
+    public class LimitPerTurnNodeData
+    {
+        public int maxExecutionsPerTurn = 1;
+    }
+
+    [Serializable]
+    public class ScheduleExecutionNodeData
+    {
+        public int delayTurns = 1;
     }
 
     // --- Efeitos ---

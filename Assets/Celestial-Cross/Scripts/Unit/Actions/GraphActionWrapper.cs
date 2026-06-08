@@ -106,28 +106,41 @@ namespace Celestial_Cross.Scripts.Units
                         subtype = data.subtype;
                     }
 
-                    // Lógica de Movimentação Gratuita
-                    if (subtype == AbilitySubtype.Movement)
+                    bool isEnemy = caster is Celestial_Cross.Scripts.Units.Enemy.EnemyUnit;
+                    if (!isEnemy && subtype == AbilitySubtype.Movement && !caster.hasMovedThisTurn)
+                    {
                         caster.hasMovedThisTurn = true;
+                        // Movimento gratuito (0 AP)
+                    }
                     else
-                        caster.hasActedThisTurn = true;
+                    {
+                        caster.CurrentAP--;
+                    }
 
-                    if (caster.hasMovedThisTurn && caster.hasActedThisTurn)
-                    {
-                        if (caster is Celestial_Cross.Scripts.Units.Enemy.EnemyUnit)
-                            TurnManager.Instance.EndTurn();
-                        else    
-                            PlayerController.Instance.EndTurn();
-                    }
-                    else
-                    {
-                        PlayerController.Instance?.RefreshUI();
-                    }
+                    AbilityExecutor.Instance.StartCoroutine(HandleTurnEnd(caster));
                 }, Level, SlotId, presetTarget);
             }
             else
             {
                 Debug.LogError("[GraphActionWrapper] AbilityExecutor não encontrado na cena!");
+            }
+        }
+
+        private System.Collections.IEnumerator HandleTurnEnd(global::Unit caster)
+        {
+            // Espera até que TODAS as execuções filhas (como passivas disparadas por hooks) terminem
+            yield return new WaitUntil(() => !AbilityExecutor.Instance.IsExecuting);
+
+            if (caster.CurrentAP <= 0)
+            {
+                if (caster is Celestial_Cross.Scripts.Units.Enemy.EnemyUnit)
+                    TurnManager.Instance.EndTurn();
+                else    
+                    PlayerController.Instance.EndTurn();
+            }
+            else
+            {
+                PlayerController.Instance?.RefreshUI();
             }
         }
 

@@ -96,6 +96,11 @@ namespace CelestialCross.Editor
         private GUIStyle cardStyle;
         private GUIStyle subtitleStyle;
         private GUIStyle richTextStyle;
+        private int basePhysicalAttack = 5;
+        private int baseMagicalAttack = 5;
+        private int basePhysicalDefense = 3;
+        private int baseMagicalDefense = 3;
+        private int maxAP = 1;
 
         // Menu path para abrir o Wizard
         [MenuItem("Celestial Cross/1. Editors/Wizards/Unit Creation Wizard")]
@@ -1144,6 +1149,7 @@ namespace CelestialCross.Editor
                 unitData.idleAnim = idleAnim;
                 unitData.combatIdleAnim = combatIdleAnim;
                 unitData.baseStats = baseStats;
+                unitData.maxAP = maxAP;
                 unitData.maxStats = maxStats;
                 unitData.abilityGraphs = associatedGraphs;
 

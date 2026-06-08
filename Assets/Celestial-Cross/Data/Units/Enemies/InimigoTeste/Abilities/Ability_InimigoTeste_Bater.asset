@@ -44,7 +44,7 @@ MonoBehaviour:
     NodeType: TargetNode
     NodeTitle: Targeting
     Position: {x: 1077, y: 169}
-    JsonData: '{"reusePrevious":false,"sourceType":0,"mode":0,"range":3,"multipleTargets":false,"maxTargets":1,"origin":1,"strategy":0,"attributeType":0,"factionType":2,"targetCount":1,"autoRotate":true,"preferredDirection":0,"patternReferenceId":"","areaPattern":{"instanceID":0},"rangeVariable":"","maxTargetsVariable":"max_targets_4a6b","useExtraRangeVariable":false}'
+    JsonData: '{"reusePrevious":false,"sourceType":0,"mode":0,"range":1,"multipleTargets":false,"allowSameTargetMultipleTimes":false,"maxTargets":1,"origin":1,"strategy":0,"attributeType":0,"factionType":2,"targetCount":1,"autoRotate":true,"preferredDirection":0,"patternReferenceId":"","areaPattern":{"instanceID":0},"rangeVariable":"","maxTargetsVariable":"max_targets_4a6b","useExtraRangeVariable":false}'
     areaPattern: {fileID: 0}
   - Guid: 6c716545-3b99-483f-a602-c0509f367c23
     NodeType: StartNode
@@ -87,5 +87,5 @@ MonoBehaviour:
     isLocked: 0
   GeneratedDescription: "<b>--- DESCRI\xC7\xC3O AUTOM\xC1TICA ---</b>\r\n- Esta \xE9
     uma habilidade do tipo Active. Subtipo: Attack.\r\n- Escolhe manualmente unidade(s)
-    a um range de 3 a partir de Point.\r\n- Modifica 'Damage' (Set 1,2).\r\n- Dano
+    a um range de 1 a partir de Point.\r\n- Modifica 'Damage' (Set 1,2).\r\n- Dano
     escalado (1 stats).\r\n"

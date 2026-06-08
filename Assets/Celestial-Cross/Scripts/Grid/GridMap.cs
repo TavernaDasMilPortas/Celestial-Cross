@@ -476,4 +476,12 @@ public class GridMap : MonoBehaviour
             DestroyImmediate(child);
         }
     }
+
+    public void ClearAllTelegraphs()
+    {
+        foreach (var kvp in tiles)
+        {
+            kvp.Value.ClearTelegraph();
+        }
+    }
 }

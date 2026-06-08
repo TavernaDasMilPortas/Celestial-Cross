@@ -94,28 +94,40 @@ namespace Celestial_Cross.Scripts.Units
                 AbilityExecutor.Instance.ExecuteAbility(caster, Blueprint, CelestialCross.Combat.CombatHook.OnManualCast, () => {
                     CameraController.Instance?.ResetFocus();
                     
-                    // Lógica de Movimentação Gratuita
-                    if (Blueprint.abilityType == AbilityType.Active && Blueprint.abilitySubtype == AbilitySubtype.Movement)
+                    bool isEnemy = caster is Celestial_Cross.Scripts.Units.Enemy.EnemyUnit;
+                    if (!isEnemy && Blueprint.abilityType == AbilityType.Active && Blueprint.abilitySubtype == AbilitySubtype.Movement && !caster.hasMovedThisTurn)
+                    {
                         caster.hasMovedThisTurn = true;
+                        // Movimento gratuito (0 AP)
+                    }
                     else
-                        caster.hasActedThisTurn = true;
+                    {
+                        caster.CurrentAP--;
+                    }
 
-                    if (caster.hasMovedThisTurn && caster.hasActedThisTurn)
-                    {
-                        if (caster is Celestial_Cross.Scripts.Units.Enemy.EnemyUnit)
-                            TurnManager.Instance.EndTurn();
-                        else    
-                            PlayerController.Instance.EndTurn();
-                    }
-                    else
-                    {
-                        PlayerController.Instance?.RefreshUI();
-                    }
+                    AbilityExecutor.Instance.StartCoroutine(HandleTurnEnd(caster));
                 });
             }
             else
             {
                 Debug.LogError("[BlueprintActionWrapper] AbilityExecutor não encontrado na cena!");
+            }
+        }
+
+        private System.Collections.IEnumerator HandleTurnEnd(global::Unit caster)
+        {
+            yield return new WaitUntil(() => !AbilityExecutor.Instance.IsExecuting);
+
+            if (caster.CurrentAP <= 0)
+            {
+                if (caster is Celestial_Cross.Scripts.Units.Enemy.EnemyUnit)
+                    TurnManager.Instance.EndTurn();
+                else    
+                    PlayerController.Instance.EndTurn();
+            }
+            else
+            {
+                PlayerController.Instance?.RefreshUI();
             }
         }
 

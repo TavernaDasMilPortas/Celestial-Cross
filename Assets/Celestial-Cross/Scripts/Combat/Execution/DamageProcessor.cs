@@ -62,6 +62,12 @@ namespace Celestial_Cross.Scripts.Combat.Execution
             // 8. Hooks Pos-Dano
             context.source?.TriggerPassives(CombatHook.OnAfterDealDamage, context);
             context.target?.TriggerPassives(CombatHook.OnAfterTakeDamage, context);
+
+            // 9. Verifica Morte e dispara OnKill para o atacante
+            if (context.target.Health.CurrentHealth <= 0)
+            {
+                context.source?.TriggerPassives(CombatHook.OnKill, context);
+            }
         }
 
         public static void ProcessAndApplyHeal(CombatContext context, bool canCrit)

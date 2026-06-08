@@ -82,17 +82,43 @@ public class AIBrain : MonoBehaviour
             return;
         }
 
-        UpdateBlackboard();
+        StartCoroutine(AILoopRoutine());
+    }
 
-        var result = runner.Evaluate(blackboard);
+    private IEnumerator AILoopRoutine()
+    {
+        // Limite de segurança para não travar num loop infinito se algo der errado
+        int maxIterations = 5; 
+        int iterations = 0;
 
-        if (result == BTResult.Success && blackboard.bestPlan != null)
+        while (enemy.CurrentAP > 0 && iterations < maxIterations)
         {
-            StartCoroutine(ExecutePlanRoutine(blackboard.bestPlan));
+            iterations++;
+            UpdateBlackboard();
+
+            var result = runner.Evaluate(blackboard);
+
+            if (result == BTResult.Success && blackboard.bestPlan != null)
+            {
+                yield return StartCoroutine(ExecutePlanRoutine(blackboard.bestPlan));
+                
+                // O AP já é consumido pelas Actions (GraphActionWrapper, etc.)
+                // Não subtrair aqui para evitar débito duplo!
+                
+                // Pequeno delay entre ações
+                yield return new WaitForSeconds(0.5f);
+            }
+            else
+            {
+                CelestialCross.Combat.CombatLogger.Log($"<b>{enemy.DisplayName}</b>: Nenhuma ação viável. Encerrando turno com {enemy.CurrentAP} AP sobrando.", CelestialCross.Combat.LogCategory.AI);
+                break;
+            }
         }
-        else
+
+        // Só chama EndTurn se a unidade ainda for a ativa.
+        // Se a AP chegou a 0, as Actions (HandleTurnEnd) já podem ter chamado o EndTurn.
+        if (TurnManager.Instance.CurrentUnit == enemy)
         {
-            CelestialCross.Combat.CombatLogger.Log($"<b>{enemy.DisplayName}</b>: Nenhuma ação viável. Passando turno.", CelestialCross.Combat.LogCategory.AI);
             TurnManager.Instance.EndTurn();
         }
     }
@@ -303,7 +329,5 @@ public class AIBrain : MonoBehaviour
                 yield return new WaitForSeconds(0.5f);
             }
         }
-
-        TurnManager.Instance.EndTurn();
     }
 }
