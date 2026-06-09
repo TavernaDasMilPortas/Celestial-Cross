@@ -18,6 +18,11 @@ namespace CelestialCross.Scenes.Unit
         [Header("Modals")]
         public UnitArtifactSelectModal artifactSelectModal;
         public ArtifactMiniInfoModal miniInfoModal;
+        public ArtifactSetBonusModal setBonusModal;
+
+        [Header("Sets List")]
+        public Transform setListContainer;
+        public GameObject setListItemPrefab;
 
         private UnitData currentUnitData;
         private RuntimeUnitData currentRuntimeData;
@@ -60,10 +65,19 @@ namespace CelestialCross.Scenes.Unit
                 }
             }
 
+            if (setListContainer != null)
+            {
+                foreach(Transform child in setListContainer)
+                {
+                    if (child.gameObject != setListItemPrefab) Destroy(child.gameObject);
+                }
+            }
+
             var loadout = acc.GetLoadoutForUnit(runtimeData.UnitID);
             if (loadout == null) return;
 
             CelestialCross.Artifacts.ArtifactType[] slotTypes = (CelestialCross.Artifacts.ArtifactType[])global::System.Enum.GetValues(typeof(CelestialCross.Artifacts.ArtifactType));
+            var equippedSets = new global::System.Collections.Generic.Dictionary<CelestialCross.Artifacts.ArtifactSet, int>();
 
             for (int i = 0; i < 6; i++)
             {
@@ -86,12 +100,47 @@ namespace CelestialCross.Scenes.Unit
                     if (artifact != null && artifactCatalog != null)
                     {
                         var set = artifactCatalog.GetSetById(artifact.artifactSetId);
-                        if (set != null && artifactSlotImages[i] != null)
+                        if (set != null)
                         {
-                            artifactSlotImages[i].sprite = set.GetIconForSlot(artifact.slot);
-                            artifactSlotImages[i].gameObject.SetActive(true);
-                            artifactSlotImages[i].preserveAspect = true;
+                            if (artifactSlotImages[i] != null)
+                            {
+                                artifactSlotImages[i].sprite = set.GetIconForSlot(artifact.slot);
+                                artifactSlotImages[i].gameObject.SetActive(true);
+                                artifactSlotImages[i].preserveAspect = true;
+                            }
+                            
+                            if (equippedSets.ContainsKey(set))
+                                equippedSets[set]++;
+                            else
+                                equippedSets[set] = 1;
                         }
+                    }
+                }
+            }
+
+            if (setListContainer != null && setListItemPrefab != null && setBonusModal != null)
+            {
+                foreach(var kvp in equippedSets)
+                {
+                    var set = kvp.Key;
+                    int count = kvp.Value;
+                    
+                    var go = Instantiate(setListItemPrefab, setListContainer);
+                    go.SetActive(true);
+                    
+                    var txt = go.GetComponentInChildren<TextMeshProUGUI>();
+                    if (txt != null)
+                    {
+                        string sName = string.IsNullOrEmpty(set.setName) ? set.name : set.setName;
+                        txt.text = $"{sName} x{count}";
+                    }
+                    
+                    var btn = go.GetComponent<Button>();
+                    if (btn != null)
+                    {
+                        btn.onClick.AddListener(() => {
+                            setBonusModal.Show(set, count);
+                        });
                     }
                 }
             }

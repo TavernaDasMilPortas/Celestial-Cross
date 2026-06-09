@@ -101,4 +101,4 @@ MonoBehaviour:
           threeStarChance: 10
           fourStarChance: 0
           fiveStarChance: 0
-        NumberOfDrops: 1
+        NumberOfDrops: 10

@@ -146,15 +146,19 @@ public abstract class Unit : MonoBehaviour
                 }
             }
 
-            CombatStats uBase = unitData != null ? unitData.baseStats : baseStats;
+            // uBase deve ser os atributos escalados para o nível atual (sem o pet), e não o Level 1.
+            CombatStats uBase = unitData != null ? unitData.GetStatsAtLevel(level, refMaxLevel) : baseStats;
+            
+            // Subtrai o uBase para encontrar exatamente quanto o pet deu de atributo
             int petHealth = baseStats.health - uBase.health;
             int petAttack = baseStats.attack - uBase.attack;
             int petDefense = baseStats.defense - uBase.defense;
 
+            // Aplica as porcentagens dos artefatos em cima do status escalado pelo nível!
             int finalHealth = (int)(Mathf.Round(uBase.health * (1f + (healthPct / 100f))) + healthFlat) + petHealth;
             int finalAttack = (int)(Mathf.Round(uBase.attack * (1f + (atkPct / 100f))) + atkFlat) + petAttack;
             int finalDefense = (int)(Mathf.Round(uBase.defense * (1f + (defPct / 100f))) + defFlat) + petDefense;
-            int finalSpeed = (int)Mathf.Round(baseStats.speed + spdFlat); // Pet speed already in baseStats. Speed generally hasn't a percent variant in standard logic
+            int finalSpeed = (int)Mathf.Round(baseStats.speed + spdFlat); 
             int finalCrit = (int)Mathf.Round(baseStats.criticalChance + critChanceFlat);
             int finalCritDmg = (int)Mathf.Round(baseStats.criticalDamage + critDamageFlat);
             int finalAcc = (int)Mathf.Round(baseStats.effectAccuracy + effectAccFlat);
@@ -486,6 +490,36 @@ public abstract class Unit : MonoBehaviour
     {
         if (PassiveManager == null)
             return;
+            
+        // Se estivermos usando a lista de testes do Editor (equippedArtifacts) e não o cache do Save:
+        if ((cachedArtifactSetPassives == null || cachedArtifactSetPassives.Count == 0) &&
+            (cachedArtifactSetPassiveGraphs == null || cachedArtifactSetPassiveGraphs.Count == 0) &&
+            equippedArtifacts != null && equippedArtifacts.Count > 0)
+        {
+            Dictionary<ArtifactSet, int> setCounts = new Dictionary<ArtifactSet, int>();
+            foreach (var artifact in equippedArtifacts)
+            {
+                if (artifact != null && artifact.artifactSet != null)
+                {
+                    if (!setCounts.ContainsKey(artifact.artifactSet)) setCounts[artifact.artifactSet] = 0;
+                    setCounts[artifact.artifactSet]++;
+                }
+            }
+
+            foreach (var kvp in setCounts)
+            {
+                foreach (var bonus in kvp.Key.setBonuses)
+                {
+                    if (kvp.Value >= bonus.piecesRequired)
+                    {
+                        if (bonus.passiveAbility != null && !cachedArtifactSetPassives.Contains(bonus.passiveAbility))
+                            cachedArtifactSetPassives.Add(bonus.passiveAbility);
+                        if (bonus.passiveGraph != null && !cachedArtifactSetPassiveGraphs.Contains(bonus.passiveGraph))
+                            cachedArtifactSetPassiveGraphs.Add(bonus.passiveGraph);
+                    }
+                }
+            }
+        }
  
         if (cachedArtifactSetPassives != null)
         {
@@ -493,8 +527,6 @@ public abstract class Unit : MonoBehaviour
             {
                 var passive = cachedArtifactSetPassives[i];
                 if (passive == null) continue;
- 
-                // A duração/persistência é controlada dentro do próprio AbilityBlueprint.
                 PassiveManager.ApplyCondition(passive, this);
             }
         }
@@ -505,7 +537,6 @@ public abstract class Unit : MonoBehaviour
             {
                 var passiveGraph = cachedArtifactSetPassiveGraphs[i];
                 if (passiveGraph == null) continue;
- 
                 PassiveManager.ApplyGraphCondition(passiveGraph, this);
             }
         }

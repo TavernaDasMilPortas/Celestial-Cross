@@ -114,7 +114,11 @@ namespace CelestialCross.Scenes.Unit
                 if (attributesDetailPanel != null)
                 {
                     var attr = attributesDetailPanel.GetComponent<UnitDetailPanel_Attributes>();
-                    if (attr != null) attr.Refresh(unitSO, runtimeData);
+                    if (attr != null) 
+                    {
+                        attr.artifactSetCatalog = artifactSetCatalog;
+                        attr.Refresh(unitSO, runtimeData);
+                    }
                 }
 
                 if (petDetailPanel != null)
@@ -165,7 +169,12 @@ namespace CelestialCross.Scenes.Unit
                     if (attributesDetailPanel) 
                     { 
                         attributesDetailPanel.SetActive(true); 
-                        attributesDetailPanel.GetComponent<UnitDetailPanel_Attributes>()?.Refresh(currentLoadedUnit, currentLoadedRuntime);
+                        var attr = attributesDetailPanel.GetComponent<UnitDetailPanel_Attributes>();
+                        if (attr != null) 
+                        {
+                            attr.artifactSetCatalog = artifactSetCatalog;
+                            attr.Refresh(currentLoadedUnit, currentLoadedRuntime);
+                        }
                     } 
                     break;
                 case 1: 

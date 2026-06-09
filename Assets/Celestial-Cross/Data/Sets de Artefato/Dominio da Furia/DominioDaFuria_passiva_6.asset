@@ -1,0 +1,82 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b74335336934364f92171120eea7025, type: 3}
+  m_Name: DominioDaFuria_passiva_6
+  m_EditorClassIdentifier: Assembly-CSharp::Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO
+  abilityName: 'Furia Liberta '
+  abilityIcon: {fileID: 21300000, guid: 31dca23adbc5a70458efc291cb3f0e78, type: 3}
+  abilityDescription: "Enquanto tiver 30% da vida ou menos, recebe uma a\xE7\xE3o
+    extra"
+  displayRange: 0
+  NodeLinks:
+  - BaseNodeGuid: 722601a7-2b05-4dd2-9f36-cbdf1c8db210
+    PortName: Out
+    TargetNodeGuid: 9c6e264d-08ea-4ee2-ae5a-e70288aa6256
+    TargetPortName: In
+  - BaseNodeGuid: 9c6e264d-08ea-4ee2-ae5a-e70288aa6256
+    PortName: Out
+    TargetNodeGuid: 43ee20f8-62b3-4f00-a0a5-2a5bbb990bc0
+    TargetPortName: Flow In
+  - BaseNodeGuid: 3715451c-f74a-44e7-ab4f-95e92f8c4e53
+    PortName: Bool Out
+    TargetNodeGuid: 43ee20f8-62b3-4f00-a0a5-2a5bbb990bc0
+    TargetPortName: Cond 0
+  - BaseNodeGuid: 43ee20f8-62b3-4f00-a0a5-2a5bbb990bc0
+    PortName: True
+    TargetNodeGuid: 20c8f434-691c-45f9-897a-b0e221680f4c
+    TargetPortName: In
+  NodeData:
+  - Guid: 722601a7-2b05-4dd2-9f36-cbdf1c8db210
+    NodeType: StartNode
+    NodeTitle: Start
+    Position: {x: 100, y: 200}
+    JsonData: '{"type":0,"subtype":0,"isBuff":true}'
+    areaPattern: {fileID: 0}
+  - Guid: 9c6e264d-08ea-4ee2-ae5a-e70288aa6256
+    NodeType: TriggerNode
+    NodeTitle: Trigger Event
+    Position: {x: 338, y: 200}
+    JsonData: '{"trigger":3}'
+    areaPattern: {fileID: 0}
+  - Guid: 43ee20f8-62b3-4f00-a0a5-2a5bbb990bc0
+    NodeType: ConditionalFlowNode
+    NodeTitle: Branch (Conditional)
+    Position: {x: 822, y: 247}
+    JsonData: 
+    areaPattern: {fileID: 0}
+  - Guid: 3715451c-f74a-44e7-ab4f-95e92f8c4e53
+    NodeType: AttributeConditionNode
+    NodeTitle: Attribute Condition
+    Position: {x: 480, y: 399}
+    JsonData: '{"targetToCheck":0,"attribute":0,"comparison":4,"mode":1,"threshold":30.0}'
+    areaPattern: {fileID: 0}
+  - Guid: 20c8f434-691c-45f9-897a-b0e221680f4c
+    NodeType: ModifyAPNode
+    NodeTitle: Modify AP
+    Position: {x: 1183, y: 247}
+    JsonData: '{"amount":1,"modifyMax":false}'
+    areaPattern: {fileID: 0}
+  Dependencies: []
+  Variables: []
+  MaxLevel: 1
+  aiHint:
+    category: 5
+    basePriority: 30
+    cooldownTurns: 0
+    lowHPTargetBonus: 20
+    freshApplicationBonus: 15
+    targetsFriendlies: 0
+    estimatedValue: 10
+    isLocked: 0
+  GeneratedDescription: "<b>--- DESCRI\xC7\xC3O AUTOM\xC1TICA ---</b>\r\n- Esta \xE9
+    uma habilidade do tipo Passive.\r\n  * Se for 'True':\r\n  - Modifica Current
+    AP em 1.\r\n"

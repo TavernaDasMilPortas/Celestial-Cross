@@ -48,6 +48,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor
                 new SearchTreeEntry(new GUIContent("Cleanse / Remove Status")) { userData = typeof(CleanseStatusNode), level = 2 },
                 new SearchTreeEntry(new GUIContent("VFX / Animation")) { userData = typeof(VfxNode), level = 2 },
                 new SearchTreeEntry(new GUIContent("Cost / Cooldown")) { userData = typeof(CostNode), level = 2 },
+                new SearchTreeEntry(new GUIContent("Sacrifice Health")) { userData = typeof(SacrificeHealthNode), level = 2 },
                 new SearchTreeEntry(new GUIContent("Variable Modifier")) { userData = typeof(VariableModifierNode), level = 2 },
                 new SearchTreeEntry(new GUIContent("Modify AP")) { userData = typeof(ModifyAPNode), level = 2 },
 

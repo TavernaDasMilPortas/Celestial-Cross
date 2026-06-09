@@ -17,6 +17,11 @@ namespace Celestial_Cross.Scripts.Combat.Execution
             // 2. Puxa o ataque base pós-modificações flat
             int totalBase = context.amount;
 
+            if (context.Variables.TryGetValue("bonus_flat_damage", out float flatDmg)) 
+            {
+                totalBase += Mathf.RoundToInt(flatDmg);
+            }
+
             // 3. Multiplicadores
             float multiplier = 1.0f;
             if (context.Variables.TryGetValue("damage_mult", out float md)) multiplier += md;

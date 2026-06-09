@@ -87,11 +87,14 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
     [Serializable]
     public class VariableModifierNodeData
     {
-        public enum Operation { Set, Add, Multiply }
+        public enum Operation { Set, Add, Multiply, Divide }
         public string variableName;
         public Operation operation = Operation.Set;
         public float value;
         public string valueVariableReference; // Opcional: usar outra variável como valor
+        
+        public bool useCasterAttribute = false;
+        public CelestialCross.Artifacts.StatType casterAttribute = CelestialCross.Artifacts.StatType.HealthFlat;
     }
 
     [Serializable]
@@ -121,10 +124,18 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
     [Serializable]
     public class CostNodeData
     {
-        public int manaCost;
+        public int manaCost = 0;
         public string manaVariable;
-        public int staminaCost;
+        public int staminaCost = 0;
         public string staminaVariable;
+    }
+
+    [Serializable]
+    public class SacrificeHealthNodeData
+    {
+        public bool usePercentage = true;
+        public float amount = 10f;
+        public string outputVariable; // Guarda o valor exato sacrificado
     }
 
     // --- Condições ---

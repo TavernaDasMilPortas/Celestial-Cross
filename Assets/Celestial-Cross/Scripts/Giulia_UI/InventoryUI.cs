@@ -739,6 +739,24 @@ private void PopulateTab(int tabIndex)
         }
     }
 
+    private void ProcessStatData(CelestialCross.Artifacts.StatModifier stat, ref float hF, ref float hP, ref float aF, ref float aP, ref float dF, ref float dP, ref float spdF, ref float crF, ref float eaf, ref float cdF, ref float erf)
+    {
+        switch (stat.statType)
+        {
+            case CelestialCross.Artifacts.StatType.HealthFlat: hF += stat.value; break;
+            case CelestialCross.Artifacts.StatType.HealthPercent:  hP += stat.value; break;
+            case CelestialCross.Artifacts.StatType.AttackFlat: aF += stat.value; break;
+            case CelestialCross.Artifacts.StatType.AttackPercent:  aP += stat.value; break;
+            case CelestialCross.Artifacts.StatType.DefenseFlat:dF += stat.value; break;
+            case CelestialCross.Artifacts.StatType.DefensePercent: dP += stat.value; break;
+            case CelestialCross.Artifacts.StatType.Speed:  spdF += stat.value; break;
+            case CelestialCross.Artifacts.StatType.CriticalRate: crF += stat.value; break;
+            case CelestialCross.Artifacts.StatType.CriticalDamage: cdF += stat.value; break;
+            case CelestialCross.Artifacts.StatType.EffectHitRate: eaf += stat.value; break;
+            case CelestialCross.Artifacts.StatType.EffectResistance: erf += stat.value; break;
+        }
+    }
+
     private void SpawnAbilityButton(RectTransform parent, Celestial_Cross.Scripts.Abilities.AbilityBlueprint ability, bool isPet)
     {
         var btnGO = new GameObject("AbilityBtn", typeof(RectTransform), typeof(Image), typeof(UnityEngine.EventSystems.EventTrigger));
@@ -886,6 +904,8 @@ private void PopulateTab(int tabIndex)
             if (loadout != null)
             {
                 var artifactIDs = loadout.GetEquippedArtifactIDs();
+                var setCounts = new Dictionary<string, int>();
+
                 foreach (var guid in artifactIDs)
                 {
                     var arti = account.GetArtifactByGuid(guid);
@@ -897,6 +917,32 @@ private void PopulateTab(int tabIndex)
                             foreach (var sub in arti.subStats)
                             {
                                 ProcessStatData(sub, ref hF, ref hP, ref aF, ref aP, ref dF, ref dP, ref spdF, ref crF, ref eaf, ref cdF, ref erf);
+                            }
+                        }
+                        
+                        if (!string.IsNullOrEmpty(arti.artifactSetId))
+                        {
+                            if (!setCounts.ContainsKey(arti.artifactSetId)) setCounts[arti.artifactSetId] = 0;
+                            setCounts[arti.artifactSetId]++;
+                        }
+                    }
+                }
+
+                if (artifactSetCatalog != null)
+                {
+                    foreach (var kvp in setCounts)
+                    {
+                        var set = artifactSetCatalog.GetSetById(kvp.Key);
+                        if (set == null) continue;
+
+                        foreach (var bonus in set.setBonuses)
+                        {
+                            if (kvp.Value >= bonus.piecesRequired && bonus.statBonuses != null)
+                            {
+                                foreach (var statMod in bonus.statBonuses)
+                                {
+                                    ProcessStatData(statMod, ref hF, ref hP, ref aF, ref aP, ref dF, ref dP, ref spdF, ref crF, ref eaf, ref cdF, ref erf);
+                                }
                             }
                         }
                     }
@@ -962,6 +1008,37 @@ private void PopulateTab(int tabIndex)
                     if (equippedPetSpecies.PassiveSkills != null) foreach(var ab in equippedPetSpecies.PassiveSkills) if (ab != null) SpawnAbilityButton(unitAbilitiesContainer, ab, true);
                     if (equippedPetSpecies.ActiveSkills != null) foreach(var ab in equippedPetSpecies.ActiveSkills) if (ab != null) SpawnAbilityButton(unitAbilitiesContainer, ab, true);
                     if (equippedPetSpecies.AbilityGraphs != null) foreach(var graph in equippedPetSpecies.AbilityGraphs) if (graph != null) SpawnGraphButton(unitAbilitiesContainer, graph);
+                }
+                
+                // Adiciona Passivas de Sets de Artefatos
+                if (loadout != null && artifactSetCatalog != null)
+                {
+                    var setCounts = new Dictionary<string, int>();
+                    var artifactIDs = loadout.GetEquippedArtifactIDs();
+                    foreach (var guid in artifactIDs)
+                    {
+                        var arti = account.GetArtifactByGuid(guid);
+                        if (arti != null && !string.IsNullOrEmpty(arti.artifactSetId))
+                        {
+                            if (!setCounts.ContainsKey(arti.artifactSetId)) setCounts[arti.artifactSetId] = 0;
+                            setCounts[arti.artifactSetId]++;
+                        }
+                    }
+
+                    foreach (var kvp in setCounts)
+                    {
+                        var set = artifactSetCatalog.GetSetById(kvp.Key);
+                        if (set == null) continue;
+
+                        foreach (var bonus in set.setBonuses)
+                        {
+                            if (kvp.Value >= bonus.piecesRequired)
+                            {
+                                if (bonus.passiveAbility != null) SpawnAbilityButton(unitAbilitiesContainer, bonus.passiveAbility, false);
+                                if (bonus.passiveGraph != null) SpawnGraphButton(unitAbilitiesContainer, bonus.passiveGraph);
+                            }
+                        }
+                    }
                 }
             }
 

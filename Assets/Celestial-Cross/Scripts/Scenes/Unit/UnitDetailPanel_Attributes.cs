@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using System.Collections.Generic;
 
 namespace CelestialCross.Scenes.Unit
 {
@@ -14,6 +15,8 @@ namespace CelestialCross.Scenes.Unit
         public TextMeshProUGUI critDmgText;
         public TextMeshProUGUI effectAccText;
         public TextMeshProUGUI effectResText;
+
+        public ArtifactSetCatalog artifactSetCatalog;
 
         public void Refresh(UnitData unitData, CelestialCross.Data.RuntimeUnitData runtimeData)
         {
@@ -36,6 +39,8 @@ namespace CelestialCross.Scenes.Unit
                     }
 
                     var artifactIDs = loadout.GetEquippedArtifactIDs();
+                    var setCounts = new Dictionary<string, int>();
+
                     foreach (var guid in artifactIDs)
                     {
                         var arti = account.GetArtifactByGuid(guid);
@@ -46,6 +51,32 @@ namespace CelestialCross.Scenes.Unit
                             {
                                 foreach (var sub in arti.subStats)
                                     ProcessStatData(sub, ref hF, ref hP, ref aF, ref aP, ref dF, ref dP, ref spdF, ref crF, ref eaf, ref cdF, ref erf);
+                            }
+
+                            if (!string.IsNullOrEmpty(arti.artifactSetId))
+                            {
+                                if (!setCounts.ContainsKey(arti.artifactSetId)) setCounts[arti.artifactSetId] = 0;
+                                setCounts[arti.artifactSetId]++;
+                            }
+                        }
+                    }
+
+                    if (artifactSetCatalog != null)
+                    {
+                        foreach (var kvp in setCounts)
+                        {
+                            var set = artifactSetCatalog.GetSetById(kvp.Key);
+                            if (set == null) continue;
+
+                            foreach (var bonus in set.setBonuses)
+                            {
+                                if (kvp.Value >= bonus.piecesRequired && bonus.statBonuses != null)
+                                {
+                                    foreach (var statMod in bonus.statBonuses)
+                                    {
+                                        ProcessStatData(statMod, ref hF, ref hP, ref aF, ref aP, ref dF, ref dP, ref spdF, ref crF, ref eaf, ref cdF, ref erf);
+                                    }
+                                }
                             }
                         }
                     }
@@ -96,6 +127,24 @@ namespace CelestialCross.Scenes.Unit
         private void ProcessStatData(CelestialCross.Artifacts.StatModifierData stat, ref float hF, ref float hP, ref float aF, ref float aP, ref float dF, ref float dP, ref float spdF, ref float crF, ref float eaf, ref float cdF, ref float erf)
         {
             if (stat == null) return;
+            switch (stat.statType)
+            {
+                case CelestialCross.Artifacts.StatType.HealthFlat: hF += stat.value; break;
+                case CelestialCross.Artifacts.StatType.HealthPercent:  hP += stat.value; break;
+                case CelestialCross.Artifacts.StatType.AttackFlat: aF += stat.value; break;
+                case CelestialCross.Artifacts.StatType.AttackPercent:  aP += stat.value; break;
+                case CelestialCross.Artifacts.StatType.DefenseFlat: dF += stat.value; break;
+                case CelestialCross.Artifacts.StatType.DefensePercent: dP += stat.value; break;
+                case CelestialCross.Artifacts.StatType.Speed:  spdF += stat.value; break;
+                case CelestialCross.Artifacts.StatType.CriticalRate: crF += stat.value; break;
+                case CelestialCross.Artifacts.StatType.CriticalDamage: cdF += stat.value; break;
+                case CelestialCross.Artifacts.StatType.EffectHitRate: eaf += stat.value; break;
+                case CelestialCross.Artifacts.StatType.EffectResistance: erf += stat.value; break;
+            }
+        }
+
+        private void ProcessStatData(CelestialCross.Artifacts.StatModifier stat, ref float hF, ref float hP, ref float aF, ref float aP, ref float dF, ref float dP, ref float spdF, ref float crF, ref float eaf, ref float cdF, ref float erf)
+        {
             switch (stat.statType)
             {
                 case CelestialCross.Artifacts.StatType.HealthFlat: hF += stat.value; break;

@@ -105,7 +105,7 @@ MonoBehaviour:
       recentlyClickedContents: []
     sceneGUID: 03d58314661be71469defb5607568be7
     sceneName: InventoryScene
-    lastSaveTimePrint: 01:43 PM (June 8, 2026)
+    lastSaveTimePrint: 09:50 PM (June 8, 2026)
     gracePeriod: 3
     activeIndex: 0
     checkingToLoad: 0
@@ -246,35 +246,48 @@ MonoBehaviour:
     playModeTransforms: []
     historyAssets:
     - assetGUIDs:
-      - 02827416b37dc40789742e71e524e1c0
-    - assetGUIDs:
-      - 41ab50bd04fdfce42875fe6724f71972
-    - assetGUIDs:
-      - 2630c83ded303e24ca23dc9d17848f02
-    - assetGUIDs:
-      - 44b481785305ce14896d60bc64211682
-    - assetGUIDs:
-      - 8e33882f7fba925478cbd19e61365198
-    - assetGUIDs:
-      - b0faee783a4de594596afdcb3bceb014
-    - assetGUIDs:
-      - 8105016687592461f977c054a80ce2f2
-    - assetGUIDs:
-      - 66d33cd4e53f2a64b9d5484bc2a8e6b0
-    - assetGUIDs:
       - 5ce4d2489b6654048a704997ca5ba3fc
     - assetGUIDs:
       - 7ae324cccbef89349a6be98a24ae0d9e
     - assetGUIDs:
-      - aa84a7dcbee22b84ebe4ed90ff5c0a6b
-    targetObject: {fileID: 11500000, guid: 02827416b37dc40789742e71e524e1c0, type: 3}
+      - aae55989abe44784197dd80958fdd0f5
+    - assetGUIDs:
+      - aa9d5c055ab8c8f40a7ee30ead82c12c
+    - assetGUIDs:
+      - 1c4f1b892b6e20245a0e9ec4a942e09d
+    - assetGUIDs:
+      - dd6c335508611954bb124b6b14c917c5
+    - assetGUIDs:
+      - 1b2b04fbc5b4b6b4db511a6fddead897
+    - assetGUIDs:
+      - b881144fea6a6b844b5ebd80d142d2ae
+    - assetGUIDs:
+      - 31dca23adbc5a70458efc291cb3f0e78
+    - assetGUIDs:
+      - 8252258a7b8860e44952e1e250772bda
+    - assetGUIDs:
+      - 7fbe55eea63973f479405207d40c2221
+    targetObject: {fileID: 11400000, guid: 5ce4d2489b6654048a704997ca5ba3fc, type: 2}
     targetObjects: []
-    lastSelectedAsset: Packages/com.unity.services.authentication/Runtime/Models/Responses/SignInResponse.cs
+    lastSelectedAsset: Assets/Celestial-Cross/Data/Hub/Ruinas/Chapters/Ch_Campo de
+      Treinamento.asset
     lastClickedTab: -1
-    previousTab: 0
+    previousTab: 11
   - tracker:
       mostClicked: []
       recentlyClicked:
+      - paths: []
+        count: 1
+        gameObjects: []
+      - paths: []
+        count: 1
+        gameObjects: []
+      - paths: []
+        count: 1
+        gameObjects: []
+      - paths: []
+        count: 1
+        gameObjects: []
       - paths: []
         count: 1
         gameObjects: []
@@ -297,7 +310,7 @@ MonoBehaviour:
       recentlyClickedContents: []
     sceneGUID: aae55989abe44784197dd80958fdd0f5
     sceneName: HubScene
-    lastSaveTimePrint: 01:59 PM (June 8, 2026)
+    lastSaveTimePrint: 11:21 PM (June 8, 2026)
     gracePeriod: 3
     activeIndex: 0
     checkingToLoad: 0
@@ -378,32 +391,32 @@ MonoBehaviour:
     playModeTransforms: []
     historyAssets:
     - assetGUIDs:
-      - 44b481785305ce14896d60bc64211682
-    - assetGUIDs:
-      - 02827416b37dc40789742e71e524e1c0
-    - assetGUIDs:
-      - 41ab50bd04fdfce42875fe6724f71972
-    - assetGUIDs:
-      - 2630c83ded303e24ca23dc9d17848f02
-    - assetGUIDs:
-      - 8e33882f7fba925478cbd19e61365198
-    - assetGUIDs:
-      - b0faee783a4de594596afdcb3bceb014
-    - assetGUIDs:
       - 8105016687592461f977c054a80ce2f2
     - assetGUIDs:
-      - 66d33cd4e53f2a64b9d5484bc2a8e6b0
+      - ad9baf3ac3e35c948bf6a50e91e91473
+    - assetGUIDs:
+      - d115e0bc68e6adf42a7c6f7c6d914978
+    - assetGUIDs:
+      - 701c5cb8b2be9224eb39101ce2d19bfe
+    - assetGUIDs:
+      - b735d31839abab440b75d89a1a6be66c
     - assetGUIDs:
       - 5ce4d2489b6654048a704997ca5ba3fc
     - assetGUIDs:
-      - 7ae324cccbef89349a6be98a24ae0d9e
+      - e625a3e42d710e542b4c986f567fb23b
     - assetGUIDs:
-      - aa84a7dcbee22b84ebe4ed90ff5c0a6b
-    targetObject: {fileID: 11400000, guid: 44b481785305ce14896d60bc64211682, type: 2}
+      - d088c2f0ae89cd44280a9fbfb5c3dc8c
+    - assetGUIDs:
+      - a03c32ec404b64125b88769f42e5b8a5
+    - assetGUIDs:
+      - 1c4f1b892b6e20245a0e9ec4a942e09d
+    - assetGUIDs:
+      - dd6c335508611954bb124b6b14c917c5
+    targetObject: {fileID: 11400000, guid: a9644b9cf968da748bbf12a4c0810c07, type: 2}
     targetObjects: []
-    lastSelectedAsset: Assets/Celestial-Cross/Prefabs/Units/Enemies/I/Data/Alien_melle_base.asset
+    lastSelectedAsset: Assets/CoInspector/Editor/Core/Helpers/MissingScriptManager.asset
     lastClickedTab: -1
-    previousTab: 0
+    previousTab: 11
   - tracker:
       mostClicked: []
       recentlyClicked: []
@@ -411,7 +424,7 @@ MonoBehaviour:
       recentlyClickedContents: []
     sceneGUID: 41797f812614b484c878b87c4d6155a1
     sceneName: PreparationScene
-    lastSaveTimePrint: 01:52 PM (June 8, 2026)
+    lastSaveTimePrint: 10:19 PM (June 8, 2026)
     gracePeriod: 3
     activeIndex: 0
     checkingToLoad: 0
@@ -492,55 +505,59 @@ MonoBehaviour:
     playModeTransforms: []
     historyAssets:
     - assetGUIDs:
-      - 02827416b37dc40789742e71e524e1c0
-    - assetGUIDs:
-      - 41ab50bd04fdfce42875fe6724f71972
-    - assetGUIDs:
-      - 2630c83ded303e24ca23dc9d17848f02
-    - assetGUIDs:
-      - 44b481785305ce14896d60bc64211682
-    - assetGUIDs:
-      - 8e33882f7fba925478cbd19e61365198
-    - assetGUIDs:
-      - b0faee783a4de594596afdcb3bceb014
-    - assetGUIDs:
-      - 8105016687592461f977c054a80ce2f2
-    - assetGUIDs:
-      - 66d33cd4e53f2a64b9d5484bc2a8e6b0
-    - assetGUIDs:
       - 5ce4d2489b6654048a704997ca5ba3fc
+    - assetGUIDs:
+      - d088c2f0ae89cd44280a9fbfb5c3dc8c
+    - assetGUIDs:
+      - a03c32ec404b64125b88769f42e5b8a5
+    - assetGUIDs:
+      - 1c4f1b892b6e20245a0e9ec4a942e09d
+    - assetGUIDs:
+      - dd6c335508611954bb124b6b14c917c5
     - assetGUIDs:
       - 7ae324cccbef89349a6be98a24ae0d9e
     - assetGUIDs:
-      - aa84a7dcbee22b84ebe4ed90ff5c0a6b
-    targetObject: {fileID: 11500000, guid: 02827416b37dc40789742e71e524e1c0, type: 3}
+      - aae55989abe44784197dd80958fdd0f5
+    - assetGUIDs:
+      - aa9d5c055ab8c8f40a7ee30ead82c12c
+    - assetGUIDs:
+      - 1b2b04fbc5b4b6b4db511a6fddead897
+    - assetGUIDs:
+      - b881144fea6a6b844b5ebd80d142d2ae
+    - assetGUIDs:
+      - 31dca23adbc5a70458efc291cb3f0e78
+    targetObject: {fileID: 11400000, guid: 5ce4d2489b6654048a704997ca5ba3fc, type: 2}
     targetObjects: []
-    lastSelectedAsset: Packages/com.unity.services.authentication/Runtime/Models/Responses/SignInResponse.cs
+    lastSelectedAsset: Assets/Celestial-Cross/Data/Hub/Ruinas/Chapters/Ch_Campo de
+      Treinamento.asset
     lastClickedTab: -1
-    previousTab: 0
+    previousTab: 11
   - tracker:
       mostClicked:
       - paths:
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"GameManager[0]/GameLogger[0]"}'
-        count: 12
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/RemainingTargetsText[0]"}'
-        count: 5
-        gameObjects:
-        - {fileID: 0}
+        - 
+        count: 3
+        gameObjects: []
       recentlyClicked:
       - paths:
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"GameManager[0]/GameLogger[0]"}'
+        - 
         count: 1
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/RemainingTargetsText[0]"}'
+        gameObjects: []
+      - paths: []
         count: 1
-        gameObjects:
-        - {fileID: 0}
+        gameObjects: []
+      - paths: []
+        count: 1
+        gameObjects: []
+      - paths: []
+        count: 1
+        gameObjects: []
+      - paths: []
+        count: 1
+        gameObjects: []
+      - paths: []
+        count: 1
+        gameObjects: []
       - paths: []
         count: 1
         gameObjects: []
@@ -557,7 +574,7 @@ MonoBehaviour:
       recentlyClickedContents: []
     sceneGUID: 8e33882f7fba925478cbd19e61365198
     sceneName: Teste 1
-    lastSaveTimePrint: 01:59 PM (June 8, 2026)
+    lastSaveTimePrint: 10:20 PM (June 8, 2026)
     gracePeriod: 3
     activeIndex: 0
     checkingToLoad: 0
@@ -566,24 +583,24 @@ MonoBehaviour:
     maximizedAssetView: 0
     showImportSettings: 1
     suggestedHeight: 0
-    userAssetViewSize: -1
+    userAssetViewSize: 268
     previewHeight: 0
-    scrollPosition: {x: 0, y: 0}
+    scrollPosition: {x: 0, y: 239}
     toolbarScrollPosition: {x: 0, y: 0}
     rawUserHeight: 0
-    lastValidTabWidth: 97
+    lastValidTabWidth: 94
     alreadyCalculatedHeight: 0
     lastKnownHeight: 0
     tabs:
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"GameManager[0]/GameLogger[0]"}'
       paths: []
-      tabWidth: 94
+      tabWidth: 91
       name: GameLogger
       icon: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
       shortName: GameLogger
       filterString: 
       newTab: 0
-      scrollPosition: 0
+      scrollPosition: 239
       isSelected: 0
       allCollapsed: 0
       runtimeFoldouts: 
@@ -668,77 +685,144 @@ MonoBehaviour:
     playModeTransforms: []
     historyAssets:
     - assetGUIDs:
-      - 44b481785305ce14896d60bc64211682
-    - assetGUIDs:
-      - 02827416b37dc40789742e71e524e1c0
-    - assetGUIDs:
-      - 41ab50bd04fdfce42875fe6724f71972
-    - assetGUIDs:
-      - 2630c83ded303e24ca23dc9d17848f02
-    - assetGUIDs:
-      - 8e33882f7fba925478cbd19e61365198
-    - assetGUIDs:
-      - b0faee783a4de594596afdcb3bceb014
-    - assetGUIDs:
-      - 8105016687592461f977c054a80ce2f2
-    - assetGUIDs:
-      - 66d33cd4e53f2a64b9d5484bc2a8e6b0
-    - assetGUIDs:
       - 5ce4d2489b6654048a704997ca5ba3fc
+    - assetGUIDs:
+      - d088c2f0ae89cd44280a9fbfb5c3dc8c
+    - assetGUIDs:
+      - a03c32ec404b64125b88769f42e5b8a5
+    - assetGUIDs:
+      - 1c4f1b892b6e20245a0e9ec4a942e09d
+    - assetGUIDs:
+      - dd6c335508611954bb124b6b14c917c5
     - assetGUIDs:
       - 7ae324cccbef89349a6be98a24ae0d9e
     - assetGUIDs:
-      - aa84a7dcbee22b84ebe4ed90ff5c0a6b
-    targetObject: {fileID: 11400000, guid: 44b481785305ce14896d60bc64211682, type: 2}
+      - aae55989abe44784197dd80958fdd0f5
+    - assetGUIDs:
+      - aa9d5c055ab8c8f40a7ee30ead82c12c
+    - assetGUIDs:
+      - 1b2b04fbc5b4b6b4db511a6fddead897
+    - assetGUIDs:
+      - b881144fea6a6b844b5ebd80d142d2ae
+    - assetGUIDs:
+      - 31dca23adbc5a70458efc291cb3f0e78
+    targetObject: {fileID: 11400000, guid: 5ce4d2489b6654048a704997ca5ba3fc, type: 2}
     targetObjects: []
-    lastSelectedAsset: Assets/Celestial-Cross/Prefabs/Units/Enemies/I/Data/Alien_melle_base.asset
+    lastSelectedAsset: Assets/Celestial-Cross/Data/Hub/Ruinas/Chapters/Ch_Campo de
+      Treinamento.asset
     lastClickedTab: -1
-    previousTab: 0
+    previousTab: 11
   - tracker:
       mostClicked:
       - paths:
-        - 
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/Modals_Container[0]"}'
+        count: 18
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]/SetListItemPrefab[0]"}'
+        count: 13
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]/SetListContainer[0]"}'
+        count: 10
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/Modals_Container[0]/ArtifactSetBonusModal[0]"}'
+        count: 8
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]"}'
+        count: 7
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]/SlotsGrid[0]"}'
+        count: 6
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]/SetSkillPrefab[0]"}'
+        count: 4
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]/SetListItemPrefab[0]/Text[0]"}'
+        count: 4
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/Modals_Container[0]/ArtifactSetBonusModal[0]/Window[0]/Scroll[0]/Viewport[0]/Content[0]"}'
+        count: 4
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]/SlotsGrid[0]/Slot_1[0]/Slot_1[0]/Icon[0]"}'
         count: 1
-        gameObjects: []
+        gameObjects:
+        - {fileID: 0}
       recentlyClicked:
       - paths:
-        - 
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]"}'
         count: 1
-        gameObjects: []
-      - paths: []
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]/SlotsGrid[0]/Slot_1[0]/Slot_1[0]/Icon[0]"}'
         count: 1
-        gameObjects: []
-      - paths: []
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]/SlotsGrid[0]/Slot_1[0]/Slot_1[0]/Icon
+          (1)[0]"}'
         count: 1
-        gameObjects: []
-      - paths: []
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]/SlotsGrid[0]/Slot_0[0]/Slot_0[0]"}'
         count: 1
-        gameObjects: []
-      - paths: []
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]/SlotsGrid[0]/Slot_5[0]/Slot_5[0]"}'
         count: 1
-        gameObjects: []
-      - paths: []
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]/SlotsGrid[0]/Slot_4[0]/Slot_4[0]"}'
         count: 1
-        gameObjects: []
-      - paths: []
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]/SlotsGrid[0]/Slot_3[0]/Slot_3[0]"}'
         count: 1
-        gameObjects: []
-      - paths: []
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]/SlotsGrid[0]/Slot_3[0]"}'
         count: 1
-        gameObjects: []
-      - paths: []
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]/SlotsGrid[0]/Slot_2[0]/Slot_2[0]"}'
         count: 1
-        gameObjects: []
-      - paths: []
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]/SlotsGrid[0]/Slot_1[0]/Slot_1[0]"}'
         count: 1
-        gameObjects: []
+        gameObjects:
+        - {fileID: 0}
       mostClickedContents: []
       recentlyClickedContents: []
     sceneGUID: e625a3e42d710e542b4c986f567fb23b
     sceneName: UnitScene
-    lastSaveTimePrint: 01:52 PM (June 8, 2026)
+    lastSaveTimePrint: 11:24 PM (June 8, 2026)
     gracePeriod: 3
-    activeIndex: 9
+    activeIndex: 12
     checkingToLoad: 0
     assetsCollapsed: 0
     lockedAsset: 0
@@ -747,16 +831,16 @@ MonoBehaviour:
     suggestedHeight: 0
     userAssetViewSize: -1
     previewHeight: 0
-    scrollPosition: {x: 0, y: 486}
-    toolbarScrollPosition: {x: 15, y: 0}
+    scrollPosition: {x: 0, y: 600}
+    toolbarScrollPosition: {x: 205, y: 0}
     rawUserHeight: 0
-    lastValidTabWidth: 553
+    lastValidTabWidth: 743
     alreadyCalculatedHeight: 0
     lastKnownHeight: 0
     tabs:
     - path: '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]"}'
       paths: []
-      tabWidth: 58
+      tabWidth: 57
       name: UnitMainPanel
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Unit\u2026"
@@ -887,7 +971,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_0[0]"}'
       paths: []
-      tabWidth: 57
+      tabWidth: 58
       name: Tab_0
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: Tab_0
@@ -1091,7 +1175,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_0[0]"}'
       paths: []
-      tabWidth: 57
+      tabWidth: 58
       name: Tab_0
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: Tab_0
@@ -1189,7 +1273,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_0[0]"}'
       paths: []
-      tabWidth: 57
+      tabWidth: 58
       name: Tab_0
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: Tab_0
@@ -1284,7 +1368,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_0[0]"}'
       paths: []
-      tabWidth: 57
+      tabWidth: 58
       name: Tab_0
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: Tab_0
@@ -1379,7 +1463,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_0[0]/Text[0]"}'
       paths: []
-      tabWidth: 47
+      tabWidth: 49
       name: Text
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: Text
@@ -1468,7 +1552,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitBtnPrefab[0]"}'
       paths: []
-      tabWidth: 58
+      tabWidth: 57
       name: UnitBtnPrefab
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Unit\u2026"
@@ -1611,7 +1695,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitListScroll[0]/Viewport[0]"}'
       paths: []
-      tabWidth: 62
+      tabWidth: 61
       name: Viewport
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "View\u2026"
@@ -1716,9 +1800,6 @@ MonoBehaviour:
         - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitBanner[0]"}'
         prefab: 0
       - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/bORDER[0]"}'
-        prefab: 0
-      - paths:
         - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Pet[0]"}'
         prefab: 0
       - paths:
@@ -1738,27 +1819,27 @@ MonoBehaviour:
         - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]"}'
         prefab: 0
       owner: {fileID: 0}
-    - path: '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Pet[0]/EquippedContainer[0]/SkillDesc[0]"}'
+    - path: '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitSpriteConainerBorder[0]/UnitSpriteContainer[0]"}'
       paths: []
-      tabWidth: 56
-      name: SkillDesc
+      tabWidth: 57
+      name: UnitSpriteContainer
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
-      shortName: "Skil\u2026"
+      shortName: "Unit\u2026"
       filterString: 
       newTab: 0
-      scrollPosition: 486
+      scrollPosition: 0
       isSelected: 0
       allCollapsed: 0
       runtimeFoldouts: 
       runtimeMultiComponents: []
       tabTextContent:
-        m_Text: "Skil\u2026"
+        m_Text: "Unit\u2026"
         m_Image: {fileID: 0}
         m_Tooltip: 
-        m_TextWithWhitespace: "Skil\u2026\u200B"
+        m_TextWithWhitespace: "Unit\u2026\u200B"
       multiEditMode: 0
       locked: 0
-      hasPreview: 0
+      hasPreview: 1
       previewHeight: 13
       debug: 0
       filtering: 0
@@ -1820,17 +1901,26 @@ MonoBehaviour:
         focusAfter: 0
         awaitingScroll: 0
         hidden: 0
-        componentName: textmeshprougui
-        niceComponentName: text mesh pro ugui
+        componentName: betterimage
+        niceComponentName: better image
       historyPaths:
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitSpriteConainerBorder[0]/UnitSpriteContainer[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitSpriteConainerBorder[0]/UnitSpriteContainer[0]/Mask[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitSpriteConainerBorder[0]/UnitSpriteContainer[0]/Mask[0]/UnitSprite[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/Modals_Container[0]"}'
+        prefab: 0
       - paths:
         - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Pet[0]/EquippedContainer[0]/SkillDesc[0]"}'
         prefab: 0
       - paths:
         - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Pet[0]/EmptyContainer[0]"}'
-        prefab: 0
-      - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/Modals_Container[0]"}'
         prefab: 0
       - paths:
         - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Pet[0]/EquippedContainer[0]/SkillIcon[0]"}'
@@ -1844,49 +1934,392 @@ MonoBehaviour:
       - paths:
         - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Pet[0]/EquippedContainer[0]/Name_Stars_Container[0]/PetName[0]"}'
         prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]"}'
+      paths: []
+      tabWidth: 62
+      name: Panel_Equipment
+      icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Pane\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Pane\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Pane\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 13
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 10
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasrenderer
+        niceComponentName: canvas renderer
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: betterimage
+        niceComponentName: better image
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: unitdetailpanel_equipment
+        niceComponentName: unit detail panel_equipment
+      historyPaths:
       - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Pet[0]/EmptyContainer[0]/EmptyText[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Pet[0]/DefaultStarPrefab[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Pet[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Pet[0]/EquippedContainer[0]/Name_Stars_Container[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Pet[0]/EquippedContainer[0]/Name_Stars_Container[0]/PetName[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/Modals_Container[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/Background[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/Stars[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/bORDER[0]"}'
         prefab: 0
       - paths:
         - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]"}'
         prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Pet[0]"}'
+      paths: []
+      tabWidth: 62
+      name: Panel_Pet
+      icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Pane\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Pane\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Pane\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 150
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 11
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasrenderer
+        niceComponentName: canvas renderer
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: betterimage
+        niceComponentName: better image
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: unitdetailpanel_pet
+        niceComponentName: unit detail panel_pet
+      historyPaths:
       - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/DefaultStarPrefab[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Pet[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]"}'
+      paths: []
+      tabWidth: 62
+      name: Panel_Equipment
+      icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Pane\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 600
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Pane\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Pane\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 13
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 12
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasrenderer
+        niceComponentName: canvas renderer
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: betterimage
+        niceComponentName: better image
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: unitdetailpanel_equipment
+        niceComponentName: unit detail panel_equipment
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]"}'
         prefab: 0
       - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/Background[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]/SlotsGrid[0]/Slot_1[0]/Slot_1[0]/Icon[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]/SlotsGrid[0]/Slot_1[0]/Slot_1[0]/Icon
+          (1)[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]/SlotsGrid[0]/Slot_0[0]/Slot_0[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]/SlotsGrid[0]/Slot_5[0]/Slot_5[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]/SlotsGrid[0]/Slot_4[0]/Slot_4[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]/SlotsGrid[0]/Slot_3[0]/Slot_3[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]/SlotsGrid[0]/Slot_3[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]/SlotsGrid[0]/Slot_2[0]/Slot_2[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]/SlotsGrid[0]/Slot_1[0]/Slot_1[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]/SlotsGrid[0]/Slot_5[0]"}'
         prefab: 0
       owner: {fileID: 0}
     closedTabs: []
     playModeTransforms: []
     historyAssets:
     - assetGUIDs:
-      - 02827416b37dc40789742e71e524e1c0
-    - assetGUIDs:
-      - 41ab50bd04fdfce42875fe6724f71972
-    - assetGUIDs:
-      - 2630c83ded303e24ca23dc9d17848f02
-    - assetGUIDs:
-      - 44b481785305ce14896d60bc64211682
-    - assetGUIDs:
-      - 8e33882f7fba925478cbd19e61365198
-    - assetGUIDs:
-      - b0faee783a4de594596afdcb3bceb014
+      - ad9baf3ac3e35c948bf6a50e91e91473
     - assetGUIDs:
       - 8105016687592461f977c054a80ce2f2
     - assetGUIDs:
-      - 66d33cd4e53f2a64b9d5484bc2a8e6b0
+      - d115e0bc68e6adf42a7c6f7c6d914978
+    - assetGUIDs:
+      - 701c5cb8b2be9224eb39101ce2d19bfe
+    - assetGUIDs:
+      - b735d31839abab440b75d89a1a6be66c
     - assetGUIDs:
       - 5ce4d2489b6654048a704997ca5ba3fc
     - assetGUIDs:
-      - 7ae324cccbef89349a6be98a24ae0d9e
+      - e625a3e42d710e542b4c986f567fb23b
     - assetGUIDs:
-      - aa84a7dcbee22b84ebe4ed90ff5c0a6b
-    targetObject: {fileID: 11500000, guid: 02827416b37dc40789742e71e524e1c0, type: 3}
+      - d088c2f0ae89cd44280a9fbfb5c3dc8c
+    - assetGUIDs:
+      - a03c32ec404b64125b88769f42e5b8a5
+    - assetGUIDs:
+      - 1c4f1b892b6e20245a0e9ec4a942e09d
+    - assetGUIDs:
+      - dd6c335508611954bb124b6b14c917c5
+    targetObject: {fileID: 11400000, guid: ad9baf3ac3e35c948bf6a50e91e91473, type: 3}
     targetObjects: []
-    lastSelectedAsset: Packages/com.unity.services.authentication/Runtime/Models/Responses/SignInResponse.cs
+    lastSelectedAsset: Packages/com.unity.2d.sprite/Editor/UI/SpriteEditor/PolygonChangeShapeWindow.uxml
     lastClickedTab: -1
-    previousTab: 0
+    previousTab: 11
   - tracker:
       mostClicked: []
       recentlyClicked: []
@@ -1894,7 +2327,7 @@ MonoBehaviour:
       recentlyClickedContents: []
     sceneGUID: 3bea51b30b1a74742b70e245c7a07f9c
     sceneName: ShopScene
-    lastSaveTimePrint: 01:52 PM (June 8, 2026)
+    lastSaveTimePrint: 08:26 PM (June 8, 2026)
     gracePeriod: 3
     activeIndex: 0
     checkingToLoad: 0
@@ -1975,32 +2408,32 @@ MonoBehaviour:
     playModeTransforms: []
     historyAssets:
     - assetGUIDs:
+      - 8252258a7b8860e44952e1e250772bda
+    - assetGUIDs:
+      - 8105016687592461f977c054a80ce2f2
+    - assetGUIDs:
+      - e625a3e42d710e542b4c986f567fb23b
+    - assetGUIDs:
       - 02827416b37dc40789742e71e524e1c0
+    - assetGUIDs:
+      - 44b481785305ce14896d60bc64211682
     - assetGUIDs:
       - 41ab50bd04fdfce42875fe6724f71972
     - assetGUIDs:
       - 2630c83ded303e24ca23dc9d17848f02
     - assetGUIDs:
-      - 44b481785305ce14896d60bc64211682
-    - assetGUIDs:
       - 8e33882f7fba925478cbd19e61365198
     - assetGUIDs:
       - b0faee783a4de594596afdcb3bceb014
     - assetGUIDs:
-      - 8105016687592461f977c054a80ce2f2
-    - assetGUIDs:
       - 66d33cd4e53f2a64b9d5484bc2a8e6b0
     - assetGUIDs:
       - 5ce4d2489b6654048a704997ca5ba3fc
-    - assetGUIDs:
-      - 7ae324cccbef89349a6be98a24ae0d9e
-    - assetGUIDs:
-      - aa84a7dcbee22b84ebe4ed90ff5c0a6b
-    targetObject: {fileID: 11500000, guid: 02827416b37dc40789742e71e524e1c0, type: 3}
+    targetObject: {fileID: 11500000, guid: 8252258a7b8860e44952e1e250772bda, type: 3}
     targetObjects: []
-    lastSelectedAsset: Packages/com.unity.services.authentication/Runtime/Models/Responses/SignInResponse.cs
+    lastSelectedAsset: Packages/com.unity.services.levelplay/Editor/PostBuild/LevelPlayAndroidManifestProcessor.cs
     lastClickedTab: -1
     previousTab: 0
-  tipsShown: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000000000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+  tipsShown: 01000000010000000000000001000000000000000100000000000000000000000100000000000000000000000100000000000000010000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000001000000000000000000000000000000
   playModeStartScene: {}
   enteringPlayMode: 0

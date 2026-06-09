@@ -10,11 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d389b35c32d0f0f49a37cffea31d942f, type: 3}
-  m_Name: "Ben\xE7\xE3o do Fogo"
+  m_Name: "Dominio da F\xFAria"
   m_EditorClassIdentifier: Assembly-CSharp::CelestialCross.Artifacts.ArtifactSet
   id: 1
-  setName: "Ben\xE7\xE3o do Fogo"
-  description: 
+  setName: Dominio da Furia
+  description: "Alguns dizem que a f\xFAria cega, mas quem domina a Celestia \xE9
+    capaz de usa-la como caminho para vit\xF3ria."
+  setFilterIcon: {fileID: 21300000, guid: 31dca23adbc5a70458efc291cb3f0e78, type: 3}
   slotIcons:
   - slot: 0
     icon: {fileID: 21300000, guid: c2d1cabe55598ae41977f6aa53060063, type: 3}
@@ -31,6 +33,15 @@ MonoBehaviour:
   setBonuses:
   - piecesRequired: 2
     statBonuses:
-    - statType: 2
-      value: 5
+    - statType: 3
+      value: 10
     passiveAbility: {fileID: 0}
+    passiveGraph: {fileID: 0}
+  - piecesRequired: 4
+    statBonuses: []
+    passiveAbility: {fileID: 0}
+    passiveGraph: {fileID: 11400000, guid: dd6c335508611954bb124b6b14c917c5, type: 2}
+  - piecesRequired: 6
+    statBonuses: []
+    passiveAbility: {fileID: 0}
+    passiveGraph: {fileID: 11400000, guid: 1b2b04fbc5b4b6b4db511a6fddead897, type: 2}

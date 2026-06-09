@@ -24,7 +24,8 @@ public class ArtifactSetCatalog : ScriptableObject
             if (set == null)
                 continue;
 
-            if (set.id == setId)
+            // Suporta match pelo 'id' ou pelo nome do ScriptableObject como fallback
+            if (set.id == setId || set.name == setId)
                 return set;
         }
 

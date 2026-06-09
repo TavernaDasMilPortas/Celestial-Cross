@@ -11,6 +11,8 @@ namespace CelestialCross.Scenes.Unit
         [Header("UI - Pet Equipado")]
         public GameObject petEquippedContainer;
         public GameObject petEmptyContainer;
+        [Tooltip("Arraste o objeto pai (ex: petspriteconainerborder) para garantir que ele fique ativo mesmo vazio.")]
+        public GameObject petSpriteParent;
         
         public Image petSpriteImage;
         public TextMeshProUGUI petNameText;
@@ -95,6 +97,9 @@ namespace CelestialCross.Scenes.Unit
         {
             if (petEquippedContainer) petEquippedContainer.SetActive(false);
             if (petEmptyContainer) petEmptyContainer.SetActive(true);
+            
+            if (petSpriteParent) petSpriteParent.SetActive(true);
+            if (petSpriteImage != null) petSpriteImage.gameObject.SetActive(false);
         }
 
         private void DisplayPet(RuntimePetData petData, PetSpeciesSO speciesSO)
@@ -102,7 +107,12 @@ namespace CelestialCross.Scenes.Unit
             if (petEquippedContainer) petEquippedContainer.SetActive(true);
             if (petEmptyContainer) petEmptyContainer.SetActive(false);
 
-            if (petSpriteImage != null) petSpriteImage.sprite = speciesSO.sprite;
+            if (petSpriteParent) petSpriteParent.SetActive(true);
+            if (petSpriteImage != null)
+            {
+                petSpriteImage.gameObject.SetActive(true);
+                petSpriteImage.sprite = speciesSO.sprite;
+            }
             if (petNameText != null) petNameText.text = speciesSO.SpeciesName;
 
             if (hpText != null) hpText.text = $"HP: {petData.Health}";

@@ -364,6 +364,12 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                     if (!string.IsNullOrEmpty(modData.valueVariableReference))
                         modVal = GetVariable(context, modData.valueVariableReference, modVal);
                     
+                    if (modData.useCasterAttribute && context.source != null && context.source.VariableStore != null) 
+                    {
+                        float statVal = context.source.VariableStore.GetStat(modData.casterAttribute);
+                        modVal = statVal * (modVal / 100f);
+                    }
+                    
                     ModifyVariable(context, modData.variableName, modData.operation, modVal);
                     break;
 
@@ -491,6 +497,22 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                 case "CleanseStatusNode":
                     var cleanseData = JsonUtility.FromJson<CleanseStatusNodeData>(node.JsonData);
                     ExecuteCleanse(cleanseData, context);
+                    break;
+                    
+                case "SacrificeHealthNode":
+                    var sacData = JsonUtility.FromJson<SacrificeHealthNodeData>(node.JsonData);
+                    if (context.source != null && context.source.Health != null)
+                    {
+                        int hpLoss = sacData.usePercentage 
+                            ? Mathf.RoundToInt(context.source.Health.MaxHealth * (sacData.amount / 100f))
+                            : Mathf.RoundToInt(sacData.amount);
+                        
+                        context.source.Health.TakeDamage(hpLoss, false, context.source);
+                        if (!string.IsNullOrEmpty(sacData.outputVariable))
+                            context.Variables[sacData.outputVariable] = hpLoss;
+                            
+                        CombatLogger.Log($"<color=#ff4d4d>[Sacrifício]</color> {context.source.name} sacrificou {hpLoss} HP!", LogCategory.Passive);
+                    }
                     break;
             }
 
@@ -642,6 +664,22 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                     var cleanseData = JsonUtility.FromJson<CleanseStatusNodeData>(node.JsonData);
                     ExecuteCleanse(cleanseData, context);
                     break;
+                    
+                case "SacrificeHealthNode":
+                    var sacData = JsonUtility.FromJson<SacrificeHealthNodeData>(node.JsonData);
+                    if (context.source != null && context.source.Health != null)
+                    {
+                        int hpLoss = sacData.usePercentage 
+                            ? Mathf.RoundToInt(context.source.Health.MaxHealth * (sacData.amount / 100f))
+                            : Mathf.RoundToInt(sacData.amount);
+                        
+                        context.source.Health.TakeDamage(hpLoss, false, context.source);
+                        if (!string.IsNullOrEmpty(sacData.outputVariable))
+                            context.Variables[sacData.outputVariable] = hpLoss;
+                            
+                        CombatLogger.Log($"<color=#ff4d4d>[Sacrifício]</color> {context.source.name} sacrificou {hpLoss} HP!", LogCategory.Passive);
+                    }
+                    break;
 
 
                 case "LoopNode":
@@ -670,6 +708,12 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                     float modVal = modData.value;
                     if (!string.IsNullOrEmpty(modData.valueVariableReference))
                         modVal = GetVariable(context, modData.valueVariableReference, modVal);
+                    
+                    if (modData.useCasterAttribute && context.source != null && context.source.VariableStore != null) 
+                    {
+                        float statVal = context.source.VariableStore.GetStat(modData.casterAttribute);
+                        modVal = statVal * (modVal / 100f);
+                    }
                     
                     ModifyVariable(context, modData.variableName, modData.operation, modVal);
                     break;
@@ -1446,6 +1490,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                 case VariableModifierNodeData.Operation.Set: context.Variables[varName] = value; break;
                 case VariableModifierNodeData.Operation.Add: context.Variables[varName] += value; break;
                 case VariableModifierNodeData.Operation.Multiply: context.Variables[varName] *= value; break;
+                case VariableModifierNodeData.Operation.Divide: context.Variables[varName] = value != 0 ? context.Variables[varName] / value : context.Variables[varName]; break;
             }
             Debug.Log($"[Interpreter] Variável '{varName}' atualizada para {context.Variables[varName]} (Op: {op})");
         }

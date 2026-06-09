@@ -181,15 +181,9 @@ MonoBehaviour:
   equippedArtifactData: []
   cachedArtifactStatModifiers: []
   cachedArtifactSetPassives: []
+  cachedArtifactSetPassiveGraphs: []
   Team: 0
   GridPosition: {x: 0, y: 0}
-  modifierStats:
-    health: 0
-    attack: 0
-    defense: 0
-    speed: 0
-    criticalChance: 0
-    effectAccuracy: 0
 --- !u!114 &6000719012097959160
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -241,7 +235,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UnitRuntimeConfigurator
   unit: {fileID: 646509738643498755}
   unitSpriteRenderer: {fileID: 0}
-  artifactSetCatalog: {fileID: 0}
+  artifactSetCatalog: {fileID: 11400000, guid: ba31e5cc6fccb08478437f02f0896260, type: 2}
 --- !u!65 &2021321755430437321
 BoxCollider:
   m_ObjectHideFlags: 0

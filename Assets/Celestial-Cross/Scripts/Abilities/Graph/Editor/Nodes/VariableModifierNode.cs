@@ -12,6 +12,8 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
         private EnumField operationDropdown;
         private FloatField valueField;
         private TextField valueVariableField;
+        private Toggle useCasterAttrToggle;
+        private EnumField casterAttrDropdown;
 
         private VariableModifierNodeData nodeData = new VariableModifierNodeData();
 
@@ -49,6 +51,16 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
             valueVariableField.RegisterValueChangedCallback(evt => nodeData.valueVariableReference = evt.newValue);
             extensionContainer.Add(valueVariableField);
 
+            useCasterAttrToggle = new Toggle("Use Caster Stat %");
+            useCasterAttrToggle.value = nodeData.useCasterAttribute;
+            useCasterAttrToggle.RegisterValueChangedCallback(evt => nodeData.useCasterAttribute = evt.newValue);
+            extensionContainer.Add(useCasterAttrToggle);
+
+            casterAttrDropdown = new EnumField("Caster Stat", nodeData.casterAttribute);
+            casterAttrDropdown.value = nodeData.casterAttribute;
+            casterAttrDropdown.RegisterValueChangedCallback(evt => nodeData.casterAttribute = (CelestialCross.Artifacts.StatType)evt.newValue);
+            extensionContainer.Add(casterAttrDropdown);
+
             RefreshExpandedState();
             RefreshPorts();
         }
@@ -63,6 +75,8 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor.Nodes
             operationDropdown.value = nodeData.operation;
             valueField.value = nodeData.value;
             valueVariableField.value = nodeData.valueVariableReference;
+            useCasterAttrToggle.value = nodeData.useCasterAttribute;
+            casterAttrDropdown.value = nodeData.casterAttribute;
         }
 
         public override string GetDescription()
