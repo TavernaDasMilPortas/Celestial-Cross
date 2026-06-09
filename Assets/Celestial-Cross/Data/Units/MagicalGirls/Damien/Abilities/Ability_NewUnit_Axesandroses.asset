@@ -1,0 +1,127 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b74335336934364f92171120eea7025, type: 3}
+  m_Name: Ability_NewUnit_Axesandroses
+  m_EditorClassIdentifier: Assembly-CSharp::Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO
+  abilityName: Axes and roses
+  abilityIcon: {fileID: 0}
+  abilityDescription: Ability description here...
+  displayRange: 1
+  NodeLinks:
+  - BaseNodeGuid: 612b342f-7383-470e-8f53-c8d0510fdea4
+    PortName: Out
+    TargetNodeGuid: bd841bae-5eea-4739-8d8e-714620880776
+    TargetPortName: In
+  - BaseNodeGuid: bd841bae-5eea-4739-8d8e-714620880776
+    PortName: Out
+    TargetNodeGuid: fc413e9f-2db7-4c9f-9a2c-048eebb355af
+    TargetPortName: In
+  - BaseNodeGuid: fc413e9f-2db7-4c9f-9a2c-048eebb355af
+    PortName: Out
+    TargetNodeGuid: 05e5232d-4265-4690-b362-93dcf3005bce
+    TargetPortName: In
+  - BaseNodeGuid: 05e5232d-4265-4690-b362-93dcf3005bce
+    PortName: Out
+    TargetNodeGuid: dad0a04f-6b90-49a7-8400-d24101451d64
+    TargetPortName: In
+  - BaseNodeGuid: dad0a04f-6b90-49a7-8400-d24101451d64
+    PortName: Out
+    TargetNodeGuid: 01e3ac07-eb59-42a2-83c2-e682ace15d0a
+    TargetPortName: In
+  - BaseNodeGuid: 01e3ac07-eb59-42a2-83c2-e682ace15d0a
+    PortName: Out
+    TargetNodeGuid: 0a2dabfa-5384-4452-b8e6-e591101191d5
+    TargetPortName: In
+  - BaseNodeGuid: 0a2dabfa-5384-4452-b8e6-e591101191d5
+    PortName: Out
+    TargetNodeGuid: ecb5dfcb-6631-4a45-b363-850f5f413748
+    TargetPortName: In
+  NodeData:
+  - Guid: 612b342f-7383-470e-8f53-c8d0510fdea4
+    NodeType: StartNode
+    NodeTitle: Start
+    Position: {x: 231, y: -131}
+    JsonData: '{"type":1,"subtype":0,"isBuff":false}'
+    areaPattern: {fileID: 0}
+  - Guid: bd841bae-5eea-4739-8d8e-714620880776
+    NodeType: TriggerNode
+    NodeTitle: Trigger Event
+    Position: {x: 452, y: -116}
+    JsonData: '{"trigger":0}'
+    areaPattern: {fileID: 0}
+  - Guid: fc413e9f-2db7-4c9f-9a2c-048eebb355af
+    NodeType: VariableModifierNode
+    NodeTitle: Modifier
+    Position: {x: 753, y: -103}
+    JsonData: '{"variableName":"Damage","operation":0,"value":1.0,"valueVariableReference":""}'
+    areaPattern: {fileID: 0}
+  - Guid: 05e5232d-4265-4690-b362-93dcf3005bce
+    NodeType: TargetNode
+    NodeTitle: Targeting
+    Position: {x: 1006, y: -108}
+    JsonData: '{"reusePrevious":false,"sourceType":0,"mode":0,"range":1,"multipleTargets":false,"maxTargets":1,"origin":0,"strategy":0,"attributeType":0,"factionType":2,"targetCount":1,"autoRotate":true,"preferredDirection":0,"patternReferenceId":"","areaPattern":{"instanceID":0},"rangeVariable":"","maxTargetsVariable":"max_targets_05e5","useExtraRangeVariable":false}'
+    areaPattern: {fileID: 0}
+  - Guid: dad0a04f-6b90-49a7-8400-d24101451d64
+    NodeType: DamageEffectNode
+    NodeTitle: Damage Effect
+    Position: {x: 1299, y: -90}
+    JsonData: '{"variableReference":"Damage","scalings":[{"statType":3,"percentage":100.0,"useTargetStat":true}],"scaleWithDistance":false,"distanceScaleFactor":0.10000000149011612}'
+    areaPattern: {fileID: 0}
+  - Guid: 01e3ac07-eb59-42a2-83c2-e682ace15d0a
+    NodeType: TargetNode
+    NodeTitle: Targeting
+    Position: {x: 1635, y: -68}
+    JsonData: '{"reusePrevious":false,"sourceType":1,"mode":0,"range":3,"multipleTargets":false,"maxTargets":1,"origin":0,"strategy":4,"attributeType":0,"factionType":2,"targetCount":1,"autoRotate":true,"preferredDirection":0,"patternReferenceId":"","areaPattern":{"instanceID":0},"rangeVariable":"","maxTargetsVariable":"max_targets_01e3","useExtraRangeVariable":false}'
+    areaPattern: {fileID: 0}
+  - Guid: ecb5dfcb-6631-4a45-b363-850f5f413748
+    NodeType: HealEffectNode
+    NodeTitle: Heal Effect
+    Position: {x: 2200, y: -68}
+    JsonData: '{"variableReference":"Damage","scalings":[{"statType":3,"percentage":100.0,"useTargetStat":true}],"canCrit":true,"allowOverheal":false}'
+    areaPattern: {fileID: 0}
+  - Guid: 0a2dabfa-5384-4452-b8e6-e591101191d5
+    NodeType: VariableModifierNode
+    NodeTitle: Modifier
+    Position: {x: 1934, y: -60}
+    JsonData: '{"variableName":"Damage","operation":2,"value":0.5,"valueVariableReference":""}'
+    areaPattern: {fileID: 0}
+  Dependencies: []
+  Variables:
+  - name: Damage
+    initialValue: 0
+    description: 
+  - name: max_targets_05e5
+    initialValue: 1
+    description: 
+  - name: dmg_amount_dad0
+    initialValue: 10
+    description: 
+  - name: max_targets_01e3
+    initialValue: 1
+    description: 
+  - name: heal_amount_ecb5
+    initialValue: 10
+    description: 
+  MaxLevel: 1
+  aiHint:
+    category: 0
+    basePriority: 50
+    cooldownTurns: 0
+    lowHPTargetBonus: 20
+    freshApplicationBonus: 15
+    targetsFriendlies: 0
+    estimatedValue: 10
+  GeneratedDescription: "<b>--- DESCRI\xC7\xC3O AUTOM\xC1TICA ---</b>\r\n- Esta \xE9
+    uma habilidade do tipo Active. Subtipo: None.\r\n- Modifica 'Damage' (Set 1).\r\n-
+    Escolhe manualmente unidade(s) a um range de 1 a partir de Unit.\r\n- Dano escalado
+    (1 stats).\r\n- Seleciona automaticamente a si mesmo.\r\n- Modifica 'Damage'
+    (Multiply 0,5).\r\n- Cura escalada (1 stats).\r\n"

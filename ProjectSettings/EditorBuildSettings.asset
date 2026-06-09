@@ -6,8 +6,35 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
+    path: Assets/Celestial-Cross/Scenes/HubScene.unity
+    guid: aae55989abe44784197dd80958fdd0f5
+  - enabled: 1
+    path: Assets/Celestial-Cross/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Celestial-Cross/Scenes/RestScene.unity
+    guid: 589ee8b52c987334996a55c9d02cc3ce
+  - enabled: 1
+    path: Assets/Celestial-Cross/Scenes/MainMenu.unity
+    guid: 3a34bb65e0b98494faa8fe5f88d53f86
+  - enabled: 1
+    path: Assets/Celestial-Cross/Scenes/PreparationScene.unity
+    guid: 41797f812614b484c878b87c4d6155a1
+  - enabled: 1
+    path: Assets/Celestial-Cross/Scenes/Teste 1.unity
+    guid: 8e33882f7fba925478cbd19e61365198
+  - enabled: 1
+    path: Assets/Celestial-Cross/Scenes/ShopScene.unity
+    guid: 3bea51b30b1a74742b70e245c7a07f9c
+  - enabled: 1
+    path: Assets/Celestial-Cross/Scenes/DialogueScene.unity
+    guid: b64aa4f30b1fd1548b757958394826b6
+  - enabled: 1
+    path: Assets/Celestial-Cross/Scenes/InventoryScene.unity
+    guid: 03d58314661be71469defb5607568be7
+  - enabled: 1
+    path: Assets/Celestial-Cross/Scenes/UnitScene.unity
+    guid: e625a3e42d710e542b4c986f567fb23b
   m_configObjects:
     com.unity.adaptivePerformance.basic.provider_settings: {fileID: 11400000, guid: 81c6a135fcad177479fd34a2f6a80d20, type: 2}
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 801f113cbebbf734e9dac349dd5c025d, type: 2}

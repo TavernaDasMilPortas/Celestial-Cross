@@ -1,10 +1,43 @@
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using Celestial_Cross.Scripts.Combat.Execution;
+
+public enum UnitActionCategory
+{
+    Attack,       // Ataque
+    Movement,     // Deslocamento
+    Ability,      // Habilidade
+    Spell         // Magia
+}
 
 public abstract class UnitActionBase : MonoBehaviour, IUnitAction
 {
     protected Unit unit;
     protected ActionState state = ActionState.Idle;
     protected ActionContext context;
+    protected TargetSelector targetSelector;
+
+    public string ActionName { get; set; }
+    public UnitActionCategory ActionCategory { get; set; } = UnitActionCategory.Ability; // Categoria da ação
+    
+    [Tooltip("Se verdadeiro, esta ação pula as regras de peso padrão e tem prioridade máxima (Ex: Especial de Chefe).")]
+    public bool IsAbsolutePriority { get; set; }
+
+    public Sprite ActionIcon { get; set; }
+    public string ActionDescription { get; set; }
+    public virtual int Range { get; set; }
+    public virtual int Level { get; set; } = 1;
+    public Vector2Int Target { get; set; }
+    public virtual AreaPatternData GetAreaPattern() => null;
+    public virtual string GetDetailStats() => "";
+    public event System.Action<ActionForecast> OnForecastUpdated;
+
+    protected void InvokeForecastUpdated(ActionForecast forecast)
+    {
+        OnForecastUpdated?.Invoke(forecast);
+    }
 
     bool configured;
 
@@ -45,21 +78,144 @@ public abstract class UnitActionBase : MonoBehaviour, IUnitAction
         OnUpdate();
     }
 
+    protected void StartTargetSelection(int range, TargetingRuleData rule = null)
+    {
+        // Se já existir um seletor (por exemplo, após um swap), limpamos o anterior
+        if (targetSelector != null) Destroy(targetSelector);
+
+        targetSelector = gameObject.AddComponent<TargetSelector>();
+        targetSelector.OnTargetsConfirmed += OnTargetsConfirmed;
+        targetSelector.OnCanceled += OnSelectionCanceled;
+        targetSelector.Begin(unit, range, rule);
+    }
+
+    protected virtual void OnTargetsConfirmed(List<Unit> targets)
+    {
+        context.targets = targets;
+        state = ActionState.ReadyToConfirm;
+        unit.LogCanConfirm(true);
+        PerformFinalExecution();
+    }
+
+    protected virtual void OnSelectionCanceled()
+    {
+        state = ActionState.Finished;
+        unit.LogCanConfirm(false);
+    }
+
+    protected void PerformFinalExecution()
+    {
+        if (state != ActionState.ReadyToConfirm) return;
+        StartCoroutine(ExecuteRoutine());
+    }
+
+    private IEnumerator ExecuteRoutine()
+    {
+        state = ActionState.Resolving;
+
+        // Limpamos o Overlay chamativo (Amarelo) e pegamos a área final
+        HashSet<Vector2Int> finalArea = new HashSet<Vector2Int>();
+        if (targetSelector != null)
+        {
+            finalArea = targetSelector.GetFinalTargetArea();
+            targetSelector.ClearAllHighlights(); 
+        }
+
+        // Feedback Visual: Darken os Tiles finais
+        foreach (var pos in finalArea)
+        {
+            GridMap.Instance?.GetTile(pos)?.Darken();
+        }
+
+        yield return new WaitForSeconds(0.5f);
+
+        Execute();
+
+        if (targetSelector != null)
+        {
+            Destroy(targetSelector);
+        }
+
+        GridMap.Instance?.ResetAllTileVisuals();
+    }
+
     public void Confirm()
     {
-        if (state != ActionState.ReadyToConfirm)
-            return;
+        PerformFinalExecution();
+    }
 
-        state = ActionState.Resolving;
+    public void Execute()
+    {
         Resolve();
         state = ActionState.Finished;
 
-        PlayerController.Instance.EndTurn();
+        // Dispara o hook OnAfterAction no PassiveManager da unidade
+        var passiveManager = unit.GetComponent<PassiveManager>();
+        if (passiveManager != null)
+        {
+            var combatContext = new CelestialCross.Combat.CombatContext(unit, unit, 0, this);
+            passiveManager.TriggerHook(CelestialCross.Combat.CombatHook.OnAfterAction, combatContext);
+        }
+
+        OnActionFinished();
+    }
+
+    protected virtual void OnActionFinished()
+    {
+        CameraController.Instance?.ResetFocus();
+
+        bool isEnemy = unit is Celestial_Cross.Scripts.Units.Enemy.EnemyUnit;
+        if (!isEnemy && ActionCategory == UnitActionCategory.Movement && !unit.hasMovedThisTurn)
+        {
+            unit.hasMovedThisTurn = true;
+            // Movimento gratuito (0 AP)
+        }
+        else
+        {
+            if (ActionCategory == UnitActionCategory.Movement) unit.hasMovedThisTurn = true;
+            else unit.hasActedThisTurn = true;
+            
+            unit.CurrentAP--;
+        }
+
+        AbilityExecutor.Instance.StartCoroutine(HandleTurnEnd(unit));
+    }
+
+    private IEnumerator HandleTurnEnd(Unit unit)
+    {
+        yield return new WaitUntil(() => !AbilityExecutor.Instance.IsExecuting);
+
+        if (unit.CurrentAP <= 0)
+        {
+            EndTurnProperly();
+        }
+        else
+        {
+            Debug.Log($"[UnitActionBase] Ação '{ActionName}' concluída. AP restante: {unit.CurrentAP}.");
+            // Notificar PlayerController/UI para atualizar botões
+            PlayerController.Instance?.RefreshUI();
+        }
+    }
+
+    protected void EndTurnProperly()
+    {
+        if (unit is Celestial_Cross.Scripts.Units.Enemy.EnemyUnit)
+            TurnManager.Instance.EndTurn();
+        else
+            PlayerController.Instance.EndTurn();
     }
 
     public void Cancel()
     {
         OnCancel();
+        
+        if (targetSelector != null)
+        {
+            targetSelector.ClearAllHighlights();
+            Destroy(targetSelector);
+        }
+
+        GridMap.Instance?.ResetAllTileVisuals();
         state = ActionState.Finished;
     }
 

@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9fa029edc35a40c7b4610452fc91464a, type: 3}
+  m_Name: Pet_1
+  m_EditorClassIdentifier: Assembly-CSharp::PetData
+  petID: 
+  displayName: Lobo de Gelo
+  icon: {fileID: 0}
+  baseStats:
+    health: 30
+    attack: 20
+    defense: 20
+    speed: 15
+    criticalChance: 2
+    effectAccuracy: 0
+  ability: {fileID: 11400000, guid: a8e22cc5176529a4fbc822b5e20191b5, type: 2}

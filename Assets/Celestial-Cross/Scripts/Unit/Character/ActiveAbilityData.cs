@@ -9,6 +9,8 @@ public class ActiveAbilityData : IExecutableDefinitionData
     [SerializeReference]
     public UnitActionData actionDefinition;
 
+    public int level = 1;
+
     public string DefinitionName => actionName;
 
     public Type GetRuntimeActionType()
@@ -24,6 +26,7 @@ public class ActiveAbilityData : IExecutableDefinitionData
             return;
         }
 
+        action.Level = level;
         actionDefinition.Configure(action);
     }
 }

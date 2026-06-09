@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb249868a85523b4686441d22073799e, type: 3}
+  m_Name: Leidell
+  m_EditorClassIdentifier: Assembly-CSharp::UnitData
+  unitID: 67628d77266bab446ba0b5274c2a9397
+  displayName: Leidell
+  role: 0
+  unitClass: 0
+  icon: {fileID: 21300000, guid: 6c0f467186696f64ea6f117122847d44, type: 3}
+  idleAnim: {fileID: 7400000, guid: 9745dc52f2b71c64b90b4740e3101456, type: 2}
+  combatIdleAnim: {fileID: 7400000, guid: 9745dc52f2b71c64b90b4740e3101456, type: 2}
+  baseStats:
+    health: 30
+    attack: 10
+    defense: 6
+    speed: 15
+    criticalChance: 7
+    criticalDamage: 50
+    effectAccuracy: 1
+    effectResistance: 0
+  maxStats:
+    health: 300
+    attack: 100
+    defense: 60
+    speed: 70
+    criticalChance: 7
+    criticalDamage: 50
+    effectAccuracy: 1
+    effectResistance: 0
+  abilityGraphs: []
+  constellationConfig: {fileID: 11400000, guid: 895416b1fbffaab44ab31b2f8bbc2f06, type: 2}
+  skillTreeConfig: {fileID: 11400000, guid: 3a32e9a6d9a1b854092cda9705155ffe, type: 2}
+  nativeActions: []
+  references:
+    version: 2
+    RefIds: []

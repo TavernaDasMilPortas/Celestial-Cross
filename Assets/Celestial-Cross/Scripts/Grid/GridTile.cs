@@ -5,33 +5,45 @@ public class GridTile : MonoBehaviour
 {
     public Vector2Int GridPosition { get; private set; }
     public bool IsOccupied;
+    public Unit OccupyingUnit;
 
+    // ── Gameplay properties ──────────────────────────────────────────────────
+    public bool IsPlayerSpawnZone { get; private set; }
+    public bool IsWalkable { get; private set; } = true;
+
+    // ── Visual renderers ─────────────────────────────────────────────────────
     [SerializeField] private Renderer tileRenderer;
+    [SerializeField] private SpriteRenderer visualSpriteRenderer;
 
-    [Header("Colors")]
+    [Header("Colors (Darken)")]
     [SerializeField] private Color baseColor = Color.gray;
-    [SerializeField] private Color highlightColor = Color.green;
-    [SerializeField] private Color selectedColor = Color.yellow;
-    [SerializeField] private Color areaPreviewColor = new Color(1f, 0.5f, 0f, 1f);
-    [SerializeField] private Color areaCenterColor = new Color(0.8f, 0.2f, 0f, 1f);
+    [SerializeField] private Color executionColor = new Color(0.15f, 0.15f, 0.15f, 1f);
+    [SerializeField] private Color confirmedColor = new Color(0.1f, 0.7f, 0.1f, 1f);
 
-    public event Action OnHighlight;
-    public event Action OnClearHighlight;
-    public event Action OnSelect;
+    [Header("Telegraph Colors")]
+    [SerializeField] private Color telegraphColor1 = new Color(1f, 0f, 0f, 0.8f); // 1 turno (Vermelho)
+    [SerializeField] private Color telegraphColor2 = new Color(1f, 0.5f, 0f, 0.8f); // 2 turnos (Laranja)
+    [SerializeField] private Color telegraphColor3 = new Color(1f, 0.9f, 0f, 0.8f); // 3+ turnos (Amarelo)
 
     private MaterialPropertyBlock propertyBlock;
 
-    // IDs possíveis de cor (compatibilidade total)
     private static readonly int ColorId = Shader.PropertyToID("_Color");
     private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
-
     private int activeColorProperty = -1;
 
-    // Estado visual empilhado (prioridades)
+    // ── Visual state flags ───────────────────────────────────────────────────
+    private bool isExecution = false;
     private bool isSelected = false;
     private bool isAreaCenter = false;
     private bool isAreaPreview = false;
     private bool isHighlight = false;
+    private bool isConfirmed = false;
+    private bool isTelegraphed = false;
+    private int telegraphTurns = 0;
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // INIT
+    // ─────────────────────────────────────────────────────────────────────────
 
     public void Init(Vector2Int pos)
     {
@@ -42,20 +54,69 @@ public class GridTile : MonoBehaviour
         EnsurePropertyBlock();
         DetectColorProperty();
 
-        OnHighlight = null;
-        OnClearHighlight = null;
-        OnSelect = null;
-
-        OnHighlight += ApplyHighlight;
-        OnClearHighlight += ClearHighlight;
-        OnSelect += ApplySelected;
-
         HardClearAllStates();
     }
 
-    // =====================
-    // API PÚBLICA (Flags)
-    // =====================
+    public void ApplyDefinition(TileDefinition definition)
+    {
+        if (definition == null) return;
+        IsPlayerSpawnZone = definition.isPlayerSpawnZone;
+        IsWalkable = definition.isWalkable;
+    }
+
+    /// <summary>
+    /// Applies walkable state from PhaseMap Layer 2 (overrides the TileDefinition default).
+    /// </summary>
+    public void ApplyWalkableOverride(bool walkable)
+    {
+        IsWalkable = walkable;
+    }
+
+    /// <summary>
+    /// Applies a visual sprite from PhaseMap Layer 3. Falls back to TileDefinition.defaultSprite if null.
+    /// </summary>
+    public void ApplySprite(Sprite sprite)
+    {
+        if (visualSpriteRenderer == null) return;
+        
+        visualSpriteRenderer.sprite = sprite;
+        visualSpriteRenderer.gameObject.SetActive(sprite != null);
+
+        // Ensure a tiny offset to avoid Z-fighting with the 3D mesh face
+        if (sprite != null)
+        {
+            var p = visualSpriteRenderer.transform.localPosition;
+            if (p.y <= 0.001f) p.y = 0.505f; // Standard cube top
+            visualSpriteRenderer.transform.localPosition = p;
+        }
+    }
+
+    public void AddSpriteLayer(Sprite sprite, int layerIndex)
+    {
+        if (visualSpriteRenderer == null || sprite == null) return;
+        
+        GameObject overlay = new GameObject($"SpriteLayer_{layerIndex}");
+        overlay.transform.SetParent(visualSpriteRenderer.transform.parent);
+        
+        // Match the base visual sprite transform exactly
+        overlay.transform.localPosition = visualSpriteRenderer.transform.localPosition + new Vector3(0, 0.001f * layerIndex, 0); // Reduced Y distance
+        overlay.transform.localRotation = visualSpriteRenderer.transform.localRotation;
+        overlay.transform.localScale = visualSpriteRenderer.transform.localScale;
+
+        SpriteRenderer sr = overlay.AddComponent<SpriteRenderer>();
+        sr.sprite = sprite;
+        sr.sortingOrder = layerIndex; // Ensure correct drawing order
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // PUBLIC API — Visual State Flags
+    // ─────────────────────────────────────────────────────────────────────────
+
+    public bool IsHighlighted => isHighlight;
+    public bool IsConfirmed => isConfirmed;
+    public bool IsSelected => isSelected;
+    public bool IsAreaPreview => isAreaPreview;
+    public bool IsAreaCenter => isAreaCenter;
 
     public void Highlight()
     {
@@ -98,50 +159,85 @@ public class GridTile : MonoBehaviour
         isAreaCenter = state;
         UpdateVisuals();
     }
-    
+
+    public void Darken()
+    {
+        isExecution = true;
+        UpdateVisuals();
+    }
+
+    public void ClearDarken()
+    {
+        isExecution = false;
+        UpdateVisuals();
+    }
+
+    public void SetConfirmed(bool state)
+    {
+        isConfirmed = state;
+        UpdateVisuals();
+    }
+
     public void HardClearAllStates()
     {
+        isExecution = false;
         isSelected = false;
         isAreaCenter = false;
         isAreaPreview = false;
         isHighlight = false;
+        isConfirmed = false;
+        isTelegraphed = false;
+        telegraphTurns = 0;
         UpdateVisuals();
     }
 
-    // =====================
-    // EVENT CALLBACKS (Mantidos para compatibilidade, caso usados externamente)
-    // =====================
+    public void ApplyTelegraph(int turnsLeft)
+    {
+        isTelegraphed = true;
+        telegraphTurns = turnsLeft;
+        UpdateVisuals();
+    }
 
-    void ApplyHighlight() => Highlight();
-    void ApplySelected() => Select();
-    void ClearHighlight() => Clear();
+    public void ClearTelegraph()
+    {
+        isTelegraphed = false;
+        telegraphTurns = 0;
+        UpdateVisuals();
+    }
 
-    // =====================
-    // VISUAL UPDATE LOGIC
-    // =====================
+    // ─────────────────────────────────────────────────────────────────────────
+    // VISUAL UPDATE — Only Darken uses MaterialPropertyBlock now.
+    // Highlight/Select/Area overlays are handled by HighlightOverlayPool (Feature B).
+    // ─────────────────────────────────────────────────────────────────────────
 
     void UpdateVisuals()
     {
-        if (isSelected) ApplyColor(selectedColor);
-        else if (isAreaCenter) ApplyColor(areaCenterColor);
-        else if (isAreaPreview) ApplyColor(areaPreviewColor);
-        else if (isHighlight) ApplyColor(highlightColor);
-        else ApplyColor(baseColor);
+        if (isExecution)
+            ApplyColor(executionColor);
+        else if (isTelegraphed)
+        {
+            if (telegraphTurns <= 1) ApplyColor(telegraphColor1);
+            else if (telegraphTurns == 2) ApplyColor(telegraphColor2);
+            else ApplyColor(telegraphColor3);
+        }
+        else
+            ApplyColor(baseColor);
+            
+        GridMap.Instance?.MarkHighlightsDirty();
     }
 
     void ApplyColor(Color color)
     {
-        if (activeColorProperty == -1)
-            return;
+        if (activeColorProperty == -1) return;
 
         tileRenderer.GetPropertyBlock(propertyBlock);
         propertyBlock.SetColor(activeColorProperty, color);
         tileRenderer.SetPropertyBlock(propertyBlock);
     }
 
-    // =====================
-    // SETUP SEGURO
-    // =====================
+    // ─────────────────────────────────────────────────────────────────────────
+    // SETUP HELPERS
+    // ─────────────────────────────────────────────────────────────────────────
 
     void EnsureRenderer()
     {
@@ -163,26 +259,15 @@ public class GridTile : MonoBehaviour
 
     void DetectColorProperty()
     {
-        if (tileRenderer == null || tileRenderer.sharedMaterial == null)
-            return;
+        if (tileRenderer == null || tileRenderer.sharedMaterial == null) return;
 
         var mat = tileRenderer.sharedMaterial;
 
         if (mat.HasProperty(BaseColorId))
-        {
             activeColorProperty = BaseColorId;
-            Debug.Log($"[GridTile] Usando _BaseColor em {name}");
-        }
         else if (mat.HasProperty(ColorId))
-        {
             activeColorProperty = ColorId;
-            Debug.Log($"[GridTile] Usando _Color em {name}");
-        }
         else
-        {
-            Debug.LogError(
-                $"[GridTile] Shader do tile '{name}' não possui _Color nem _BaseColor"
-            );
-        }
+            Debug.LogError($"[GridTile] Shader '{name}' não possui _Color nem _BaseColor");
     }
 }

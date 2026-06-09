@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b609c611f50aad942beb9dcfe09b95a6, type: 3}
+  m_Name: fase 2
+  m_EditorClassIdentifier: Assembly-CSharp::LevelData
+  LevelName: 'Fase 2 '
+  SceneName: Teste 1
+  PhaseMap: {fileID: 11400000, guid: 66096b2fcdc24544c8839de4450c6755, type: 2}
+  Waves: []
+  Enemies: []
+  VictoryRewards: {fileID: 11400000, guid: 594ba186335bf874c873163cdecdea60, type: 2}

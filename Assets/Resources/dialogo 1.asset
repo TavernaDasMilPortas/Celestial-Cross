@@ -1,0 +1,218 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10d30a4be252b63479f95c401df7180e, type: 3}
+  m_Name: dialogo 1
+  m_EditorClassIdentifier: Assembly-CSharp::CelestialCross.Dialogue.Graph.DialogueGraph
+  nodeLinks:
+  - baseNodeGuid: 889a2b9d-4256-41c1-bf59-f627817910c5
+    portName: Next
+    targetNodeGuid: 3f15daf8-d7d9-4ae8-9437-80214ca12245
+  - baseNodeGuid: 3f15daf8-d7d9-4ae8-9437-80214ca12245
+    portName: Choice 1
+    targetNodeGuid: 2fe232fa-982f-4c8c-8646-eda7ffa15233
+  - baseNodeGuid: 2fe232fa-982f-4c8c-8646-eda7ffa15233
+    portName: Choice 1
+    targetNodeGuid: ab5cd2fd-2e1e-482d-b7ef-ae0cc4f55460
+  - baseNodeGuid: ab5cd2fd-2e1e-482d-b7ef-ae0cc4f55460
+    portName: Choice 1
+    targetNodeGuid: 323cc58c-6709-4c98-a4c9-66a61649491f
+  - baseNodeGuid: 323cc58c-6709-4c98-a4c9-66a61649491f
+    portName: Choice 1
+    targetNodeGuid: 6bf7e5bb-b683-41d2-8566-1300591b7313
+  - baseNodeGuid: 6bf7e5bb-b683-41d2-8566-1300591b7313
+    portName: Choice 1
+    targetNodeGuid: 445ac909-1f40-400c-842c-a5858f35b03e
+  - baseNodeGuid: 445ac909-1f40-400c-842c-a5858f35b03e
+    portName: Choice 1
+    targetNodeGuid: a28b0772-87d0-44f4-91f3-68bad208993b
+  - baseNodeGuid: a28b0772-87d0-44f4-91f3-68bad208993b
+    portName: Choice 1
+    targetNodeGuid: 5b81b22e-bd07-42d2-afcb-a9e69819c41d
+  - baseNodeGuid: 5b81b22e-bd07-42d2-afcb-a9e69819c41d
+    portName: Choice 1
+    targetNodeGuid: e33bbf3e-0f8b-4f39-8038-f8b002e87c92
+  - baseNodeGuid: e33bbf3e-0f8b-4f39-8038-f8b002e87c92
+    portName: Choice 1
+    targetNodeGuid: 6d99e714-785f-4156-9e3b-a68a1d5faf7d
+  - baseNodeGuid: 6d99e714-785f-4156-9e3b-a68a1d5faf7d
+    portName: Choice 1
+    targetNodeGuid: 7b2e84af-cff6-4b51-8b9c-76ccf48b3cf8
+  nodeData:
+  - guid: 3f15daf8-d7d9-4ae8-9437-80214ca12245
+    nodeType: 1
+    position: {x: 267.2, y: 200}
+    speakerName: Shany
+    dialogueText: "Voc\xEA \xE9 a nova aluna?"
+    characterSprite: {fileID: 21300000, guid: 4e04daee1287aea4485ed39ca6aa9dbf, type: 3}
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 2fe232fa-982f-4c8c-8646-eda7ffa15233
+    nodeType: 1
+    position: {x: 682.4, y: 266.4}
+    speakerName: "Voc\xEA"
+    dialogueText: Ta falando comigo?
+    characterSprite: {fileID: 0}
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: ab5cd2fd-2e1e-482d-b7ef-ae0cc4f55460
+    nodeType: 1
+    position: {x: 1052.7999, y: 290.4}
+    speakerName: Shany
+    dialogueText: Claro que sim bobinha!
+    characterSprite: {fileID: 21300000, guid: 8b2e64a407bbb414b9e40064ba97295f, type: 3}
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 323cc58c-6709-4c98-a4c9-66a61649491f
+    nodeType: 1
+    position: {x: 1416.7999, y: 356.8}
+    speakerName: Shany
+    dialogueText: "Meu nome \xE9 Shany. Muito prazer!"
+    characterSprite: {fileID: 0}
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 6bf7e5bb-b683-41d2-8566-1300591b7313
+    nodeType: 1
+    position: {x: 68.799995, y: 422.4}
+    speakerName: Liedell
+    dialogueText: "J\xE1 ta importunando a novata?"
+    characterSprite: {fileID: 21300000, guid: ba8a27074283e25459f252b211ba915d, type: 3}
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 445ac909-1f40-400c-842c-a5858f35b03e
+    nodeType: 1
+    position: {x: 448.80002, y: 488.8}
+    speakerName: "Voc\xEA"
+    dialogueText: 'O-oi '
+    characterSprite: {fileID: 0}
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: a28b0772-87d0-44f4-91f3-68bad208993b
+    nodeType: 1
+    position: {x: 744.8, y: 554.4}
+    speakerName: Shany
+    dialogueText: "Pareque que algu\xE9m ta de mau humor hoje!"
+    characterSprite: {fileID: 21300000, guid: 2b2b488d06b388547b8fcff0b611d1f4, type: 3}
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 5b81b22e-bd07-42d2-afcb-a9e69819c41d
+    nodeType: 1
+    position: {x: 1236, y: 620}
+    speakerName: Liedell
+    dialogueText: "Voc\xEA n\xE3o tem gra\xE7a Shany"
+    characterSprite: {fileID: 21300000, guid: 61403abfaf5fc2c4a831e756f9306eb8, type: 3}
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: e33bbf3e-0f8b-4f39-8038-f8b002e87c92
+    nodeType: 1
+    position: {x: 1622.3999, y: 686.4}
+    speakerName: Liedel
+    dialogueText: "Vamos ver do que voc\xEA \xE9 capaz, novata"
+    characterSprite: {fileID: 21300000, guid: 194e730b189cf1b47852bcaf39751aaa, type: 3}
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 6d99e714-785f-4156-9e3b-a68a1d5faf7d
+    nodeType: 1
+    position: {x: 2084, y: 717.6}
+    speakerName: "Voc\xEA"
+    dialogueText: Do que eu sou capaz?
+    characterSprite: {fileID: 0}
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 7b2e84af-cff6-4b51-8b9c-76ccf48b3cf8
+    nodeType: 5
+    position: {x: 2438.4, y: 780}
+    speakerName: 
+    dialogueText: 
+    characterSprite: {fileID: 0}
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  exposedProperties:
+  - propertyName: New Variable
+    propertyValue: 
+    type: 2

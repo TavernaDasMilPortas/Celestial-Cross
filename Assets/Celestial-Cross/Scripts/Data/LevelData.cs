@@ -1,0 +1,42 @@
+using System.Collections.Generic;
+using UnityEngine;
+
+[CreateAssetMenu(fileName = "NewLevelData", menuName = "Celestial Cross/Levels/Level Data")]
+public class LevelData : ScriptableObject
+{
+    [Header("Level Info")]
+    public string LevelName;
+    public string SceneName; // Nome da cena a ser carregada
+
+    [Header("Grid")]
+    public PhaseMap PhaseMap;
+
+    [Header("Waves")]
+    [Tooltip("Se preenchido, a Wave 0 é usada como spawn inicial. (Suporte a múltiplas waves/ondas.)")]
+    public List<EnemyWave> Waves = new();
+
+    [Header("Enemies (Legacy)")]
+    [Tooltip("Legacy: use apenas se Waves estiver vazio. Mantido para não quebrar assets antigos.")]
+    public List<EnemySpawnInfo> Enemies;
+
+    [Header("Rewards")]
+    public List<CelestialCross.Data.Rewards.RewardDefinition> FirstClearRewards = new List<CelestialCross.Data.Rewards.RewardDefinition>();
+    public List<CelestialCross.Data.Rewards.RewardDefinition> RepeatRewards = new List<CelestialCross.Data.Rewards.RewardDefinition>();
+}
+
+[System.Serializable]
+public class EnemyWave
+{
+    public string WaveName;
+    public List<EnemySpawnInfo> Enemies = new();
+}
+
+[System.Serializable]
+public struct EnemySpawnInfo
+{
+    public UnitData UnitData;
+    public Vector2Int GridPosition;
+    
+    [Tooltip("Se preenchido, substitui a Behavior Tree padrão desta unidade (útil para chefes ou fases específicas).")]
+    public Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.BehaviorTreeSO OverrideBehaviorTree;
+}

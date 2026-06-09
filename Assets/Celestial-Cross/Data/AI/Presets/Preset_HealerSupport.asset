@@ -1,0 +1,141 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8cf6610ba3c29a74aa7d2416f7a095d4, type: 3}
+  m_Name: Preset_HealerSupport
+  m_EditorClassIdentifier: Assembly-CSharp::Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.BehaviorTreeSO
+  treeName: Healer Support
+  description: "Prioriza curar aliados feridos. Se amea\xE7ado, recua. Caso contr\xE1rio,
+    ataca de longe."
+  NodeData:
+  - Guid: root
+    NodeType: BTRootEditorNode
+    NodeTitle: Root
+    Position: {x: 100, y: 350}
+    JsonData: 
+  - Guid: selector
+    NodeType: BTSelectorEditorNode
+    NodeTitle: Selector
+    Position: {x: 300, y: 350}
+    JsonData: '{"ports":["Passo_0","Passo_1","Passo_2"]}'
+  - Guid: seq_heal
+    NodeType: BTSequenceEditorNode
+    NodeTitle: Sequence Heal
+    Position: {x: 550, y: 100}
+    JsonData: '{"ports":["Passo_0","Passo_1"]}'
+  - Guid: check_hp
+    NodeType: BTCheckValueEditorNode
+    NodeTitle: Check Value
+    Position: {x: 800, y: 0}
+    JsonData: '{"operatorType":1,"threshold":50.0}'
+  - Guid: get_hp
+    NodeType: BTGetNumericDataEditorNode
+    NodeTitle: Get Numeric Data
+    Position: {x: 1100, y: 0}
+    JsonData: '{"dataType":2}'
+  - Guid: act_heal
+    NodeType: BTActionUseAbilityEditorNode
+    NodeTitle: Cast Heal
+    Position: {x: 800, y: 150}
+    JsonData: '{"category":1}'
+  - Guid: get_weakest_ally
+    NodeType: BTGetTargetEditorNode
+    NodeTitle: Get Weakest Ally
+    Position: {x: 1100, y: 120}
+    JsonData: '{"faction":1,"strategy":2}'
+  - Guid: seq_flee
+    NodeType: BTSequenceEditorNode
+    NodeTitle: Sequence Flee
+    Position: {x: 550, y: 350}
+    JsonData: '{"ports":["Passo_0","Passo_1"]}'
+  - Guid: check_dist
+    NodeType: BTCheckValueEditorNode
+    NodeTitle: Check Value
+    Position: {x: 800, y: 300}
+    JsonData: '{"operatorType":2,"threshold":2.0}'
+  - Guid: get_dist
+    NodeType: BTGetNumericDataEditorNode
+    NodeTitle: Get Numeric Data
+    Position: {x: 1100, y: 300}
+    JsonData: '{"dataType":3}'
+  - Guid: act_flee
+    NodeType: BTActionMoveEditorNode
+    NodeTitle: Flee (Flee)
+    Position: {x: 800, y: 420}
+    JsonData: '{"intent":1}'
+  - Guid: act_damage
+    NodeType: BTActionUseAbilityEditorNode
+    NodeTitle: Attack Weakest Enemy
+    Position: {x: 550, y: 580}
+    JsonData: '{"category":0}'
+  - Guid: get_closest_enemy
+    NodeType: BTGetTargetEditorNode
+    NodeTitle: Get Closest Enemy
+    Position: {x: 1100, y: 420}
+    JsonData: '{"faction":0,"strategy":0}'
+  - Guid: get_weakest_enemy
+    NodeType: BTGetTargetEditorNode
+    NodeTitle: Get Weakest Enemy
+    Position: {x: 1100, y: 580}
+    JsonData: '{"faction":0,"strategy":2}'
+  NodeLinks:
+  - ParentGuid: root
+    ParentPort: Child
+    ChildGuid: selector
+    ChildPort: Parent
+  - ParentGuid: selector
+    ParentPort: Passo_0
+    ChildGuid: seq_heal
+    ChildPort: Parent
+  - ParentGuid: selector
+    ParentPort: Passo_1
+    ChildGuid: seq_flee
+    ChildPort: Parent
+  - ParentGuid: selector
+    ParentPort: Passo_2
+    ChildGuid: act_damage
+    ChildPort: Parent
+  - ParentGuid: seq_heal
+    ParentPort: Passo_0
+    ChildGuid: check_hp
+    ChildPort: Parent
+  - ParentGuid: seq_heal
+    ParentPort: Passo_1
+    ChildGuid: act_heal
+    ChildPort: Parent
+  - ParentGuid: get_hp
+    ParentPort: Value
+    ChildGuid: check_hp
+    ChildPort: Value
+  - ParentGuid: get_weakest_ally
+    ParentPort: Target
+    ChildGuid: act_heal
+    ChildPort: Target
+  - ParentGuid: seq_flee
+    ParentPort: Passo_0
+    ChildGuid: check_dist
+    ChildPort: Parent
+  - ParentGuid: seq_flee
+    ParentPort: Passo_1
+    ChildGuid: act_flee
+    ChildPort: Parent
+  - ParentGuid: get_dist
+    ParentPort: Value
+    ChildGuid: check_dist
+    ChildPort: Value
+  - ParentGuid: get_closest_enemy
+    ParentPort: Target
+    ChildGuid: act_flee
+    ChildPort: Target
+  - ParentGuid: get_weakest_enemy
+    ParentPort: Target
+    ChildGuid: act_damage
+    ChildPort: Target

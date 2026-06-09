@@ -1,16 +1,19 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using Celestial_Cross.Scripts.Combat.Execution;
 
 public class AttackAction : UnitActionBase
 {
-    public int Range { get; set; }
-    public int Damage { get; set; }
+    public override int Range { get; set; }
+    public float DamageMultiplier { get; set; } = 1.0f;
+    public override string GetDetailStats() => $"Dano: {DamageMultiplier * 100}%";
     public TargetingRuleData TargetingRule { get; set; } = new TargetingRuleData();
     public AreaPatternData AreaPattern { get; set; }
-    public int AreaRotationSteps { get; set; }
+    public override AreaPatternData GetAreaPattern() => AreaPattern;
+    public Direction PreferredDirection { get; set; }
+    public bool AutoRotateArea { get; set; }
 
-    TargetSelector targetSelector;
 
     protected override ActionContext CreateContext()
     {
@@ -19,70 +22,71 @@ public class AttackAction : UnitActionBase
 
     protected override void OnEnter()
     {
-        Debug.Log($"[AttackAction] {unit.DisplayName} | Range {Range} | Flat Bonus {Damage} | Mode {TargetingRule.mode}");
+        Debug.Log($"[AttackAction] {unit.DisplayName} | Range {Range} | Mult {DamageMultiplier} | Mode {TargetingRule.mode}");
 
-        StartTargetSelection();
+        StartTargetSelection(Range, TargetingRule);
+
+        targetSelector.OnSelectedTargetsChanged += OnSelectionChanged;
+        targetSelector.UpdateAreaConfig(AreaPattern, PreferredDirection, AutoRotateArea);
+
         unit.LogCanConfirm(false);
     }
 
     protected override void OnUpdate()
     {
-        // input é tratado pelo TargetSelector
     }
 
     protected override void Resolve()
     {
         foreach (var target in context.targets)
         {
-            if (target.Health == null)
+            if (target == null || target.Health == null)
                 continue;
 
             int hits = unit.GetAttacksAgainst(target);
-            int totalDamage = 0;
 
             for (int i = 0; i < hits; i++)
             {
-                AttackResult result = unit.CalculateAttack(
-                    target,
-                    new DamageBonus { flat = Damage, percent = 0f },
-                    new DamageReduction { flat = 0, percent = 0f }
-                );
-
-                totalDamage += result.damage;
-
-                Debug.Log($"[AttackAction] Hit {i + 1}/{hits} | {unit.DisplayName} -> {target.DisplayName} | Damage: {result.damage} | Critical: {result.isCritical}");
+                var combatContext = new CelestialCross.Combat.CombatContext(unit, target, Mathf.FloorToInt(unit.Stats.attack * DamageMultiplier));
+                DamageProcessor.ProcessAndApplyDamage(combatContext, applyDefense: true);
             }
-
-            target.Health.TakeDamage(totalDamage);
         }
-
-        ClearSelection();
     }
 
     protected override void OnCancel()
     {
-        ClearSelection();
     }
 
-    void StartTargetSelection()
+
+    void OnSelectionChanged(List<Unit> targets)
     {
-        targetSelector = gameObject.AddComponent<TargetSelector>();
+        if (targets == null || targets.Count == 0)
+        {
+            InvokeForecastUpdated(default);
+            return;
+        }
 
-        targetSelector.Begin(
-            sourceUnit: unit,
-            selectionRange: Range,
-            rule: TargetingRule,
-            selectedAreaPattern: AreaPattern,
-            selectedAreaRotationSteps: AreaRotationSteps
-        );
+        Unit lastTarget = targets.Last();
+        if (lastTarget == null) return;
 
-        targetSelector.OnTargetsConfirmed += OnTargetsConfirmed;
-        targetSelector.OnCanceled += OnSelectionCanceled;
+        CombatStats tempStats = unit.Stats;
+        tempStats.attack = Mathf.FloorToInt(tempStats.attack * DamageMultiplier);
+        AttackResult sample = DamageModel.ResolveHit(tempStats, lastTarget.Stats);
 
-        state = ActionState.SelectingTargets;
+        ActionForecast forecast = new ActionForecast
+        {
+            Source = unit,
+            Target = lastTarget,
+            Damage = sample.damage,
+            IsCritical = sample.isCritical,
+            AttackCount = unit.GetAttacksAgainst(lastTarget),
+            CriticalChance = unit.Stats.criticalChance
+        };
+
+        InvokeForecastUpdated(forecast);
     }
 
-    void OnTargetsConfirmed(List<Unit> targets)
+    protected override void OnTargetsConfirmed(List<Unit> targets)
     {
         context.targets = ExpandAreaTargetsIfNeeded(targets, targetSelector != null ? targetSelector.SelectedPoints : null);
         state = ActionState.ReadyToConfirm;
@@ -90,6 +94,7 @@ public class AttackAction : UnitActionBase
         Debug.Log($"[AttackAction] Alvos confirmados: {context.targets.Count}");
 
         unit.LogCanConfirm(true);
+        PerformFinalExecution();
     }
 
     List<Unit> ExpandAreaTargetsIfNeeded(List<Unit> targets, IReadOnlyList<Vector2Int> selectedPoints)
@@ -97,16 +102,19 @@ public class AttackAction : UnitActionBase
         if ((targets == null || targets.Count == 0) && (selectedPoints == null || selectedPoints.Count == 0))
             return new List<Unit>();
 
-        if (TargetingRule.mode != TargetingMode.Area || AreaPattern == null)
+        if (TargetingRule.mode != TargetingMode.Area || AreaPattern == null)    
             return targets;
 
         HashSet<Vector2Int> affectedCells = new();
+        context.affectedAreaCells.Clear();
+
+        Direction rotationToUse = targetSelector != null ? targetSelector.CurrentRotation : PreferredDirection;
 
         if (TargetingRule.origin == TargetOrigin.Point && selectedPoints != null && selectedPoints.Count > 0)
         {
             foreach (var point in selectedPoints)
             {
-                foreach (var cell in AreaResolver.ResolveCells(point, AreaPattern, AreaRotationSteps))
+                foreach (var cell in AreaResolver.ResolveCells(point, AreaPattern, rotationToUse))
                     affectedCells.Add(cell);
             }
         }
@@ -114,12 +122,14 @@ public class AttackAction : UnitActionBase
         {
             foreach (var target in targets)
             {
-                foreach (var cell in AreaResolver.ResolveCells(target.GridPosition, AreaPattern, AreaRotationSteps))
+                foreach (var cell in AreaResolver.ResolveCells(target.GridPosition, AreaPattern, rotationToUse))
                     affectedCells.Add(cell);
             }
         }
 
-        List<Unit> affectedUnits = FindObjectsOfType<Unit>()
+        context.affectedAreaCells.AddRange(affectedCells);
+
+        List<Unit> affectedUnits = new List<Unit>(Object.FindObjectsByType<Unit>(FindObjectsSortMode.None))
             .Where(u => affectedCells.Contains(u.GridPosition))
             .Where(u => TargetingRule.canTargetSelf || u != unit)
             .Distinct()
@@ -129,21 +139,4 @@ public class AttackAction : UnitActionBase
         return affectedUnits;
     }
 
-    void OnSelectionCanceled()
-    {
-        state = ActionState.Finished;
-        unit.LogCanConfirm(false);
-    }
-
-    void ClearSelection()
-    {
-        if (targetSelector != null)
-        {
-            targetSelector.OnTargetsConfirmed -= OnTargetsConfirmed;
-            targetSelector.OnCanceled -= OnSelectionCanceled;
-            Destroy(targetSelector);
-        }
-
-        targetSelector = null;
-    }
 }

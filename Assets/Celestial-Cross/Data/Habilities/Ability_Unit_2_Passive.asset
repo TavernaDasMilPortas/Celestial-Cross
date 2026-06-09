@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d40ee282d0c8984b934ffbbbb9c91f1, type: 3}
+  m_Name: Ability_Unit_2_Passive
+  m_EditorClassIdentifier: Assembly-CSharp::Celestial_Cross.Scripts.Abilities.AbilityBlueprint
+  abilityName: "T\xE9cnica de Piromante"
+  abilityIcon: {fileID: 0}
+  abilityDescription: Habilidade passiva de um verdadeiro Piromante.
+  displayRange: 1
+  isPassive: 1
+  isPersistentCondition: 0
+  durationInTurns: 0
+  effectSteps:
+  - rid: 215814544673210473
+  modifierSteps: []
+  modifiers: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 215814544673210473
+      type: {class: EffectStep, ns: Celestial_Cross.Scripts.Abilities, asm: Assembly-CSharp}
+      data:
+        trigger: 3
+        reusePreviousTargets: 0
+        targetingStrategy:
+          rid: 215814544673210474
+        effects:
+        - rid: 215814544673210475
+    - rid: 215814544673210474
+      type: {class: SingleTargetingStrategy, ns: Celestial_Cross.Scripts.Abilities.Strategies, asm: Assembly-CSharp}
+      data:
+        RequiresManualSelection: 1
+        ManualRule:
+          mode: 0
+          origin: 0
+          allowMultiple: 0
+          minTargets: 1
+          maxTargets: 1
+          canTargetSelf: 0
+          targetFaction: 2
+        AreaPattern: {fileID: 0}
+        PreferredDirection: 0
+        AutoRotateArea: 0
+        ManualRange: 5
+    - rid: 215814544673210475
+      type: {class: HealEffectData, ns: Celestial_Cross.Scripts.Abilities, asm: Assembly-CSharp}
+      data:
+        conditions: []
+        requireAllConditions: 1
+        scaleWithDistance: 0
+        distanceScaleFactor: 0.1
+        valueType: 0
+        amount: 5
+        baseAttribute: 0
+        canCritHeal: 1
+        allowOverheal: 0

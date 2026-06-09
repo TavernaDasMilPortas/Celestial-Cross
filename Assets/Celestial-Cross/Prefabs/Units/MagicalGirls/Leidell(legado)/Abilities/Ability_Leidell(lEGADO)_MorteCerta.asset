@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b74335336934364f92171120eea7025, type: 3}
+  m_Name: Ability_Leidell(lEGADO)_MorteCerta
+  m_EditorClassIdentifier: Assembly-CSharp::Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO
+  abilityName: Morte Certa
+  abilityIcon: {fileID: 21300000, guid: 818165bbcf8b25a40ba19a9fc51a2e52, type: 3}
+  abilityDescription: Uma vez por turno, ao matar um inimigo, pode agir de novo
+  displayRange: 1
+  NodeLinks:
+  - BaseNodeGuid: 0761910b-ba93-49a7-bae2-ac716d4d7115
+    PortName: Out
+    TargetNodeGuid: be6a20a4-7e77-44bd-8e49-aabf6f9795fd
+    TargetPortName: In
+  - BaseNodeGuid: be6a20a4-7e77-44bd-8e49-aabf6f9795fd
+    PortName: Out
+    TargetNodeGuid: 5f406eb7-76b3-4db0-b286-cd4a831024f8
+    TargetPortName: In
+  - BaseNodeGuid: 5f406eb7-76b3-4db0-b286-cd4a831024f8
+    PortName: True
+    TargetNodeGuid: b26e66bd-84df-4954-baee-8418198a2af5
+    TargetPortName: In
+  NodeData:
+  - Guid: 0761910b-ba93-49a7-bae2-ac716d4d7115
+    NodeType: StartNode
+    NodeTitle: Start
+    Position: {x: 100, y: 200}
+    JsonData: '{"type":0,"subtype":0,"isBuff":false}'
+    areaPattern: {fileID: 0}
+  - Guid: be6a20a4-7e77-44bd-8e49-aabf6f9795fd
+    NodeType: TriggerNode
+    NodeTitle: Trigger Event
+    Position: {x: 373, y: 200}
+    JsonData: '{"trigger":20}'
+    areaPattern: {fileID: 0}
+  - Guid: 5f406eb7-76b3-4db0-b286-cd4a831024f8
+    NodeType: LimitPerTurnNode
+    NodeTitle: Limit Per Turn
+    Position: {x: 629, y: 200}
+    JsonData: '{"maxExecutionsPerTurn":1}'
+    areaPattern: {fileID: 0}
+  - Guid: b26e66bd-84df-4954-baee-8418198a2af5
+    NodeType: ModifyAPNode
+    NodeTitle: Modify AP
+    Position: {x: 872, y: 206}
+    JsonData: '{"amount":1,"modifyMax":false}'
+    areaPattern: {fileID: 0}
+  Dependencies: []
+  Variables: []
+  MaxLevel: 1
+  aiHint:
+    category: 5
+    basePriority: 30
+    cooldownTurns: 0
+    lowHPTargetBonus: 20
+    freshApplicationBonus: 15
+    targetsFriendlies: 0
+    estimatedValue: 10
+    isLocked: 0
+  GeneratedDescription: "<b>--- DESCRI\xC7\xC3O AUTOM\xC1TICA ---</b>\r\n- Esta \xE9
+    uma habilidade do tipo Passive.\r\n- Modifica Current AP em 1.\r\n"

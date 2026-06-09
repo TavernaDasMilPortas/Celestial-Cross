@@ -1,0 +1,104 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c88dc071a74705e4891f163f1fc40faf, type: 3}
+  m_Name: Ch_Campo de Treinamento
+  m_EditorClassIdentifier: Assembly-CSharp::CelestialCross.Progression.ChapterData
+  ChapterID: 08db3737-8041-4f58-ae4a-01de964afe4b
+  ChapterTitle: Campo de Treinamento
+  Description: Morgan ajuda os novatos a treinarem suas habilidades com os UFOs invocados
+    pela sua celestia
+  RequiredChapter: {fileID: 0}
+  RequiredUnitID: 
+  IsDiaryChapter: 0
+  Nodes:
+  - rid: 4322150705243357184
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 4322150705243357184
+      type: {class: CombatStoryNode, ns: CelestialCross.Progression, asm: Assembly-CSharp}
+      data:
+        NodeID: cda38d56-49ce-4c0e-b49d-a7dfcabc31b3
+        Title: Fase 1
+        IsAutoPlay: 1
+        EntryCost:
+          EnergyCost: 7
+          ItemCosts: []
+        Rewards:
+          FirstClearRewards:
+          - Type: 5
+            Amount: 0
+            ReferenceID: 
+            UnitRef: {fileID: 11400000, guid: 642b786367762f940aded926f739f0ba, type: 2}
+            PetRef: {fileID: 0}
+            ArtifactSetRef: {fileID: 0}
+            LootTableRef:
+              rid: -2
+          RepeatRewards:
+          - Type: 0
+            Amount: 10000
+            ReferenceID: 
+            UnitRef: {fileID: 0}
+            PetRef: {fileID: 0}
+            ArtifactSetRef: {fileID: 0}
+            LootTableRef:
+              rid: -2
+          - Type: 4
+            Amount: 10000
+            ReferenceID: 
+            UnitRef: {fileID: 0}
+            PetRef: {fileID: 0}
+            ArtifactSetRef: {fileID: 0}
+            LootTableRef:
+              rid: -2
+          LootTables:
+          - rid: 4322150705243357185
+          MilestoneRewards: []
+        MaxCompletions: -1
+        ResetPolicy:
+          ResetType: 0
+          ResetHourUTC: 3
+          ResetDayOfWeek: 1
+          WeeklyResetHourUTC: 3
+          ResetDayOfMonth: 1
+          MonthlyResetHourUTC: 3
+          CustomResetIntervalHours: 24
+        NodeIcon: {fileID: 21300000, guid: 238f041d6a6113a45b128674deb101e6, type: 3}
+        Requirement:
+          RequiresInvite: 0
+          RequiresPreviousNode: 0
+          PreviousNodeID: 
+          InviteCostOptions: []
+        LevelRef: {fileID: 11400000, guid: 5b3c0b90a8bd3984bb1bc99003a34ba7, type: 2}
+        DungeonRef: {fileID: 0}
+        SpecificLootTables: []
+        FixedSlots: []
+    - rid: 4322150705243357185
+      type: {class: ArtifactLootTable, ns: CelestialCross.Data.Loot, asm: Assembly-CSharp}
+      data:
+        BaseDropChance: 100
+        AllowedArtifactSets:
+        - {fileID: 11400000, guid: 1c4f1b892b6e20245a0e9ec4a942e09d, type: 2}
+        DropMatrix:
+          commonChance: 50
+          uncommonChance: 30
+          rareChance: 15
+          epicChance: 4
+          legendaryChance: 1
+          oneStarChance: 60
+          twoStarChance: 30
+          threeStarChance: 10
+          fourStarChance: 0
+          fiveStarChance: 0
+        NumberOfDrops: 10

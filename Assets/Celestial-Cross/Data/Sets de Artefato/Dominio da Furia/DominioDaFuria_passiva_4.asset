@@ -1,0 +1,88 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b74335336934364f92171120eea7025, type: 3}
+  m_Name: DominioDaFuria_passiva_4
+  m_EditorClassIdentifier: Assembly-CSharp::Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO
+  abilityName: Poder da Dor
+  abilityIcon: {fileID: 21300000, guid: 31dca23adbc5a70458efc291cb3f0e78, type: 3}
+  abilityDescription: Ao atacar, perde 10% da vida maxima e causa metade desse valor
+    em dano
+  displayRange: 0
+  NodeLinks:
+  - BaseNodeGuid: 46a080e9-c8cd-483d-a436-dfb8d9d935d3
+    PortName: Out
+    TargetNodeGuid: be7b3c07-b50a-423b-9f35-00afbb2b7f24
+    TargetPortName: In
+  - BaseNodeGuid: be7b3c07-b50a-423b-9f35-00afbb2b7f24
+    PortName: Out
+    TargetNodeGuid: 0f13927c-f5b9-4ddd-aa88-0b94af49b720
+    TargetPortName: In
+  - BaseNodeGuid: 0f13927c-f5b9-4ddd-aa88-0b94af49b720
+    PortName: Out
+    TargetNodeGuid: a7764ee6-e7d4-4336-a66d-24b91a211460
+    TargetPortName: In
+  - BaseNodeGuid: a7764ee6-e7d4-4336-a66d-24b91a211460
+    PortName: Out
+    TargetNodeGuid: 9cc69abd-54af-4f1f-9965-888a35f748eb
+    TargetPortName: In
+  NodeData:
+  - Guid: 46a080e9-c8cd-483d-a436-dfb8d9d935d3
+    NodeType: StartNode
+    NodeTitle: Start
+    Position: {x: 95, y: 200}
+    JsonData: '{"type":0,"subtype":0,"isBuff":true}'
+    areaPattern: {fileID: 0}
+  - Guid: be7b3c07-b50a-423b-9f35-00afbb2b7f24
+    NodeType: TriggerNode
+    NodeTitle: Trigger Event
+    Position: {x: 366, y: 218}
+    JsonData: '{"trigger":9}'
+    areaPattern: {fileID: 0}
+  - Guid: 0f13927c-f5b9-4ddd-aa88-0b94af49b720
+    NodeType: SacrificeHealthNode
+    NodeTitle: Sacrifice Health
+    Position: {x: 676, y: 218}
+    JsonData: '{"usePercentage":true,"amount":10.0,"outputVariable":"hp_perdido"}'
+    areaPattern: {fileID: 0}
+  - Guid: a7764ee6-e7d4-4336-a66d-24b91a211460
+    NodeType: VariableModifierNode
+    NodeTitle: Modifier
+    Position: {x: 984, y: 234}
+    JsonData: '{"variableName":"hp_perdido","operation":3,"value":2.0,"valueVariableReference":"","useCasterAttribute":false,"casterAttribute":0}'
+    areaPattern: {fileID: 0}
+  - Guid: 9cc69abd-54af-4f1f-9965-888a35f748eb
+    NodeType: VariableModifierNode
+    NodeTitle: Modifier
+    Position: {x: 1296, y: 257}
+    JsonData: '{"variableName":"bonus_flat_damage","operation":1,"value":0.0,"valueVariableReference":"hp_perdido","useCasterAttribute":false,"casterAttribute":0}'
+    areaPattern: {fileID: 0}
+  Dependencies: []
+  Variables:
+  - name: max_targets_6098
+    initialValue: 1
+    description: 
+  - name: hp_perdido
+    initialValue: 0
+    description: 
+  MaxLevel: 1
+  aiHint:
+    category: 1
+    basePriority: 80
+    cooldownTurns: 0
+    lowHPTargetBonus: 20
+    freshApplicationBonus: 15
+    targetsFriendlies: 1
+    estimatedValue: 10
+    isLocked: 0
+  GeneratedDescription: "<b>--- DESCRI\xC7\xC3O AUTOM\xC1TICA ---</b>\r\n- Esta \xE9
+    uma habilidade do tipo Passive.\r\n- Sacrifica 10% de Vida. Sa\xEDda: 'hp_perdido'.\r\n-
+    Modifica 'hp_perdido' (Divide 2).\r\n- Modifica 'bonus_flat_damage' (Add [hp_perdido]).\r\n"

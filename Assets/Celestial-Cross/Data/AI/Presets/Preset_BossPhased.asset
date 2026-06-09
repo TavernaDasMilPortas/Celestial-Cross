@@ -1,0 +1,229 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8cf6610ba3c29a74aa7d2416f7a095d4, type: 3}
+  m_Name: Preset_BossPhased
+  m_EditorClassIdentifier: Assembly-CSharp::Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.BehaviorTreeSO
+  treeName: Phased Boss (Complexo)
+  description: "Chefe complexo de 2 fases. Fase 1: Foca em ataques de \xE1rea. Fase
+    2 (HP < 40%): Ganha escudo, se cura e ataca intensamente."
+  NodeData:
+  - Guid: root
+    NodeType: BTRootEditorNode
+    NodeTitle: Root
+    Position: {x: 100, y: 300}
+    JsonData: 
+  - Guid: val_switch
+    NodeType: BTValueSwitchEditorNode
+    NodeTitle: Value Switch
+    Position: {x: 300, y: 300}
+    JsonData: '{"cases":[{"portName":"Fase2","operatorType":1,"threshold":40.0},{"portName":"Fase1","operatorType":4,"threshold":40.0}]}'
+  - Guid: get_hp_boss
+    NodeType: BTGetNumericDataEditorNode
+    NodeTitle: Get Numeric Data
+    Position: {x: 300, y: 500}
+    JsonData: '{"dataType":0}'
+  - Guid: sel_phase1
+    NodeType: BTSelectorEditorNode
+    NodeTitle: Selector Phase 1
+    Position: {x: 550, y: 100}
+    JsonData: '{"ports":["Passo_0","Passo_1","Passo_2"]}'
+  - Guid: seq_aoe
+    NodeType: BTSequenceEditorNode
+    NodeTitle: Sequence AoE
+    Position: {x: 800, y: -20}
+    JsonData: '{"ports":["Passo_0","Passo_1","Passo_2"]}'
+  - Guid: check_turn
+    NodeType: BTCheckValueEditorNode
+    NodeTitle: Check Value
+    Position: {x: 1050, y: -100}
+    JsonData: '{"operatorType":5,"threshold":2.0}'
+  - Guid: get_turn
+    NodeType: BTGetNumericDataEditorNode
+    NodeTitle: Get Numeric Data
+    Position: {x: 1300, y: -100}
+    JsonData: '{"dataType":4}'
+  - Guid: cond_aoe_hits
+    NodeType: BTConditionAoEHitCountEditorNode
+    NodeTitle: AoE Hit Count >= 2
+    Position: {x: 1050, y: 20}
+    JsonData: '{"minHitCount":2}'
+  - Guid: act_aoe
+    NodeType: BTActionUseAbilityEditorNode
+    NodeTitle: Cast AoE Damage
+    Position: {x: 1050, y: 140}
+    JsonData: '{"category":0}'
+  - Guid: act_atk_weak
+    NodeType: BTActionUseAbilityEditorNode
+    NodeTitle: Attack Weakest
+    Position: {x: 800, y: 200}
+    JsonData: '{"category":0}'
+  - Guid: act_move_p1
+    NodeType: BTActionMoveEditorNode
+    NodeTitle: Approach Target
+    Position: {x: 800, y: 320}
+    JsonData: '{"intent":0}'
+  - Guid: sel_phase2
+    NodeType: BTSelectorEditorNode
+    NodeTitle: Selector Phase 2
+    Position: {x: 550, y: 600}
+    JsonData: '{"ports":["Passo_0","Passo_1","Passo_2"]}'
+  - Guid: seq_shield
+    NodeType: BTSequenceEditorNode
+    NodeTitle: Sequence Buff Shield
+    Position: {x: 800, y: 450}
+    JsonData: '{"ports":["Passo_0","Passo_1"]}'
+  - Guid: cond_no_shield
+    NodeType: BTConditionTargetHasBuffEditorNode
+    NodeTitle: No UltimateShield Buff
+    Position: {x: 1050, y: 380}
+    JsonData: '{"isBuff":true,"modifierId":"UltimateShield"}'
+  - Guid: act_shield
+    NodeType: BTActionUseAbilityEditorNode
+    NodeTitle: Cast Shield Buff
+    Position: {x: 1050, y: 490}
+    JsonData: '{"category":2}'
+  - Guid: seq_panic_heal
+    NodeType: BTSequenceEditorNode
+    NodeTitle: Sequence Panic Heal
+    Position: {x: 800, y: 620}
+    JsonData: '{"ports":["Passo_0","Passo_1"]}'
+  - Guid: check_panic
+    NodeType: BTCheckValueEditorNode
+    NodeTitle: Check Value
+    Position: {x: 1050, y: 580}
+    JsonData: '{"operatorType":1,"threshold":20.0}'
+  - Guid: get_hp_panic
+    NodeType: BTGetNumericDataEditorNode
+    NodeTitle: Get Numeric Data
+    Position: {x: 1300, y: 580}
+    JsonData: '{"dataType":0}'
+  - Guid: act_heal_self
+    NodeType: BTActionUseAbilityEditorNode
+    NodeTitle: Cast Self Heal
+    Position: {x: 1050, y: 680}
+    JsonData: '{"category":1}'
+  - Guid: act_berserk_atk
+    NodeType: BTActionUseAbilityEditorNode
+    NodeTitle: Berserk Attack
+    Position: {x: 800, y: 780}
+    JsonData: '{"category":0}'
+  - Guid: get_self
+    NodeType: BTGetTargetEditorNode
+    NodeTitle: Get Self
+    Position: {x: 1350, y: 520}
+    JsonData: '{"faction":2,"strategy":0}'
+  - Guid: get_weakest
+    NodeType: BTGetTargetEditorNode
+    NodeTitle: Get Weakest Enemy
+    Position: {x: 1350, y: 200}
+    JsonData: '{"faction":0,"strategy":2}'
+  NodeLinks:
+  - ParentGuid: root
+    ParentPort: Child
+    ChildGuid: val_switch
+    ChildPort: Parent
+  - ParentGuid: get_hp_boss
+    ParentPort: Value
+    ChildGuid: val_switch
+    ChildPort: Value
+  - ParentGuid: val_switch
+    ParentPort: Fase1
+    ChildGuid: sel_phase1
+    ChildPort: Parent
+  - ParentGuid: val_switch
+    ParentPort: Fase2
+    ChildGuid: sel_phase2
+    ChildPort: Parent
+  - ParentGuid: sel_phase1
+    ParentPort: Passo_0
+    ChildGuid: seq_aoe
+    ChildPort: Parent
+  - ParentGuid: sel_phase1
+    ParentPort: Passo_1
+    ChildGuid: act_atk_weak
+    ChildPort: Parent
+  - ParentGuid: sel_phase1
+    ParentPort: Passo_2
+    ChildGuid: act_move_p1
+    ChildPort: Parent
+  - ParentGuid: seq_aoe
+    ParentPort: Passo_0
+    ChildGuid: check_turn
+    ChildPort: Parent
+  - ParentGuid: get_turn
+    ParentPort: Value
+    ChildGuid: check_turn
+    ChildPort: Value
+  - ParentGuid: seq_aoe
+    ParentPort: Passo_1
+    ChildGuid: cond_aoe_hits
+    ChildPort: Parent
+  - ParentGuid: seq_aoe
+    ParentPort: Passo_2
+    ChildGuid: act_aoe
+    ChildPort: Parent
+  - ParentGuid: sel_phase2
+    ParentPort: Passo_0
+    ChildGuid: seq_shield
+    ChildPort: Parent
+  - ParentGuid: sel_phase2
+    ParentPort: Passo_1
+    ChildGuid: seq_panic_heal
+    ChildPort: Parent
+  - ParentGuid: sel_phase2
+    ParentPort: Passo_2
+    ChildGuid: act_berserk_atk
+    ChildPort: Parent
+  - ParentGuid: seq_shield
+    ParentPort: Passo_0
+    ChildGuid: cond_no_shield
+    ChildPort: Parent
+  - ParentGuid: seq_shield
+    ParentPort: Passo_1
+    ChildGuid: act_shield
+    ChildPort: Parent
+  - ParentGuid: seq_panic_heal
+    ParentPort: Passo_0
+    ChildGuid: check_panic
+    ChildPort: Parent
+  - ParentGuid: get_hp_panic
+    ParentPort: Value
+    ChildGuid: check_panic
+    ChildPort: Value
+  - ParentGuid: seq_panic_heal
+    ParentPort: Passo_1
+    ChildGuid: act_heal_self
+    ChildPort: Parent
+  - ParentGuid: get_weakest
+    ParentPort: Target
+    ChildGuid: act_aoe
+    ChildPort: Target
+  - ParentGuid: get_weakest
+    ParentPort: Target
+    ChildGuid: act_atk_weak
+    ChildPort: Target
+  - ParentGuid: get_weakest
+    ParentPort: Target
+    ChildGuid: act_move_p1
+    ChildPort: Target
+  - ParentGuid: get_weakest
+    ParentPort: Target
+    ChildGuid: act_berserk_atk
+    ChildPort: Target
+  - ParentGuid: get_self
+    ParentPort: Target
+    ChildGuid: act_shield
+    ChildPort: Target
+  - ParentGuid: get_self
+    ParentPort: Target
+    ChildGuid: act_heal_self
+    ChildPort: Target

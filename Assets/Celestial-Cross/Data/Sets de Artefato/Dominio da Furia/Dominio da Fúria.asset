@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d389b35c32d0f0f49a37cffea31d942f, type: 3}
+  m_Name: "Dominio da F\xFAria"
+  m_EditorClassIdentifier: Assembly-CSharp::CelestialCross.Artifacts.ArtifactSet
+  id: 1
+  setName: Dominio da Furia
+  description: "Alguns dizem que a f\xFAria cega, mas quem domina a Celestia \xE9
+    capaz de usa-la como caminho para vit\xF3ria."
+  setFilterIcon: {fileID: 21300000, guid: 31dca23adbc5a70458efc291cb3f0e78, type: 3}
+  slotIcons:
+  - slot: 0
+    icon: {fileID: 21300000, guid: c2d1cabe55598ae41977f6aa53060063, type: 3}
+  - slot: 1
+    icon: {fileID: 21300000, guid: 0155ec6e61d1cc044be791c04aad9980, type: 3}
+  - slot: 2
+    icon: {fileID: 21300000, guid: 08480878a45f22a48ab8cca86cd4ad9c, type: 3}
+  - slot: 3
+    icon: {fileID: 21300000, guid: 2c8d4a41342faa344ba1aecd8eb2d490, type: 3}
+  - slot: 4
+    icon: {fileID: 21300000, guid: 06dffc4bb9489a643b71cf24916ca20c, type: 3}
+  - slot: 5
+    icon: {fileID: 21300000, guid: a7d45202d603c4c4ca6fc1e310989ccf, type: 3}
+  setBonuses:
+  - piecesRequired: 2
+    statBonuses:
+    - statType: 3
+      value: 10
+    passiveAbility: {fileID: 0}
+    passiveGraph: {fileID: 0}
+  - piecesRequired: 4
+    statBonuses: []
+    passiveAbility: {fileID: 0}
+    passiveGraph: {fileID: 11400000, guid: dd6c335508611954bb124b6b14c917c5, type: 2}
+  - piecesRequired: 6
+    statBonuses: []
+    passiveAbility: {fileID: 0}
+    passiveGraph: {fileID: 11400000, guid: 1b2b04fbc5b4b6b4db511a6fddead897, type: 2}

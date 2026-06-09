@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b31a651ac781c94dad64bc1c9744430, type: 3}
+  m_Name: PetReleaseConfig
+  m_EditorClassIdentifier: Assembly-CSharp::CelestialCross.Data.Pets.PetReleaseConfigSO
+  StardustPerStar: 000000000a000000190000003200000064000000fa00000090010000
+  PetSoulsPerStar: 00000000010000000200000003000000040000000500000006000000

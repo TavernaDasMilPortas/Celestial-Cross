@@ -1,25 +1,31 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public class TargetSelector : MonoBehaviour
 {
     public event Action<List<Unit>> OnTargetsConfirmed;
+    public event Action<List<Unit>> OnSelectedTargetsChanged;
+    public event Action<Unit> OnHoverChanged;
     public event Action OnCanceled;
 
     public IReadOnlyList<Vector2Int> SelectedPoints => selectedPoints;
 
-    Unit source;
-    int range;
+    Unit sourceUnit;
+    int selectionRange;
     TargetingRuleData targetingRule;
     AreaPatternData areaPattern;
-    int areaRotationSteps;
+    Direction currentRotation = Direction.N;
+    IEnumerable<GridTile> tileWhitelist;
+    bool autoRotateArea;
+
+    public Direction CurrentRotation => currentRotation;
 
     HashSet<Unit> validTargets = new();
     List<Unit> selectedTargets = new();
 
     HashSet<GridTile> validTiles = new();
-    List<GridTile> selectedTiles = new();
     List<GridTile> areaPreviewTiles = new();
     List<Vector2Int> selectedPoints = new();
 
@@ -45,18 +51,26 @@ public class TargetSelector : MonoBehaviour
         int selectionRange,
         TargetingRuleData rule = null,
         AreaPatternData selectedAreaPattern = null,
-        int selectedAreaRotationSteps = 0
+        Direction startingDirection = Direction.N,
+        IEnumerable<GridTile> tileWhitelist = null,
+        bool autoRotate = false
     )
     {
-        source = sourceUnit;
-        range = selectionRange;
+        ClearAreaPreview();
+        ClearSelection();
+        ClearPointSelection();
+        ClearAllHighlights();
+
+        this.sourceUnit = sourceUnit;
+        this.selectionRange = selectionRange;
         targetingRule = rule != null ? rule.Clone() : new TargetingRuleData();
         areaPattern = selectedAreaPattern;
-        areaRotationSteps = selectedAreaRotationSteps;
+        this.currentRotation = startingDirection;
+        this.tileWhitelist = tileWhitelist;
+        this.autoRotateArea = autoRotate;
 
         selectedTargets.Clear();
         validTargets.Clear();
-        selectedTiles.Clear();
         validTiles.Clear();
         areaPreviewTiles.Clear();
         selectedPoints.Clear();
@@ -70,7 +84,31 @@ public class TargetSelector : MonoBehaviour
         else
             PrepareUnitSelection();
 
-        Debug.Log($"[TargetSelector] Iniciado | Range: {range} | Type: {targetingRule.mode} | Origin: {targetingRule.origin}");
+        if (Celestial_Cross.Scripts.UI.TargetMultiplierUIManager.Instance != null)
+        {
+            Celestial_Cross.Scripts.UI.TargetMultiplierUIManager.Instance.RegisterTargetSelector(this);
+            Celestial_Cross.Scripts.UI.TargetMultiplierUIManager.Instance.BeginSelection(targetingRule);
+        }
+
+        Debug.Log($"[TargetSelector] Iniciado | Range: {selectionRange} | Type: {targetingRule.mode} | Origin: {targetingRule.origin}");
+    }
+
+    public void UpdateAreaConfig(AreaPatternData pattern, Direction rotation, bool autoRotate = false)
+    {
+        this.areaPattern = pattern;
+        this.currentRotation = rotation;
+        this.autoRotateArea = autoRotate;
+        if (isActive) RefreshAreaPreview();
+    }
+
+    public void UpdateWhitelist(IEnumerable<GridTile> whitelist)
+    {
+        this.tileWhitelist = whitelist;
+        if (isActive)
+        {
+            FindValidTiles();
+            HighlightValidTiles();
+        }
     }
 
     void ClampRule()
@@ -88,26 +126,35 @@ public class TargetSelector : MonoBehaviour
     void PrepareUnitSelection()
     {
         FindValidTargets();
-        HighlightValidTargets();
+        HighlightValidTargets(); 
         Debug.Log($"[TargetSelector] Alvos válidos: {validTargets.Count}");
     }
 
     void PrepareTileSelection()
     {
         FindValidTiles();
-        HighlightValidTiles();
+        HighlightValidTiles(); 
+        
+        // Também destacar Units válidas presas na área para melhor percepção visual no modo point
+        FindValidTargets();
+        HighlightValidTargets();
+        
         Debug.Log($"[TargetSelector] Tiles válidos: {validTiles.Count}");
     }
 
     void FindValidTargets()
     {
-        foreach (var unit in FindObjectsOfType<Unit>())
+        validTargets.Clear();
+        foreach (var unit in UnityEngine.Object.FindObjectsByType<Unit>(FindObjectsSortMode.None))
         {
+            if (unit == sourceUnit && !targetingRule.canTargetSelf)
+                continue;
+
             if (!CanTargetUnit(unit))
                 continue;
 
-            int dist = GridDistance(source.GridPosition, unit.GridPosition);
-            if (dist <= range)
+            int dist = GridDistance(sourceUnit.GridPosition, unit.GridPosition);
+            if (dist <= selectionRange)
                 validTargets.Add(unit);
         }
     }
@@ -117,9 +164,24 @@ public class TargetSelector : MonoBehaviour
         if (GridMap.Instance == null)
             return;
 
-        foreach (var tile in FindObjectsOfType<GridTile>())
+        validTiles.Clear();
+        foreach (var tile in GridMap.Instance.GetAllTiles())
         {
-            if (GridDistance(source.GridPosition, tile.GridPosition) <= range)
+            if (tile == null) continue;
+
+            // Se houver whitelist, apenas tiles nela podem ser válidos
+            if (tileWhitelist != null && !tileWhitelist.Contains(tile))
+                continue;
+
+            // Se a origem for Unit, o tile PRECISA estar ocupado para ser um alvo válido de clique
+            if (targetingRule.origin == TargetOrigin.Unit && !tile.IsOccupied)
+                continue;
+
+            // Previne que tiles 'Not Walkable' se tornem alvo de movimentos ou ações em áreas
+            if (!tile.IsWalkable && targetingRule.origin == TargetOrigin.Point)
+                continue;
+
+            if (GridDistance(sourceUnit.GridPosition, tile.GridPosition) <= selectionRange)
                 validTiles.Add(tile);
         }
     }
@@ -129,13 +191,13 @@ public class TargetSelector : MonoBehaviour
         if (unit == null)
             return false;
 
-        if (!targetingRule.canTargetSelf && unit == source)
+        if (!targetingRule.canTargetSelf && unit == sourceUnit)
             return false;
 
         return targetingRule.targetFaction switch
         {
-            TargetFaction.Allies => unit.GetType() == source.GetType(),
-            TargetFaction.Enemies => unit.GetType() != source.GetType(),
+            TargetFaction.Allies => unit.GetType() == sourceUnit.GetType(),
+            TargetFaction.Enemies => unit.GetType() != sourceUnit.GetType(),
             _ => true,
         };
     }
@@ -152,7 +214,7 @@ public class TargetSelector : MonoBehaviour
             tile.Highlight();
     }
 
-    void ClearAllHighlights()
+    public void ClearAllHighlights()
     {
         ClearAreaPreview();
 
@@ -170,95 +232,299 @@ public class TargetSelector : MonoBehaviour
             tile.HardClearAllStates();
     }
 
+    GridTile currentHoveredTile;
+    Unit currentHoveredUnit;
+
     void HandleMouseInput()
     {
         if (!Input.GetMouseButtonDown(0))
             return;
 
-        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        Ray ray;
+        if (RenderTextureInputManager.Instance != null)
+        {
+            if (!RenderTextureInputManager.Instance.TryGetRay(Input.mousePosition, out ray))
+                return;
+        }
+        else
+            ray = cam.ScreenPointToRay(Input.mousePosition);
+
         if (!Physics.Raycast(ray, out RaycastHit hit))
             return;
 
         if (targetingRule.origin == TargetOrigin.Point)
         {
-            GridTile tile = hit.collider.GetComponent<GridTile>();
+            GridTile clickedTile = hit.collider.GetComponentInParent<GridTile>();
 
             // Fallback: se clicou em uma Unit, tentar pegar o Tile embaixo dela
-            if (tile == null)
+            if (clickedTile == null)
             {
-                Unit unitHit = hit.collider.GetComponent<Unit>();
+                Unit unitHit = hit.collider.GetComponentInParent<Unit>();
                 if (unitHit != null && GridMap.Instance != null)
                 {
-                    tile = GridMap.Instance.GetTile(unitHit.GridPosition);
+                    clickedTile = GridMap.Instance.GetTile(unitHit.GridPosition);
                 }
             }
 
-            if (tile == null || !validTiles.Contains(tile))
+            if (clickedTile == null || !validTiles.Contains(clickedTile))
                 return;
 
-            ToggleTileSelection(tile);
+            currentHoveredTile = clickedTile; // Define como hover para cálculo de rotação
+            ToggleTileSelection(clickedTile);
             return;
         }
 
-        Unit unit = hit.collider.GetComponent<Unit>();
-        if (unit == null)
+        Unit clickedUnit = hit.collider.GetComponentInParent<Unit>();
+        if (clickedUnit == null)
             return;
 
-        if (!validTargets.Contains(unit))
+        if (!validTargets.Contains(clickedUnit))
         {
             Debug.Log("[TargetSelector] Clique em alvo inválido");
             return;
         }
 
-        ToggleSelection(unit);
+        currentHoveredUnit = clickedUnit; // Define como hover para cálculo de rotação
+        ToggleSelection(clickedUnit);
     }
 
     void ToggleSelection(Unit unit)
     {
         var outline = unit.GetComponent<UnitOutlineController>();
+        GridTile tileUnderUnit = GridMap.Instance?.GetTile(unit.GridPosition);
 
-        if (selectedTargets.Contains(unit))
+        if (selectedTargets.Count >= targetingRule.maxTargets)
         {
-            selectedTargets.Remove(unit);
-            outline?.SetSelected(false);
-            return;
+            if (targetingRule.maxTargets == 1)
+            {
+                if (selectedTargets.Contains(unit))
+                {
+                    Confirm();
+                    return;
+                }
+                else
+                {
+                    Unit previous = selectedTargets[0];
+                    previous.GetComponent<UnitOutlineController>()?.SetSelected(false);
+                    GridMap.Instance?.GetTile(previous.GridPosition)?.ClearSelect();
+                    selectedTargets.Clear();
+                }
+            }
+            else
+            {
+                Confirm();
+                return;
+            }
         }
-
-        if (!targetingRule.allowMultiple)
-            ClearSelection();
-
-        if (targetingRule.maxTargets > 0 && selectedTargets.Count >= targetingRule.maxTargets)
-            return;
+        else
+        {
+            if (targetingRule.maxTargets == 1 && selectedTargets.Count > 0)
+            {
+                Unit previous = selectedTargets[0];
+                previous.GetComponent<UnitOutlineController>()?.SetSelected(false);
+                GridMap.Instance?.GetTile(previous.GridPosition)?.ClearSelect();
+                selectedTargets.Clear();
+            }
+            else if (selectedTargets.Contains(unit) && !targetingRule.allowSameTargetMultipleTimes)
+            {
+                selectedTargets.Remove(unit);
+                outline?.SetSelected(false);
+                tileUnderUnit?.ClearSelect();
+                RefreshAreaPreview();
+                OnSelectedTargetsChanged?.Invoke(GetResolvedTargets(selectedTargets, selectedPoints));
+                return;
+            }
+        }
 
         selectedTargets.Add(unit);
         outline?.SetSelected(true);
+        tileUnderUnit?.Select();
+
+        RefreshAreaPreview();
+        OnSelectedTargetsChanged?.Invoke(GetResolvedTargets(selectedTargets, selectedPoints));
     }
 
     void ToggleTileSelection(GridTile tile)
     {
-        if (selectedTiles.Contains(tile))
+        if (selectedPoints.Count >= targetingRule.maxTargets)
         {
-            selectedTiles.Remove(tile);
-            selectedPoints.Remove(tile.GridPosition);
-            tile.ClearSelect();
-            RefreshAreaPreview();
-            return;
+            if (targetingRule.maxTargets == 1)
+            {
+                if (selectedPoints.Contains(tile.GridPosition))
+                {
+                    Confirm();
+                    return;
+                }
+                else
+                {
+                    Vector2Int previousPos = selectedPoints[0];
+                    GridMap.Instance?.GetTile(previousPos)?.ClearSelect();
+                    selectedPoints.Clear();
+                }
+            }
+            else
+            {
+                Confirm();
+                return;
+            }
+        }
+        else
+        {
+            if (targetingRule.maxTargets == 1 && selectedPoints.Count > 0)
+            {
+                Vector2Int previousPos = selectedPoints[0];
+                GridMap.Instance?.GetTile(previousPos)?.ClearSelect();
+                selectedPoints.Clear();
+            }
+            else if (selectedPoints.Contains(tile.GridPosition) && !targetingRule.allowSameTargetMultipleTimes)
+            {
+                selectedPoints.Remove(tile.GridPosition);
+                tile.ClearSelect();
+                RefreshAreaPreview();
+                OnSelectedTargetsChanged?.Invoke(GetResolvedTargets(selectedTargets, selectedPoints));
+                return;
+            }
         }
 
-        // Fix: Se não permite múltiplos alvos, limpar seleção anterior antes de adicionar nova
-        if (!targetingRule.allowMultiple)
-        {
-            ClearTileSelection();
-        }
-
-        if (targetingRule.maxTargets > 0 && selectedTiles.Count >= targetingRule.maxTargets)
-            return;
-
-        selectedTiles.Add(tile);
         selectedPoints.Add(tile.GridPosition);
         tile.Select();
 
-        RefreshAreaPreview();
+        RefreshAreaPreview(); 
+        OnSelectedTargetsChanged?.Invoke(GetResolvedTargets(selectedTargets, selectedPoints));
+    }
+
+    List<Unit> GetResolvedTargets(IEnumerable<Unit> baseTargets, IEnumerable<Vector2Int> basePoints)
+    {
+        HashSet<Vector2Int> affectedCells = new();
+
+        if (targetingRule.mode == TargetingMode.Area && areaPattern != null)
+        {
+            if (targetingRule.origin == TargetOrigin.Point)
+            {
+                foreach (var point in basePoints)
+                {
+                    foreach (var cell in AreaResolver.ResolveCells(point, areaPattern, currentRotation))
+                        affectedCells.Add(cell);
+                }
+            }
+            else
+            {
+                foreach (var target in baseTargets)
+                {
+                    if (target == null) continue;
+                    foreach (var cell in AreaResolver.ResolveCells(target.GridPosition, areaPattern, currentRotation))
+                        affectedCells.Add(cell);
+                }
+            }
+        }
+        else
+        {
+            foreach (var point in basePoints)
+                affectedCells.Add(point);
+        }
+
+        var result = UnityEngine.Object.FindObjectsByType<Unit>(FindObjectsSortMode.None)
+            .Where(u => affectedCells.Contains(u.GridPosition))
+            .Where(u => targetingRule.canTargetSelf || u != sourceUnit)
+            .ToList();
+
+        // Se allowSameTargetMultipleTimes for true, a duplicação no selectedTargets e selectedPoints
+        // DEVE ser refletida para os targets de base, sem Distinct.
+        if (targetingRule.allowSameTargetMultipleTimes)
+        {
+            // Se for targetOrigin de unit, os proprios baseTargets são a referência (repetidos).
+            // Em targetOrigin Point, a area pode acertar uma unidade n vezes se a area sobrepor,
+            // mas tipicamente só usamos point repetido para jogar N magias lá, gerando N vezes o dano nos result.
+            // Para repetição, precisamos devolver a lista completa multiplicada, mas isso afeta "Area".
+            // Para simplificar: adicionamos baseTargets.
+            List<Unit> finalResult = new List<Unit>();
+            foreach (var t in baseTargets)
+            {
+                if (t != null && (!targetingRule.canTargetSelf && t == sourceUnit ? false : true)) 
+                {
+                    finalResult.Add(t);
+                }
+            }
+
+            if (targetingRule.origin == TargetOrigin.Point)
+            {
+                // Para origin Point, a repetição está em basePoints
+                // Cada ponto gera os affectedCells, já lidamos com area. 
+                // Wait, o `affectedCells` acima é um HashSet, então sobreposições foram perdidas.
+                // Mas para simplicidade, se for allowMultiple, não queremos unificar as chamadas de area se elas ocorreram N vezes?
+                // Como não estamos calculando hit por hit do "Point", podemos apenas repetir as unidades atingidas pelo numero de pontos selecionados.
+                return result; 
+            }
+
+            return finalResult;
+        }
+        else
+        {
+            foreach (var t in baseTargets)
+                if (t != null && (!targetingRule.canTargetSelf && t == sourceUnit ? false : true) && !result.Contains(t)) result.Add(t);
+
+            return result.Distinct().ToList();
+        }
+    }
+
+    public HashSet<Vector2Int> GetFinalTargetArea()
+    {
+        HashSet<Vector2Int> finalArea = new HashSet<Vector2Int>();
+        
+        if (targetingRule.mode == TargetingMode.Area && areaPattern != null)
+        {
+            if (targetingRule.origin == TargetOrigin.Point)
+            {
+                foreach (var point in selectedPoints)
+                {
+                    foreach (var cell in AreaResolver.ResolveCells(point, areaPattern, currentRotation))
+                        finalArea.Add(cell);
+                }
+            }
+            else
+            {
+                foreach (var target in selectedTargets)
+                {
+                    if (target == null) continue;
+                    foreach (var cell in AreaResolver.ResolveCells(target.GridPosition, areaPattern, currentRotation))
+                        finalArea.Add(cell);
+                }
+            }
+        }
+        else
+        {
+            if (targetingRule.origin == TargetOrigin.Point)
+            {
+                foreach (var point in selectedPoints)
+                    finalArea.Add(point);
+            }
+            else
+            {
+                foreach (var target in selectedTargets)
+                {
+                    if (target == null) continue;
+                    finalArea.Add(target.GridPosition);
+                }
+            }
+        }
+
+        return finalArea;
+    }
+
+    void Confirm()
+    {
+        OnTargetsConfirmed?.Invoke(GetResolvedTargets(selectedTargets, selectedPoints));
+        isActive = false;
+        ClearAllHighlights();
+    }
+
+    void Cancel()
+    {
+        isActive = false;
+        ClearAllHighlights();
+        ClearSelection();
+        ClearPointSelection();
+        OnCanceled?.Invoke();
     }
 
     IEnumerable<Vector2Int> GetPreviewOrigins()
@@ -273,6 +539,17 @@ public class TargetSelector : MonoBehaviour
 
         foreach (var target in selectedTargets)
             yield return target.GridPosition;
+    }
+
+    void OnDestroy()
+    {
+        ClearAllHighlights();
+        
+        if (currentHoveredUnit != null)
+            UnitHoverDetector.ForceHoverEnd(currentHoveredUnit);
+            
+        currentHoveredTile = null;
+        currentHoveredUnit = null;
     }
 
     void ClearAreaPreview()
@@ -298,15 +575,37 @@ public class TargetSelector : MonoBehaviour
     {
         ClearAreaPreview();
 
-        if (targetingRule.mode != TargetingMode.Area || areaPattern == null)
+        if (targetingRule == null || targetingRule.mode != TargetingMode.Area || areaPattern == null)
             return;
 
         if (GridMap.Instance == null)
             return;
 
+        if (autoRotateArea && areaPattern.canRotate && sourceUnit != null)
+        {
+            Vector2Int targetPos = sourceUnit.GridPosition;
+            
+            if (targetingRule.origin == TargetOrigin.Point)
+            {
+                if (selectedPoints.Count > 0)
+                    targetPos = selectedPoints.Last();
+                else if (currentHoveredTile != null)
+                    targetPos = currentHoveredTile.GridPosition;
+            }
+            else if (targetingRule.origin == TargetOrigin.Unit)
+            {
+                if (selectedTargets.Count > 0)
+                    targetPos = selectedTargets.Last().GridPosition;
+                else if (currentHoveredUnit != null)
+                    targetPos = currentHoveredUnit.GridPosition;
+            }
+            
+            currentRotation = CalculateDirectionTowards(sourceUnit.GridPosition, targetPos);
+        }
+
         foreach (var origin in GetPreviewOrigins())
         {
-            foreach (var cell in AreaResolver.ResolveCells(origin, areaPattern, areaRotationSteps))
+            foreach (var cell in AreaResolver.ResolveCells(origin, areaPattern, currentRotation))
             {
                 var previewTile = GridMap.Instance.GetTile(cell);
                 if (previewTile == null || areaPreviewTiles.Contains(previewTile))
@@ -325,16 +624,21 @@ public class TargetSelector : MonoBehaviour
             }
         }
 
-        foreach (var selectedTile in selectedTiles)
-            selectedTile.Select();
+        foreach (var point in selectedPoints)
+        {
+            var tile = GridMap.Instance.GetTile(point);
+            if (tile != null) tile.Select();
+        }
     }
 
-    void ClearTileSelection()
+    void ClearPointSelection()
     {
-        foreach (var tile in selectedTiles)
-            tile.ClearSelect();
+        foreach (var point in selectedPoints)
+        {
+            var tile = GridMap.Instance?.GetTile(point);
+            if (tile != null) tile.ClearSelect();
+        }
 
-        selectedTiles.Clear();
         selectedPoints.Clear();
         RefreshAreaPreview();
     }
@@ -342,50 +646,34 @@ public class TargetSelector : MonoBehaviour
 
     void HandleConfirmCancel()
     {
-        if (Input.GetKeyDown(KeyCode.Return))
-        {
-            int count = targetingRule.origin == TargetOrigin.Point
-                ? selectedTiles.Count
-                : selectedTargets.Count;
-
-            if (count < targetingRule.minTargets)
-            {
-                Debug.Log($"[TargetSelector] Selecione pelo menos {targetingRule.minTargets} alvo(s)");
-                return;
-            }
-
-            Confirm();
-        }
+        // Enter removed or ignored because we auto-confirm now.
 
         if (Input.GetKeyDown(KeyCode.Escape))
             Cancel();
     }
 
-    void Confirm()
-    {
-        isActive = false;
-
-        ClearAllHighlights();
-        OnTargetsConfirmed?.Invoke(new List<Unit>(selectedTargets));
-
-        Destroy(this);
-    }
-
-    void Cancel()
-    {
-        isActive = false;
-
-        ClearAllHighlights();
-        selectedTargets.Clear();
-        selectedTiles.Clear();
-        selectedPoints.Clear();
-
-        OnCanceled?.Invoke();
-        Destroy(this);
-    }
-
     int GridDistance(Vector2Int a, Vector2Int b)
     {
-        return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
+        return Mathf.Max(Mathf.Abs(a.x - b.x), Mathf.Abs(a.y - b.y));
+    }
+
+    Direction CalculateDirectionTowards(Vector2Int from, Vector2Int to)
+    {
+        int dx = to.x - from.x;
+        int dy = to.y - from.y;
+        
+        if (dx == 0 && dy == 0) return currentRotation; 
+        
+        if (Mathf.Abs(dx) > Mathf.Abs(dy)) {
+            return dx > 0 ? Direction.E : Direction.W;
+        } else if (Mathf.Abs(dy) > Mathf.Abs(dx)) {
+            return dy > 0 ? Direction.N : Direction.S;
+        } else {
+            if (dx > 0 && dy > 0) return Direction.NE;
+            if (dx > 0 && dy < 0) return Direction.SE;
+            if (dx < 0 && dy < 0) return Direction.SW;
+            if (dx < 0 && dy > 0) return Direction.NW;
+        }
+        return Direction.N;
     }
 }

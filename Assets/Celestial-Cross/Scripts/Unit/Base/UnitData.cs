@@ -1,56 +1,131 @@
 using UnityEngine;
 using System.Collections.Generic;
+using Celestial_Cross.Scripts.Abilities;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
-[CreateAssetMenu(menuName = "Units/Unit Data")]
+public enum UnitRole
+{
+    Attacker,   // Foco puro em causar dano
+    Tank,       // Sobrevivência, trava de movimentação e redirecionamento de ameaça
+    Support     // Utilitários, manter equipe viva ou manipular combate
+}
+
+public enum UnitClass
+{
+    Warrior,    // Dano de curtas distâncias consistente, aguenta pancada
+    Mage,       // Danos em áreas vastas, alto custo de mana e baixa sobrevivência
+    Ranger,     // Ataques focados bem distantes
+    Assassin,   // Foca em matar suportes/magos alheios numa explosão
+    Healer,     // Mantém a sobrevivência direta resgatando HP
+    Buffer,     // Concede vantagem tática como velocidade, escudos e +ataque
+    Hexer,      // Especializado em jogar debuffs, veneno, redução de defesa/velocidade
+    Summoner    // Pode colocar obstáculos reais ou pets menores em campo
+}
+
+[CreateAssetMenu(menuName = "Celestial Cross/Units/Unit Data")]
 public class UnitData : ScriptableObject
 {
+    [SerializeField, HideInInspector]
+    private string unitID;
+    public string UnitID => unitID;
     public string displayName;
 
-    [Header("Legacy Stats")]
-    public int maxHealth;
-    public int speed;
+    [Header("Tactical Identity")]
+    public UnitRole role;
+    public UnitClass unitClass;
+    public int displacement = 3;
+    public int baseRange = 1;
 
-    [Header("Magical Girl Stats")]
+    [Header("AI")]
+    [Tooltip("Árvore de comportamento padrão, caso essa unidade seja inimiga ou use autofarm.")]
+    public Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.BehaviorTreeSO defaultBehaviorTree;
+
+    [Header("Stats Base")]
+    public int maxAP = 1;
+    public int maxHealth = 10;
+    public int physicalAttack = 5;
+
+    [Header("UI & Visuals")]
+    public Sprite icon;
+    public Sprite sprite;
+
+    [Tooltip("Animação base usada quando a unidade está apenas esperando.")]
+    public AnimationClip idleAnim;
+    
+    [Tooltip("Animação usada quando for o turno desta unidade no combate.")]
+    public AnimationClip combatIdleAnim;
+
+    [Header("Stats")]
     public CombatStats baseStats = new CombatStats(30, 10, 6, 7, 7, 1);
-    public AbilityData characterAbility;
-    public PetData defaultPet;
+    public CombatStats maxStats = new CombatStats(300, 100, 60, 70, 7, 1);
 
+    /// <summary>
+    /// Calcula os status baseados no nível atual, interpolando entre baseStats e maxStats.
+    /// O referenceMaxLevel define em qual nível a unidade atinge os maxStats (geralmente vindo do LevelingConfig).
+    /// </summary>
+    public CombatStats GetStatsAtLevel(int level, int referenceMaxLevel = 100)
+    {
+        if (referenceMaxLevel <= 1) return baseStats;
+        float factor = Mathf.Clamp01((float)(level - 1) / (referenceMaxLevel - 1));
+        return new CombatStats(
+            // Stats que escalam com level:
+            Mathf.RoundToInt(baseStats.health + (maxStats.health - baseStats.health) * factor),
+            Mathf.RoundToInt(baseStats.attack + (maxStats.attack - baseStats.attack) * factor),
+            Mathf.RoundToInt(baseStats.defense + (maxStats.defense - baseStats.defense) * factor),
+            Mathf.RoundToInt(baseStats.speed + (maxStats.speed - baseStats.speed) * factor),
+            // Stats que NÃO escalam com level:
+            baseStats.criticalChance,
+            baseStats.effectAccuracy,
+            baseStats.criticalDamage,
+            baseStats.effectResistance
+        );
+    }
+
+
+    [Header("Ability Graphs")]
+    [Tooltip("Lista de habilidades usando o sistema de Grafos.")]
+    public List<Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO> abilityGraphs = new();
+
+    [Header("Constellation")]
+    [Tooltip("Configuração completa da constelação (Formato + Habilidades).")]
+    public CelestialCross.Data.ConstellationConfigSO constellationConfig;
+
+    [Header("Skill Tree Config")]
+    [Tooltip("Configuração da árvore de habilidades da unidade.")]
+    public Celestial_Cross.Scripts.Abilities.SkillTree.SkillTreeConfigSO skillTreeConfig;
+
+    [Header("Actions (Native)")]
     [SerializeReference]
-    public List<UnitActionData> actions = new();
+    public List<UnitActionData> nativeActions = new();
 
-    public CombatStats GetCombinedStats(PetData equippedPet = null)
+    public List<Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO> GetAbilityGraphs() => abilityGraphs;
+
+    // Adaptado para Unit.cs - UnitActionContext se comunica com UnitActionData
+    public IEnumerable<UnitActionData> GetExecutableDefinitions()
     {
-        PetData selectedPet = equippedPet != null ? equippedPet : defaultPet;
-        CombatStats total = baseStats;
-
-        if (selectedPet != null)
-            total += selectedPet.baseStats;
-
-        return total;
-    }
-
-    public AbilityData GetCharacterAbility() => characterAbility;
-
-    public AbilityData GetPetAbility(PetData equippedPet = null)
-    {
-        PetData selectedPet = equippedPet != null ? equippedPet : defaultPet;
-        return selectedPet != null ? selectedPet.ability : null;
-    }
-
-    public IEnumerable<IExecutableDefinitionData> GetExecutableDefinitions(PetData equippedPet = null)
-    {
-        foreach (var action in actions)
+        foreach (var action in nativeActions)
         {
             if (action != null)
                 yield return action;
         }
-
-        AbilityData charAbility = GetCharacterAbility();
-        if (charAbility != null && charAbility.IsActive && charAbility.GetExecutableDefinition() != null)
-            yield return charAbility.GetExecutableDefinition();
-
-        AbilityData petAbility = GetPetAbility(equippedPet);
-        if (petAbility != null && petAbility.IsActive && petAbility.GetExecutableDefinition() != null)
-            yield return petAbility.GetExecutableDefinition();
     }
+
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        string assetPath = AssetDatabase.GetAssetPath(this);
+        if (string.IsNullOrWhiteSpace(assetPath))
+            return;
+
+        string guid = AssetDatabase.AssetPathToGUID(assetPath);
+        if (string.IsNullOrWhiteSpace(guid) || unitID == guid)
+            return;
+
+        unitID = guid;
+        EditorUtility.SetDirty(this);
+    }
+#endif
 }
+

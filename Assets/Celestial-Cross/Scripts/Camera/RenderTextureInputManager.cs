@@ -1,0 +1,279 @@
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using System.Collections.Generic;
+
+/// <summary>
+/// Converte os cliques na tela (Canvas) para raios da câmera interna usando Render Texture.
+/// </summary>
+public class RenderTextureInputManager : MonoBehaviour
+{
+    public static RenderTextureInputManager Instance;
+
+    [Header("Configurações")]
+    public RawImage renderTargetUI;
+    public Camera gameCamera;
+    
+    [Header("Auto Configuração")]
+    public bool createAndAssignTextureOnStart = true;
+    public int textureResolutionStr = 1024; // Resolução quadrada
+
+    public bool IsInitialized { get; private set; } = false;
+
+    void Awake()
+    {
+        Instance = this;
+    }
+
+    System.Collections.IEnumerator Start()
+    {
+        // Aguarda o final do frame para garantir que os layouts da UI (CanvasScaler, etc.) estejam calculados
+        yield return new WaitForEndOfFrame();
+
+        if (createAndAssignTextureOnStart && renderTargetUI != null && gameCamera != null)
+        {
+            float aspect = 1f;
+            if (renderTargetUI.rectTransform != null)
+            {
+                float uiW = renderTargetUI.rectTransform.rect.width;
+                float uiH = renderTargetUI.rectTransform.rect.height;
+                if (uiW > 0.01f && uiH > 0.01f)
+                {
+                    aspect = uiW / uiH;
+                }
+            }
+
+            int width = textureResolutionStr;
+            int height = textureResolutionStr;
+
+            if (aspect > 1f)
+            {
+                height = Mathf.RoundToInt(textureResolutionStr / aspect);
+            }
+            else
+            {
+                width = Mathf.RoundToInt(textureResolutionStr * aspect);
+            }
+
+            // Garante dimensões válidas de textura
+            width = Mathf.Max(width, 16);
+            height = Mathf.Max(height, 16);
+
+            // Cria o Render Texture com o aspect ratio correto das dimensões da UI
+            RenderTexture rt = new RenderTexture(width, height, 24);
+            rt.name = "GameRenderTexture";
+            
+            gameCamera.targetTexture = rt;
+            renderTargetUI.texture = rt;
+        }
+
+        IsInitialized = true;
+    }
+
+    /// <summary>
+    /// Converte um ponto da tela para um Ray que sai da câmera que possui a Render Texture.
+    /// </summary>
+    public bool TryGetRay(Vector2 screenPos, out Ray ray)
+    {
+        if (renderTargetUI == null || gameCamera == null || gameCamera.targetTexture == null)
+        {
+            ray = default;
+            return false;
+        }
+
+        if (!IsScreenPointOverExclusiveRenderTarget(screenPos))
+        {
+            ray = default;
+            return false;
+        }
+
+        RectTransform rt = renderTargetUI.rectTransform;
+        Canvas canvas = renderTargetUI.canvas;
+        Camera uiCamera = canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay ? canvas.worldCamera : null;
+        
+        // Verifica a posição do toque relativa ao Raw Image
+        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(rt, screenPos, uiCamera, out Vector2 localPoint))
+        {
+            // Normaliza o ponto para os limites do tamanho (0 a 1 em cada eixo)
+            Vector2 normalizedPoint = new Vector2(
+                (localPoint.x + rt.rect.width * rt.pivot.x) / rt.rect.width,
+                (localPoint.y + rt.rect.height * rt.pivot.y) / rt.rect.height
+            );
+
+            // Traduz a coordenada normalizada para resolução de pixels da câmera
+            Vector2 camPixelPos = new Vector2(
+                normalizedPoint.x * gameCamera.pixelWidth,
+                normalizedPoint.y * gameCamera.pixelHeight
+            );
+
+            ray = gameCamera.ScreenPointToRay(camPixelPos);
+            return true;
+        }
+
+        ray = default;
+        return false;
+    }
+
+    /// <summary>
+    /// Converte uma posição do mundo 3D para a posição no espaço de mundo da UI (Canvas) correspondente sobre a RawImage.
+    /// Ideal para posicionar elementos de UI (como popups de dano) definindo diretamente a propriedade rectTransform.position.
+    /// </summary>
+    public bool WorldToCanvasWorldPoint(Vector3 worldPos, out Vector3 canvasWorldPos)
+    {
+        if (gameCamera == null || renderTargetUI == null)
+        {
+            canvasWorldPos = Vector3.zero;
+            return false;
+        }
+
+        // 1. Converte do Mundo para os pixels da Render Texture (coordenadas da câmera interna)
+        Vector3 camPixelPos = gameCamera.WorldToScreenPoint(worldPos);
+        
+        if (camPixelPos.z < 0) // Objeto atrás da câmera
+        {
+            canvasWorldPos = Vector3.zero;
+            return false;
+        }
+
+        // 2. Normaliza a posição (0 a 1) baseada na resolução da câmera (Render Texture)
+        Vector2 normalizedPoint = new Vector2(
+            camPixelPos.x / gameCamera.pixelWidth,
+            camPixelPos.y / gameCamera.pixelHeight
+        );
+
+        // 3. Converte a posição normalizada para o espaço local do RectTransform da RawImage
+        RectTransform rt = renderTargetUI.rectTransform;
+        Vector2 localPoint = new Vector2(
+            (normalizedPoint.x * rt.rect.width) - (rt.rect.width * rt.pivot.x),
+            (normalizedPoint.y * rt.rect.height) - (rt.rect.height * rt.pivot.y)
+        );
+
+        // 4. Converte o ponto local da RawImage para a posição de mundo da UI
+        canvasWorldPos = rt.TransformPoint(localPoint);
+        return true;
+    }
+
+    /// <summary>
+    /// Converte uma posição do mundo para a posição de tela correspondente sobre a RawImage.
+    /// Útil para posicionar elementos de UI (como popups de dano) sobre objetos do mundo renderizados na Render Texture.
+    /// </summary>
+    public bool WorldToScreenPoint(Vector3 worldPos, out Vector2 screenPos)
+    {
+        if (gameCamera == null || renderTargetUI == null)
+        {
+            screenPos = Vector2.zero;
+            return false;
+        }
+
+        // 1. Converte do Mundo para os pixels da Render Texture (coordenadas da câmera interna)
+        Vector3 camPixelPos = gameCamera.WorldToScreenPoint(worldPos);
+        
+        if (camPixelPos.z < 0) // Objeto atrás da câmera
+        {
+            screenPos = Vector2.zero;
+            return false;
+        }
+
+        // 2. Normaliza a posição (0 a 1) baseada na resolução da câmera (Render Texture)
+        Vector2 normalizedPoint = new Vector2(
+            camPixelPos.x / gameCamera.pixelWidth,
+            camPixelPos.y / gameCamera.pixelHeight
+        );
+
+        // 3. Converte a posição normalizada para o espaço local do RectTransform da RawImage
+        RectTransform rt = renderTargetUI.rectTransform;
+        Vector2 localPoint = new Vector2(
+            (normalizedPoint.x * rt.rect.width) - (rt.rect.width * rt.pivot.x),
+            (normalizedPoint.y * rt.rect.height) - (rt.rect.height * rt.pivot.y)
+        );
+
+        // 4. Converte de local do RectTransform para Screen Point (espaço do Canvas)
+        Canvas canvas = renderTargetUI.canvas;
+        Camera uiCamera = canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay ? canvas.worldCamera : null;
+        
+        // TransformPoint converte de local para mundo (o mundo da UI)
+        screenPos = RectTransformUtility.WorldToScreenPoint(uiCamera, rt.TransformPoint(localPoint));
+        return true;
+    }
+
+    public bool IsScreenPointOverRenderTarget(Vector2 screenPos)
+    {
+        if (renderTargetUI == null)
+            return false;
+
+        Canvas canvas = renderTargetUI.canvas;
+        Camera uiCamera = canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay ? canvas.worldCamera : null;
+        return RectTransformUtility.RectangleContainsScreenPoint(renderTargetUI.rectTransform, screenPos, uiCamera);
+    }
+
+    public bool IsScreenPointOverExclusiveRenderTarget(Vector2 screenPos)
+    {
+        if (renderTargetUI == null)
+            return false;
+
+        Canvas canvas = renderTargetUI.canvas;
+        Camera uiCamera = canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay ? canvas.worldCamera : null;
+        RectTransform rt = renderTargetUI.rectTransform;
+
+        if (!RectTransformUtility.RectangleContainsScreenPoint(rt, screenPos, uiCamera))
+            return false;
+
+        if (EventSystem.current == null)
+            return true;
+
+        var eventData = new PointerEventData(EventSystem.current)
+        {
+            position = screenPos
+        };
+
+        var results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventData, results);
+
+        if (results.Count == 0)
+            return true;
+
+        foreach (var result in results)
+        {
+            if (result.gameObject == null)
+                continue;
+
+            if (result.gameObject == rt.gameObject || result.gameObject.transform.IsChildOf(rt.transform))
+                return true;
+
+            // Se o topo for UI decorativa (ex.: moldura, imagem, máscara), não bloqueie o RawImage.
+            // Só UI interativa deve impedir o uso da render texture.
+            if (!ShouldBlockRenderTargetForObject(result.gameObject))
+                continue;
+
+            return false;
+        }
+
+        return false;
+    }
+
+    bool ShouldBlockRenderTargetForObject(GameObject uiObject)
+    {
+        if (uiObject == null)
+            return false;
+
+        if (uiObject.GetComponent<Selectable>() != null)
+            return true;
+
+        // Botões customizados ou controles que não herdam de Selectable podem marcar isso via componente próprio.
+        if (uiObject.GetComponent<IPointerClickHandler>() != null)
+            return true;
+
+        if (uiObject.GetComponent<IPointerDownHandler>() != null)
+            return true;
+
+        if (uiObject.GetComponent<IPointerUpHandler>() != null)
+            return true;
+
+        return false;
+    }
+
+    public bool IsRaycastTargetReady()
+    {
+        return renderTargetUI != null && gameCamera != null;
+    }
+}

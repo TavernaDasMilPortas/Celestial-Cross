@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d40ee282d0c8984b934ffbbbb9c91f1, type: 3}
+  m_Name: Healing
+  m_EditorClassIdentifier: Assembly-CSharp::Celestial_Cross.Scripts.Abilities.AbilityBlueprint
+  abilityName: Healing
+  abilityIcon: {fileID: 0}
+  abilityDescription: 
+  displayRange: 1
+  abilityType: 1
+  isPassive: 0
+  isPersistentCondition: 0
+  durationInTurns: 0
+  effectSteps:
+  - rid: 2614504980249575427
+  modifierSteps: []
+  modifiers: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 2614504980249575427
+      type: {class: EffectStep, ns: Celestial_Cross.Scripts.Abilities, asm: Assembly-CSharp}
+      data:
+        trigger: 0
+        reusePreviousTargets: 0
+        targetingStrategy:
+          rid: 2614504980249575428
+        effects:
+        - rid: 2614504980249575429
+    - rid: 2614504980249575428
+      type: {class: ManualTargetingStrategy, ns: Celestial_Cross.Scripts.Abilities.Targeting, asm: Assembly-CSharp}
+      data:
+        RequiresManualSelection: 1
+        ManualRule:
+          mode: 0
+          origin: 0
+          allowMultiple: 0
+          minTargets: 1
+          maxTargets: 1
+          canTargetSelf: 0
+          targetFaction: 0
+        AreaPattern: {fileID: 11400000, guid: 37f1be3e0254c9647a13fc3549c4d814, type: 2}
+        PreferredDirection: 0
+        AutoRotateArea: 1
+        ManualRange: 1
+    - rid: 2614504980249575429
+      type: {class: HealEffectData, ns: Celestial_Cross.Scripts.Abilities, asm: Assembly-CSharp}
+      data:
+        conditions: []
+        requireAllConditions: 1
+        scaleWithDistance: 0
+        distanceScaleFactor: 0.1
+        valueType: 0
+        amount: 10
+        baseAttribute: 0
+        canCritHeal: 1
+        allowOverheal: 0

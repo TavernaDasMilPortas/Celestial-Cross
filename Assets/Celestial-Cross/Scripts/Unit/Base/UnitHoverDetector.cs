@@ -3,6 +3,9 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public class UnitHoverDetector : MonoBehaviour
 {
+    public static event System.Action<Unit> OnHoverStarted;
+    public static event System.Action<Unit> OnHoverEnded;
+
     Unit unit;
     UnitOutlineController outline;
 
@@ -12,15 +15,25 @@ public class UnitHoverDetector : MonoBehaviour
         outline = GetComponent<UnitOutlineController>();
     }
 
-    void OnMouseEnter()
+    public void ManualMouseEnter()
     {
         outline?.SetHover(true);
-        UnitInfoUI.Instance.Show(unit);
+        ForceHover(unit);
     }
 
-    void OnMouseExit()
+    public void ManualMouseExit()
     {
         outline?.SetHover(false);
-        UnitInfoUI.Instance.Hide(unit);
+        ForceHoverEnd(unit);
+    }
+
+    public static void ForceHover(Unit u)
+    {
+        OnHoverStarted?.Invoke(u);
+    }
+
+    public static void ForceHoverEnd(Unit u)
+    {
+        OnHoverEnded?.Invoke(u);
     }
 }
