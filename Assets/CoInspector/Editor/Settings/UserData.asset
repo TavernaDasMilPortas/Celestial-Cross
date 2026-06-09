@@ -310,7 +310,7 @@ MonoBehaviour:
       recentlyClickedContents: []
     sceneGUID: aae55989abe44784197dd80958fdd0f5
     sceneName: HubScene
-    lastSaveTimePrint: 11:21 PM (June 8, 2026)
+    lastSaveTimePrint: 09:53 AM (June 9, 2026)
     gracePeriod: 3
     activeIndex: 0
     checkingToLoad: 0
@@ -391,32 +391,32 @@ MonoBehaviour:
     playModeTransforms: []
     historyAssets:
     - assetGUIDs:
-      - 8105016687592461f977c054a80ce2f2
+      - 6d7fc2a7a7b163446a4695cb3bdd963a
+    - assetGUIDs:
+      - 5efd3494a46632541b34e2ee635717eb
+    - assetGUIDs:
+      - a4aa5e7ef9df1264c89076cc5b331e51
+    - assetGUIDs:
+      - 47da1726115063d46ade8f5b25c49e2d
+    - assetGUIDs:
+      - 6433de88c4c815c478ea2e14983d4550
+    - assetGUIDs:
+      - c3d451f524ccd6a41a425bd1b8cd8858
     - assetGUIDs:
       - ad9baf3ac3e35c948bf6a50e91e91473
+    - assetGUIDs:
+      - 8105016687592461f977c054a80ce2f2
     - assetGUIDs:
       - d115e0bc68e6adf42a7c6f7c6d914978
     - assetGUIDs:
       - 701c5cb8b2be9224eb39101ce2d19bfe
     - assetGUIDs:
       - b735d31839abab440b75d89a1a6be66c
-    - assetGUIDs:
-      - 5ce4d2489b6654048a704997ca5ba3fc
-    - assetGUIDs:
-      - e625a3e42d710e542b4c986f567fb23b
-    - assetGUIDs:
-      - d088c2f0ae89cd44280a9fbfb5c3dc8c
-    - assetGUIDs:
-      - a03c32ec404b64125b88769f42e5b8a5
-    - assetGUIDs:
-      - 1c4f1b892b6e20245a0e9ec4a942e09d
-    - assetGUIDs:
-      - dd6c335508611954bb124b6b14c917c5
-    targetObject: {fileID: 11400000, guid: a9644b9cf968da748bbf12a4c0810c07, type: 2}
+    targetObject: {fileID: 11400000, guid: 6d7fc2a7a7b163446a4695cb3bdd963a, type: 2}
     targetObjects: []
-    lastSelectedAsset: Assets/CoInspector/Editor/Core/Helpers/MissingScriptManager.asset
+    lastSelectedAsset: Assets/Celestial-Cross/Prefabs/Units/Enemies/Alien_Ranged_base/Data/Alien_Ranged_base.asset
     lastClickedTab: -1
-    previousTab: 11
+    previousTab: 0
   - tracker:
       mostClicked: []
       recentlyClicked: []
@@ -716,7 +716,7 @@ MonoBehaviour:
       mostClicked:
       - paths:
         - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/Modals_Container[0]"}'
-        count: 18
+        count: 19
         gameObjects:
         - {fileID: 0}
       - paths:
@@ -730,13 +730,13 @@ MonoBehaviour:
         gameObjects:
         - {fileID: 0}
       - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/Modals_Container[0]/ArtifactSetBonusModal[0]"}'
-        count: 8
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]"}'
+        count: 10
         gameObjects:
         - {fileID: 0}
       - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]"}'
-        count: 7
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/Modals_Container[0]/ArtifactSetBonusModal[0]"}'
+        count: 8
         gameObjects:
         - {fileID: 0}
       - paths:
@@ -760,11 +760,169 @@ MonoBehaviour:
         gameObjects:
         - {fileID: 0}
       - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]/SlotsGrid[0]/Slot_1[0]/Slot_1[0]/Icon[0]"}'
-        count: 1
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]"}'
+        count: 2
         gameObjects:
         - {fileID: 0}
       recentlyClicked:
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]"}'
+        count: 1
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/Modals_Container[0]"}'
+        count: 1
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitNameContainerBorder[0]/UnitNameContainer[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_3[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_1[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitSpriteConainerBorder[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitSpriteConainerBorder[0]/UnitSpriteContainer[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/Fill
+          Background[0]/Fill[0]/XpText[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitSpriteConainerBorder[0]/UnitSpriteContainer[0]/Mask[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/Fill
+          Background[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_4[0]/Text[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanelBorder[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_4[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitNameContainerBorder[0]/UnitNameContainer[0]/UnitName[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_2[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitNameContainerBorder[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitSpriteConainerBorder[0]/UnitSpriteContainer[0]/Mask[0]/UnitSprite[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/Fill
+          Background[0]/Fill[0]/UnitLevel[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_1[0]/Text[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_2[0]/Text[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_0[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/Fill
+          Background[0]/Fill[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_0[0]/Text[0]"}'
+        count: 1
+        gameObjects:
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitNameContainerBorder[0]/UnitNameContainer[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_3[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_1[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitSpriteConainerBorder[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitSpriteConainerBorder[0]/UnitSpriteContainer[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/Fill
+          Background[0]/Fill[0]/XpText[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitSpriteConainerBorder[0]/UnitSpriteContainer[0]/Mask[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/Fill
+          Background[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_4[0]/Text[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_4[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitNameContainerBorder[0]/UnitNameContainer[0]/UnitName[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_2[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitNameContainerBorder[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitSpriteConainerBorder[0]/UnitSpriteContainer[0]/Mask[0]/UnitSprite[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/Fill
+          Background[0]/Fill[0]/UnitLevel[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_1[0]/Text[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_2[0]/Text[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_0[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/Fill
+          Background[0]/Fill[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_0[0]/Text[0]"}'
+        count: 1
+        gameObjects:
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitNameContainerBorder[0]/UnitNameContainer[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_4[0]/Text[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_4[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitNameContainerBorder[0]/UnitNameContainer[0]/UnitName[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_2[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitNameContainerBorder[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_2[0]/Text[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_0[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_0[0]/Text[0]"}'
+        count: 1
+        gameObjects:
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitNameContainerBorder[0]/UnitNameContainer[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitNameContainerBorder[0]/UnitNameContainer[0]/UnitName[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitNameContainerBorder[0]"}'
+        count: 1
+        gameObjects:
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/Fill
+          Background[0]/Fill[0]/XpText[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanelBorder[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]"}'
+        count: 1
+        gameObjects:
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/Fill
+          Background[0]/Fill[0]/XpText[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanelBorder[0]"}'
+        count: 1
+        gameObjects:
+        - {fileID: 0}
+        - {fileID: 0}
       - paths:
         - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]"}'
         count: 1
@@ -775,52 +933,11 @@ MonoBehaviour:
         count: 1
         gameObjects:
         - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]/SlotsGrid[0]/Slot_1[0]/Slot_1[0]/Icon
-          (1)[0]"}'
-        count: 1
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]/SlotsGrid[0]/Slot_0[0]/Slot_0[0]"}'
-        count: 1
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]/SlotsGrid[0]/Slot_5[0]/Slot_5[0]"}'
-        count: 1
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]/SlotsGrid[0]/Slot_4[0]/Slot_4[0]"}'
-        count: 1
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]/SlotsGrid[0]/Slot_3[0]/Slot_3[0]"}'
-        count: 1
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]/SlotsGrid[0]/Slot_3[0]"}'
-        count: 1
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]/SlotsGrid[0]/Slot_2[0]/Slot_2[0]"}'
-        count: 1
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]/SlotsGrid[0]/Slot_1[0]/Slot_1[0]"}'
-        count: 1
-        gameObjects:
-        - {fileID: 0}
       mostClickedContents: []
       recentlyClickedContents: []
     sceneGUID: e625a3e42d710e542b4c986f567fb23b
     sceneName: UnitScene
-    lastSaveTimePrint: 11:24 PM (June 8, 2026)
+    lastSaveTimePrint: 10:03 AM (June 9, 2026)
     gracePeriod: 3
     activeIndex: 12
     checkingToLoad: 0
@@ -831,10 +948,10 @@ MonoBehaviour:
     suggestedHeight: 0
     userAssetViewSize: -1
     previewHeight: 0
-    scrollPosition: {x: 0, y: 600}
-    toolbarScrollPosition: {x: 205, y: 0}
+    scrollPosition: {x: 0, y: 185}
+    toolbarScrollPosition: {x: 268, y: 0}
     rawUserHeight: 0
-    lastValidTabWidth: 743
+    lastValidTabWidth: 742
     alreadyCalculatedHeight: 0
     lastKnownHeight: 0
     tabs:
@@ -2161,24 +2278,24 @@ MonoBehaviour:
         - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Pet[0]"}'
         prefab: 0
       owner: {fileID: 0}
-    - path: '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]"}'
+    - path: '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]"}'
       paths: []
-      tabWidth: 62
-      name: Panel_Equipment
+      tabWidth: 61
+      name: DetailContainer
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
-      shortName: "Pane\u2026"
+      shortName: "Deta\u2026"
       filterString: 
       newTab: 0
-      scrollPosition: 600
+      scrollPosition: 185
       isSelected: 0
       allCollapsed: 0
       runtimeFoldouts: 
       runtimeMultiComponents: []
       tabTextContent:
-        m_Text: "Pane\u2026"
+        m_Text: "Deta\u2026"
         m_Image: {fileID: 0}
         m_Tooltip: 
-        m_TextWithWhitespace: "Pane\u2026\u200B"
+        m_TextWithWhitespace: "Deta\u2026\u200B"
       multiEditMode: 0
       locked: 0
       hasPreview: 0
@@ -2252,9 +2369,97 @@ MonoBehaviour:
         focusAfter: 0
         awaitingScroll: 0
         hidden: 0
-        componentName: unitdetailpanel_equipment
-        niceComponentName: unit detail panel_equipment
+        componentName: shadow
+        niceComponentName: shadow
       historyPaths:
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/Modals_Container[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitNameContainerBorder[0]/UnitNameContainer[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_3[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_1[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitSpriteConainerBorder[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitSpriteConainerBorder[0]/UnitSpriteContainer[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/Fill
+          Background[0]/Fill[0]/XpText[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitSpriteConainerBorder[0]/UnitSpriteContainer[0]/Mask[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/Fill
+          Background[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_4[0]/Text[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanelBorder[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_4[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitNameContainerBorder[0]/UnitNameContainer[0]/UnitName[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_2[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitNameContainerBorder[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitSpriteConainerBorder[0]/UnitSpriteContainer[0]/Mask[0]/UnitSprite[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/Fill
+          Background[0]/Fill[0]/UnitLevel[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_1[0]/Text[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_2[0]/Text[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_0[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/Fill
+          Background[0]/Fill[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_0[0]/Text[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitNameContainerBorder[0]/UnitNameContainer[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_3[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_1[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitSpriteConainerBorder[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitSpriteConainerBorder[0]/UnitSpriteContainer[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/Fill
+          Background[0]/Fill[0]/XpText[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitSpriteConainerBorder[0]/UnitSpriteContainer[0]/Mask[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/Fill
+          Background[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_4[0]/Text[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_4[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitNameContainerBorder[0]/UnitNameContainer[0]/UnitName[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_2[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitNameContainerBorder[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitSpriteConainerBorder[0]/UnitSpriteContainer[0]/Mask[0]/UnitSprite[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/Fill
+          Background[0]/Fill[0]/UnitLevel[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_1[0]/Text[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_2[0]/Text[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_0[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/Fill
+          Background[0]/Fill[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_0[0]/Text[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitNameContainerBorder[0]/UnitNameContainer[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_4[0]/Text[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_4[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitNameContainerBorder[0]/UnitNameContainer[0]/UnitName[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_2[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitNameContainerBorder[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_2[0]/Text[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_0[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/TabsBar[0]/Tab_0[0]/Text[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitNameContainerBorder[0]/UnitNameContainer[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitNameContainerBorder[0]/UnitNameContainer[0]/UnitName[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitNameContainerBorder[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/Fill
+          Background[0]/Fill[0]/XpText[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanelBorder[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/Fill
+          Background[0]/Fill[0]/XpText[0]"}'
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanelBorder[0]"}'
+        prefab: 0
       - paths:
         - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]"}'
         prefab: 0
@@ -2265,61 +2470,37 @@ MonoBehaviour:
         - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]/SlotsGrid[0]/Slot_1[0]/Slot_1[0]/Icon
           (1)[0]"}'
         prefab: 0
-      - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]/SlotsGrid[0]/Slot_0[0]/Slot_0[0]"}'
-        prefab: 0
-      - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]/SlotsGrid[0]/Slot_5[0]/Slot_5[0]"}'
-        prefab: 0
-      - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]/SlotsGrid[0]/Slot_4[0]/Slot_4[0]"}'
-        prefab: 0
-      - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]/SlotsGrid[0]/Slot_3[0]/Slot_3[0]"}'
-        prefab: 0
-      - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]/SlotsGrid[0]/Slot_3[0]"}'
-        prefab: 0
-      - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]/SlotsGrid[0]/Slot_2[0]/Slot_2[0]"}'
-        prefab: 0
-      - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]/SlotsGrid[0]/Slot_1[0]/Slot_1[0]"}'
-        prefab: 0
-      - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/DetailContainer[0]/Panel_Equipment[0]/SlotsGrid[0]/Slot_5[0]"}'
-        prefab: 0
       owner: {fileID: 0}
     closedTabs: []
     playModeTransforms: []
     historyAssets:
     - assetGUIDs:
-      - ad9baf3ac3e35c948bf6a50e91e91473
-    - assetGUIDs:
       - 8105016687592461f977c054a80ce2f2
     - assetGUIDs:
+      - 1dc9fdfe61a6a8749a0f6b89b45e887d
+    - assetGUIDs:
+      - 98545765d7a2b614b921715928035ee2
+    - assetGUIDs:
+      - 6d7fc2a7a7b163446a4695cb3bdd963a
+    - assetGUIDs:
+      - 5efd3494a46632541b34e2ee635717eb
+    - assetGUIDs:
+      - a4aa5e7ef9df1264c89076cc5b331e51
+    - assetGUIDs:
+      - 47da1726115063d46ade8f5b25c49e2d
+    - assetGUIDs:
+      - 6433de88c4c815c478ea2e14983d4550
+    - assetGUIDs:
+      - c3d451f524ccd6a41a425bd1b8cd8858
+    - assetGUIDs:
+      - ad9baf3ac3e35c948bf6a50e91e91473
+    - assetGUIDs:
       - d115e0bc68e6adf42a7c6f7c6d914978
-    - assetGUIDs:
-      - 701c5cb8b2be9224eb39101ce2d19bfe
-    - assetGUIDs:
-      - b735d31839abab440b75d89a1a6be66c
-    - assetGUIDs:
-      - 5ce4d2489b6654048a704997ca5ba3fc
-    - assetGUIDs:
-      - e625a3e42d710e542b4c986f567fb23b
-    - assetGUIDs:
-      - d088c2f0ae89cd44280a9fbfb5c3dc8c
-    - assetGUIDs:
-      - a03c32ec404b64125b88769f42e5b8a5
-    - assetGUIDs:
-      - 1c4f1b892b6e20245a0e9ec4a942e09d
-    - assetGUIDs:
-      - dd6c335508611954bb124b6b14c917c5
-    targetObject: {fileID: 11400000, guid: ad9baf3ac3e35c948bf6a50e91e91473, type: 3}
+    targetObject: {fileID: 11400000, guid: 8105016687592461f977c054a80ce2f2, type: 2}
     targetObjects: []
-    lastSelectedAsset: Packages/com.unity.2d.sprite/Editor/UI/SpriteEditor/PolygonChangeShapeWindow.uxml
+    lastSelectedAsset: Assets/Readme.asset
     lastClickedTab: -1
-    previousTab: 11
+    previousTab: 0
   - tracker:
       mostClicked: []
       recentlyClicked: []
@@ -2434,6 +2615,6 @@ MonoBehaviour:
     lastSelectedAsset: Packages/com.unity.services.levelplay/Editor/PostBuild/LevelPlayAndroidManifestProcessor.cs
     lastClickedTab: -1
     previousTab: 0
-  tipsShown: 01000000010000000000000001000000000000000100000000000000000000000100000000000000000000000100000000000000010000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000001000000000000000000000000000000
+  tipsShown: 01000000010000000000000001000000000000000100000000000000000000000100000000000000000000000100000000000000010000000000000000000000000000000000000000000000010000000000000000000000010000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000001000000000000000000000000000000
   playModeStartScene: {}
   enteringPlayMode: 0

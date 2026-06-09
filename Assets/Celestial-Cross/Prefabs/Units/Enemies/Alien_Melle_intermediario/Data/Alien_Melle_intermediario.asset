@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb249868a85523b4686441d22073799e, type: 3}
+  m_Name: Alien_Melle_intermediario
+  m_EditorClassIdentifier: Assembly-CSharp::UnitData
+  unitID: 3000b6c32a91e9b4991eaee2dc268568
+  displayName: Alien
+  role: 0
+  unitClass: 0
+  displacement: 3
+  baseRange: 1
+  defaultBehaviorTree: {fileID: 11400000, guid: b0faee783a4de594596afdcb3bceb014, type: 2}
+  maxAP: 1
+  maxHealth: 10
+  physicalAttack: 5
+  icon: {fileID: 21300000, guid: 238f041d6a6113a45b128674deb101e6, type: 3}
+  sprite: {fileID: 0}
+  idleAnim: {fileID: 7400000, guid: e1b5aa6273945c742876809cba01a93b, type: 2}
+  combatIdleAnim: {fileID: 7400000, guid: e1b5aa6273945c742876809cba01a93b, type: 2}
+  baseStats:
+    health: 50
+    attack: 15
+    defense: 5
+    speed: 10
+    criticalChance: 5
+    criticalDamage: 50
+    effectAccuracy: 0
+    effectResistance: 0
+  maxStats:
+    health: 50
+    attack: 15
+    defense: 5
+    speed: 10
+    criticalChance: 5
+    criticalDamage: 50
+    effectAccuracy: 0
+    effectResistance: 0
+  abilityGraphs:
+  - {fileID: 11400000, guid: c92a23edddd3e614abf30cfe601235f9, type: 2}
+  - {fileID: 11400000, guid: fe01ac299cb9a564ebd46ef65d9fe68a, type: 2}
+  constellationConfig: {fileID: 0}
+  skillTreeConfig: {fileID: 0}
+  nativeActions: []
+  references:
+    version: 2
+    RefIds: []
