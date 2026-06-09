@@ -21,11 +21,80 @@ MonoBehaviour:
   IsDiaryChapter: 0
   Nodes:
   - rid: 4322150705243357184
+  - rid: 574425773613776896
   references:
     version: 2
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 574425773613776896
+      type: {class: CombatStoryNode, ns: CelestialCross.Progression, asm: Assembly-CSharp}
+      data:
+        NodeID: 0b490afe-9954-43eb-8821-b4a097e2da30
+        Title: 
+        IsAutoPlay: 0
+        EntryCost:
+          EnergyCost: 9
+          ItemCosts: []
+        Rewards:
+          FirstClearRewards: []
+          RepeatRewards:
+          - Type: 0
+            Amount: 20000
+            ReferenceID: 
+            UnitRef: {fileID: 0}
+            PetRef: {fileID: 0}
+            ArtifactSetRef: {fileID: 0}
+            LootTableRef:
+              rid: -2
+          - Type: 4
+            Amount: 20000
+            ReferenceID: 
+            UnitRef: {fileID: 0}
+            PetRef: {fileID: 0}
+            ArtifactSetRef: {fileID: 0}
+            LootTableRef:
+              rid: -2
+          LootTables:
+          - rid: 574425773613776897
+          MilestoneRewards: []
+        MaxCompletions: -1
+        ResetPolicy:
+          ResetType: 0
+          ResetHourUTC: 3
+          ResetDayOfWeek: 1
+          WeeklyResetHourUTC: 3
+          ResetDayOfMonth: 1
+          MonthlyResetHourUTC: 3
+          CustomResetIntervalHours: 24
+        NodeIcon: {fileID: 21300000, guid: 238f041d6a6113a45b128674deb101e6, type: 3}
+        Requirement:
+          RequiresInvite: 0
+          RequiresPreviousNode: 0
+          PreviousNodeID: 
+          InviteCostOptions: []
+        LevelRef: {fileID: 11400000, guid: 4cf0844fd451ba9468f7af88e6d7dfab, type: 2}
+        DungeonRef: {fileID: 0}
+        SpecificLootTables: []
+        FixedSlots: []
+    - rid: 574425773613776897
+      type: {class: ArtifactLootTable, ns: CelestialCross.Data.Loot, asm: Assembly-CSharp}
+      data:
+        BaseDropChance: 100
+        AllowedArtifactSets:
+        - {fileID: 11400000, guid: 1c4f1b892b6e20245a0e9ec4a942e09d, type: 2}
+        DropMatrix:
+          commonChance: 50
+          uncommonChance: 30
+          rareChance: 15
+          epicChance: 4
+          legendaryChance: 1
+          oneStarChance: 60
+          twoStarChance: 30
+          threeStarChance: 10
+          fourStarChance: 0
+          fiveStarChance: 0
+        NumberOfDrops: 5
     - rid: 4322150705243357184
       type: {class: CombatStoryNode, ns: CelestialCross.Progression, asm: Assembly-CSharp}
       data:

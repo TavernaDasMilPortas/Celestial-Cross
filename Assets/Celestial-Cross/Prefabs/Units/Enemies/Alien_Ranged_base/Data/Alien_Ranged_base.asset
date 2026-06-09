@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb249868a85523b4686441d22073799e, type: 3}
   m_Name: Alien_Ranged_base
   m_EditorClassIdentifier: Assembly-CSharp::UnitData
-  unitID: 
+  unitID: 6d7fc2a7a7b163446a4695cb3bdd963a
   displayName: Alien
   role: 0
   unitClass: 2
   displacement: 3
   baseRange: 1
   defaultBehaviorTree: {fileID: 11400000, guid: b0faee783a4de594596afdcb3bceb014, type: 2}
-  maxAP: 1
+  maxAP: 2
   maxHealth: 10
   physicalAttack: 5
   icon: {fileID: 21300000, guid: 238f041d6a6113a45b128674deb101e6, type: 3}

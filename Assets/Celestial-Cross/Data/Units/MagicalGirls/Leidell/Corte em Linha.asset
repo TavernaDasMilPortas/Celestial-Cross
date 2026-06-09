@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Corte em Linha
   m_EditorClassIdentifier: Assembly-CSharp::Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO
   abilityName: Corte em Linha
-  abilityIcon: {fileID: 21300000, guid: 63449ee7dddb7e443994c10394df6ae5, type: 3}
+  abilityIcon: {fileID: 21300000, guid: d940432e48fb4fe40a4a8bc30927449c, type: 3}
   abilityDescription: "Leidell golpeia os inimigos, causando dano a tr\xEAs quadrados
     a sua frente.\r\n"
   displayRange: 1
