@@ -12,6 +12,7 @@ namespace CelestialCross.Scenes.Unit
         public TextMeshProUGUI unitLevelText;
         public Image unitXpFillImage;
         public TextMeshProUGUI unitXpText;
+        public LevelingConfig levelingConfig;
 
         [Header("Tabs")]
         public Button[] tabButtons = new Button[5];
@@ -46,7 +47,22 @@ namespace CelestialCross.Scenes.Unit
             if (unitNameText != null) unitNameText.text = unitData.displayName;
             if (unitLevelText != null) unitLevelText.text = $"Lv. {runtimeData.Level}";
             
-            // Xp bar lógica: runtimeData.CurrentXP / XPForNextLevel
+            if (levelingConfig != null)
+            {
+                int xpToNext = levelingConfig.GetXPForNextLevel(runtimeData.Level);
+                if (unitXpText != null)
+                {
+                    unitXpText.text = $"{runtimeData.CurrentXP} / {xpToNext}";
+                }
+                if (unitXpFillImage != null && xpToNext > 0)
+                {
+                    unitXpFillImage.fillAmount = (float)runtimeData.CurrentXP / xpToNext;
+                }
+                else if (unitXpFillImage != null)
+                {
+                    unitXpFillImage.fillAmount = 1f;
+                }
+            }
         }
 
         private void OnTabClicked(int tabIndex)

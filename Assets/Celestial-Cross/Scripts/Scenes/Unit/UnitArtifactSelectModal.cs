@@ -10,25 +10,35 @@ namespace CelestialCross.Scenes.Unit
         public RectTransform gridContainer;
         public Button equipButton;
         public Button closeButton;
+        public Button backButton;
         
         public GameObject itemPrefab;
         private ArtifactType currentFilterSlot;
         private string currentUnitId;
         private string selectedArtifactGuid;
         private global::System.Action onComplete;
+        private global::System.Action onBack;
 
         private void Awake()
         {
             if (closeButton != null) closeButton.onClick.AddListener(Hide);
             if (equipButton != null) equipButton.onClick.AddListener(OnEquipClicked);
+            if (backButton != null) backButton.onClick.AddListener(OnBackClicked);
         }
 
-        public void Show(string unitId, ArtifactType slotType, global::System.Action onCompleteCallback)
+        public void Show(string unitId, ArtifactType slotType, global::System.Action onCompleteCallback, global::System.Action onBackCallback = null)
         {
             currentUnitId = unitId;
             currentFilterSlot = slotType;
             onComplete = onCompleteCallback;
+            onBack = onBackCallback;
             selectedArtifactGuid = string.Empty;
+
+            if (backButton != null)
+            {
+                backButton.gameObject.SetActive(onBack != null);
+            }
+
             gameObject.SetActive(true);
             PopulateGrid();
         }
@@ -37,6 +47,12 @@ namespace CelestialCross.Scenes.Unit
         {
             gameObject.SetActive(false);
             onComplete?.Invoke();
+        }
+
+        private void OnBackClicked()
+        {
+            gameObject.SetActive(false);
+            onBack?.Invoke();
         }
 
         private void PopulateGrid()

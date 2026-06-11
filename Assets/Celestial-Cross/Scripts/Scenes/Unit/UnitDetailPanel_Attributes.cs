@@ -1,10 +1,11 @@
 using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
 
 namespace CelestialCross.Scenes.Unit
 {
-    public class UnitDetailPanel_Attributes : MonoBehaviour
+    public class UnitDetailPanel_Attributes : MonoBehaviour, IPointerClickHandler
     {
         public TextMeshProUGUI hpText;
         public TextMeshProUGUI atkText;
@@ -18,9 +19,22 @@ namespace CelestialCross.Scenes.Unit
 
         public ArtifactSetCatalog artifactSetCatalog;
 
+        private bool showDetailedStats = false;
+        private UnitData lastUnitData;
+        private CelestialCross.Data.RuntimeUnitData lastRuntimeData;
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            showDetailedStats = !showDetailedStats;
+            Refresh(lastUnitData, lastRuntimeData);
+        }
+
         public void Refresh(UnitData unitData, CelestialCross.Data.RuntimeUnitData runtimeData)
         {
             if (unitData == null || runtimeData == null) return;
+            
+            lastUnitData = unitData;
+            lastRuntimeData = runtimeData;
 
             var baseStats = unitData.GetStatsAtLevel(runtimeData.Level, 100);
             
@@ -113,15 +127,39 @@ namespace CelestialCross.Scenes.Unit
             int roundedBaseAcc = Mathf.RoundToInt(baseStats.effectAccuracy);
             int roundedBaseRes = Mathf.RoundToInt(baseStats.effectResistance);
 
-            if (hpText != null) hpText.text = finalHealth > roundedBaseHealth ? $"HP: <color=#00ff00>{finalHealth}</color>" : $"HP: {finalHealth}";
-            if (atkText != null) atkText.text = finalAttack > roundedBaseAttack ? $"ATK: <color=#00ff00>{finalAttack}</color>" : $"ATK: {finalAttack}";
-            if (defText != null) defText.text = finalDefense > roundedBaseDefense ? $"DEF: <color=#00ff00>{finalDefense}</color>" : $"DEF: {finalDefense}";
-            if (spdText != null) spdText.text = finalSpeed > roundedBaseSpeed ? $"SPD: <color=#00ff00>{finalSpeed}</color>" : $"SPD: {finalSpeed}";
+            if (showDetailedStats)
+            {
+                int hBonus = finalHealth - roundedBaseHealth;
+                int aBonus = finalAttack - roundedBaseAttack;
+                int dBonus = finalDefense - roundedBaseDefense;
+                int sBonus = finalSpeed - roundedBaseSpeed;
+                int crBonus = finalCrit - roundedBaseCrit;
+                int cdBonus = finalCritDmg - roundedBaseCritDmg;
+                int accBonus = finalAcc - roundedBaseAcc;
+                int resBonus = finalRes - roundedBaseRes;
 
-            if (critRateText != null) critRateText.text = finalCrit > roundedBaseCrit ? $"C.RATE: <color=#00ff00>{finalCrit}%</color>" : $"C.RATE: {finalCrit}%";
-            if (critDmgText != null) critDmgText.text = finalCritDmg > roundedBaseCritDmg ? $"C.DMG: <color=#00ff00>{finalCritDmg}%</color>" : $"C.DMG: {finalCritDmg}%";
-            if (effectAccText != null) effectAccText.text = finalAcc > roundedBaseAcc ? $"ACC: <color=#00ff00>{finalAcc}%</color>" : $"ACC: {finalAcc}%";
-            if (effectResText != null) effectResText.text = finalRes > roundedBaseRes ? $"RES: <color=#00ff00>{finalRes}%</color>" : $"RES: {finalRes}%";
+                if (hpText != null) hpText.text = hBonus > 0 ? $"HP: {roundedBaseHealth} <color=#ffff00>+{hBonus}</color>" : $"HP: {roundedBaseHealth}";
+                if (atkText != null) atkText.text = aBonus > 0 ? $"ATK: {roundedBaseAttack} <color=#ffff00>+{aBonus}</color>" : $"ATK: {roundedBaseAttack}";
+                if (defText != null) defText.text = dBonus > 0 ? $"DEF: {roundedBaseDefense} <color=#ffff00>+{dBonus}</color>" : $"DEF: {roundedBaseDefense}";
+                if (spdText != null) spdText.text = sBonus > 0 ? $"SPD: {roundedBaseSpeed} <color=#ffff00>+{sBonus}</color>" : $"SPD: {roundedBaseSpeed}";
+
+                if (critRateText != null) critRateText.text = crBonus > 0 ? $"C.RATE: {roundedBaseCrit}% <color=#ffff00>+{crBonus}%</color>" : $"C.RATE: {roundedBaseCrit}%";
+                if (critDmgText != null) critDmgText.text = cdBonus > 0 ? $"C.DMG: {roundedBaseCritDmg}% <color=#ffff00>+{cdBonus}%</color>" : $"C.DMG: {roundedBaseCritDmg}%";
+                if (effectAccText != null) effectAccText.text = accBonus > 0 ? $"ACC: {roundedBaseAcc}% <color=#ffff00>+{accBonus}%</color>" : $"ACC: {roundedBaseAcc}%";
+                if (effectResText != null) effectResText.text = resBonus > 0 ? $"RES: {roundedBaseRes}% <color=#ffff00>+{resBonus}%</color>" : $"RES: {roundedBaseRes}%";
+            }
+            else
+            {
+                if (hpText != null) hpText.text = finalHealth > roundedBaseHealth ? $"HP: <color=#00ff00>{finalHealth}</color>" : $"HP: {finalHealth}";
+                if (atkText != null) atkText.text = finalAttack > roundedBaseAttack ? $"ATK: <color=#00ff00>{finalAttack}</color>" : $"ATK: {finalAttack}";
+                if (defText != null) defText.text = finalDefense > roundedBaseDefense ? $"DEF: <color=#00ff00>{finalDefense}</color>" : $"DEF: {finalDefense}";
+                if (spdText != null) spdText.text = finalSpeed > roundedBaseSpeed ? $"SPD: <color=#00ff00>{finalSpeed}</color>" : $"SPD: {finalSpeed}";
+
+                if (critRateText != null) critRateText.text = finalCrit > roundedBaseCrit ? $"C.RATE: <color=#00ff00>{finalCrit}%</color>" : $"C.RATE: {finalCrit}%";
+                if (critDmgText != null) critDmgText.text = finalCritDmg > roundedBaseCritDmg ? $"C.DMG: <color=#00ff00>{finalCritDmg}%</color>" : $"C.DMG: {finalCritDmg}%";
+                if (effectAccText != null) effectAccText.text = finalAcc > roundedBaseAcc ? $"ACC: <color=#00ff00>{finalAcc}%</color>" : $"ACC: {finalAcc}%";
+                if (effectResText != null) effectResText.text = finalRes > roundedBaseRes ? $"RES: <color=#00ff00>{finalRes}%</color>" : $"RES: {finalRes}%";
+            }
         }
 
         private void ProcessStatData(CelestialCross.Artifacts.StatModifierData stat, ref float hF, ref float hP, ref float aF, ref float aP, ref float dF, ref float dP, ref float spdF, ref float crF, ref float eaf, ref float cdF, ref float erf)

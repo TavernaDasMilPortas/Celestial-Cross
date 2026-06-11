@@ -13,10 +13,14 @@ namespace CelestialCross.Scenes.Unit
         public Image[] starIcons = new Image[6];
         public Image[] connectionLines = new Image[5]; // Conectam 0-1, 1-2, 2-3, 3-4, 4-5
 
-        [Header("Info Panel")]
-        public GameObject infoPanel;
-        public TextMeshProUGUI skillNameText;
-        public TextMeshProUGUI skillDescText;
+        [Header("Info Panel (Abilities List)")]
+        public RectTransform skillListContainer;
+        public GameObject skillListItemPrefab;
+
+        [Header("Modals & Actions")]
+        public ConstellationDetailsModal detailsModal;
+        public CelestialCross.UI.Skills.SkillBranchModal branchModal;
+        public Button detailsButton;
         
         [Header("Ações")]
         public TextMeshProUGUI insigniaCountText;
@@ -28,7 +32,7 @@ namespace CelestialCross.Scenes.Unit
         private void Awake()
         {
             if (upgradeButton != null) upgradeButton.onClick.AddListener(OnUpgradeClicked);
-            if (infoPanel != null) infoPanel.SetActive(false);
+            if (detailsButton != null) detailsButton.onClick.AddListener(OnDetailsClicked);
         }
 
         public void Refresh(UnitData unitData, RuntimeUnitData runtimeData)
@@ -118,29 +122,79 @@ namespace CelestialCross.Scenes.Unit
             
             if (insigniaCountText != null) insigniaCountText.text = $"Insígnias: {count}";
             if (upgradeButton != null) upgradeButton.interactable = (count > 0 && level < 6);
+
+            PopulateAcquiredSkillsList(level);
+        }
+
+        private void PopulateAcquiredSkillsList(int currentLevel)
+        {
+            if (skillListContainer == null || skillListItemPrefab == null || currentSO.constellationConfig == null) return;
+
+            foreach (Transform child in skillListContainer)
+            {
+                if (child.gameObject != skillListItemPrefab)
+                    Destroy(child.gameObject);
+            }
+
+            if (currentLevel <= 0)
+            {
+                var emptyGO = new GameObject("EmptyText", typeof(RectTransform), typeof(TextMeshProUGUI));
+                emptyGO.transform.SetParent(skillListContainer, false);
+                var emptyTxt = emptyGO.GetComponent<TextMeshProUGUI>();
+                emptyTxt.text = "Nenhuma habilidade habilitada.";
+                emptyTxt.alignment = TextAlignmentOptions.Center;
+                emptyTxt.color = Color.gray;
+                emptyTxt.fontSize = 20;
+                var rt = emptyGO.GetComponent<RectTransform>();
+                rt.sizeDelta = new Vector2(0, 50);
+                return;
+            }
+
+            var stars = currentSO.constellationConfig.stars;
+            for (int i = 0; i < currentLevel && i < stars.Count; i++)
+            {
+                var star = stars[i];
+                var go = Instantiate(skillListItemPrefab, skillListContainer);
+                go.SetActive(true);
+
+                int idx = i;
+                var btn = go.GetComponent<Button>();
+                if (btn != null) btn.onClick.AddListener(() => ShowSkillInfo(idx));
+
+                var img = go.transform.Find("Icon")?.GetComponent<Image>();
+                if (img != null && star.passiveGraph != null && star.passiveGraph.abilityIcon != null)
+                {
+                    img.sprite = star.passiveGraph.abilityIcon;
+                }
+
+                var text = go.transform.Find("Name")?.GetComponent<TextMeshProUGUI>();
+                if (text != null)
+                {
+                    string sName = string.IsNullOrEmpty(star.starName) ? $"Estrela {idx + 1}" : star.starName;
+                    if (star.passiveGraph != null) sName = string.IsNullOrEmpty(star.passiveGraph.abilityName) ? star.passiveGraph.name : star.passiveGraph.abilityName;
+                    text.text = sName;
+                }
+            }
         }
 
         private void ShowSkillInfo(int index)
         {
-            if (currentSO.constellationConfig != null && currentSO.constellationConfig.stars.Count > index)
+            if (currentSO.constellationConfig != null && currentSO.constellationConfig.stars.Count > index && branchModal != null)
             {
                 var star = currentSO.constellationConfig.stars[index];
-                if (skillNameText != null) skillNameText.text = string.IsNullOrEmpty(star.starName) ? $"Estrela {index + 1}" : star.starName;
-                
-                if (!string.IsNullOrEmpty(star.customDescription))
+                if (star.passiveGraph != null)
                 {
-                    if (skillDescText != null) skillDescText.text = star.customDescription;
+                    bool isActive = currentUnit != null && index < currentUnit.ConstellationLevel;
+                    branchModal.Open(currentUnit?.UnitID, star.passiveGraph.name, star.passiveGraph, Celestial_Cross.Scripts.Abilities.SkillTree.SkillSlotType.Basic, () => {}, null, isActive);
                 }
-                else if (star.passiveGraph != null)
-                {
-                    if (skillNameText != null) skillNameText.text = star.passiveGraph.abilityName;
-                    if (skillDescText != null) skillDescText.text = star.passiveGraph.abilityDescription;
-                }
-                else
-                {
-                    if (skillDescText != null) skillDescText.text = "Nenhuma habilidade configurada para este nível.";
-                }
-                if (infoPanel != null) infoPanel.SetActive(true);
+            }
+        }
+
+        private void OnDetailsClicked()
+        {
+            if (detailsModal != null)
+            {
+                detailsModal.Open(currentSO, currentUnit, branchModal);
             }
         }
 

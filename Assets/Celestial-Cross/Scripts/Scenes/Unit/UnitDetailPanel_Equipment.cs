@@ -19,6 +19,8 @@ namespace CelestialCross.Scenes.Unit
         public UnitArtifactSelectModal artifactSelectModal;
         public ArtifactMiniInfoModal miniInfoModal;
         public ArtifactSetBonusModal setBonusModal;
+        public ArtifactActionModal actionModal;
+        public CelestialCross.Giulia_UI.ArtifactUpgradeModal upgradeModal;
 
         [Header("Sets List")]
         public Transform setListContainer;
@@ -148,12 +150,33 @@ namespace CelestialCross.Scenes.Unit
 
         private void OnSlotClicked(int index)
         {
-            if (artifactSelectModal != null && !string.IsNullOrEmpty(currentUnitId))
+            CelestialCross.Artifacts.ArtifactType[] slotTypes = (CelestialCross.Artifacts.ArtifactType[])global::System.Enum.GetValues(typeof(CelestialCross.Artifacts.ArtifactType));
+            if (index < 0 || index >= slotTypes.Length) return;
+
+            var acc = AccountManager.Instance?.PlayerAccount;
+            var loadout = acc?.GetLoadoutForUnit(currentUnitId);
+            string equippedGuid = null;
+
+            if (loadout != null)
             {
-                CelestialCross.Artifacts.ArtifactType[] slotTypes = (CelestialCross.Artifacts.ArtifactType[])global::System.Enum.GetValues(typeof(CelestialCross.Artifacts.ArtifactType));
-                if (index >= 0 && index < slotTypes.Length)
+                switch (slotTypes[index])
                 {
-                    artifactSelectModal.Show(currentUnitId, slotTypes[index], () => {
+                    case CelestialCross.Artifacts.ArtifactType.Helmet: equippedGuid = loadout.HelmetID; break;
+                    case CelestialCross.Artifacts.ArtifactType.Chestplate: equippedGuid = loadout.ChestplateID; break;
+                    case CelestialCross.Artifacts.ArtifactType.Gloves: equippedGuid = loadout.GlovesID; break;
+                    case CelestialCross.Artifacts.ArtifactType.Boots:  equippedGuid = loadout.BootsID; break;
+                    case CelestialCross.Artifacts.ArtifactType.Necklace: equippedGuid = loadout.NecklaceID; break;
+                    case CelestialCross.Artifacts.ArtifactType.Ring:   equippedGuid = loadout.RingID; break;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(equippedGuid) && actionModal != null)
+            {
+                var artifact = acc.GetArtifactByGuid(equippedGuid);
+                if (artifact != null && currentArtifactCatalog != null)
+                {
+                    var set = currentArtifactCatalog.GetSetById(artifact.artifactSetId);
+                    actionModal.Show(artifact, set, currentUnitId, () => {
                         Refresh(currentUnitData, currentRuntimeData, currentArtifactCatalog);
                         if (UnitSceneController.Instance != null && UnitSceneController.Instance.attributesDetailPanel != null)
                         {
@@ -161,7 +184,20 @@ namespace CelestialCross.Scenes.Unit
                             if (attr != null) attr.Refresh(currentUnitData, currentRuntimeData);
                         }
                     });
+                    return;
                 }
+            }
+
+            if (artifactSelectModal != null && !string.IsNullOrEmpty(currentUnitId))
+            {
+                artifactSelectModal.Show(currentUnitId, slotTypes[index], () => {
+                    Refresh(currentUnitData, currentRuntimeData, currentArtifactCatalog);
+                    if (UnitSceneController.Instance != null && UnitSceneController.Instance.attributesDetailPanel != null)
+                    {
+                        var attr = UnitSceneController.Instance.attributesDetailPanel.GetComponent<UnitDetailPanel_Attributes>();
+                        if (attr != null) attr.Refresh(currentUnitData, currentRuntimeData);
+                    }
+                });
             }
         }
     }

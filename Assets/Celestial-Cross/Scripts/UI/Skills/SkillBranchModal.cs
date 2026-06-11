@@ -23,6 +23,7 @@ namespace CelestialCross.UI.Skills
         public Button unequipButton;
 
         [Header("Skill Info")]
+        public Image skillIconImage;
         public TextMeshProUGUI skillNameText;
         public TextMeshProUGUI skillDescText;
 
@@ -32,6 +33,7 @@ namespace CelestialCross.UI.Skills
         private SkillSlotType currentSlot;
         private Action onSelectionComplete;
         private Action onChangeRequested;
+        private bool currentSkillIsActive = true;
 
         private void Awake()
         {
@@ -43,7 +45,7 @@ namespace CelestialCross.UI.Skills
                 unequipButton.onClick.AddListener(OnUnequipClicked);
         }
 
-        public void Open(string unitId, string skillId, AbilityGraphSO graph, SkillSlotType slot, Action onComplete, Action onChangeRequest = null)
+        public void Open(string unitId, string skillId, AbilityGraphSO graph, SkillSlotType slot, Action onComplete, Action onChangeRequest = null, bool isActive = true)
         {
             currentUnitId = unitId;
             currentSkillId = skillId;
@@ -51,6 +53,7 @@ namespace CelestialCross.UI.Skills
             currentSlot = slot;
             onSelectionComplete = onComplete;
             onChangeRequested = onChangeRequest;
+            currentSkillIsActive = isActive;
             
             modalRoot.SetActive(true);
             PopulateTiers();
@@ -68,8 +71,27 @@ namespace CelestialCross.UI.Skills
         {
             if (currentGraph != null)
             {
+                if (skillIconImage != null)
+                {
+                    if (currentGraph.abilityIcon != null)
+                    {
+                        skillIconImage.sprite = currentGraph.abilityIcon;
+                        skillIconImage.color = Color.white;
+                        skillIconImage.gameObject.SetActive(true);
+                    }
+                    else
+                    {
+                        skillIconImage.gameObject.SetActive(false);
+                    }
+                }
+
                 if (skillNameText != null)
-                    skillNameText.text = string.IsNullOrEmpty(currentGraph.abilityName) ? currentGraph.name : currentGraph.abilityName;
+                {
+                    string baseName = string.IsNullOrEmpty(currentGraph.abilityName) ? currentGraph.name : currentGraph.abilityName;
+                    if (!currentSkillIsActive)
+                        baseName += " <color=red><size=80%>[Não Habilitada]</size></color>";
+                    skillNameText.text = baseName;
+                }
                 if (skillDescText != null)
                     skillDescText.text = currentGraph.abilityDescription;
             }

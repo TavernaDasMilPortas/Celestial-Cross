@@ -18,20 +18,29 @@ namespace CelestialCross.Giulia_UI
         [SerializeField] private TextMeshProUGUI sellPriceText;
         [SerializeField] private Button closeButton;
 
+        [Header("Multiple Upgrade Additions")]
+        [SerializeField] private Slider levelSlider;
+        [SerializeField] private TextMeshProUGUI levelTargetText;
+
         private ArtifactInstanceData currentArtifact;
         private Action onStateChanged;
+        private Action onClose;
+        private bool canSellCurrent;
 
         private void Awake()
         {
             if (upgradeButton != null) upgradeButton.onClick.AddListener(OnUpgradeClicked);
             if (sellButton != null) sellButton.onClick.AddListener(OnSellClicked);
             if (closeButton != null) closeButton.onClick.AddListener(Close);
+            if (levelSlider != null) levelSlider.onValueChanged.AddListener(OnSliderChanged);
         }
 
-        public void Show(ArtifactInstanceData artifact, Action onStateChangedCallback)
+        public void Show(ArtifactInstanceData artifact, Action onStateChangedCallback, bool allowSell = true, Action onCloseCallback = null)
         {
             currentArtifact = artifact;
             onStateChanged = onStateChangedCallback;
+            canSellCurrent = allowSell;
+            onClose = onCloseCallback;
             RefreshUI();
             
             // Força o modal a ser desenhado por cima de tudo no parent
@@ -44,6 +53,7 @@ namespace CelestialCross.Giulia_UI
         {
             Debug.Log("Close Btn clicked");
             gameObject.SetActive(false);
+            onClose?.Invoke();
         }
 
         private void RefreshUI()
@@ -72,34 +82,95 @@ namespace CelestialCross.Giulia_UI
             if (currentArtifact.currentLevel >= 15)
             {
                 upgradeButton.interactable = false;
-                upgradeCostText.text = "N�VEL MAX (15)";
+                upgradeCostText.text = "NÍVEL MAX (15)";
+                if (levelSlider != null) levelSlider.gameObject.SetActive(false);
+                if (levelTargetText != null) levelTargetText.gameObject.SetActive(false);
             }
             else
             {
-                int cost = ArtifactEconomyService.GetUpgradeCost(currentArtifact.currentLevel, (int)currentArtifact.stars, currentArtifact.rarity);
-                upgradeButton.interactable = acc.Money >= cost;
-                upgradeCostText.text = $"UPGRADE\n(Custo: {cost} moedas) | Saldo: {acc.Money}";
+                if (levelSlider != null)
+                {
+                    levelSlider.gameObject.SetActive(true);
+                    levelSlider.minValue = currentArtifact.currentLevel;
+                    levelSlider.maxValue = 15;
+                    if (levelSlider.value < currentArtifact.currentLevel) levelSlider.value = currentArtifact.currentLevel;
+                    if (levelSlider.value == currentArtifact.currentLevel) levelSlider.value = currentArtifact.currentLevel + 1;
+                }
+                if (levelTargetText != null) levelTargetText.gameObject.SetActive(true);
+                UpdateCostUI();
             }
 
             // Sell State
-            int sellValue = ArtifactEconomyService.GetSellValue(currentArtifact);
-            sellPriceText.text = $"VENDER\n(+{sellValue} moedas)";
+            if (canSellCurrent && sellButton != null)
+            {
+                sellButton.gameObject.SetActive(true);
+                int sellValue = ArtifactEconomyService.GetSellValue(currentArtifact);
+                sellPriceText.text = $"VENDER\n(+{sellValue} moedas)";
+            }
+            else if (sellButton != null)
+            {
+                sellButton.gameObject.SetActive(false);
+            }
+        }
+
+        private void OnSliderChanged(float val)
+        {
+            UpdateCostUI();
+        }
+
+        private void UpdateCostUI()
+        {
+            if (currentArtifact == null || currentArtifact.currentLevel >= 15) return;
+            
+            int target = levelSlider != null ? Mathf.RoundToInt(levelSlider.value) : currentArtifact.currentLevel + 1;
+            if (target <= currentArtifact.currentLevel) target = currentArtifact.currentLevel + 1;
+            
+            if (levelTargetText != null) levelTargetText.text = $"-> Nível {target}";
+
+            int levelsToUpgrade = target - currentArtifact.currentLevel;
+            int totalCost = 0;
+            for(int i = 0; i < levelsToUpgrade; i++)
+            {
+                totalCost += ArtifactEconomyService.GetUpgradeCost(currentArtifact.currentLevel + i, (int)currentArtifact.stars, currentArtifact.rarity);
+            }
+
+            var acc = AccountManager.Instance.PlayerAccount;
+            upgradeButton.interactable = acc.Money >= totalCost && levelsToUpgrade > 0;
+            upgradeCostText.text = $"UPGRADE\n(Custo: {totalCost} moedas) | Saldo: {acc.Money}";
         }
 
         private void OnUpgradeClicked()
         {
-            Debug.Log("Upgrade Btn clicked");
             var acc = AccountManager.Instance.PlayerAccount;
-            if (ArtifactEconomyService.TryUpgradeArtifact(acc, currentArtifact))
+            int target = levelSlider != null ? Mathf.RoundToInt(levelSlider.value) : currentArtifact.currentLevel + 1;
+            if (target <= currentArtifact.currentLevel) target = currentArtifact.currentLevel + 1;
+            
+            int levelsToUpgrade = target - currentArtifact.currentLevel;
+            bool successAny = false;
+
+            for(int i = 0; i < levelsToUpgrade; i++)
             {
-                Debug.Log($"Upgraded successfully! New level: {currentArtifact.currentLevel}");
+                if (ArtifactEconomyService.TryUpgradeArtifact(acc, currentArtifact))
+                {
+                    successAny = true;
+                }
+                else
+                {
+                    Debug.Log($"Upgrade failed on step {i} (Insufficient funds). Level: {currentArtifact.currentLevel}, Funds: {acc.Money}");
+                    break;
+                }
+            }
+
+            if (successAny)
+            {
                 AccountManager.Instance.SaveAccount();
                 RefreshUI();
                 onStateChanged?.Invoke();
-            }
-            else
-            {
-                Debug.Log($"Upgrade failed (Level cap or insufficient funds). Level: {currentArtifact.currentLevel}, Funds: {acc.Money}");
+                
+                if (currentArtifact.currentLevel >= 15)
+                {
+                    Close();
+                }
             }
         }
 

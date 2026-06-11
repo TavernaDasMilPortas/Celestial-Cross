@@ -16,6 +16,7 @@ namespace CelestialCross.Scenes.Unit
         
         public Image petSpriteImage;
         public TextMeshProUGUI petNameText;
+        public TextMeshProUGUI plusText;
         [Header("Atributos do Pet")]
         public TextMeshProUGUI hpText;
         public TextMeshProUGUI atkText;
@@ -34,7 +35,7 @@ namespace CelestialCross.Scenes.Unit
         public Image skillIconImage;
         public Button skillIconButton;
         public TextMeshProUGUI skillDescText;
-        public CelestialCross.Scenes.Inventory.PetSkillModal petSkillModal;
+        public CelestialCross.UI.Skills.SkillBranchModal branchModal;
         
         [Header("Ações")]
         public Button petImageButton;
@@ -95,11 +96,31 @@ namespace CelestialCross.Scenes.Unit
 
         private void DisplayEmpty()
         {
-            if (petEquippedContainer) petEquippedContainer.SetActive(false);
-            if (petEmptyContainer) petEmptyContainer.SetActive(true);
+            if (petEquippedContainer) petEquippedContainer.SetActive(true);
+            if (petEmptyContainer) petEmptyContainer.SetActive(false);
             
             if (petSpriteParent) petSpriteParent.SetActive(true);
             if (petSpriteImage != null) petSpriteImage.gameObject.SetActive(false);
+            if (plusText != null) plusText.gameObject.SetActive(true);
+
+            if (petNameText != null) petNameText.text = "Nenhum Pet";
+            
+            if (hpText != null) hpText.text = "HP: 0";
+            if (atkText != null) atkText.text = "ATK: 0";
+            if (defText != null) defText.text = "DEF: 0";
+            if (spdText != null) spdText.text = "SPD: 0";
+            if (critChanceText != null) critChanceText.text = "CRIT: 0%";
+            if (critDmgText != null) critDmgText.text = "C.DMG: 0%";
+            if (accText != null) accText.text = "ACC: 0%";
+            if (resText != null) resText.text = "RES: 0%";
+
+            if (skillIconImage != null) skillIconImage.gameObject.SetActive(false);
+            if (skillDescText != null) skillDescText.text = "Nenhuma habilidade associada.";
+
+            if (starsContainer != null)
+            {
+                foreach (Transform child in starsContainer) Destroy(child.gameObject);
+            }
         }
 
         private void DisplayPet(RuntimePetData petData, PetSpeciesSO speciesSO)
@@ -113,6 +134,7 @@ namespace CelestialCross.Scenes.Unit
                 petSpriteImage.gameObject.SetActive(true);
                 petSpriteImage.sprite = speciesSO.sprite;
             }
+            if (plusText != null) plusText.gameObject.SetActive(false);
             if (petNameText != null) petNameText.text = speciesSO.SpeciesName;
 
             if (hpText != null) hpText.text = $"HP: {petData.Health}";
@@ -170,7 +192,7 @@ namespace CelestialCross.Scenes.Unit
 
         private void OnSkillIconClicked()
         {
-            if (petSkillModal == null) return;
+            if (branchModal == null) return;
             var account = AccountManager.Instance?.PlayerAccount;
             var loadout = account?.GetLoadoutForUnit(currentUnitId);
             if (loadout == null || string.IsNullOrEmpty(loadout.PetID)) return;
@@ -184,7 +206,7 @@ namespace CelestialCross.Scenes.Unit
                 var graph = petSpecies.AbilityGraphs[0];
                 if (graph != null)
                 {
-                    petSkillModal.Show(graph.name, graph.abilityIcon, graph.abilityDescription);
+                    branchModal.Open(currentUnitId, graph.name, graph, Celestial_Cross.Scripts.Abilities.SkillTree.SkillSlotType.Basic, () => {}, null, true);
                 }
             }
         }

@@ -152,83 +152,8 @@ namespace CelestialCross.UIBuilders.Editor
                 panel.skillIconButton = skillBtn;
             }
 
-            // Ligar o PetSkillModal automaticamente se existir na cena, senão cria um básico
-            if (panel.petSkillModal == null)
-            {
-                var foundModal = Object.FindObjectOfType<CelestialCross.Scenes.Inventory.PetSkillModal>(true);
-                if (foundModal != null)
-                {
-                    panel.petSkillModal = foundModal;
-                }
-                else
-                {
-                    // Criar um PetSkillModal do zero
-                    var modalGO = new GameObject("Panel_PetSkillModal", typeof(RectTransform), typeof(Image), typeof(CelestialCross.Scenes.Inventory.PetSkillModal));
-                    
-                    // Pega o root do Canvas principal
-                    var canvas = Object.FindObjectOfType<Canvas>();
-                    if (canvas != null) modalGO.transform.SetParent(canvas.transform, false);
-                    else modalGO.transform.SetParent(panel.transform.root, false);
-                    
-                    var mRT = modalGO.GetComponent<RectTransform>();
-                    mRT.anchorMin = Vector2.zero; mRT.anchorMax = Vector2.one;
-                    mRT.offsetMin = mRT.offsetMax = Vector2.zero;
-                    modalGO.GetComponent<Image>().color = new Color(0, 0, 0, 0.8f); // Fundo escuro
-                    
-                    var pModal = modalGO.GetComponent<CelestialCross.Scenes.Inventory.PetSkillModal>();
-                    
-                    // Box principal
-                    var box = new GameObject("Box", typeof(RectTransform), typeof(Image));
-                    box.transform.SetParent(modalGO.transform, false);
-                    var bRT = box.GetComponent<RectTransform>();
-                    bRT.anchorMin = new Vector2(0.2f, 0.2f); bRT.anchorMax = new Vector2(0.8f, 0.8f);
-                    bRT.offsetMin = bRT.offsetMax = Vector2.zero;
-                    box.GetComponent<Image>().color = new Color(0.15f, 0.15f, 0.2f, 1f);
-                    
-                    // Ícone
-                    var iconGO = new GameObject("Icon", typeof(RectTransform), typeof(Image));
-                    iconGO.transform.SetParent(box.transform, false);
-                    var iRT = iconGO.GetComponent<RectTransform>();
-                    iRT.anchorMin = new Vector2(0.5f, 0.8f); iRT.anchorMax = new Vector2(0.5f, 0.8f);
-                    iRT.sizeDelta = new Vector2(100, 100);
-                    iRT.anchoredPosition = new Vector2(0, -60);
-                    pModal.skillIconImage = iconGO.GetComponent<Image>();
-                    
-                    // Nome
-                    pModal.skillNameText = CreateOrUpdateText(box.transform, "NameText", "Nome da Habilidade");
-                    var nRT = pModal.skillNameText.GetComponent<RectTransform>();
-                    nRT.anchorMin = new Vector2(0.1f, 0.6f); nRT.anchorMax = new Vector2(0.9f, 0.7f);
-                    nRT.offsetMin = nRT.offsetMax = Vector2.zero;
-                    pModal.skillNameText.alignment = TextAlignmentOptions.Center;
-                    pModal.skillNameText.fontSize = 24;
-                    
-                    // Descrição
-                    pModal.skillDescriptionText = CreateOrUpdateText(box.transform, "DescText", "Descrição longa da habilidade...");
-                    var dRT = pModal.skillDescriptionText.GetComponent<RectTransform>();
-                    dRT.anchorMin = new Vector2(0.1f, 0.2f); dRT.anchorMax = new Vector2(0.9f, 0.55f);
-                    dRT.offsetMin = dRT.offsetMax = Vector2.zero;
-                    pModal.skillDescriptionText.alignment = TextAlignmentOptions.TopLeft;
-                    pModal.skillDescriptionText.enableWordWrapping = true;
-                    pModal.skillDescriptionText.fontSize = 18;
-                    
-                    // Botão Fechar
-                    var btnGO = new GameObject("CloseBtn", typeof(RectTransform), typeof(Image), typeof(Button));
-                    btnGO.transform.SetParent(box.transform, false);
-                    var cRT = btnGO.GetComponent<RectTransform>();
-                    cRT.anchorMin = new Vector2(0.4f, 0.05f); cRT.anchorMax = new Vector2(0.6f, 0.15f);
-                    cRT.offsetMin = cRT.offsetMax = Vector2.zero;
-                    btnGO.GetComponent<Image>().color = new Color(0.8f, 0.2f, 0.2f, 1f);
-                    var btnTxt = CreateOrUpdateText(btnGO.transform, "Text", "Fechar");
-                    var btTxtRT = btnTxt.GetComponent<RectTransform>();
-                    btTxtRT.anchorMin = Vector2.zero; btTxtRT.anchorMax = Vector2.one;
-                    btTxtRT.offsetMin = btTxtRT.offsetMax = Vector2.zero;
-                    btnTxt.alignment = TextAlignmentOptions.Center;
-                    pModal.closeButton = btnGO.GetComponent<Button>();
-                    
-                    modalGO.SetActive(false); // Fica escondido até chamarem o Show()
-                    panel.petSkillModal = pModal;
-                }
-            }
+            // O SkillBranchModal será conectado pelo UnitMasterUpdater, 
+            // então não precisamos mais criar o PetSkillModal aqui.
 
             // Garantir que a cena seja salva
             EditorUtility.SetDirty(panel);

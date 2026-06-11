@@ -216,7 +216,7 @@ namespace CelestialCross.UIBuilders.Editor
 
             // Detail Panels
             controller.attributesDetailPanel = CreateAttributesPanel(detailObj.transform).gameObject;
-            controller.petDetailPanel = CreatePetPanel(detailObj.transform, petModal).gameObject;
+            controller.petDetailPanel = CreatePetPanel(detailObj.transform, petModal, branchModal).gameObject;
             controller.equipmentDetailPanel = CreateEquipmentPanel(detailObj.transform, artModal, miniModal).gameObject;
 
             controller.constellationDetailPanel = CreateConstellationPanel(detailObj.transform).gameObject;
@@ -273,7 +273,7 @@ namespace CelestialCross.UIBuilders.Editor
             return comp;
         }
 
-        private static UnitDetailPanel_Pet CreatePetPanel(Transform parent, UnitPetSelectModal modal)
+        private static UnitDetailPanel_Pet CreatePetPanel(Transform parent, UnitPetSelectModal modal, SkillBranchModal branchModal)
         {
             var go = new GameObject("Panel_Pet", typeof(RectTransform), typeof(Image), typeof(UnitDetailPanel_Pet));
             go.transform.SetParent(parent, false);
@@ -282,6 +282,7 @@ namespace CelestialCross.UIBuilders.Editor
             var comp = go.GetComponent<UnitDetailPanel_Pet>();
 
             comp.petSelectModal = modal;
+            comp.branchModal = branchModal;
 
             var equipped = new GameObject("EquippedContainer", typeof(RectTransform));
             equipped.transform.SetParent(go.transform, false);
@@ -450,19 +451,18 @@ namespace CelestialCross.UIBuilders.Editor
                 comp.starIcons[i] = star.GetComponent<Image>();
             }
 
-            // Info Panel
+            // Info Panel (Old layout, kept so the MasterUpdater can convert it)
             var info = new GameObject("InfoPanel", typeof(RectTransform), typeof(Image));
             info.transform.SetParent(go.transform, false);
             var iRT = info.GetComponent<RectTransform>();
             iRT.anchorMin = new Vector2(0.55f, 0.3f); iRT.anchorMax = new Vector2(0.95f, 0.9f);
             iRT.offsetMin = iRT.offsetMax = Vector2.zero;
             info.GetComponent<Image>().color = new Color(0.15f, 0.15f, 0.2f, 1f);
-            comp.infoPanel = info;
 
-            comp.skillNameText = CreateText(info.transform, "SkillName", new Vector2(0.05f, 0.8f), new Vector2(0.95f, 0.95f), "Habilidade", 24);
-            comp.skillNameText.alignment = TextAlignmentOptions.Center;
-            comp.skillDescText = CreateText(info.transform, "SkillDesc", new Vector2(0.05f, 0.05f), new Vector2(0.95f, 0.75f), "Descrição da habilidade", 18);
-            comp.skillDescText.alignment = TextAlignmentOptions.TopLeft;
+            var skillNameText = CreateText(info.transform, "SkillNameText", new Vector2(0.05f, 0.8f), new Vector2(0.95f, 0.95f), "Habilidade", 24);
+            skillNameText.alignment = TextAlignmentOptions.Center;
+            var skillDescText = CreateText(info.transform, "SkillDescText", new Vector2(0.05f, 0.05f), new Vector2(0.95f, 0.75f), "Descrição da habilidade", 18);
+            skillDescText.alignment = TextAlignmentOptions.TopLeft;
 
             // Insignias e Botão
             comp.insigniaCountText = CreateText(go.transform, "InsigniaText", new Vector2(0.55f, 0.15f), new Vector2(0.95f, 0.25f), "Insígnias: 0", 20);

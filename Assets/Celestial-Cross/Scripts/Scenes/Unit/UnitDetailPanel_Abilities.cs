@@ -82,7 +82,15 @@ namespace CelestialCross.Scenes.Unit
         {
             if (textComp != null)
             {
-                textComp.text = $"<b>{slotLabel}</b>";
+                textComp.overflowMode = TextOverflowModes.Ellipsis;
+                if (graph != null && !string.IsNullOrEmpty(graph.name))
+                {
+                    textComp.text = $"<b>{graph.name}</b>";
+                }
+                else
+                {
+                    textComp.text = $"<b>{slotLabel}</b>";
+                }
             }
 
             if (button != null)

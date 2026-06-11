@@ -14,27 +14,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CelestialCross.Data.ConstellationConfigSO
   stars:
   - starName: Estrela 1
-    position: {x: 2, y: -100}
-    passiveGraph: {fileID: 0}
+    position: {x: -2.255319, y: -172.3404}
+    passiveGraph: {fileID: 11400000, guid: 743f84550d77079479449c7485668536, type: 2}
     customDescription: 
   - starName: Estrela 2
-    position: {x: -98, y: 1}
-    passiveGraph: {fileID: 0}
+    position: {x: -66.08506, y: -81.9787}
+    passiveGraph: {fileID: 11400000, guid: 324fe28890f3d9549915219b5c1f161c, type: 2}
     customDescription: 
   - starName: Estrela 3
-    position: {x: 99, y: 0}
+    position: {x: 64.95735, y: -85.106384}
     passiveGraph: {fileID: 0}
     customDescription: 
   - starName: Estrela 4
-    position: {x: 0, y: 96}
+    position: {x: 0, y: 2.382974}
     passiveGraph: {fileID: 0}
     customDescription: 
   - starName: Estrela 5
-    position: {x: 0, y: 170}
+    position: {x: 0, y: 116.80858}
     passiveGraph: {fileID: 0}
     customDescription: 
   - starName: Estrela 6
-    position: {x: -1, y: 235}
+    position: {x: 1.1276596, y: 217.97876}
     passiveGraph: {fileID: 0}
     customDescription: 
   connectionIndices: 
