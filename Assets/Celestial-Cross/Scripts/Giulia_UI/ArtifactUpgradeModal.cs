@@ -16,6 +16,7 @@ namespace CelestialCross.Giulia_UI
         [SerializeField] private TextMeshProUGUI upgradeCostText;
         [SerializeField] private Button sellButton;
         [SerializeField] private TextMeshProUGUI sellPriceText;
+        [SerializeField] private GameObject sellButtonBorder;
         [SerializeField] private Button closeButton;
 
         [Header("Multiple Upgrade Additions")]
@@ -104,12 +105,14 @@ namespace CelestialCross.Giulia_UI
             if (canSellCurrent && sellButton != null)
             {
                 sellButton.gameObject.SetActive(true);
+                if (sellButtonBorder != null) sellButtonBorder.SetActive(true);
                 int sellValue = ArtifactEconomyService.GetSellValue(currentArtifact);
                 sellPriceText.text = $"VENDER\n(+{sellValue} moedas)";
             }
             else if (sellButton != null)
             {
                 sellButton.gameObject.SetActive(false);
+                if (sellButtonBorder != null) sellButtonBorder.SetActive(false);
             }
         }
 
@@ -124,8 +127,6 @@ namespace CelestialCross.Giulia_UI
             
             int target = levelSlider != null ? Mathf.RoundToInt(levelSlider.value) : currentArtifact.currentLevel + 1;
             if (target <= currentArtifact.currentLevel) target = currentArtifact.currentLevel + 1;
-            
-            if (levelTargetText != null) levelTargetText.text = $"-> Nível {target}";
 
             int levelsToUpgrade = target - currentArtifact.currentLevel;
             int totalCost = 0;
@@ -134,9 +135,18 @@ namespace CelestialCross.Giulia_UI
                 totalCost += ArtifactEconomyService.GetUpgradeCost(currentArtifact.currentLevel + i, (int)currentArtifact.stars, currentArtifact.rarity);
             }
 
+            if (levelTargetText != null) 
+            {
+                levelTargetText.text = $"Nível {target}\n(Custo Total: {totalCost})";
+            }
+
             var acc = AccountManager.Instance.PlayerAccount;
             upgradeButton.interactable = acc.Money >= totalCost && levelsToUpgrade > 0;
-            upgradeCostText.text = $"UPGRADE\n(Custo: {totalCost} moedas) | Saldo: {acc.Money}";
+            
+            if (upgradeCostText != null)
+            {
+                upgradeCostText.text = "APRIMORAR";
+            }
         }
 
         private void OnUpgradeClicked()
