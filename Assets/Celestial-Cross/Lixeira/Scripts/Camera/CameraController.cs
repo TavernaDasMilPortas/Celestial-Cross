@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 
 public class CameraController : MonoBehaviour
 {
@@ -187,6 +188,8 @@ public class CameraController : MonoBehaviour
         dragForward = new Vector3(Mathf.Sin(yaw), 0f,  Mathf.Cos(yaw));
     }
 
+    public bool IsSetupComplete { get; private set; } = false;
+
     System.Collections.IEnumerator DelayedSetupZoom()
     {
         if (RenderTextureInputManager.Instance != null && RenderTextureInputManager.Instance.createAndAssignTextureOnStart)
@@ -198,7 +201,7 @@ public class CameraController : MonoBehaviour
         }
         else
         {
-            yield return new WaitForEndOfFrame();
+            yield return null;
         }
 
         float calculatedTileSize = ResolveLogicalTileSize();
@@ -210,6 +213,8 @@ public class CameraController : MonoBehaviour
         {
             SetupAutoZoom(calculatedTileSize);
         }
+
+        IsSetupComplete = true;
     }
 
     void Update()
@@ -535,8 +540,27 @@ public class CameraController : MonoBehaviour
         targetProjectedPoint = new Vector3(clampedX, 0f, clampedZ);
     }
 
+    private bool isTweening = false;
+
+    public void AnimateToTarget(float duration)
+    {
+        ApplyClamp();
+        
+        Vector3 desiredCameraPos = targetProjectedPoint - cam.transform.forward * depthOffset;
+        
+        isTweening = true;
+        
+        DG.Tweening.Sequence seq = DG.Tweening.DOTween.Sequence();
+        seq.Join(transform.DOMove(desiredCameraPos, duration).SetEase(DG.Tweening.Ease.InOutQuad));
+        seq.Join(cam.DOOrthoSize(targetZoom, duration).SetEase(DG.Tweening.Ease.InOutQuad));
+        seq.OnComplete(() => { isTweening = false; });
+    }
+
+
     void ApplyMovement()
     {
+        if (isTweening) return;
+
         float zoomFactor = Mathf.Clamp(
             cam.orthographicSize * followZoomMultiplier,
             minFollowFactor,
@@ -545,9 +569,6 @@ public class CameraController : MonoBehaviour
 
         float speed = followSpeed * zoomFactor;
 
-        // Simplificação: Para centralizar no orthographic, a posição da câmera deve ser:
-        // PosiçãoFocada - forward * distância
-        // Usamos depthOffset como essa distância total. heightOffset passa a ser 0 ou um ajuste fino.
         Vector3 desiredCameraPos =
             targetProjectedPoint
             - cam.transform.forward * depthOffset;
@@ -567,6 +588,9 @@ public class CameraController : MonoBehaviour
 
     void SetupAutoZoom(float calculatedTileSize)
     {
+        if (bounds == null || bounds.bottomLeft == null || bounds.topRight == null)
+            return;
+
         float logicalTileSize = ResolveLogicalTileSize();
         float minMapX = bounds.bottomLeft.position.x - bounds.tileExtensao;
         float maxMapX = bounds.topRight.position.x + bounds.tileExtensao;
@@ -880,6 +904,7 @@ public class CameraController : MonoBehaviour
         
         Vector3 desiredCameraPos = targetProjectedPoint - cam.transform.forward * depthOffset;
         transform.position = desiredCameraPos;
+        cam.orthographicSize = targetZoom;
     }
 
     public void ResetToInitialFraming()

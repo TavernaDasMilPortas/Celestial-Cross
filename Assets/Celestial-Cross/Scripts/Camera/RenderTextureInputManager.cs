@@ -28,7 +28,7 @@ public class RenderTextureInputManager : MonoBehaviour
     System.Collections.IEnumerator Start()
     {
         // Aguarda o final do frame para garantir que os layouts da UI (CanvasScaler, etc.) estejam calculados
-        yield return new WaitForEndOfFrame();
+        yield return null;
 
         if (createAndAssignTextureOnStart && renderTargetUI != null && gameCamera != null)
         {

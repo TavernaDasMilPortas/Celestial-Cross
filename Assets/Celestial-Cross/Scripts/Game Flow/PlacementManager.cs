@@ -40,12 +40,31 @@ public class PlacementManager : MonoBehaviour
         if (swipeDetector == null)
             swipeDetector = FindFirstObjectByType<SwipeDetector>();
         
-#if UNITY_EDITOR
+        if (unitCatalog == null)
+        {
+            if (CelestialCross.System.GlobalCatalogs.Instance != null)
+                unitCatalog = CelestialCross.System.GlobalCatalogs.Instance.unitCatalog;
+                
+            if (unitCatalog == null)
+            {
+                unitCatalog = Object.FindFirstObjectByType<UnitCatalog>();
+                if (unitCatalog == null)
+                    Debug.LogWarning("[PlacementManager] UnitCatalog não encontrado na cena nem no GlobalCatalogs! As unidades do jogador não poderão ser instanciadas.");
+            }
+        }
+
         if (petCatalog == null)
         {
-            petCatalog = UnityEditor.AssetDatabase.LoadAssetAtPath<PetCatalog>("Assets/Celestial-Cross/Data/Catalogs/PetCatalog.asset");
+            if (CelestialCross.System.GlobalCatalogs.Instance != null)
+                petCatalog = CelestialCross.System.GlobalCatalogs.Instance.petCatalog;
+                
+            if (petCatalog == null)
+            {
+                petCatalog = Object.FindFirstObjectByType<PetCatalog>();
+                if (petCatalog == null)
+                    Debug.LogWarning("[PlacementManager] PetCatalog não encontrado na cena nem no GlobalCatalogs!");
+            }
         }
-#endif
     }
 
     public void StartPlacementPhase()
@@ -105,6 +124,14 @@ public class PlacementManager : MonoBehaviour
         totalUnitsToPlace = ownedUnits.Count;
         allOwnedUnits = ownedUnits;
 
+        if (totalUnitsToPlace == 0)
+        {
+            Debug.LogWarning("[PlacementManager] Nenhuma unidade do jogador disponível para colocar. Pulando fase de posicionamento.");
+            // Atrasa o encerramento por 1 frame para não conflitar com a pilha de chamadas
+            StartCoroutine(AutoSkipPlacementRoutine());
+            return;
+        }
+
         placementActionBar.ClearButtons();
         placementActionBar.GenerateButtonsForPlacement(ownedUnits, SelectUnitForPlacement);
         
@@ -113,6 +140,12 @@ public class PlacementManager : MonoBehaviour
         {
             SelectUnitForPlacement(ownedUnits[0]);
         }
+    }
+
+    private IEnumerator AutoSkipPlacementRoutine()
+    {
+        yield return null;
+        EndPlacementPhase();
     }
 
     private void SelectUnitForPlacement(UnitData unitData)

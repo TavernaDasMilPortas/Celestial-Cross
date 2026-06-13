@@ -1,0 +1,8 @@
+<linker>
+  <assembly fullname="Assembly-CSharp">
+    <namespace fullname="Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Runtime" preserve="all"/>
+    <namespace fullname="Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Runtime.Actions" preserve="all"/>
+    <namespace fullname="Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Runtime.Conditions" preserve="all"/>
+    <namespace fullname="Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Runtime.Data" preserve="all"/>
+  </assembly>
+</linker>

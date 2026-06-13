@@ -537,6 +537,9 @@ GameObject:
   - component: {fileID: 127734721}
   - component: {fileID: 127734723}
   - component: {fileID: 127734722}
+  - component: {fileID: 127734724}
+  - component: {fileID: 127734725}
+  - component: {fileID: 127734726}
   m_Layer: 0
   m_Name: _Managers
   m_TagString: Untagged
@@ -585,9 +588,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AccountManager
   useCloudSave: 0
   accountKey: player_account
-  bootstrapConfig: {fileID: 0}
+  bootstrapConfig: {fileID: 11400000, guid: 21e5ff6e2065d3e48bf16eeaf1a1baa3, type: 2}
   debugProfile: {fileID: 11400000, guid: 2630c83ded303e24ca23dc9d17848f02, type: 2}
-  useDebugProfile: 1
+  useDebugProfile: 0
 --- !u!114 &127734721
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -625,6 +628,45 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54955d7fefbd60e4ea19063388ba800b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CelestialCross.System.ProgressionService
+--- !u!114 &127734724
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 127734717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf26f0a80023bdb41b1a9944bd9d3e0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CelestialCross.Authentication.AuthManager
+--- !u!114 &127734725
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 127734717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fa6d00eddb7197488218f1c430e4102, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CelestialCross.System.GlobalCatalogs
+  unitCatalog: {fileID: 11400000, guid: 7d18229e63a7d974fbfa170b4cb71025, type: 2}
+  petCatalog: {fileID: 11400000, guid: ff04443928da5b14dbdfed42ecd6db1c, type: 2}
+  artifactSetCatalog: {fileID: 11400000, guid: ba31e5cc6fccb08478437f02f0896260, type: 2}
+--- !u!114 &127734726
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 127734717}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6aec34e055840d479beadea1d6a3f99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CelestialCross.System.InGameConsole
 --- !u!1 &141992671
 GameObject:
   m_ObjectHideFlags: 0

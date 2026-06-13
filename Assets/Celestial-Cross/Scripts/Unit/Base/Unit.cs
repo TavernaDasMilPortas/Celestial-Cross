@@ -544,7 +544,11 @@ public abstract class Unit : MonoBehaviour
  
     public void InitializeActions()
     {
-        if (unitData == null) { Debug.LogError($"[Unit] {name} não possui UnitData."); return; }
+        if (unitData == null) 
+        { 
+            if (Application.isPlaying) Debug.LogError($"[Unit] {name} não possui UnitData."); 
+            return; 
+        }
         actions.Clear();
         foreach (var action in GetComponents<IUnitAction>()) 
         {
@@ -573,36 +577,54 @@ public abstract class Unit : MonoBehaviour
         if (Loadout != null && treeConfig != null)
         {
             #pragma warning disable 612, 618
-            if (!string.IsNullOrEmpty(Loadout.Slot1SkillId))
+            string slot1Id = Loadout.Slot1SkillId;
+            if (string.IsNullOrEmpty(slot1Id))
+            {
+                var pool1 = (treeConfig.slot1Skills != null && treeConfig.slot1Skills.Count > 0) ? treeConfig.slot1Skills : treeConfig.combatSkills;
+                var firstActive1 = pool1?.Find(x => x != null && !x.IsPassive);
+                if (firstActive1 != null) slot1Id = firstActive1.name;
+            }
+
+            if (!string.IsNullOrEmpty(slot1Id))
             {
                 var pool = (treeConfig.slot1Skills != null && treeConfig.slot1Skills.Count > 0)
                     ? treeConfig.slot1Skills
                     : treeConfig.combatSkills;
 
-                var g = pool.Find(x => x != null && x.name == Loadout.Slot1SkillId);
+                var g = pool.Find(x => x != null && x.name == slot1Id);
                 if (g != null && !g.IsPassive && !addedGraphs.Contains(g))
                 {
                     var wrapper = new GraphActionWrapper(this, g);
                     wrapper.SlotId = "Slot1";
                     actions.Add(wrapper);
                     addedGraphs.Add(g);
-                    Debug.Log($"[Unit] Habilidade do Slot 1 '{g.name}' injetada em {DisplayName}.");
+                    Debug.Log($"[Unit] Habilidade do Slot 1 '{g.name}' injetada em {DisplayName} (via Loadout ou Fallback).");
                 }
             }
-            if (!string.IsNullOrEmpty(Loadout.Slot2SkillId))
+
+            string slot2Id = Loadout.Slot2SkillId;
+            if (string.IsNullOrEmpty(slot2Id))
+            {
+                var pool2 = (treeConfig.slot2Skills != null && treeConfig.slot2Skills.Count > 0) ? treeConfig.slot2Skills : treeConfig.combatSkills;
+                // Avoid duplicating slot 1
+                var firstActive2 = pool2?.Find(x => x != null && !x.IsPassive && x.name != slot1Id);
+                if (firstActive2 != null) slot2Id = firstActive2.name;
+            }
+
+            if (!string.IsNullOrEmpty(slot2Id))
             {
                 var pool = (treeConfig.slot2Skills != null && treeConfig.slot2Skills.Count > 0)
                     ? treeConfig.slot2Skills
                     : treeConfig.combatSkills;
 
-                var g = pool.Find(x => x != null && x.name == Loadout.Slot2SkillId);
+                var g = pool.Find(x => x != null && x.name == slot2Id);
                 if (g != null && !g.IsPassive && !addedGraphs.Contains(g))
                 {
                     var wrapper = new GraphActionWrapper(this, g);
                     wrapper.SlotId = "Slot2";
                     actions.Add(wrapper);
                     addedGraphs.Add(g);
-                    Debug.Log($"[Unit] Habilidade do Slot 2 '{g.name}' injetada em {DisplayName}.");
+                    Debug.Log($"[Unit] Habilidade do Slot 2 '{g.name}' injetada em {DisplayName} (via Loadout ou Fallback).");
                 }
             }
             #pragma warning restore 612, 618

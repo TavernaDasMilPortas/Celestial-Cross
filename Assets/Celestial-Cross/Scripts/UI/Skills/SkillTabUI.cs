@@ -232,17 +232,13 @@ namespace CelestialCross.UI.Skills
         {
             if (unitCatalog == null)
             {
-                unitCatalog = FindObjectOfType<UnitCatalog>();
-                #if UNITY_EDITOR
-                if (unitCatalog == null)
+                if (CelestialCross.System.GlobalCatalogs.Instance != null)
                 {
-                    string[] guids = UnityEditor.AssetDatabase.FindAssets("t:UnitCatalog");
-                    if (guids.Length > 0)
-                    {
-                        unitCatalog = UnityEditor.AssetDatabase.LoadAssetAtPath<UnitCatalog>(UnityEditor.AssetDatabase.GUIDToAssetPath(guids[0]));
-                    }
+                    unitCatalog = CelestialCross.System.GlobalCatalogs.Instance.unitCatalog;
                 }
-                #endif
+                
+                if (unitCatalog == null)
+                    unitCatalog = FindObjectOfType<UnitCatalog>();
             }
             if (unitCatalog == null) return null;
             var unitData = unitCatalog.GetUnitData(currentUnitId);

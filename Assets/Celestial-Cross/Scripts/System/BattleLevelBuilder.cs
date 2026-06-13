@@ -75,7 +75,22 @@ public class BattleLevelBuilder : MonoBehaviour
         // Spawns dos inimigos
         List<EnemyUnit> enemies = SpawnEnemies(flow, grid);
 
-        // Aguarda um frame para garantir que os game objects e componentes das unidades inimigas estejam totalmente inicializados
+        // Aguarda a Câmera terminar seu setup inicial (Zoom/Enquadramento do mapa)
+        // para garantir que ela não roube o controle da câmera durante a animação do primeiro inimigo.
+        if (CameraController.Instance != null)
+        {
+            float maxWait = Time.realtimeSinceStartup + 2f;
+            while (!CameraController.Instance.IsSetupComplete && Time.realtimeSinceStartup < maxWait)
+            {
+                yield return null;
+            }
+            if (!CameraController.Instance.IsSetupComplete)
+            {
+                Debug.LogWarning("[BattleLevelBuilder] CameraController não terminou o setup após 2s. Prosseguindo...");
+            }
+        }
+        
+        // Aguarda mais um frame para garantir estabilidade do engine
         yield return null;
 
         // Se a lista retornada por SpawnEnemies estiver vazia, tenta coletar todas as EnemyUnits da cena (fallback robusto)
@@ -102,21 +117,35 @@ public class BattleLevelBuilder : MonoBehaviour
                     CameraController.Instance.TargetProjectedPoint = enemy.transform.position;
                     CameraController.Instance.TargetZoom = enemyFocusZoom;
                     
-                    // Ativa o outline visual para destacar o inimigo
-                    var outline = enemy.GetComponent<UnitOutlineController>();
-                    if (outline == null) outline = enemy.GetComponentInChildren<UnitOutlineController>();
-                    outline?.SetSelected(true);
+                // Se for o primeiro inimigo, pula direto para ele para não perder o início da animação viajando pelo mapa
+                bool isFirstEnemy = (enemy == enemies[0]);
+                
+                if (isFirstEnemy)
+                {
+                    CameraController.Instance.SnapToTarget();
+                }
+                else
+                {
+                    // Anima suavemente para os próximos inimigos usando DOTween (ex: 0.6s de viagem)
+                    CameraController.Instance.AnimateToTarget(0.6f);
+                }
+                
+                // Ativa o outline visual para destacar o inimigo
+                var outline = enemy.GetComponent<UnitOutlineController>();
+                if (outline == null) outline = enemy.GetComponentInChildren<UnitOutlineController>();
+                outline?.SetSelected(true);
                     
                     // Espera pelo tempo determinado ou até que o jogador arraste a tela
-                    float elapsed = 0f;
-                    while (elapsed < enemyFocusDuration)
+                    // Usa Time.time ao invés de Time.deltaTime para evitar que o lag de instanciação do mapa 
+                    // (que faz o deltaTime ser > 1.5s no primeiro frame) pule instantaneamente o primeiro inimigo.
+                    float startTime = Time.time;
+                    while (Time.time - startTime < enemyFocusDuration)
                     {
                         if (CameraController.Instance.IsDragging)
                         {
                             Debug.Log("[BattleLevelBuilder] Foco de câmera cancelado pelo arrasto do jogador.");
                             break;
                         }
-                        elapsed += Time.deltaTime;
                         yield return null;
                     }
                     
@@ -206,23 +235,30 @@ public class BattleLevelBuilder : MonoBehaviour
                 if (enemy.UnitData == null)
                     continue;
 
-                Unit spawnedUnit = grid.SpawnUnitAt(enemyUnitMold, enemy.GridPosition, Team.Enemy, enemy.UnitData);
-                
-                if (spawnedUnit != null)
+                try
                 {
-                    EnemyUnit eUnit = spawnedUnit as EnemyUnit;
-                    if (eUnit != null)
+                    Unit spawnedUnit = grid.SpawnUnitAt(enemyUnitMold, enemy.GridPosition, Team.Enemy, enemy.UnitData);
+                    
+                    if (spawnedUnit != null)
                     {
-                        spawnedEnemiesList.Add(eUnit);
-                        if (enemy.OverrideBehaviorTree != null)
+                        EnemyUnit eUnit = spawnedUnit as EnemyUnit;
+                        if (eUnit != null)
                         {
-                            eUnit.SetBehaviorTree(enemy.OverrideBehaviorTree);
+                            spawnedEnemiesList.Add(eUnit);
+                            if (enemy.OverrideBehaviorTree != null)
+                            {
+                                eUnit.SetBehaviorTree(enemy.OverrideBehaviorTree);
+                            }
+                        }
+                        else
+                        {
+                            Debug.LogWarning($"[BattleLevelBuilder] Unidade spawnada em {enemy.GridPosition} não é do tipo EnemyUnit (tipo: {spawnedUnit.GetType()})");
                         }
                     }
-                    else
-                    {
-                        Debug.LogWarning($"[BattleLevelBuilder] Unidade spawnada em {enemy.GridPosition} não é do tipo EnemyUnit (tipo: {spawnedUnit.GetType()})");
-                    }
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogError($"[BattleLevelBuilder] Erro fatal ao spawnar inimigo {enemy.UnitData.name} em {enemy.GridPosition}: {ex.Message}\n{ex.StackTrace}");
                 }
             }
         }
