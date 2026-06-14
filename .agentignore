@@ -1,0 +1,132 @@
+# =============================================================================
+# .agentignore — Arquivos ignorados pela IA para otimizar contexto e tokens
+# =============================================================================
+# Este arquivo impede que assistentes de IA indexem pastas e arquivos
+# irrelevantes para codificação, economizando tokens e evitando alucinações.
+# =============================================================================
+
+# =============================================
+# Unity — Pastas geradas automaticamente
+# =============================================
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+/[Mm]emoryCaptures/
+/[Rr]ecordings/
+
+# =============================================
+# IDE e sistema operacional
+# =============================================
+.vs/
+.idea/
+.vscode/
+*.suo
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+# =============================================
+# Arquivos de projeto auto-gerados (C#/Unity)
+# =============================================
+*.csproj
+*.sln
+*.slnx
+*.unityproj
+
+# =============================================
+# Binários e assets pesados
+# =============================================
+*.fbx
+*.FBX
+*.obj
+*.OBJ
+*.blend
+*.blend1
+*.3ds
+*.max
+*.dae
+*.mb
+*.ma
+*.psd
+*.tga
+*.tif
+*.tiff
+*.bmp
+*.exr
+*.hdr
+*.wav
+*.mp3
+*.ogg
+*.aif
+*.aiff
+*.bank
+*.mp4
+*.mov
+*.avi
+*.webm
+*.ttf
+*.otf
+*.woff
+*.woff2
+*.dll
+*.so
+*.dylib
+*.a
+*.jar
+*.aar
+*.apk
+*.aab
+*.unitypackage
+*.unitypackage.meta
+
+# =============================================
+# Unity — Builds e plataformas
+# =============================================
+crashlytics-build.properties
+sysinfo.txt
+/[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/*/*.bin*
+/[Aa]ssets/[Ss]treamingAssets/aa.meta
+/[Aa]ssets/[Ss]treamingAssets/aa/*
+
+# =============================================
+# Plugins e assets de terceiros (opcional, ajustar conforme necessidade)
+# =============================================
+# /[Aa]ssets/Plugins/
+# /[Aa]ssets/ThirdParty/
+
+# =============================================
+# Arquivos temporários do projeto
+# =============================================
+.utmp/
+.temp_*
+temp_*
+*.tmp
+fix_target.py
+
+# =============================================
+# Segurança — Nunca enviar para a IA
+# =============================================
+*.env
+*.env.*
+**/secrets.*
+**/credentials.*
+
+# =============================================
+# Graphic assets (pesados e irrelevantes para código)
+# =============================================
+/GraphicAssets/
+
+# =============================================
+# Git internals
+# =============================================
+.git/

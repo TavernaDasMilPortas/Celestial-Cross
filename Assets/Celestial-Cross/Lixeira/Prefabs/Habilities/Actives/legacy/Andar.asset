@@ -61,11 +61,11 @@ MonoBehaviour:
     description: 
   MaxLevel: 1
   aiHint:
-    category: 0
-    basePriority: 50
+    category: 5
+    basePriority: 30
     cooldownTurns: 0
-    lowHPTargetBonus: 20
-    freshApplicationBonus: 15
+    lowHPTargetBonus: 0
+    freshApplicationBonus: 0
     targetsFriendlies: 0
     estimatedValue: 10
     isLocked: 0

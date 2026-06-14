@@ -26,6 +26,8 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Runtime
             public int range;
             public AreaPatternData areaPattern;
             public AIAbilityHint hint;
+            public int maxTargets = 1;
+            public bool allowSameTargetMultipleTimes = false;
         }
         public List<AbilityInfo> availableAbilities = new List<AbilityInfo>();
 

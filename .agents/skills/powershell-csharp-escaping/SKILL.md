@@ -1,18 +1,19 @@
 ---
 name: powershell-csharp-escaping
-description: Prevents syntax errors when writing C# code via PowerShell by enforcing single-quoted here-strings (@'...') instead of double-quoted ones.
+description: Previne erros de sintaxe ao escrever código C# via PowerShell, forçando o uso de here-strings com aspas simples (@'...') em vez de aspas duplas.
 ---
 
-# PowerShell C# Escaping Rules
+# Regras de Escaping C# no PowerShell
 
-When using the `run_in_terminal` tool (PowerShell) to replace, append, or overwrite C# code files (e.g., `Set-Content`, `-replace`), you **MUST** follow these rules to avoid breaking the script with improperly escaped double quotes (e.g., `""Title""` instead of `"Title"`) and triggering errors like `Unterminated raw string literal`.
+Ao usar o terminal (PowerShell) para substituir, adicionar ou sobrescrever arquivos C# (ex: `Set-Content`, `-replace`), você **DEVE** seguir estas regras para evitar quebra de scripts com aspas duplas indevidamente escapadas (ex: `""Title""` em vez de `"Title"`) e erros como `Unterminated raw string literal`.
 
-## Rule 1: Use Single-Quoted Here-Strings (`@'` ... `'@`)
-Never use double-quoted here-strings (`@"` ... `"@`) when injecting C# code, as PowerShell will try to expand variables and process double quotes, requiring tedious and error-prone escaping that often destroys string literals in the target file.
+## Regra 1: Use Here-Strings com Aspas Simples (`@'` ... `'@`)
 
-Always wrap literal C# code blocks in single-quoted here-strings:
+Nunca use here-strings com aspas duplas (`@"` ... `"@`) ao injetar código C#, pois o PowerShell tentará expandir variáveis e processar as aspas duplas, exigindo escaping tedioso e propenso a erros que frequentemente destrói strings literais no arquivo de destino.
 
-**CORRECT:**
+Sempre envolva blocos de código C# literal em here-strings com aspas simples:
+
+**CORRETO:**
 ```powershell
 $csharpCode = @'
 public class VictoryRewardUI : MonoBehaviour
@@ -26,26 +27,28 @@ public class VictoryRewardUI : MonoBehaviour
 Set-Content "file.cs" -Value $csharpCode -Encoding UTF8
 ```
 
-**INCORRECT:**
+**INCORRETO:**
 ```powershell
 $csharpCode = @"
 public class VictoryRewardUI : MonoBehaviour
 {
     private void Awake()
     {
-        Debug.Log(""Hello World""); // INCORRECT ESCAPING: BREAKS COMPILER
+        Debug.Log(""Hello World""); // ESCAPING INCORRETO: QUEBRA O COMPILADOR
     }
 }
 "@
 ```
 
-## Rule 2: Single-Quote Strings for Regex Replacements
-If you are doing a `-replace` operation in the terminal, use single quotes `' '` for the PowerShell string wrapper so that you can type double quotes `"` internally exactly as they are without side effects.
+## Regra 2: Strings com Aspas Simples para Substituições Regex
 
-**CORRECT:**
+Se estiver fazendo operações `-replace` no terminal, use aspas simples `' '` para delimitar a string no PowerShell para que você possa digitar aspas duplas `"` internamente sem efeitos colaterais.
+
+**CORRETO:**
 ```powershell
 (Get-Content "file.cs" -Raw) -replace 'Debug\.Log\("old"\);', 'Debug.Log("new");'
 ```
 
-## Rule 3: Prefer Native Tools First
-Whenever possible, prefer using the `replace_string_in_file` native tool over executing PowerShell regex replacements via terminal. It mitigates the risk of script parsing errors and string escaping entirely. Use PowerShell regex strings for multiline blocks only when the regular tool fails due to indentation/whitespace issues mismatch.
+## Regra 3: Prefira Ferramentas Nativas Primeiro
+
+Sempre que possível, prefira usar as ferramentas nativas de edição de arquivo (`replace_file_content`, `multi_replace_file_content`) em vez de executar substituições regex via PowerShell no terminal. Isso mitiga completamente o risco de erros de parsing e escaping de strings. Use regex no PowerShell somente quando a ferramenta nativa falhar por problemas de indentação/whitespace.

@@ -49,5 +49,49 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Runtime
 
             return reachable;
         }
+
+        public static Direction GetDirection(Vector2Int from, Vector2Int to)
+        {
+            Vector2 dir = new Vector2(to.x - from.x, to.y - from.y).normalized;
+            if (dir == Vector2.zero) return Direction.N;
+
+            float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+            if (angle < 0) angle += 360f;
+
+            if (angle >= 337.5f || angle < 22.5f) return Direction.E;
+            if (angle >= 22.5f && angle < 67.5f) return Direction.NE;
+            if (angle >= 67.5f && angle < 112.5f) return Direction.N;
+            if (angle >= 112.5f && angle < 157.5f) return Direction.NW;
+            if (angle >= 157.5f && angle < 202.5f) return Direction.W;
+            if (angle >= 202.5f && angle < 247.5f) return Direction.SW;
+            if (angle >= 247.5f && angle < 292.5f) return Direction.S;
+            if (angle >= 292.5f && angle < 337.5f) return Direction.SE;
+
+            return Direction.N;
+        }
+
+        public static (int validHits, int friendlyHits, HashSet<Vector2Int> hitPositions) EvaluateAoE(
+            Vector2Int casterPos, Vector2Int targetPos, AreaPatternData pattern, 
+            IEnumerable<Unit> validTargets, IEnumerable<Unit> friendlyUnits)
+        {
+            var dir = GetDirection(casterPos, targetPos);
+            var cells = AreaResolver.ResolveCells(targetPos, pattern, dir);
+            var hitPositions = new HashSet<Vector2Int>(cells);
+
+            int validHits = 0;
+            int friendlyHits = 0;
+
+            foreach (var t in validTargets)
+            {
+                if (hitPositions.Contains(t.GridPosition)) validHits++;
+            }
+
+            foreach (var f in friendlyUnits)
+            {
+                if (hitPositions.Contains(f.GridPosition)) friendlyHits++;
+            }
+
+            return (validHits, friendlyHits, hitPositions);
+        }
     }
 }

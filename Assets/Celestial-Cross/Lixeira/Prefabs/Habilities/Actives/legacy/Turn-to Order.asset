@@ -106,6 +106,15 @@ MonoBehaviour:
     initialValue: 1
     description: 
   MaxLevel: 1
+  aiHint:
+    category: 0
+    basePriority: 52
+    cooldownTurns: 0
+    lowHPTargetBonus: 8
+    freshApplicationBonus: 0
+    targetsFriendlies: 0
+    estimatedValue: 20
+    isLocked: 0
   GeneratedDescription: "<b>--- DESCRI\xC7\xC3O AUTOM\xC1TICA ---</b>\r\n- Esta \xE9
     uma habilidade do tipo Active.\r\n- Desvia o fluxo dependendo do n\xEDvel atual
     da habilidade.\r\n- Escolhe manualmente m\xFAltiplos tiles em \xE1rea a um range

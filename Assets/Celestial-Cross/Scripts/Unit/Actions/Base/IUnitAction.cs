@@ -9,6 +9,8 @@ public interface IUnitAction
     int Level { get; set; }
     Vector2Int Target { get; set; }
     AreaPatternData GetAreaPattern();
+    int GetMaxTargets();
+    bool GetAllowSameTargetMultipleTimes();
     event System.Action<ActionForecast> OnForecastUpdated;
     void EnterAction();
     void UpdateAction();

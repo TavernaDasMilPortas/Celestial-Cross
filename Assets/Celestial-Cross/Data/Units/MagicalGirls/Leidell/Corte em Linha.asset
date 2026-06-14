@@ -165,12 +165,12 @@ MonoBehaviour:
   MaxLevel: 1
   aiHint:
     category: 0
-    basePriority: 50
+    basePriority: 54
     cooldownTurns: 0
-    lowHPTargetBonus: 20
-    freshApplicationBonus: 15
+    lowHPTargetBonus: 84
+    freshApplicationBonus: 0
     targetsFriendlies: 0
-    estimatedValue: 10
+    estimatedValue: 210
     isLocked: 0
   GeneratedDescription: "<b>--- DESCRI\xC7\xC3O AUTOM\xC1TICA ---</b>\r\n- Esta \xE9
     uma habilidade do tipo Active. Subtipo: None.\r\n- Desvia o fluxo dependendo

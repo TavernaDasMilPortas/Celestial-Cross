@@ -37,12 +37,11 @@
 ## ScriptableObject Usage
 
 * Use ScriptableObjects for:
-
   * configuration data
   * shared data
   * modular systems
   * game settings
-* Avoid storing runtime state in ScriptableObjects unless explicitly intended.
+* Avoid storing runtime state in ScriptableObjects unless explicitly intended. Do not modify ScriptableObjects in runtime to persist player state.
 
 ## Dependency Management
 
@@ -55,25 +54,30 @@
 * Avoid heavy logic inside Update().
 * Prefer events, coroutines, or timers when possible.
 * Cache component references instead of repeatedly calling GetComponent().
-* Avoid unnecessary allocations during gameplay.
+* Avoid unnecessary allocations during gameplay (e.g., avoid LINQ, `new`, or string concatenation in the Update loop).
+* Use Object Pooling for frequently instantiated objects.
+* Use TextMeshPro instead of legacy Text components.
 
 ## Clean Code Principles
 
+* Use explicit naming conventions: `PascalCase` for public members/methods/classes, and `_camelCase` for private fields.
 * Use clear and descriptive names.
 * Keep methods small and focused.
 * Each class should have a single responsibility.
-* Avoid deep nesting and complex conditionals.
+* Avoid deep nesting and complex conditionals. Use guard clauses to reduce nesting.
 
 ## Debugging and Testing
 
 * Add useful debug logs for important systems.
 * Systems should be easy to test independently.
 * Prefer deterministic logic when possible.
+* Use `Debug.Assert` for invariants during development to catch logical errors early.
+* Implement `OnValidate()` in MonoBehaviours and ScriptableObjects to validate data in the Inspector.
 
 ## Editor vs Runtime Separation
 
 * Editor tools must always be placed inside Editor folders.
-* Never include editor-only code in runtime builds.
+* Never include editor-only code in runtime builds. Use `#if UNITY_EDITOR` to wrap editor-only logic.
 
 ## Data-Oriented Design When Possible
 
@@ -91,6 +95,10 @@
 * Avoid static state unless the system is explicitly global.
 * Avoid FindObjectOfType in gameplay systems.
 * Avoid hardcoded scene references.
+* Use `TryGetComponent<T>()` instead of `GetComponent<T>()` to prevent NullReferenceExceptions.
+* Use `CompareTag("Tag")` instead of `== "Tag"` for tag comparisons.
+* Never call Unity APIs from outside the main thread or inside constructors.
+* If a serialized field is renamed, always use `[FormerlySerializedAs("oldName")]` to prevent data loss in the Inspector.
 
 ## Generated Code Expectations
 
@@ -113,15 +121,51 @@ All external communication must go through service layers such as:
 - InventoryService
 
 Gameplay code should remain independent from networking logic.
-
 Use events to trigger persistence or server synchronization when necessary.
-
 Design systems so they can work both offline and online.
-
 Persisted data should be handled by dedicated systems instead of gameplay scripts.
+
+## 🚨 Obrigatório: Revisão de Referências e Clean Up 🚨
+
+APÓS TODA modificação de código, a IA DEVE realizar as seguintes verificações rigorosamente:
+
+* **Remoção de lixo:** Verificar se todas as declarações `using` são necessárias e remover as não utilizadas.
+* **Referências stale/quebradas:** Verificar se nenhuma referência a classes, métodos ou campos recém-renomeados/removidos foi deixada para trás.
+* **Alucinações:** Verificar se nenhuma classe, método ou pacote inventado/incompatível foi introduzido. Se a API não existir na Unity ou no projeto atual, corrija.
+* **Consistência de renomeação:** Se um campo serializado for renomeado, `[FormerlySerializedAs]` FOI adicionado?
+* **Mudança de pastas:** Se um script for movido, verificar se o seu `namespace` corresponde à nova localização.
+* **Assinaturas Unity:** Verificar se assinaturas de eventos Unity (OnCollisionEnter, OnTriggerStay, etc.) estão corretas.
+* **Dependências:** Verificar se todas as dependências entre os scripts modificados estão consistentes.
+
+## Null Safety e Tratamento de Erros
+
+* Sempre validar referências antes de acessá-las.
+* Use `TryGetComponent<T>(out T component)` para evitar exceções em componentes ausentes.
+* **Cuidado com Unity Objects:** Nunca use `ReferenceEquals(obj, null)` para checar objetos Unity (como GameObjects ou MonoBehaviours). Sempre use `obj == null`, pois a Unity sobrecarrega esse operador.
+* Nunca engula exceções silenciosamente (não use blocos `try-catch` vazios).
+* Implemente guard clauses em vez de aninhamento longo ou blocos try-catch para lidar com nulos no início de métodos.
+
+## Serialização e Dados Dinâmicos vs Estáticos
+
+* Não tente serializar tipos não suportados pela Unity em campos visíveis ao Inspector (ex: `Dictionary`, arrays multidimensionais).
+* Separe dados estáticos (usando ScriptableObjects) de dados dinâmicos (que mudam durante o gameplay e precisam ser salvos).
+* Nunca modifique valores de ScriptableObjects em runtime com o intuito de persistir estado de jogador.
+* Para desserialização complexa, valide os dados usando classes validadoras antes de aplicá-los ao gameplay.
+
+## Segurança em Refatoração
+
+* Nunca renomeie, mova ou delete arquivos sem ter verificado todas as referências que dependem deles.
+* Sempre analise onde métodos e classes estão sendo utilizados antes de alterar suas assinaturas.
+* Ao modificar múltiplos arquivos, garanta absoluta consistência entre eles.
+* Evite mudanças drásticas em APIs internas do projeto sem planejamento.
+
+## Qualidade do Output Gerado
+
+* Não assuma apenas o "caminho feliz" (happy path). Inclua tratamento de erros realista.
+* Verifique sempre se as soluções propostas utilizam sistemas/arquiteturas já existentes no projeto, em vez de inventar novas arquiteturas isoladas.
+* Não crie APIs ou classes da Unity "alucinadas"; verifique as especificações da versão da Unity utilizada.
 
 ## Language and Communication
 
 * Always communicate with the user in Portuguese (Português do Brasil).
 * Always write documents, plans, walkthroughs, tasks, and code comments in Portuguese (Português do Brasil) unless explicitly requested otherwise.
-

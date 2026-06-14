@@ -40,6 +40,12 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Runtime
         public AIAbilityHint.AbilityCategory category = AIAbilityHint.AbilityCategory.Damage;
     }
 
+    [Serializable]
+    public class ActionUseBestAbilityData
+    {
+        public float minimumScoreThreshold = 5f;
+    }
+
     public enum BTMoveIntent { Approach, Flee, Flank, Wander }
 
     [Serializable]

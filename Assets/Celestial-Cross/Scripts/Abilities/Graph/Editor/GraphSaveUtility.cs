@@ -78,48 +78,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Editor
 
         private void AutoGenerateAIHint(AbilityGraphSO graphSO, List<AbilityNode> nodes)
         {
-            if (graphSO.aiHint == null)
-            {
-                graphSO.aiHint = new Celestial_Cross.Scripts.Units.Enemy.AI.AIAbilityHint();
-            }
-
-            if (graphSO.aiHint.isLocked) return;
-
-            bool hasDamage = nodes.Any(n => n.title.Contains("Damage") || n.GetType().Name.Contains("Damage"));
-            bool hasHeal = nodes.Any(n => n.title.Contains("Heal") || n.GetType().Name.Contains("Heal"));
-            bool hasBuff = nodes.Any(n => n.title.Contains("Buff") || n.GetType().Name.Contains("Buff"));
-            bool hasSummon = nodes.Any(n => n.title.Contains("Summon") || n.GetType().Name.Contains("Summon"));
-
-            if (hasHeal)
-            {
-                graphSO.aiHint.category = Celestial_Cross.Scripts.Units.Enemy.AI.AIAbilityHint.AbilityCategory.Heal;
-                graphSO.aiHint.basePriority = 80;
-                graphSO.aiHint.targetsFriendlies = true;
-            }
-            else if (hasDamage)
-            {
-                graphSO.aiHint.category = Celestial_Cross.Scripts.Units.Enemy.AI.AIAbilityHint.AbilityCategory.Damage;
-                graphSO.aiHint.basePriority = 50;
-                graphSO.aiHint.targetsFriendlies = false;
-            }
-            else if (hasBuff)
-            {
-                graphSO.aiHint.category = Celestial_Cross.Scripts.Units.Enemy.AI.AIAbilityHint.AbilityCategory.Buff;
-                graphSO.aiHint.basePriority = 60;
-                graphSO.aiHint.targetsFriendlies = true;
-            }
-            else if (hasSummon)
-            {
-                graphSO.aiHint.category = Celestial_Cross.Scripts.Units.Enemy.AI.AIAbilityHint.AbilityCategory.Summon;
-                graphSO.aiHint.basePriority = 70;
-                graphSO.aiHint.targetsFriendlies = false;
-            }
-            else
-            {
-                graphSO.aiHint.category = Celestial_Cross.Scripts.Units.Enemy.AI.AIAbilityHint.AbilityCategory.Utility;
-                graphSO.aiHint.basePriority = 30;
-                graphSO.aiHint.targetsFriendlies = false;
-            }
+            AIHintCalculator.Recalculate(graphSO);
         }
 
         private string GenerateAutoDescription()

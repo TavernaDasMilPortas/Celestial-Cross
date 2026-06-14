@@ -113,13 +113,14 @@ MonoBehaviour:
     description: 
   MaxLevel: 1
   aiHint:
-    category: 0
-    basePriority: 50
+    category: 1
+    basePriority: 80
     cooldownTurns: 0
-    lowHPTargetBonus: 20
-    freshApplicationBonus: 15
-    targetsFriendlies: 0
-    estimatedValue: 10
+    lowHPTargetBonus: 60.000004
+    freshApplicationBonus: 0
+    targetsFriendlies: 1
+    estimatedValue: 100
+    isLocked: 0
   GeneratedDescription: "<b>--- DESCRI\xC7\xC3O AUTOM\xC1TICA ---</b>\r\n- Esta \xE9
     uma habilidade do tipo Active. Subtipo: None.\r\n- Modifica 'Damage' (Set 1).\r\n-
     Escolhe manualmente unidade(s) a um range de 1 a partir de Unit.\r\n- Dano escalado

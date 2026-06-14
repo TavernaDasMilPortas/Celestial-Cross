@@ -31,6 +31,8 @@ public abstract class UnitActionBase : MonoBehaviour, IUnitAction
     public virtual int Level { get; set; } = 1;
     public Vector2Int Target { get; set; }
     public virtual AreaPatternData GetAreaPattern() => null;
+    public virtual int GetMaxTargets() => 1;
+    public virtual bool GetAllowSameTargetMultipleTimes() => false;
     public virtual string GetDetailStats() => "";
     public event System.Action<ActionForecast> OnForecastUpdated;
 
