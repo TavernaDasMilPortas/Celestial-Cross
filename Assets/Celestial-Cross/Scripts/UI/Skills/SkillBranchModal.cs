@@ -20,7 +20,9 @@ namespace CelestialCross.UI.Skills
 
         [Header("Slot Actions")]
         public Button changeButton;
+        public Image changeButtonImage;
         public Button unequipButton;
+        public Image unequipButtonImage;
 
         [Header("Skill Info")]
         public Image skillIconImage;
@@ -100,8 +102,18 @@ namespace CelestialCross.UI.Skills
         private void UpdateActionButtons()
         {
             bool isSlotAbility = (currentSlot == SkillSlotType.Slot1 || currentSlot == SkillSlotType.Slot2);
-            if (changeButton != null) changeButton.gameObject.SetActive(isSlotAbility);
-            if (unequipButton != null) unequipButton.gameObject.SetActive(isSlotAbility);
+            
+            if (changeButton != null) 
+            {
+                changeButton.gameObject.SetActive(isSlotAbility);
+                if (changeButtonImage != null) changeButtonImage.gameObject.SetActive(isSlotAbility);
+            }
+            
+            if (unequipButton != null) 
+            {
+                unequipButton.gameObject.SetActive(isSlotAbility);
+                if (unequipButtonImage != null) unequipButtonImage.gameObject.SetActive(isSlotAbility);
+            }
         }
 
         private void OnChangeClicked()

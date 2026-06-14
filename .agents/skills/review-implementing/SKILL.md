@@ -1,136 +1,134 @@
 ---
 name: review-implementing
-description: Process and implement code review feedback systematically. Use when user provides reviewer comments, PR feedback, code review notes, or asks to implement suggestions from reviews.
+description: Processa e implementa feedback de code review sistematicamente. Use quando o usuário fornecer comentários de revisão, feedback de PR, notas de review, ou pedir para implementar sugestões de revisões.
 ---
 
-# Review Feedback Implementation
+# Implementação de Feedback de Code Review
 
-Systematically process and implement changes based on code review feedback.
+Processa e implementa alterações sistematicamente com base em feedback de revisão de código.
 
-## When to Use
+## Quando Usar
 
-- Provides reviewer comments or feedback
-- Pastes PR review notes
-- Mentions implementing review suggestions
-- Says "address these comments" or "implement feedback"
-- Shares list of changes requested by reviewers
+- O usuário fornece comentários de revisores ou feedback
+- O usuário cola notas de revisão de PR
+- O usuário menciona implementar sugestões de revisão
+- O usuário diz "aplique esses comentários" ou "implemente o feedback"
+- O usuário compartilha lista de alterações solicitadas por revisores
 
-## Systematic Workflow
+## Fluxo de Trabalho Sistemático
 
-### 1. Parse Reviewer Notes
+### 1. Analisar Notas do Revisor
 
-Identify individual feedback items:
-- Split numbered lists (1., 2., etc.)
-- Handle bullet points or unnumbered feedback
-- Extract distinct change requests
-- Clarify ambiguous items before starting
+Identifique itens individuais de feedback:
+- Separe listas numeradas (1., 2., etc.)
+- Trate bullet points ou feedback não numerado
+- Extraia solicitações de alteração distintas
+- Esclareça itens ambíguos antes de começar
 
-### 2. Create Todo List
+### 2. Criar Lista de Tarefas
 
-Use TodoWrite tool to create actionable tasks:
-- Each feedback item becomes one or more todos
-- Break down complex feedback into smaller tasks
-- Make tasks specific and measurable
-- Mark first task as `in_progress` before starting
+Crie tarefas acionáveis:
+- Cada item de feedback se torna uma ou mais tarefas
+- Quebre feedback complexo em tarefas menores
+- Torne as tarefas específicas e mensuráveis
 
-Example:
+Exemplo:
 ```
-- Add type hints to extract function
-- Fix duplicate tag detection logic
-- Update docstring in chain.py
-- Add unit test for edge case
+- Adicionar null checks na função de extração
+- Corrigir lógica de detecção de tags duplicadas
+- Atualizar comentários no PlayerController.cs
+- Adicionar teste para caso extremo de dano negativo
 ```
 
-### 3. Implement Changes Systematically
+### 3. Implementar Alterações Sistematicamente
 
-For each todo item:
+Para cada tarefa:
 
-**Locate relevant code:**
-- Use Grep to search for functions/classes
-- Use Glob to find files by pattern
-- Read current implementation
+**Localizar código relevante:**
+- Usar grep para buscar funções/classes
+- Buscar arquivos por padrão
+- Ler implementação atual
 
-**Make changes:**
-- Use Edit tool for modifications
-- Follow project conventions (CLAUDE.md)
-- Preserve existing functionality unless changing behavior
+**Fazer alterações:**
+- Usar ferramentas de edição para modificações
+- Seguir convenções do projeto (`.ia-rules`)
+- Preservar funcionalidade existente a menos que a alteração de comportamento seja intencional
 
-**Verify changes:**
-- Check syntax correctness
-- Run relevant tests if applicable
-- Ensure changes address reviewer's intent
+**Verificar alterações:**
+- Checar correção de sintaxe
+- Executar testes relevantes se aplicável
+- Garantir que as alterações atendem à intenção do revisor
+- **IMPORTANTE:** Verificar referências — nenhuma `using` órfã, nenhuma referência a classes/métodos renomeados ou removidos
 
-**Update status:**
-- Mark todo as `completed` immediately after finishing
-- Move to next todo (only one `in_progress` at a time)
+**Atualizar status:**
+- Marcar tarefa como concluída imediatamente após finalizar
+- Avançar para a próxima tarefa
 
-### 4. Handle Different Feedback Types
+### 4. Tipos de Feedback
 
-**Code changes:**
-- Use Edit tool for existing code
-- Follow type hint conventions (PEP 604/585)
-- Maintain consistent style
+**Alterações de código:**
+- Usar ferramentas de edição para código existente
+- Seguir convenções de tipo e nomenclatura do C#
+- Manter estilo consistente
 
-**New features:**
-- Create new files with Write tool if needed
-- Add corresponding tests
-- Update documentation
+**Novas funcionalidades:**
+- Criar novos arquivos se necessário
+- Adicionar testes correspondentes
+- Atualizar documentação
 
-**Documentation:**
-- Update docstrings following project style
-- Modify markdown files as needed
-- Keep explanations concise
+**Documentação:**
+- Atualizar comentários seguindo estilo do projeto
+- Modificar arquivos markdown conforme necessário
+- Manter explicações concisas
 
-**Tests:**
-- Write tests as functions, not classes
-- Use descriptive names
-- Follow pytest conventions
+**Testes:**
+- Escrever testes claros e descritivos
+- Usar nomes que descrevam o cenário testado
 
-**Refactoring:**
-- Preserve functionality
-- Improve code structure
-- Run tests to verify no regressions
+**Refatoração:**
+- Preservar funcionalidade
+- Melhorar estrutura do código
+- Executar testes para verificar ausência de regressões
+- **CRÍTICO:** Verificar que nenhuma referência foi quebrada pela refatoração
 
-### 5. Validation
+### 5. Validação
 
-After implementing changes:
-- Run affected tests
-- Check for linting errors: `uv run ruff check`
-- Verify changes don't break existing functionality
+Após implementar alterações:
+- Verificar se há erros de compilação
+- Checar referências quebradas (using, namespaces, campos serializados)
+- Verificar que as alterações não quebram funcionalidade existente
+- Remover `using` statements não utilizadas
 
-### 6. Communication
+### 6. Comunicação
 
-Keep user informed:
-- Update todo list in real-time
-- Ask for clarification on ambiguous feedback
-- Report blockers or challenges
-- Summarize changes at completion
+Mantenha o usuário informado:
+- Atualizar lista de tarefas em tempo real
+- Pedir esclarecimentos sobre feedback ambíguo
+- Reportar bloqueios ou desafios
+- Resumir alterações ao concluir
 
-## Edge Cases
+## Casos Extremos
 
-**Conflicting feedback:**
-- Ask user for guidance
-- Explain conflict clearly
+**Feedback conflitante:**
+- Pedir orientação ao usuário
+- Explicar o conflito claramente
 
-**Breaking changes required:**
-- Notify user before implementing
-- Discuss impact and alternatives
+**Alterações que quebram compatibilidade:**
+- Notificar o usuário antes de implementar
+- Discutir impacto e alternativas
 
-**Tests fail after changes:**
-- Fix tests before marking todo complete
-- Ensure all related tests pass
+**Testes falham após alterações:**
+- Corrigir testes antes de marcar tarefa como concluída
+- Garantir que todos os testes relacionados passam
 
-**Referenced code doesn't exist:**
-- Ask user for clarification
-- Verify understanding before proceeding
+**Código referenciado não existe:**
+- Pedir esclarecimento ao usuário
+- Verificar entendimento antes de prosseguir
 
-## Important Guidelines
+## Diretrizes Importantes
 
-- **Always use TodoWrite** for tracking progress
-- **Mark todos completed immediately** after each item
-- **Only one todo in_progress** at any time
-- **Don't batch completions** - update status in real-time
-- **Ask questions** for unclear feedback
-- **Run tests** if changes affect tested code
-- **Follow CLAUDE.md conventions** for all code changes
-- **Use conventional commits** if creating commits afterward
+- **Marcar tarefas como concluídas imediatamente** após cada item
+- **Perguntar** quando houver feedback pouco claro
+- **Executar testes** se alterações afetam código testado
+- **Seguir convenções do `.ia-rules`** para todas as alterações de código
+- **SEMPRE verificar referências** após alterações (usando, namespace, campos serializados)
