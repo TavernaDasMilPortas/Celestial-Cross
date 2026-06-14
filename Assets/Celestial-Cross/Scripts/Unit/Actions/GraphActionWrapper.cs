@@ -86,6 +86,32 @@ namespace Celestial_Cross.Scripts.Units
             return null;
         }
 
+        public int GetMaxTargets()
+        {
+            foreach (var node in Graph.NodeData)
+            {
+                if (node.NodeType == "TargetNode")
+                {
+                    var targetData = JsonUtility.FromJson<Celestial_Cross.Scripts.Abilities.Graph.Runtime.TargetNodeData>(node.JsonData);
+                    if (targetData != null && targetData.multipleTargets) return targetData.maxTargets;
+                }
+            }
+            return 1;
+        }
+
+        public bool GetAllowSameTargetMultipleTimes()
+        {
+            foreach (var node in Graph.NodeData)
+            {
+                if (node.NodeType == "TargetNode")
+                {
+                    var targetData = JsonUtility.FromJson<Celestial_Cross.Scripts.Abilities.Graph.Runtime.TargetNodeData>(node.JsonData);
+                    if (targetData != null && targetData.multipleTargets) return targetData.allowSameTargetMultipleTimes;
+                }
+            }
+            return false;
+        }
+
         public void EnterAction()
         {
             if (AbilityExecutor.Instance != null)

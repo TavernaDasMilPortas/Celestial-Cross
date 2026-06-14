@@ -83,4 +83,34 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Editor.Nodes
             }
         }
     }
+
+    public class BTActionUseBestAbilityEditorNode : BTActionBaseEditorNode
+    {
+        private ActionUseBestAbilityData data = new ActionUseBestAbilityData();
+
+        public override void Initialize(string nodeName, Vector2 position)
+        {
+            base.Initialize(BTLocalizationManager.GetString("Action Use Best Ability"), position);
+            AddDataInputPort("Target", Port.Capacity.Single);
+
+            var thresholdField = new FloatField("Min Score");
+            thresholdField.value = data.minimumScoreThreshold;
+            thresholdField.RegisterValueChangedCallback(evt => { data.minimumScoreThreshold = evt.newValue; JsonData = GetJsonData(); });
+            extensionContainer.Add(thresholdField);
+            
+            RefreshExpandedState();
+            RefreshPorts();
+        }
+
+        public override string GetJsonData() => JsonUtility.ToJson(data);
+        public override void LoadFromJson(string json)
+        {
+            base.LoadFromJson(json);
+            if (!string.IsNullOrEmpty(json))
+            {
+                data = JsonUtility.FromJson<ActionUseBestAbilityData>(json);
+                if (extensionContainer.Q<FloatField>("Min Score") is FloatField f) f.value = data.minimumScoreThreshold;
+            }
+        }
+    }
 }

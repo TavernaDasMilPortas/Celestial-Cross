@@ -44,7 +44,8 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Editor
 
                 new SearchTreeGroupEntry(new GUIContent("Actions (Folhas)"), 1),
                 new SearchTreeEntry(new GUIContent("Mover/Aproximar/Recuar/Wander")) { level = 2, userData = typeof(BTActionMoveEditorNode) },
-                new SearchTreeEntry(new GUIContent("Usar Habilidade/Atacar")) { level = 2, userData = typeof(BTActionUseAbilityEditorNode) },
+                new SearchTreeEntry(new GUIContent("Usar Habilidade (Filtrada)")) { level = 2, userData = typeof(BTActionUseAbilityEditorNode) },
+                new SearchTreeEntry(new GUIContent("Usar Melhor Habilidade (Geral)")) { level = 2, userData = typeof(BTActionUseBestAbilityEditorNode) },
                 new SearchTreeEntry(new GUIContent("Esperar")) { level = 2, userData = typeof(BTActionWaitEditorNode) },
 
                 new SearchTreeGroupEntry(new GUIContent("Conditions (Folhas)"), 1),

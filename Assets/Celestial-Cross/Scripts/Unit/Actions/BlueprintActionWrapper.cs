@@ -39,6 +39,9 @@ namespace Celestial_Cross.Scripts.Units
             return null;
         }
 
+        public int GetMaxTargets() => 1;
+        public bool GetAllowSameTargetMultipleTimes() => false;
+
         private void HandleTargetPreview(AbilityBlueprint runningBlueprint, System.Collections.Generic.List<global::Unit> targets)
         {
             if (Blueprint != runningBlueprint) return;

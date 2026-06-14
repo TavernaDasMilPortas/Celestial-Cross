@@ -296,6 +296,19 @@ A visualização e a modularidade da Behavior Tree eram limitadas. Nós composto
 
 ---
 
+## 26. Inteligência Artificial: Utility Scoring e Simulação Gananciosa
+**Data: 13/06/2026**
+### **Problema:**
+A IA dos inimigos era muito rígida e baseada em filtros restritos de categoria (só atacava se estivesse no nó de Dano). Habilidades em área frequentemente não eram utilizadas de forma otimizada ou atingiam aliados.
+
+### **Solução:**
+*   **Utility Scoring Engine:** A IA agora avalia habilidades atribuindo uma pontuação (Score) baseada no estado do tabuleiro. Adicionada penalidade severa para "Fogo Amigo" (acertar aliados em ataques de área).
+*   **Greedy Simulation:** Implementado um loop duplo de simulação que prevê os próximos N alvos ideais para habilidades `maxTargets > 1` (ex: Chain Lightning), inflando a pontuação para incentivar o uso de ataques múltiplos apenas se houver inimigos suficientes aglomerados.
+*   **Ação Universal de Fallback:** Criado o nó `Action Use Best Ability` para que inimigos possam escolher taticamente entre curar, buffar ou bater sem precisar estarem presos a uma Behavior Tree engessada de condicionais.
+*   **Auto-Batch Update:** Uma ferramenta no menu (Editor) que varre todos os `AbilityGraphSO` do projeto para extrair multiplicadores de dano, custos e tempos de recarga e compilar a pontuação base da habilidade automaticamente, dispensando setups manuais exaustivos.
+
+---
+
 ## Próximos Passos
 *   Aprofundar a arquitetura de features futuras para Pets e Habilidades.
 *   Polimento visual e transições utilizando a nova fundação segura do BetterUI.

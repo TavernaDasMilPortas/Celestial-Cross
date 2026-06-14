@@ -172,12 +172,21 @@ public class AIBrain : MonoBehaviour
             if (act is GraphActionWrapper gw && gw.Graph != null)
             {
                 var hint = gw.Graph.aiHint;
+                
+                // Filtro de Cooldown
+                if (blackboard.abilityCooldowns.TryGetValue(act.ActionName, out int cd) && cd > 0)
+                {
+                    continue;
+                }
+
                 blackboard.availableAbilities.Add(new AIBlackboard.AbilityInfo { 
                     action = act, 
                     hint = hint,
                     subtype = gw.Subtype,
                     range = gw.Range,
-                    areaPattern = gw.GetAreaPattern()
+                    areaPattern = gw.GetAreaPattern(),
+                    maxTargets = gw.GetMaxTargets(),
+                    allowSameTargetMultipleTimes = gw.GetAllowSameTargetMultipleTimes()
                 });
             }
             else if (act is MoveAction)
@@ -198,7 +207,9 @@ public class AIBrain : MonoBehaviour
                     hint = h,
                     subtype = AbilitySubtype.Attack,
                     range = act.Range,
-                    areaPattern = null
+                    areaPattern = null,
+                    maxTargets = 1,
+                    allowSameTargetMultipleTimes = false
                 });
             }
         }
@@ -231,6 +242,13 @@ public class AIBrain : MonoBehaviour
                 else if (plan.moveTarget.HasValue)
                 {
                     targetPos = plan.moveTarget.Value;
+                }
+                
+                // Registro do Cooldown (Fase 1)
+                var abInfo = blackboard.availableAbilities.FirstOrDefault(a => a.action == plan.actionToExecute);
+                if (abInfo != null && abInfo.hint != null && abInfo.hint.cooldownTurns > 0)
+                {
+                    blackboard.abilityCooldowns[plan.actionToExecute.ActionName] = abInfo.hint.cooldownTurns;
                 }
                 
                 // --- VISUAL FEEDBACK (Fase 1) ---
