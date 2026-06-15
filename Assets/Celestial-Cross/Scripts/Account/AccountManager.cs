@@ -21,6 +21,7 @@ public class AccountManager : MonoBehaviour
     [SerializeField] private AccountProfile debugProfile;
     [SerializeField] private bool useDebugProfile = false;
 
+    public AccountBootstrapConfig BootstrapConfig => bootstrapConfig;
     public Account PlayerAccount { get; private set; }
 
     private IStorageProvider _localProvider;
@@ -64,11 +65,10 @@ public class AccountManager : MonoBehaviour
             }
         }
         
-        // Se foi criado dinamicamente, force useDebugProfile = true para facilidade de testes no editor
+        // Se foi criado dinamicamente, evitamos forçar o useDebugProfile caso o jogador queira testar o save real
         if (gameObject.name.Contains("AutoCreated"))
         {
-            Debug.Log("[AccountManager] AutoCreated detectado. Forçando useDebugProfile = true.");
-            useDebugProfile = true;
+            Debug.Log("[AccountManager] AutoCreated detectado. O uso do save ou do bootstrap será mantido conforme a configuração padrão.");
         }
 #endif
 

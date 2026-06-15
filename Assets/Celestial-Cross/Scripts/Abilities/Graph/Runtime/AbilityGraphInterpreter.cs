@@ -39,7 +39,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                 Destroy(gameObject);
             }
         }
-        public IEnumerator ExecuteGraphCoroutine(Unit caster, AbilityGraphSO graph, CombatHook hook, Action onComplete, int level = 1, string slotId = "", Vector2Int? presetTargetPos = null)
+        public IEnumerator ExecuteGraphCoroutine(Unit caster, AbilityGraphSO graph, CombatHook hook, Action onComplete, int level = 1, string slotId = "", Vector2Int? presetTargetPos = null, List<Vector2Int> presetTargetPositions = null)
         {
             if (graph == null || graph.NodeData.Count == 0)
             {
@@ -54,7 +54,18 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
             context.abilityLevel = level;
             context.slotId = slotId;
 
-            if (presetTargetPos.HasValue)
+            if (presetTargetPositions != null && presetTargetPositions.Count > 0)
+            {
+                context.targetPos = presetTargetPositions[0];
+                context.targets.Clear();
+                foreach (var pos in presetTargetPositions)
+                {
+                    var unit = GridMap.Instance?.GetTile(pos)?.OccupyingUnit;
+                    if (unit != null) context.targets.Add(unit);
+                }
+                if (context.targets.Count > 0) context.target = context.targets[0];
+            }
+            else if (presetTargetPos.HasValue)
             {
                 context.targetPos = presetTargetPos.Value;
                 var presetUnit = GridMap.Instance?.GetTile(presetTargetPos.Value)?.OccupyingUnit;
@@ -860,8 +871,49 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
 
             if (context.source != null && context.source.Team != Team.Player)
             {
-                // Para a IA, se o Behavior Tree forneceu um alvo explícito (targetPos), ele tem prioridade
-                if (context.targetPos.HasValue)
+                // Para a IA, se o Behavior Tree forneceu alvos explícitos, eles têm prioridade
+                if (context.targets != null && context.targets.Count > 0)
+                {
+                    Debug.Log($"[Interpreter] Usando {context.targets.Count} alvos do Behavior Tree para a IA.");
+                    
+                    // Se for um ataque em área, calcular os alvos na área a partir de cada ponto central
+                    if (data.mode == GraphTargetMode.Area && data.areaPattern != null)
+                    {
+                        var expandedTargets = new List<Unit>();
+                        var hitPositions = new HashSet<Vector2Int>();
+                        if (GridMap.Instance != null)
+                        {
+                            foreach (var t in context.targets)
+                            {
+                                var areaPoints = AreaResolver.ResolveCells(t.GridPosition, data.areaPattern, data.preferredDirection);
+                                foreach (var pt in areaPoints)
+                                {
+                                    var tile = GridMap.Instance.GetTile(pt);
+                                    if (tile != null && tile.OccupyingUnit != null)
+                                    {
+                                        bool isAlly = tile.OccupyingUnit.Team == context.source.Team;
+                                        if (data.factionType == GraphFactionType.Ally && !isAlly) continue;
+                                        if (data.factionType == GraphFactionType.Enemy && isAlly) continue;
+                                        
+                                        // Apenas adicionar se não bateu nessa unidade para esse ponto
+                                        if (hitPositions.Add(tile.OccupyingUnit.GridPosition))
+                                        {
+                                            expandedTargets.Add(tile.OccupyingUnit);
+                                        }
+                                        else if (data.allowSameTargetMultipleTimes)
+                                        {
+                                            // Se permite múltiplas vezes, e já foi atingido, nós adicionamos mesmo assim
+                                            expandedTargets.Add(tile.OccupyingUnit);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        context.targets = expandedTargets;
+                    }
+                    yield break;
+                }
+                else if (context.targetPos.HasValue)
                 {
                     Debug.Log($"[Interpreter] Usando alvo do Behavior Tree ({context.targetPos.Value}) para a IA.");
                     
@@ -940,7 +992,8 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
 
         private void ExecuteDamage(DamageNodeData data, CombatContext context)
         {
-            foreach (var target in context.targets)
+            var targetsCopy = context.targets.ToList();
+            foreach (var target in targetsCopy)
             {
                 if (target == null) continue;
                 var stepContext = new CombatContext(context.source, target);
@@ -979,7 +1032,8 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
 
         private void ExecuteHeal(HealNodeData data, CombatContext context)
         {
-            foreach (var target in context.targets)
+            var targetsCopy = context.targets.ToList();
+            foreach (var target in targetsCopy)
             {
                 if (target == null) continue;
                 
@@ -1280,7 +1334,8 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
 
             bool isBuff = conditionGraph.GetIsBuff();
 
-            foreach (var target in context.targets)
+            var targetsCopy = context.targets.ToList();
+            foreach (var target in targetsCopy)
             {
                 if (target == null) continue;
 

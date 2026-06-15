@@ -74,10 +74,15 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Runtime.Actions
                 return BTResult.Failure;
             }
 
+            var selectedUnits = SelectAllTargets(bestAbility, bestTarget, blackboard);
+            var selectedPositions = selectedUnits.Select(u => u.GridPosition).ToList();
+
             blackboard.bestPlan = new AIBlackboard.PlannedAction {
                 actionToExecute = bestAbility.action,
                 targetUnit = bestTarget,
-                moveTarget = null
+                moveTarget = null,
+                targetUnits = selectedUnits,
+                targetPositions = selectedPositions
             };
 
             string abilityName = bestAbility.action != null ? bestAbility.action.ActionName : "Desconhecida";
@@ -171,6 +176,34 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Runtime.Actions
                 .Where(u => AIGridUtility.ChebyshevDistance(casterPos, u.GridPosition) <= range)
                 .OrderBy(u => AIGridUtility.ChebyshevDistance(casterPos, u.GridPosition))
                 .FirstOrDefault();
+        }
+
+        private List<Unit> SelectAllTargets(AIBlackboard.AbilityInfo ability, Unit primary, AIBlackboard bb)
+        {
+            var result = new List<Unit> { primary };
+            int max = ability.maxTargets > 0 ? ability.maxTargets : 1;
+            if (max <= 1) return result;
+
+            var candidates = new List<Unit>(
+                ability.hint.targetsFriendlies ? bb.allies : bb.enemies);
+            candidates.RemoveAll(u => AIGridUtility.ChebyshevDistance(bb.myPosition, u.GridPosition) > ability.range);
+
+            if (!ability.allowSameTargetMultipleTimes)
+                candidates.Remove(primary);
+
+            for (int i = 1; i < max; i++)
+            {
+                Unit next = ability.allowSameTargetMultipleTimes
+                    ? primary   // Repete o mesmo alvo quando permitido
+                    : GetBestSecondaryTarget(bb.myPosition, ability.range, candidates);
+
+                if (next == null) break;
+                result.Add(next);
+
+                if (!ability.allowSameTargetMultipleTimes)
+                    candidates.Remove(next);
+            }
+            return result;
         }
     }
 }

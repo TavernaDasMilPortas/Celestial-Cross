@@ -234,14 +234,22 @@ public class AIBrain : MonoBehaviour
             if (actIdx >= 0)
             {
                 Vector2Int targetPos = enemy.GridPosition;
+                List<Vector2Int> targetPositions = new List<Vector2Int>();
                 
-                if (plan.targetUnit != null)
+                if (plan.targetPositions != null && plan.targetPositions.Count > 0)
+                {
+                    targetPositions = plan.targetPositions;
+                    targetPos = targetPositions[0];
+                }
+                else if (plan.targetUnit != null)
                 {
                     targetPos = plan.targetUnit.GridPosition;
+                    targetPositions.Add(targetPos);
                 }
                 else if (plan.moveTarget.HasValue)
                 {
                     targetPos = plan.moveTarget.Value;
+                    targetPositions.Add(targetPos);
                 }
                 
                 // Registro do Cooldown (Fase 1)
@@ -304,13 +312,16 @@ public class AIBrain : MonoBehaviour
                     yield return new WaitForSeconds(0.8f);
                     
                     // Passo 3: Foca por um tempo onde está o alvo voltando para o zoom que estava antes
-                    GridTile targetTile = GridMap.Instance.GetTile(targetPos);
-                    if (targetTile != null)
+                    foreach (var pos in targetPositions)
                     {
-                        if (plan.targetUnit != null)
-                            targetTile.PreviewArea(); // Destaca vermelho/agressivo
-                        else
-                            targetTile.Select(); // Destaca selecionado/movimento
+                        GridTile targetTile = GridMap.Instance.GetTile(pos);
+                        if (targetTile != null)
+                        {
+                            if (plan.targetUnit != null || (plan.targetPositions != null && plan.targetPositions.Count > 0))
+                                targetTile.PreviewArea(); // Destaca vermelho/agressivo
+                            else
+                                targetTile.Select(); // Destaca selecionado/movimento
+                        }
                     }
                     GridMap.Instance.RefreshDynamicHighlights();
 
@@ -330,6 +341,10 @@ public class AIBrain : MonoBehaviour
                 
                 // Configura o alvo ANTES do SelectAction
                 enemy.Actions[actIdx].Target = targetPos;
+                if (enemy.Actions[actIdx] is GraphActionWrapper wrapper)
+                {
+                    wrapper.PresetTargetPositions = targetPositions;
+                }
                 
                 // Dispara a execução da habilidade (GraphActionWrapper executa no EnterAction)
                 enemy.SelectAction(actIdx);

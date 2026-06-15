@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Collections.Generic;
 using UnityEngine;
 using Celestial_Cross.Scripts.Abilities.Graph;
 using Celestial_Cross.Scripts.Combat.Execution;
@@ -46,6 +47,7 @@ namespace Celestial_Cross.Scripts.Units
 
         private Vector2Int target = new Vector2Int(-999, -999);
         public Vector2Int Target { get => target; set => target = value; }
+        public List<Vector2Int> PresetTargetPositions { get; set; }
         public string SlotId { get; set; } = "";
 
         public event Action<ActionForecast> OnForecastUpdated;
@@ -55,9 +57,11 @@ namespace Celestial_Cross.Scripts.Units
             get
             {
                 var startNode = Graph.NodeData.FirstOrDefault(n => n.NodeType == "StartNode");
-                if (startNode != null) {
+                if (startNode != null && !string.IsNullOrEmpty(startNode.JsonData)) {
                     var data = JsonUtility.FromJson<Celestial_Cross.Scripts.Abilities.Graph.Runtime.StartNodeData>(startNode.JsonData);
-                    return data.subtype;
+                    if (data != null) {
+                        return data.subtype;
+                    }
                 }
                 return AbilitySubtype.None;
             }
@@ -124,12 +128,13 @@ namespace Celestial_Cross.Scripts.Units
                     // Reset focus
                     CameraController.Instance?.ResetFocus();
 
-                    // Obter subtipo do StartNode do Grafo
                     var startNode = Graph.NodeData.FirstOrDefault(n => n.NodeType == "StartNode");
                     AbilitySubtype subtype = AbilitySubtype.None;
-                    if (startNode != null) {
+                    if (startNode != null && !string.IsNullOrEmpty(startNode.JsonData)) {
                         var data = JsonUtility.FromJson<Celestial_Cross.Scripts.Abilities.Graph.Runtime.StartNodeData>(startNode.JsonData);
-                        subtype = data.subtype;
+                        if (data != null) {
+                            subtype = data.subtype;
+                        }
                     }
 
                     bool isEnemy = caster is Celestial_Cross.Scripts.Units.Enemy.EnemyUnit;
@@ -144,7 +149,9 @@ namespace Celestial_Cross.Scripts.Units
                     }
 
                     AbilityExecutor.Instance.StartCoroutine(HandleTurnEnd(caster));
-                }, Level, SlotId, presetTarget);
+                }, Level, SlotId, presetTarget, presetTargetPositions: PresetTargetPositions);
+                
+                PresetTargetPositions = null;
             }
             else
             {
