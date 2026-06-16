@@ -83,11 +83,12 @@ public class PlayerController : MonoBehaviour
             UpdateTargeting();
         }
 
-        // O 'ConfirmAction()' original pelo Enter foi removido para priorizar toques ou botões de UI
         // que chamem explicitamente activeUnit.ConfirmAction() ou cliques duplos (OnExecuteRequested)
 
         if (Input.GetKeyDown(KeyCode.Escape))
             activeUnit.CancelAction();
+
+        activeUnit.UpdateAction();
     }
 
     private void UpdateTargeting()

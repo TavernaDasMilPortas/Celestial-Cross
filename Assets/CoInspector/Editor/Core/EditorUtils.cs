@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 using System.Reflection;
@@ -2281,12 +2281,22 @@ namespace CoInspector
             }
             foreach (var icon in allIcons)
             {
-                if (!icon.name.Contains("cs Script Icon"))
+                if (icon != null && !icon.name.Contains("cs Script Icon"))
                 {
                     return icon;
                 }
             }
-            return allIcons[0];
+
+            if (allIcons.Count > 0)
+            {
+                return allIcons[0];
+            }
+
+            if (components.Length > 0 && components[0] is RectTransform)
+            {
+                return CustomGUIContents.EmptyRectTransformContent.image as Texture2D;
+            }
+            return CustomGUIContents.EmptyGameObjectContent.image as Texture2D;
         }
         public static int GetMissingComponentID(SerializedObject gameObjectSerialized, int index)
         {

@@ -177,12 +177,113 @@ namespace Celestial_Cross.Scripts.Units
             }
         }
 
-        public void UpdateAction() { }
+        private GridTile lastHoveredTile;
+        private UnitGhostPreview ghostPreview;
+        private List<Vector2Int> currentPath;
 
-        public void Confirm() { }
+        public void UpdateAction()
+        {
+            if (Graph == null) return;
+
+            // Tentamos descobrir qual o efeito principal de movimento desse grafo
+            var previewData = Graph.GetPreviewMoveData();
+            if (previewData == null) return; // Nao é movimento, não desenha caminho
+
+            if (GridMap.Instance == null) return;
+
+            Vector2Int mousePos = GridMap.Instance.GetMouseGridPosition();
+            if (mousePos.x == -1 && mousePos.y == -1) return;
+
+            GridTile hoveredTile = GridMap.Instance.GetTile(mousePos);
+
+            if (hoveredTile != lastHoveredTile)
+            {
+                lastHoveredTile = hoveredTile;
+                
+                // Se o tile não for válido na whitelist do TargetSelector, ignorar
+                var targetSelector = caster.GetComponent<TargetSelector>();
+                if (targetSelector == null || !targetSelector.ValidTiles.Contains(hoveredTile))
+                {
+                    ClearPreviews();
+                    return;
+                }
+
+                if (previewData.moveMode == Celestial_Cross.Scripts.Abilities.Graph.Runtime.MoveEffectNodeData.MoveMode.MoveCaster)
+                {
+                    // Movimento do próprio caster (Andar/Teleport)
+                    currentPath = GridMap.Instance.FindPath(caster.GridPosition, hoveredTile.GridPosition, targetSelector.ValidTiles);
+                    
+                    if (currentPath != null && currentPath.Count > 0)
+                    {
+                        if (previewData.moveType != Celestial_Cross.Scripts.Abilities.Graph.Runtime.MoveEffectNodeData.MoveType.TeleportToTarget)
+                            if (PathVisualizer.Instance != null) PathVisualizer.Instance.DrawPath(currentPath, caster.GridPosition);
+                        
+                        caster.lastCalculatedPath = currentPath; // <-- GUARDA O PATH EXATO AQUI
+                        ShowGhost(caster, GridMap.Instance.GridToWorld(hoveredTile.GridPosition), caster.GridPosition.x > hoveredTile.GridPosition.x);
+                    }
+                    else
+                    {
+                        ClearPreviews();
+                    }
+                }
+                else
+                {
+                    // Movimento do Alvo (Push / Pull)
+                    if (hoveredTile.OccupyingUnit != null)
+                    {
+                        Unit targetUnit = hoveredTile.OccupyingUnit;
+                        Vector2Int dir = (targetUnit.GridPosition - caster.GridPosition);
+                        
+                        // Normaliza a direção
+                        if (Mathf.Abs(dir.x) > Mathf.Abs(dir.y)) dir = new Vector2Int(Mathf.Sign(dir.x) > 0 ? 1 : -1, 0);
+                        else dir = new Vector2Int(0, Mathf.Sign(dir.y) > 0 ? 1 : -1);
+
+                        if (previewData.moveType == Celestial_Cross.Scripts.Abilities.Graph.Runtime.MoveEffectNodeData.MoveType.Pull)
+                            dir = -dir;
+
+                        Vector2Int pushDest = targetUnit.GridPosition + (dir * previewData.range);
+                        currentPath = GridMap.Instance.FindPath(targetUnit.GridPosition, pushDest, null);
+
+                        if (currentPath != null && currentPath.Count > 0)
+                        {
+                            if (PathVisualizer.Instance != null) PathVisualizer.Instance.DrawPath(currentPath, targetUnit.GridPosition);
+                            ShowGhost(targetUnit, GridMap.Instance.GridToWorld(pushDest), targetUnit.GridPosition.x > pushDest.x);
+                        }
+                    }
+                    else
+                    {
+                        ClearPreviews();
+                    }
+                }
+            }
+        }
+
+        private void ShowGhost(Unit targetUnit, Vector3 worldPos, bool flip)
+        {
+            if (ghostPreview == null)
+            {
+                ghostPreview = caster.gameObject.GetComponent<UnitGhostPreview>();
+                if (ghostPreview == null) ghostPreview = caster.gameObject.AddComponent<UnitGhostPreview>();
+            }
+            ghostPreview.Initialize(targetUnit);
+            ghostPreview.ShowAt(worldPos, flip);
+        }
+
+        private void ClearPreviews()
+        {
+            if (PathVisualizer.Instance != null) PathVisualizer.Instance.ClearPath();
+            if (ghostPreview != null) ghostPreview.Hide();
+            currentPath = null;
+        }
+
+        public void Confirm()
+        {
+            ClearPreviews();
+        }
 
         public void Cancel()
         {
+            ClearPreviews();
             if (AbilityExecutor.Instance != null)
             {
                 AbilityExecutor.Instance.AbortCurrentAbility();

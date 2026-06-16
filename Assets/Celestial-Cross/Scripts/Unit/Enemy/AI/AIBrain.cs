@@ -307,6 +307,25 @@ public class AIBrain : MonoBehaviour
                         }
                     }
                     
+                    // Desenhar caminho e fantasma se for movimento
+                    if (plan.moveTarget.HasValue)
+                    {
+                        var validTiles = blackboard.reachableTiles.Select(p => GridMap.Instance.GetTile(p)).Where(t => t != null);
+                        var currentPath = GridMap.Instance.FindPath(enemy.GridPosition, plan.moveTarget.Value, validTiles);
+                        enemy.lastCalculatedPath = currentPath;
+                        
+                        if (currentPath != null && currentPath.Count > 0)
+                        {
+                            if (PathVisualizer.Instance != null)
+                                PathVisualizer.Instance.DrawPath(currentPath, enemy.GridPosition);
+                            
+                            var ghostPreview = enemy.GetComponent<UnitGhostPreview>();
+                            if (ghostPreview == null) ghostPreview = enemy.gameObject.AddComponent<UnitGhostPreview>();
+                            ghostPreview.Initialize(enemy);
+                            ghostPreview.ShowAt(GridMap.Instance.GridToWorld(plan.moveTarget.Value), enemy.GridPosition.x > plan.moveTarget.Value.x);
+                        }
+                    }
+                    
                     if (areaToHighlight != null)
                     {
                         foreach (var pos in areaToHighlight)
@@ -352,6 +371,9 @@ public class AIBrain : MonoBehaviour
                     // Passo 4: Limpa visualizações antes de executar a ação
                     GridMap.Instance.ResetAllTileVisuals();
                     GridMap.Instance.RefreshDynamicHighlights();
+                    if (PathVisualizer.Instance != null) PathVisualizer.Instance.ClearPath();
+                    var ghostPreviewHide = enemy.GetComponent<UnitGhostPreview>();
+                    if (ghostPreviewHide != null) ghostPreviewHide.Hide();
                 }
                 // ---------------------------------
                 

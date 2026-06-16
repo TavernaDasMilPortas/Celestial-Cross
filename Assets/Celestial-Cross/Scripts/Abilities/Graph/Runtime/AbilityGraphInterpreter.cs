@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using DG.Tweening;
 using CelestialCross.Combat;
 using Celestial_Cross.Scripts.Combat.Execution;
 using Celestial_Cross.Scripts.Abilities.Conditions;
@@ -1234,15 +1235,96 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                     var oldTile = gridMap.GetTile(subject.GridPosition);
                     if (oldTile != null) { oldTile.IsOccupied = false; oldTile.OccupyingUnit = null; }
 
-                    var moveAction = subject.GetComponent<MoveAction>();
-                    if (moveAction != null)
+                    if (data.moveMode == MoveEffectNodeData.MoveMode.MoveCaster && data.moveType != MoveEffectNodeData.MoveType.TeleportToTarget)
                     {
-                        yield return StartCoroutine(moveAction.MoveRoutine(destination));
+                        HashSet<GridTile> validMoveTiles = new HashSet<GridTile>();
+                        foreach (var tile in gridMap.GetAllTiles())
+                        {
+                            int dist = UnityEngine.Mathf.Abs(subject.GridPosition.x - tile.GridPosition.x) + UnityEngine.Mathf.Abs(subject.GridPosition.y - tile.GridPosition.y);
+                            if (dist <= data.range)
+                                validMoveTiles.Add(tile);
+                        }
+
+                        var path = subject.lastCalculatedPath;
+                        if (path == null || path.Count == 0 || path[path.Count - 1] != destination)
+                        {
+                            path = gridMap.FindPath(subject.GridPosition, destination, validMoveTiles);
+                        }
+                        
+                        if (path != null && path.Count > 0)
+                        {
+                            if (PathVisualizer.Instance != null && PathVisualizer.Instance.cameraFollowsMovement)
+                            {
+                                CameraController.Instance?.Follow(subject);
+                            }
+
+                            float moveSpeed = PathVisualizer.Instance != null ? PathVisualizer.Instance.unitWalkSpeed : 8f;
+                            Vector3[] waypoints = new Vector3[path.Count];
+                            for (int i = 0; i < path.Count; i++)
+                            {
+                                waypoints[i] = gridMap.GridToWorld(path[i]);
+                                waypoints[i].y = subject.transform.position.y;
+                            }
+                            
+                            float totalDistance = 0f;
+                            Vector3 currentPos = subject.transform.position;
+                            foreach (var wp in waypoints)
+                            {
+                                totalDistance += Vector3.Distance(currentPos, wp);
+                                currentPos = wp;
+                            }
+                            float duration = totalDistance / moveSpeed;
+
+                            yield return subject.transform.DOPath(waypoints, duration, DG.Tweening.PathType.Linear)
+                                .SetEase(DG.Tweening.Ease.Linear)
+                                .WaitForCompletion();
+                        }
+                        else
+                        {
+                            // Fallback caso caminho não seja encontrado
+                            float distance = Vector3.Distance(subject.transform.position, gridMap.GridToWorld(destination));
+                            float duration = distance / 4f;
+                            Vector3 finalPos = gridMap.GridToWorld(destination);
+                            finalPos.y = subject.transform.position.y;
+                            yield return subject.transform.DOMove(finalPos, duration)
+                                .SetEase(DG.Tweening.Ease.Linear)
+                                .WaitForCompletion();
+                        }
+                        subject.GridPosition = destination;
                     }
                     else
                     {
+                        // Reposicionamento via Habilidade (Push, Pull, Dash, Teleport)
+                        float duration = 0.3f;
+                        Vector3 finalWorldPos = gridMap.GridToWorld(destination);
+                        finalWorldPos.y = subject.transform.position.y;
+                        
+                        if (data.moveType == MoveEffectNodeData.MoveType.TeleportToTarget)
+                        {
+                            // Teleporte: desaparece e aparece
+                            Sequence seq = DG.Tweening.DOTween.Sequence();
+                            seq.Append(subject.transform.DOScale(0f, 0.15f).SetEase(DG.Tweening.Ease.InBack));
+                            seq.AppendCallback(() => subject.transform.position = finalWorldPos);
+                            seq.Append(subject.transform.DOScale(Vector3.one, 0.15f).SetEase(DG.Tweening.Ease.OutBack));
+                            yield return seq.WaitForCompletion();
+                        }
+                        else if (data.moveType == MoveEffectNodeData.MoveType.Push)
+                        {
+                            // Knockback (Push): Impacto forte
+                            yield return subject.transform.DOMove(finalWorldPos, duration).SetEase(DG.Tweening.Ease.OutExpo).WaitForCompletion();
+                        }
+                        else if (data.moveType == MoveEffectNodeData.MoveType.Pull)
+                        {
+                            // Puxão (Pull): Volta elástica ou rápida
+                            yield return subject.transform.DOMove(finalWorldPos, duration).SetEase(DG.Tweening.Ease.InBack).WaitForCompletion();
+                        }
+                        else
+                        {
+                            // Padrão ou Dash
+                            yield return subject.transform.DOMove(finalWorldPos, duration).SetEase(DG.Tweening.Ease.InOutQuad).WaitForCompletion();
+                        }
+                        
                         subject.GridPosition = destination;
-                        subject.transform.position = gridMap.GridToWorld(destination);
                     }
 
                     if (targetTile != null) { targetTile.IsOccupied = true; targetTile.OccupyingUnit = subject; }

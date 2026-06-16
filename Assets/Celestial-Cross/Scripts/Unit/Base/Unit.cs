@@ -213,6 +213,9 @@ public abstract class Unit : MonoBehaviour
     
     protected IUnitAction currentAction;
     public IUnitAction CurrentAction => currentAction;
+    
+    // Armazena o path visualizado no targeting para sincronizar perfeitamente a execução real
+    [HideInInspector] public System.Collections.Generic.List<UnityEngine.Vector2Int> lastCalculatedPath;
 
     public System.Action<IUnitAction> OnActionChanged;
 

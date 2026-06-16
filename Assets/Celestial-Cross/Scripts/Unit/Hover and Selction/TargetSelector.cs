@@ -232,6 +232,11 @@ public class TargetSelector : MonoBehaviour
             tile.HardClearAllStates();
     }
 
+    public GridTile CurrentHoveredTile => currentHoveredTile;
+    public Unit CurrentHoveredUnit => currentHoveredUnit;
+    public HashSet<GridTile> ValidTiles => validTiles;
+    public HashSet<Unit> ValidTargets => validTargets;
+
     GridTile currentHoveredTile;
     Unit currentHoveredUnit;
 
@@ -535,6 +540,7 @@ public class TargetSelector : MonoBehaviour
 
     void Confirm()
     {
+        sourceUnit.ConfirmAction();
         OnTargetsConfirmed?.Invoke(GetResolvedTargets(selectedTargets, selectedPoints));
         isActive = false;
         ClearAllHighlights();
@@ -542,6 +548,7 @@ public class TargetSelector : MonoBehaviour
 
     void Cancel()
     {
+        sourceUnit.CancelAction();
         isActive = false;
         ClearAllHighlights();
         ClearSelection();

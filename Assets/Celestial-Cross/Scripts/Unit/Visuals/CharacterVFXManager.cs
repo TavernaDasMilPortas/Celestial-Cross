@@ -7,10 +7,24 @@ namespace CelestialCross.UnitVisuals
     public class CharacterVFXManager : MonoBehaviour
     {
         private static CharacterVFXManager _instance;
+        private static bool applicationIsQuitting = false;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void ResetStatic()
+        {
+            applicationIsQuitting = false;
+            _instance = null;
+        }
+
         public static CharacterVFXManager Instance
         {
             get
             {
+                if (applicationIsQuitting)
+                {
+                    return null;
+                }
+
                 if (_instance == null)
                 {
                     var go = new GameObject("CharacterVFXManager");
@@ -35,6 +49,11 @@ namespace CelestialCross.UnitVisuals
                 _instance = this;
                 DontDestroyOnLoad(gameObject);
             }
+        }
+
+        private void OnApplicationQuit()
+        {
+            applicationIsQuitting = true;
         }
 
         public void RegisterRenderer(Unit unit, SpriteRenderer sr)
