@@ -76,7 +76,7 @@ MonoBehaviour:
   aiHint:
     category: 0
     basePriority: 53
-    cooldownTurns: 0
+    cooldownTurns: 1
     lowHPTargetBonus: 40
     freshApplicationBonus: 0
     targetsFriendlies: 0

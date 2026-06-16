@@ -571,12 +571,12 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
 
                 case "DamageEffectNode":
                     var dmgData = JsonUtility.FromJson<DamageNodeData>(node.JsonData);
-                    ExecuteDamage(dmgData, context);
+                    yield return StartCoroutine(ExecuteDamageRoutine(dmgData, context));
                     break;
 
                 case "HealEffectNode":
                     var healData = JsonUtility.FromJson<HealNodeData>(node.JsonData);
-                    ExecuteHeal(healData, context);
+                    yield return StartCoroutine(ExecuteHealRoutine(healData, context));
                     break;
 
                 case "ConditionalFlowNode":
@@ -948,6 +948,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                 rule.mode = data.mode == GraphTargetMode.Single ? TargetingMode.Unit : TargetingMode.Area;
                 rule.origin = data.origin == GraphTargetOrigin.Unit ? TargetOrigin.Unit : TargetOrigin.Point;
                 rule.allowMultiple = data.multipleTargets;
+                rule.allowSameTargetMultipleTimes = data.allowSameTargetMultipleTimes;
                 rule.maxTargets = data.maxTargets;
                 rule.targetFaction = (TargetFaction)data.factionType;
 
@@ -1014,7 +1015,6 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                 }
                 else
                 {
-                    // Fallback to source attack
                     baseVal = context.source != null ? context.source.Stats.attack : 0;
                 }
 
@@ -1051,6 +1051,83 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                         }
                     }
                 }
+
+                float multiplier = 1.0f;
+                if (!string.IsNullOrEmpty(data.variableReference))
+                    multiplier = GetVariable(context, data.variableReference, multiplier);
+
+                int finalAmount = Mathf.FloorToInt(baseVal * multiplier);
+                
+                var stepContext = new CombatContext(context.source, target, finalAmount);
+                CombatLogger.Log($"  <color=#4dff4d>[Cura]</color> Curando <b>{finalAmount}</b> em <b>{target.DisplayName}</b>", LogCategory.Damage);
+                DamageProcessor.ProcessAndApplyHeal(stepContext, data.canCrit);
+            }
+        }
+
+        private IEnumerator ExecuteDamageRoutine(DamageNodeData data, CombatContext context)
+        {
+            var targetsCopy = context.targets.ToList();
+            foreach (var target in targetsCopy)
+            {
+                if (target == null) continue;
+                var stepContext = new CombatContext(context.source, target);
+                
+                float baseVal = 0;
+
+                if (data.scalings != null && data.scalings.Count > 0)
+                {
+                    foreach (var scaling in data.scalings)
+                    {
+                        var u = scaling.useTargetStat ? target : context.source;
+                        if (u != null && u.VariableStore != null)
+                        {
+                            float statVal = u.VariableStore.GetStat(scaling.statType);
+                            baseVal += statVal * (scaling.percentage / 100f);
+                        }
+                    }
+                }
+                else
+                {
+                    // Fallback to source attack
+                    baseVal = context.source != null ? context.source.Stats.attack : 0;
+                }
+
+                float multiplier = 1.0f;
+                if (!string.IsNullOrEmpty(data.variableReference))
+                    multiplier = GetVariable(context, data.variableReference, multiplier);
+
+                int finalAmount = Mathf.FloorToInt(baseVal * multiplier);
+                stepContext.amount = finalAmount;
+
+                CombatLogger.Log($"  <color=#ff4d4d>[Dano]</color> Causando <b>{finalAmount}</b> de dano em <b>{target.DisplayName}</b>", LogCategory.Damage);
+                DamageProcessor.ProcessAndApplyDamage(stepContext, true);
+                
+                // Pequeno delay para que múltiplos hits sejam visíveis e não se sobreponham num único frame
+                yield return new WaitForSeconds(0.2f);
+            }
+        }
+
+        private IEnumerator ExecuteHealRoutine(HealNodeData data, CombatContext context)
+        {
+            var targetsCopy = context.targets.ToList();
+            foreach (var target in targetsCopy)
+            {
+                if (target == null) continue;
+                
+                float baseVal = 0;
+                
+                if (data.scalings != null && data.scalings.Count > 0)
+                {
+                    foreach (var scaling in data.scalings)
+                    {
+                        var u = scaling.useTargetStat ? target : context.source;
+                        if (u != null && u.VariableStore != null)
+                        {
+                            float statVal = u.VariableStore.GetStat(scaling.statType);
+                            baseVal += statVal * (scaling.percentage / 100f);
+                        }
+                    }
+                }
                 else
                 {
                     // Fallback to target max health
@@ -1064,8 +1141,10 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                 int finalAmount = Mathf.FloorToInt(baseVal * multiplier);
                 
                 var stepContext = new CombatContext(context.source, target, finalAmount);
-                CombatLogger.Log($"  <color=#4dff88>[Cura]</color> Curando <b>{finalAmount}</b> de HP em <b>{target.DisplayName}</b>", LogCategory.Healing);
+                CombatLogger.Log($"  <color=#4dff4d>[Cura]</color> Curando <b>{finalAmount}</b> em <b>{target.DisplayName}</b>", LogCategory.Damage);
                 DamageProcessor.ProcessAndApplyHeal(stepContext, data.canCrit);
+                
+                yield return new WaitForSeconds(0.2f);
             }
         }
 

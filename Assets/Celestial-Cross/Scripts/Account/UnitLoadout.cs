@@ -20,7 +20,21 @@ public class UnitLoadout
     [Header("Skill Tree Loadout")]
     public string Slot1SkillId;
     public string Slot2SkillId;
+    public bool hasInitializedDefaultSkills = false;
     public List<Celestial_Cross.Scripts.Abilities.SkillTree.SkillBranchSelection> branchSelections = new List<Celestial_Cross.Scripts.Abilities.SkillTree.SkillBranchSelection>();
+
+    public void InitializeDefaults(Celestial_Cross.Scripts.Abilities.SkillTree.SkillTreeConfigSO treeConfig)
+    {
+        if (hasInitializedDefaultSkills) return;
+        
+        if (treeConfig != null)
+        {
+            if (treeConfig.defaultSlot1Skill != null) Slot1SkillId = treeConfig.defaultSlot1Skill.name;
+            if (treeConfig.defaultSlot2Skill != null) Slot2SkillId = treeConfig.defaultSlot2Skill.name;
+        }
+        
+        hasInitializedDefaultSkills = true;
+    }
 
     public UnitLoadout() {}
     public UnitLoadout(string unitID)

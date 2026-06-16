@@ -47,11 +47,26 @@ public class AIBrain : MonoBehaviour
     void OnEnable()
     {
         TurnManager.OnTurnEnded += HandleTurnEnded;
+        TurnManager.OnRoundStarted += HandleRoundStarted;
     }
 
     void OnDisable()
     {
         TurnManager.OnTurnEnded -= HandleTurnEnded;
+        TurnManager.OnRoundStarted -= HandleRoundStarted;
+    }
+
+    private void HandleRoundStarted(int round)
+    {
+        if (round == 1)
+        {
+            if (blackboard != null)
+            {
+                blackboard.abilityCooldowns.Clear();
+                blackboard.turnsAlive = 0;
+                blackboard.currentTurnNumber = 0;
+            }
+        }
     }
 
     void HandleTurnEnded()
@@ -256,7 +271,8 @@ public class AIBrain : MonoBehaviour
                 var abInfo = blackboard.availableAbilities.FirstOrDefault(a => a.action == plan.actionToExecute);
                 if (abInfo != null && abInfo.hint != null && abInfo.hint.cooldownTurns > 0)
                 {
-                    blackboard.abilityCooldowns[plan.actionToExecute.ActionName] = abInfo.hint.cooldownTurns;
+                    // + 1 para compensar o decremento feito no final do mesmo turno de uso
+                    blackboard.abilityCooldowns[plan.actionToExecute.ActionName] = abInfo.hint.cooldownTurns + 1;
                 }
                 
                 // --- VISUAL FEEDBACK (Fase 1) ---

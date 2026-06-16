@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b74335336934364f92171120eea7025, type: 3}
+  m_Name: Ability_SNIPER_NewAbility
+  m_EditorClassIdentifier: Assembly-CSharp::Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO
+  abilityName: New Ability
+  abilityIcon: {fileID: 0}
+  abilityDescription: Ability description here...
+  displayRange: 1
+  NodeLinks: []
+  NodeData:
+  - Guid: 2a9ae3ca-8f49-4aec-86c7-95d0b1e21530
+    NodeType: StartNode
+    NodeTitle: Start
+    Position: {x: 100, y: 200}
+    JsonData: '{"type":1,"isBuff":false}'
+    areaPattern: {fileID: 0}
+  Dependencies: []
+  Variables: []
+  MaxLevel: 1
+  aiHint:
+    category: 0
+    basePriority: 50
+    cooldownTurns: 0
+    lowHPTargetBonus: 20
+    freshApplicationBonus: 15
+    targetsFriendlies: 0
+    estimatedValue: 10
+    isLocked: 0
+  GeneratedDescription: 

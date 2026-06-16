@@ -309,9 +309,23 @@ A IA dos inimigos era muito rígida e baseada em filtros restritos de categoria 
 
 ---
 
+## 27. Refatoração do Multi-Targeting e Estabilidade da UI de Combate
+**Data: 15/06/2026**
+### **Problemas:**
+*   A seleção múltipla de alvos em combate estava auto-confirmando o ataque acidentalmente, sem chance de repensar a estratégia.
+*   Efeitos múltiplos no mesmo alvo eram disparados instantaneamente no mesmo frame, escondendo o somatório das animações e popups de dano/cura.
+*   O texto indicativo de alvos múltiplos ("2x", "3x") sofria de atrasos/inconsistência de instâncias (bugs de pooling e scripts duplicados). 
+*   Imagens de fundo do Multi-Target ficavam travadas nas bordas da tela quando a câmera afastava.
+
+### **Soluções:**
+*   **Targeting via Fila Cíclica:** Alterado o fluxo no `TargetSelector.cs`. A seleção múltipla funciona como uma fila (descarta o alvo mais antigo se exceder o limite) e o ataque só confirma mediante clique final num tile que já pertence à seleção.
+*   **Dual-Flow do Grafo de Habilidades:** O `AbilityGraphInterpreter` foi dividido em execução Síncrona (validação ultra-rápida usada pela IA e simulações) e Assíncrona via Coroutines (usada durante a partida real). Isso permitiu injetar micro-delays de 0.2s entre acertos sucessivos no mesmo alvo.
+*   **Controle de Visibilidade Inteligente (CanvasGroup):** Refatorada a UI de Multiplicadores para usar `CanvasGroup`. Agora o painel inteiro e seus fundos desvanecem perfeitamente ao sair do *Frustum* da câmera.
+*   **Saneamento de Prefabs da UI:** Corrigido o `TargetMultiplierUIManager` para aceitar referências customizadas de Parent/Camada no Inspector, com limpeza automática de scripts `TargetMultiplierUI` perdidos nos GameObjects Filhos (que antes causavam a invisibilidade do texto por curto-circuito do Alpha).
+
+---
+
 ## Próximos Passos
+*   Implementar campos no `Unit Editor` para definição de `Default Skills` nos Slots e inserção de sprites customizados fora dos Animation Clips.
 *   Aprofundar a arquitetura de features futuras para Pets e Habilidades.
 *   Polimento visual e transições utilizando a nova fundação segura do BetterUI.
-*   Verificar em Play Mode as transições visuais e o submodal de detalhes de status durante batalhas reais.
-
-
