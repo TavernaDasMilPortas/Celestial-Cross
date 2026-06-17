@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
+using DG.Tweening;
+using MoreMountains.Feedbacks;
 
 namespace CelestialCross.UI.Skills
 {
@@ -9,6 +11,16 @@ namespace CelestialCross.UI.Skills
     {
         public GameObject modalRoot;
         
+        [Header("Animações (DOTween & Feel)")]
+        public RectTransform paperBackground; // O fundo que representa a folha de caderno
+        public CanvasGroup modalCanvasGroup;
+        public float animationSpeed = 1f;
+        public MMF_Player openPaperFeedback;
+        public MMF_Player closePaperFeedback;
+        public MMF_Player stickerPopFeedback;
+
+        private Sequence currentAnimSeq;
+
         [Header("Seção 1: Condições Temporárias")]
         public RectTransform conditionsGrid;
         public GameObject conditionIconPrefab;
@@ -35,13 +47,132 @@ namespace CelestialCross.UI.Skills
         {
             if (unit == null) return;
             if (modalRoot != null) modalRoot.SetActive(true);
+            
             Populate(unit);
+            PlayOpenAnimation();
         }
 
         public void Close()
         {
-            if (modalRoot != null) modalRoot.SetActive(false);
             if (detailModal != null) detailModal.Close();
+            PlayCloseAnimation();
+        }
+
+        private void PlayCloseAnimation()
+        {
+            if (currentAnimSeq != null && currentAnimSeq.IsActive())
+            {
+                currentAnimSeq.Kill();
+            }
+
+            currentAnimSeq = DOTween.Sequence();
+            currentAnimSeq.timeScale = animationSpeed;
+
+            List<Transform> allStickers = GetAllGeneratedItems(); 
+            float delayPops = 0f;
+            
+            // "Descola" os adesivos rapidamente, de trás para frente
+            for (int i = allStickers.Count - 1; i >= 0; i--)
+            {
+                Transform sticker = allStickers[i];
+                currentAnimSeq.Insert(delayPops, sticker.DOScale(0f, 0.15f).SetEase(Ease.InBack));
+                delayPops += 0.02f; // Extremamente rápido pra não travar muito o fechamento
+            }
+
+            float paperStartDelay = delayPops;
+
+            // A Folha "puxada" da mesa
+            if (paperBackground != null)
+            {
+                currentAnimSeq.Insert(paperStartDelay, paperBackground.DOAnchorPos(new Vector2(0, -800), 0.3f).SetEase(Ease.InBack));
+                currentAnimSeq.Insert(paperStartDelay, paperBackground.DORotate(new Vector3(0, 0, -15f), 0.3f).SetEase(Ease.InBack));
+                currentAnimSeq.Insert(paperStartDelay, paperBackground.DOScale(0.8f, 0.3f).SetEase(Ease.InBack));
+                
+                if (closePaperFeedback != null)
+                {
+                    currentAnimSeq.InsertCallback(paperStartDelay, () => closePaperFeedback.PlayFeedbacks());
+                }
+            }
+
+            // Fade out geral de sombra do fundo
+            if (modalCanvasGroup != null)
+            {
+                currentAnimSeq.Insert(paperStartDelay + 0.1f, modalCanvasGroup.DOFade(0f, 0.2f));
+            }
+
+            // Finalmente desativa a tela ao fim de tudo
+            currentAnimSeq.OnComplete(() => {
+                if (modalRoot != null) modalRoot.SetActive(false);
+            });
+        }
+
+        private void PlayOpenAnimation()
+        {
+            if (currentAnimSeq != null && currentAnimSeq.IsActive())
+            {
+                currentAnimSeq.Kill();
+            }
+
+            if (modalCanvasGroup != null) modalCanvasGroup.alpha = 0f;
+            
+            if (paperBackground != null)
+            {
+                // Joga a folha pra fora da tela, pra baixo e inclinada
+                paperBackground.anchoredPosition = new Vector2(0, -800); 
+                paperBackground.localRotation = Quaternion.Euler(0, 0, -15f);
+                paperBackground.localScale = Vector3.one * 0.8f;
+            }
+
+            List<Transform> allStickers = GetAllGeneratedItems(); 
+            foreach (var sticker in allStickers)
+            {
+                sticker.localScale = Vector3.zero; // Encolhe para o efeito de "Pop"
+            }
+
+            currentAnimSeq = DOTween.Sequence();
+            currentAnimSeq.timeScale = animationSpeed;
+
+            // a) Fade in rápido geral do Modal
+            if (modalCanvasGroup != null) 
+                currentAnimSeq.Join(modalCanvasGroup.DOFade(1f, 0.15f));
+
+            // b) A Folha "Bate" na mesa
+            if (paperBackground != null)
+            {
+                currentAnimSeq.Join(paperBackground.DOAnchorPos(Vector2.zero, 0.35f).SetEase(Ease.OutBack, 1.2f));
+                currentAnimSeq.Join(paperBackground.DORotate(Vector3.zero, 0.3f).SetEase(Ease.OutBack));
+                currentAnimSeq.Join(paperBackground.DOScale(1f, 0.3f).SetEase(Ease.OutBack));
+                
+                // Feedback tátil/sonoro de folha sendo manipulada
+                if (openPaperFeedback != null)
+                {
+                    currentAnimSeq.InsertCallback(0.15f, () => openPaperFeedback.PlayFeedbacks());
+                }
+            }
+
+            // c) Pipocar os adesivos e post-its em cascata (Stagger)
+            float delayPops = 0f;
+            foreach (var sticker in allStickers)
+            {
+                currentAnimSeq.Insert(0.25f + delayPops, sticker.DOScale(1f, 0.3f).SetEase(Ease.OutBack, 1.5f));
+                
+                // Feedback sonoro curtinho (tip, tip, tip)
+                if (stickerPopFeedback != null)
+                {
+                    currentAnimSeq.InsertCallback(0.25f + delayPops, () => stickerPopFeedback.PlayFeedbacks());
+                }
+                delayPops += 0.04f; // Pequeno intervalo para criar o efeito cascata
+            }
+        }
+
+        private List<Transform> GetAllGeneratedItems()
+        {
+            List<Transform> items = new List<Transform>();
+            if (conditionsGrid != null) foreach(Transform child in conditionsGrid) items.Add(child);
+            if (positiveModifiersContainer != null) foreach(Transform child in positiveModifiersContainer) items.Add(child);
+            if (negativeModifiersContainer != null) foreach(Transform child in negativeModifiersContainer) items.Add(child);
+            if (allPassivesContainer != null) foreach(Transform child in allPassivesContainer) items.Add(child);
+            return items;
         }
 
         private void Populate(global::Unit unit)
@@ -67,7 +198,11 @@ namespace CelestialCross.UI.Skills
 
                     // Configurar imagem do botão (ícone da condição)
                     var btn = go.GetComponent<Button>();
-                    var img = go.GetComponent<Image>();
+                    
+                    // Primeiro tenta encontrar o objeto filho chamado "Icon" (para não pegar a borda)
+                    var imgTransform = go.transform.Find("Icon");
+                    var img = imgTransform != null ? imgTransform.GetComponent<Image>() : go.GetComponent<Image>();
+                    
                     if (img != null)
                     {
                         img.sprite = c.icon;
