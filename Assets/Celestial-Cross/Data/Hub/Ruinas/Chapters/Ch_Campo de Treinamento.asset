@@ -99,7 +99,7 @@ MonoBehaviour:
       type: {class: CombatStoryNode, ns: CelestialCross.Progression, asm: Assembly-CSharp}
       data:
         NodeID: cda38d56-49ce-4c0e-b49d-a7dfcabc31b3
-        Title: Fase 1
+        Title: Inimigos linguarudos
         IsAutoPlay: 1
         EntryCost:
           EnergyCost: 7

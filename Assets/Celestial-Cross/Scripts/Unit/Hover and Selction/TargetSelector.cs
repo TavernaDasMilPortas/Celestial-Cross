@@ -35,6 +35,7 @@ public class TargetSelector : MonoBehaviour
     void Awake()
     {
         cam = Camera.main;
+        CombatUIManager.Instance?.RegisterTargetSelector(this);
     }
 
     void Update()

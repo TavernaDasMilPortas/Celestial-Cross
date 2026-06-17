@@ -202,6 +202,11 @@ public class BattleLevelBuilder : MonoBehaviour
 
     private void StartCombat()
     {
+        if (CelestialCross.UI.IntroModalUI.Instance != null)
+        {
+            CelestialCross.UI.IntroModalUI.Instance.HideIntro();
+        }
+
         var initializer = FindFirstObjectByType<CombatInitializer>();
         if (initializer != null)
         {

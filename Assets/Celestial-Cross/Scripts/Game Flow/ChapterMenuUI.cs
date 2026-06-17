@@ -64,6 +64,10 @@ namespace CelestialCross.Progression
                 
                 // Configurar clique
                 btn.onClick.AddListener(() => {
+                    if (GameFlowManager.Instance != null)
+                    {
+                        GameFlowManager.Instance.CurrentChapter = chapterData;
+                    }
                     CelestialCross.System.ProgressionService.Instance.TryStartNode(node);
                 });
             }

@@ -325,6 +325,34 @@ A IA dos inimigos era muito rígida e baseada em filtros restritos de categoria 
 
 ---
 
+## 28. Aperfeiçoamento do Feedback Visual de Movimento e IA
+**Data: 16/06/2026**
+### **Problemas:**
+*   Habilidades de movimento (Walk/Push/Pull) não mostravam feedback visual na tela do caminho ou do impacto no destino.
+*   A Inteligência Artificial dos inimigos estava se movimentando sem nenhum indicativo prévio e usando a lógica antiga, dificultando a leitura da batalha.
+*   Conflitos de `Animator` estavam sobrescrevendo a opacidade durante os previews (fantasmas piscavam de volta para 100%).
+
+### **Soluções:**
+*   **Previews Real-Time (Grid-based):** Ações nativas no `GraphActionWrapper` agora desenham trajetórias curvas (L-Shape) usando setas no tabuleiro e um fantasma do personagem no destino final.
+*   **UnitGhostPreview Invertido:** Lógica de opacidade invertida (Fantasma = 50%, Original = 100%) para ignorar completamente as sobreposições de cores impostas pelo `Animator` durante combates, garantindo transparência segura no preview.
+*   **PathSpriteGenerator:** Atualização na tool nativa de editor (matemática de bezier/anti-aliasing) para criar `Path_Arrow` terminando perfeitamente no centro, e um novo `Path_Start` arredondado para nascimento do rastro.
+*   **Integração do AIBrain:** Inimigos agora usam o mesmo fluxo visual! Ao tomar uma decisão de movimento, o AIBrain exibe as setas na tela e o fantasma no destino, pausa dramaticamente para focar a câmera, e logo em seguida executa o deslocamento.
+*   **Dinâmica da Câmera:** Introdução do toggle `Camera Follows Movement` no `PathVisualizer` que trava o foco da câmera de batalha para acompanhar a unidade caminhando em tempo real (interpolando pelo DOTween).
+
+## 29. Refatoração da UI de Combate (Split Screen, Modais e Âncoras)
+**Data: 16/06/2026**
+### **Problemas:**
+* O "Right Modal" (modal do inimigo) estava expandindo verticalmente e ocupando a tela inteira devido a cálculos incorretos de âncoras durante as animações.
+* Os modais com os dados das unidades eram filhos diretos dos fundos coloridos, fazendo com que deslizassem junto com o fundo, quando o design exigia que ficassem estáticos enquanto a cor passava por trás.
+* O divisor em formato de raio (Lightning Divider) precisava ser desvinculado das animações hardcoded e ativado apenas em cenários específicos (Split Screen), permitindo liberdade de posicionamento no Canvas.
+
+### **Soluções:**
+* **Estabilização de Âncoras Y:** Corrigido o `anchorMin.y` nas chamadas do `DOTween` dentro do `SplitScreenUIManager`. Ao invés de forçar o Y para `0f` (esticando o painel até o chão), ele agora se mantém rigidamente em `1f`, preservando a altura de 150px no topo da tela.
+* **Quebra de Hierarquia (Detached Modals):** Atualizados o gerenciador e o gerador de UI (`DynamicUnitPanelBuilder`) para posicionar os Modais como irmãos (siblings) dos fundos. A visibilidade é agora alternada de forma explícita via script (`SetActive`), garantindo que fiquem estáticos como uma camada superior enquanto os fundos coloridos deslizam por trás.
+* **Isolamento Lógico do Raio:** A responsabilidade de exibição do raio foi delegada para o `UnitModalUI` via método `SetLightningActive()`. Ele é ocultado durante telas cheias e inspeções e mostrado apenas no combate de mira (Split Screen). Toda a lógica legada de animação do raio foi expurgada do `SplitScreenUIManager`.
+
+---
+
 ## Próximos Passos
 *   Implementar campos no `Unit Editor` para definição de `Default Skills` nos Slots e inserção de sprites customizados fora dos Animation Clips.
 *   Aprofundar a arquitetura de features futuras para Pets e Habilidades.
