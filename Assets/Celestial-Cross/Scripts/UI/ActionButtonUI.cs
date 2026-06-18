@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
+using DG.Tweening;
 
 public class ActionButtonUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler
 {
@@ -9,6 +10,11 @@ public class ActionButtonUI : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     [SerializeField] private Image selectionImage;
     [SerializeField] private Button button;
     [SerializeField] private TextMeshProUGUI nameText;
+
+    [Header("Selection Visuals")]
+    [SerializeField] private Image starImage;
+    [SerializeField] private Color selectedStarColor = new Color(1f, 0.4f, 0.7f, 1f); // Rosa
+    [SerializeField] private Color unselectedStarColor = new Color(1f, 1f, 1f, 1f); // Branco ou Transparente
 
     public IUnitAction Action => action;
     private IUnitAction action;
@@ -19,6 +25,8 @@ public class ActionButtonUI : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     private float timer;
     private bool isHolding;
     private bool modalShown;
+    
+    private Tween shakeTween;
 
     public void SetupForPlacement(UnitData unitData, System.Action onClickCallback)
     {
@@ -79,6 +87,9 @@ public class ActionButtonUI : MonoBehaviour, IPointerDownHandler, IPointerUpHand
             AddTrigger(trigger, EventTriggerType.PointerUp, (data) => OnPointerUp((PointerEventData)data));
             AddTrigger(trigger, EventTriggerType.PointerExit, (data) => OnPointerExit((PointerEventData)data));
         }
+
+        // Garante que o botão comece sem chacoalhar
+        SetSelected(false);
     }
 
     void AddTrigger(EventTrigger trigger, EventTriggerType type, UnityEngine.Events.UnityAction<BaseEventData> action)
@@ -90,7 +101,31 @@ public class ActionButtonUI : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
     public void SetSelected(bool selected)
     {
-        if (selectionImage != null) selectionImage.gameObject.SetActive(selected);
+        // selectionImage.gameObject.SetActive(selected); // Desativado conforme pedido
+
+        if (starImage != null)
+        {
+            starImage.color = selected ? selectedStarColor : unselectedStarColor;
+        }
+        
+        if (shakeTween != null)
+        {
+            shakeTween.Kill();
+            shakeTween = null;
+        }
+
+        if (selected)
+        {
+            // Chacoalho MUITO suave e lento (looping) no botão inteiro
+            transform.localRotation = Quaternion.Euler(0, 0, -2f);
+            shakeTween = transform.DOLocalRotate(new Vector3(0, 0, 2f), 0.8f)
+                .SetEase(Ease.InOutSine)
+                .SetLoops(-1, LoopType.Yoyo);
+        }
+        else
+        {
+            transform.localRotation = Quaternion.identity;
+        }
     }
 
     public void SetInteractable(bool interactable)
@@ -98,6 +133,12 @@ public class ActionButtonUI : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         if (button != null)
         {
             button.interactable = interactable;
+        }
+        
+        // Se a ação não pode ser mais usada (já agiu), também para de chacoalhar
+        if (!interactable)
+        {
+            SetSelected(false);
         }
     }
 

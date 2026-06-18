@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Celestial_Cross.Scripts.Units.Enemy;
 
 public class TurnPortraitUI : MonoBehaviour
 {
@@ -14,10 +15,32 @@ public class TurnPortraitUI : MonoBehaviour
     [SerializeField] private TMP_Text turnOrderText;
     [SerializeField] private Image textBackgroundImage; // A imagem que fica atrás do texto
 
+    private Unit linkedUnit;
+
+    private void Awake()
+    {
+        Button btn = GetComponent<Button>();
+        if (btn == null) btn = gameObject.AddComponent<Button>();
+        
+        btn.onClick.AddListener(OnClickPortrait);
+    }
+
+    private void OnClickPortrait()
+    {
+        if (linkedUnit == null || CameraController.Instance == null) return;
+        
+        // Bloqueia clique no turno do inimigo (se a unidade atual for inimigo)
+        if (TurnManager.Instance != null && TurnManager.Instance.CurrentUnit is EnemyUnit)
+            return;
+
+        CameraController.Instance.Follow(linkedUnit);
+    }
+
     // Use default turnOrder = 1 to not break existing scripts immediately
     public void Setup(Unit unit, int turnOrder = 1)
     {
         if (unit == null) return;
+        linkedUnit = unit;
 
         if (iconImage != null)
         {

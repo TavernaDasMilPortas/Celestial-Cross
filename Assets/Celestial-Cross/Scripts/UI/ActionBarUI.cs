@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 
 public class ActionBarUI : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class ActionBarUI : MonoBehaviour
     public CelestialCross.UI.Skills.PassiveListModal passiveListModal;
 
     private List<ActionButtonUI> spawnedButtons = new();
+    private List<ActionButtonUI> buttonPool = new();
     private Unit currentUnit;
     private Dictionary<string, ActionButtonUI> buttonsByUnitId = new Dictionary<string, ActionButtonUI>();
 
@@ -57,14 +59,37 @@ public class ActionBarUI : MonoBehaviour
 
     private void CreateButtonForAction(IUnitAction action, int index, bool isClickable)
     {
-        GameObject btnObj = Instantiate(buttonPrefab, container);
-        ActionButtonUI btnUI = btnObj.GetComponent<ActionButtonUI>();
+        ActionButtonUI btnUI = GetButtonFromPool();
         
         if (btnUI != null)
         {
             btnUI.Setup(action, index, isClickable);
+            
+            // Pop-in em cascata (Persona 5 style)
+            btnUI.transform.localScale = Vector3.zero;
+            btnUI.transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack).SetDelay(index * 0.05f);
+            
             spawnedButtons.Add(btnUI);
         }
+    }
+
+    private ActionButtonUI GetButtonFromPool()
+    {
+        ActionButtonUI btnUI;
+        if (buttonPool.Count > 0)
+        {
+            btnUI = buttonPool[0];
+            buttonPool.RemoveAt(0);
+            btnUI.gameObject.SetActive(true);
+        }
+        else
+        {
+            GameObject btnObj = Instantiate(buttonPrefab, container);
+            btnUI = btnObj.GetComponent<ActionButtonUI>();
+        }
+        
+        btnUI.transform.SetAsLastSibling();
+        return btnUI;
     }
 
     private void HandleActionChanged(IUnitAction action)
@@ -124,7 +149,13 @@ public class ActionBarUI : MonoBehaviour
 
         foreach (var btn in spawnedButtons)
         {
-            if (btn != null) Destroy(btn.gameObject);
+            if (btn != null)
+            {
+                btn.transform.DOKill();
+                btn.SetSelected(false); // Mata a animação de chacoalho do ícone
+                btn.gameObject.SetActive(false);
+                buttonPool.Add(btn);
+            }
         }
         spawnedButtons.Clear();
         buttonsByUnitId.Clear();
@@ -145,8 +176,7 @@ public class ActionBarUI : MonoBehaviour
 
         foreach (var unitData in units)
         {
-            GameObject btnObj = Instantiate(buttonPrefab, container);
-            ActionButtonUI btnUI = btnObj.GetComponent<ActionButtonUI>();
+            ActionButtonUI btnUI = GetButtonFromPool();
             if (btnUI != null)
             {
                 btnUI.SetupForPlacement(unitData, () => onUnitSelected(unitData));

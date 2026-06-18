@@ -75,7 +75,10 @@ namespace CelestialCross.UI.Skills
             for (int i = allStickers.Count - 1; i >= 0; i--)
             {
                 Transform sticker = allStickers[i];
-                currentAnimSeq.Insert(delayPops, sticker.DOScale(0f, 0.15f).SetEase(Ease.InBack));
+                foreach (Transform innerChild in sticker)
+                {
+                    currentAnimSeq.Insert(delayPops, innerChild.DOScale(0f, 0.15f).SetEase(Ease.InBack));
+                }
                 delayPops += 0.02f; // Extremamente rápido pra não travar muito o fechamento
             }
 
@@ -126,11 +129,32 @@ namespace CelestialCross.UI.Skills
             List<Transform> allStickers = GetAllGeneratedItems(); 
             foreach (var sticker in allStickers)
             {
-                sticker.localScale = Vector3.zero; // Encolhe para o efeito de "Pop"
+                foreach (Transform innerChild in sticker)
+                {
+                    innerChild.localScale = Vector3.zero; // Encolhe o conteúdo interno, mantendo a "caixa" (layout) do mesmo tamanho
+                }
             }
 
             currentAnimSeq = DOTween.Sequence();
             currentAnimSeq.timeScale = animationSpeed;
+
+            // BUGFIX DO UNITY: Desativar temporariamente os limites do ScrollRect durante a animação
+            // O Unity quebra a matemática do "Clamped" se o ScrollRect for rotacionado/escalado (o que fazemos na paperBackground)
+            var allScrolls = GetComponentsInChildren<ScrollRect>(true);
+            foreach(var scroll in allScrolls)
+            {
+                scroll.movementType = ScrollRect.MovementType.Unrestricted;
+            }
+
+            // Ao terminar toda a animação (quando a escala for 1 e a rotação 0), ligamos o Clamped de volta!
+            currentAnimSeq.OnComplete(() => {
+                foreach(var scroll in allScrolls)
+                {
+                    scroll.movementType = ScrollRect.MovementType.Clamped;
+                    scroll.verticalNormalizedPosition = 1f; // Garante que o scroll volte pro topo
+                    Canvas.ForceUpdateCanvases();
+                }
+            });
 
             // a) Fade in rápido geral do Modal
             if (modalCanvasGroup != null) 
@@ -150,11 +174,14 @@ namespace CelestialCross.UI.Skills
                 }
             }
 
-            // c) Pipocar os adesivos e post-its em cascata (Stagger)
+            // c) Pipocar o conteúdo dos adesivos em cascata
             float delayPops = 0f;
             foreach (var sticker in allStickers)
             {
-                currentAnimSeq.Insert(0.25f + delayPops, sticker.DOScale(1f, 0.3f).SetEase(Ease.OutBack, 1.5f));
+                foreach (Transform innerChild in sticker)
+                {
+                    currentAnimSeq.Insert(0.25f + delayPops, innerChild.DOScale(1f, 0.3f).SetEase(Ease.OutBack, 1.5f));
+                }
                 
                 // Feedback sonoro curtinho (tip, tip, tip)
                 if (stickerPopFeedback != null)
@@ -196,12 +223,12 @@ namespace CelestialCross.UI.Skills
                     var go = Instantiate(conditionIconPrefab, conditionsGrid);
                     go.SetActive(true);
 
-                    // Configurar imagem do botão (ícone da condição)
-                    var btn = go.GetComponent<Button>();
+                    // Configurar componentes via PassiveItemUI ou Find
+                    var pUI = go.GetComponent<PassiveItemUI>();
+                    var btn = pUI != null && pUI.clickButton != null ? pUI.clickButton : go.GetComponent<Button>();
                     
-                    // Primeiro tenta encontrar o objeto filho chamado "Icon" (para não pegar a borda)
                     var imgTransform = go.transform.Find("Icon");
-                    var img = imgTransform != null ? imgTransform.GetComponent<Image>() : go.GetComponent<Image>();
+                    var img = pUI != null && pUI.icon != null ? pUI.icon : (imgTransform != null ? imgTransform.GetComponent<Image>() : go.GetComponent<Image>());
                     
                     if (img != null)
                     {
@@ -209,7 +236,7 @@ namespace CelestialCross.UI.Skills
                     }
 
                     // Exibir turnos restantes no texto (ex: "3t")
-                    var turnTxt = go.GetComponentInChildren<TextMeshProUGUI>();
+                    var turnTxt = pUI != null && pUI.turnText != null ? pUI.turnText : go.GetComponentInChildren<TextMeshProUGUI>();
                     if (turnTxt != null)
                     {
                         turnTxt.text = $"{c.remainingTurns}t";
@@ -243,8 +270,10 @@ namespace CelestialCross.UI.Skills
                         var go = Instantiate(modifierItemPrefab, container);
                         go.SetActive(true);
 
+                        var pUI = go.GetComponent<PassiveItemUI>();
+
                         // Icone do Modificador
-                        var img = go.transform.Find("Icon")?.GetComponent<Image>();
+                        var img = pUI != null && pUI.icon != null ? pUI.icon : go.transform.Find("Icon")?.GetComponent<Image>();
                         if (img != null)
                         {
                             img.sprite = mod.icon;
@@ -252,7 +281,7 @@ namespace CelestialCross.UI.Skills
                         }
 
                         // Texto do Modificador
-                        var txt = go.transform.Find("Text")?.GetComponent<TextMeshProUGUI>();
+                        var txt = pUI != null && pUI.text != null ? pUI.text : go.transform.Find("Text")?.GetComponent<TextMeshProUGUI>();
                         if (txt != null)
                         {
                             string colorTag = mod.isPositive ? "#4f4" : "#f44";
@@ -271,8 +300,10 @@ namespace CelestialCross.UI.Skills
                     var go = Instantiate(passiveItemPrefab, allPassivesContainer);
                     go.SetActive(true);
 
+                    var pUI = go.GetComponent<PassiveItemUI>();
+
                     // Icone da Passiva
-                    var img = go.transform.Find("Icon")?.GetComponent<Image>();
+                    var img = pUI != null && pUI.icon != null ? pUI.icon : go.transform.Find("Icon")?.GetComponent<Image>();
                     if (img != null)
                     {
                         img.sprite = sp.icon;
@@ -280,13 +311,39 @@ namespace CelestialCross.UI.Skills
                     }
 
                     // Texto e Descrição da Passiva
-                    var txt = go.transform.Find("Text")?.GetComponent<TextMeshProUGUI>();
+                    var txt = pUI != null && pUI.text != null ? pUI.text : go.transform.Find("Text")?.GetComponent<TextMeshProUGUI>();
                     if (txt != null)
                     {
-                        string sourceStr = $"<color=#8bf>[{sp.source}]</color>";
                         string desc = string.IsNullOrEmpty(sp.description) ? "Sem descrição disponível." : sp.description;
-                        txt.text = $"<b>{sp.name}</b> {sourceStr}\n<size=85%>{desc}</size>";
+                        txt.text = $"<b>{sp.name}</b>\n<size=85%>{desc}</size>";
                     }
+                }
+            }
+
+            // Forçar o recálculo do Layout para que o ScrollView (Clamped) reconheça o novo tamanho imediatamente
+            if (conditionsGrid != null) LayoutRebuilder.ForceRebuildLayoutImmediate(conditionsGrid);
+            if (positiveModifiersContainer != null) LayoutRebuilder.ForceRebuildLayoutImmediate(positiveModifiersContainer);
+            if (negativeModifiersContainer != null) LayoutRebuilder.ForceRebuildLayoutImmediate(negativeModifiersContainer);
+            if (allPassivesContainer != null) 
+            {
+                LayoutRebuilder.ForceRebuildLayoutImmediate(allPassivesContainer);
+                
+                // Ligamos a automação original
+                var fitter = allPassivesContainer.GetComponent<ContentSizeFitter>();
+                if (fitter != null) fitter.enabled = true;
+                LayoutRebuilder.ForceRebuildLayoutImmediate(allPassivesContainer);
+                
+                // SISTEMA SALVA-VIDAS (FALLBACK):
+                // Se por algum motivo o Unity calcular a altura como 0 (porque esqueceu de aplicar o prefab, ou o layout bugou)
+                // O script entra em ação, desliga o automator, e calcula o tamanho da lista na raça!
+                if (allPassivesContainer.sizeDelta.y < 50f && allPassivesContainer.childCount > 0)
+                {
+                    if (fitter != null) fitter.enabled = false;
+                    
+                    // Assumimos uma altura média de 300 pixels por passiva + um espacinho de 20.
+                    float calculatedHeight = (allPassivesContainer.childCount * 300f) + 20f;
+                    allPassivesContainer.sizeDelta = new Vector2(allPassivesContainer.sizeDelta.x, calculatedHeight);
+                    Debug.LogWarning($"[PassiveListModal] O Unity falhou ao calcular a altura do Content. O sistema Salva-Vidas forçou a altura para {calculatedHeight}. Verifique o LayoutElement do PassiveItemPrefab!");
                 }
             }
         }
@@ -294,10 +351,13 @@ namespace CelestialCross.UI.Skills
         private void ClearContainer(RectTransform container)
         {
             if (container == null) return;
-            foreach (Transform child in container)
+            for (int i = container.childCount - 1; i >= 0; i--)
             {
+                Transform child = container.GetChild(i);
+                child.DOKill(); // Mata qualquer animação pendente
                 Destroy(child.gameObject);
             }
+            container.DetachChildren(); // Remove imediatamente da hierarquia para que as animações não peguem "fantasmas"
         }
     }
 }

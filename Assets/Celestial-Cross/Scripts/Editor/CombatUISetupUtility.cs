@@ -8,6 +8,105 @@ namespace CelestialCross.EditorArea
 {
     public class CombatUISetupUtility : EditorWindow
     {
+        [MenuItem("Celestial Cross/3. UI Builders/5. Skills/Update UI Animators (Persona 5)")]
+        public static void UpdateUIAnimators()
+        {
+            Debug.Log("Updating UI Animators...");
+            int updatedCount = 0;
+
+            // Encontrar TurnPortraitUI na cena para adicionar botões
+            var portraits = Object.FindObjectsOfType<TurnPortraitUI>(true);
+            foreach (var portrait in portraits)
+            {
+                if (portrait.GetComponent<Button>() == null)
+                {
+                    portrait.gameObject.AddComponent<Button>();
+                    EditorUtility.SetDirty(portrait.gameObject);
+                    updatedCount++;
+                }
+            }
+
+            var timelines = Object.FindObjectsOfType<TurnTimelineUI>(true);
+            foreach (var timeline in timelines)
+            {
+                if (timeline.portraitPrefab != null)
+                {
+                    if (timeline.portraitPrefab.GetComponent<Button>() == null)
+                    {
+                        timeline.portraitPrefab.AddComponent<Button>();
+                        EditorUtility.SetDirty(timeline.portraitPrefab);
+                        updatedCount++;
+                    }
+                }
+            }
+
+            if (updatedCount > 0)
+            {
+                UnityEditor.SceneManagement.EditorSceneManager.MarkAllScenesDirty();
+                Debug.Log($"UI Animators Updated! Adicionados {updatedCount} componentes necessários.");
+            }
+            else
+            {
+                Debug.Log("UI Animators estão atualizados! Nenhuma modificação foi necessária.");
+            }
+        }
+
+        [MenuItem("Celestial Cross/3. UI Builders/5. Skills/Fix Passive Scroll View Anchors")]
+        public static void FixPassiveScrollAnchors()
+        {
+            var modals = UnityEngine.Object.FindObjectsOfType<PassiveListModal>(true);
+            int fixedCount = 0;
+            foreach (var modal in modals)
+            {
+                var scrolls = modal.GetComponentsInChildren<ScrollRect>(true);
+                foreach (var scroll in scrolls)
+                {
+                    var content = scroll.content;
+                    if (content != null)
+                    {
+                        // 1. Forçar Anchors para "Top-Stretch" (Left/Right=0, Top=1, Bottom=1)
+                        content.anchorMin = new Vector2(0f, 1f);
+                        content.anchorMax = new Vector2(1f, 1f);
+                        content.pivot = new Vector2(0.5f, 1f);
+                        content.offsetMin = new Vector2(0f, content.offsetMin.y);
+                        content.offsetMax = new Vector2(0f, content.offsetMax.y);
+
+                        // 2. Corrigir o Vertical Layout Group para respeitar o Layout Element dos filhos
+                        var vlg = content.GetComponent<VerticalLayoutGroup>();
+                        if (vlg != null)
+                        {
+                            // AQUI ERA O VILÃO! Se Control Size estiver desmarcado, o Unity ignora o Layout Element!
+                            vlg.childControlHeight = true; 
+                            vlg.childControlWidth = true;
+                            vlg.childForceExpandHeight = false;
+                            vlg.childForceExpandWidth = true;
+                        }
+
+                        // 3. Garantir que o Fitter calcule a altura vertical baseado no conteúdo
+                        var csf = content.GetComponent<ContentSizeFitter>();
+                        if (csf != null)
+                        {
+                            csf.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
+                            csf.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+                        }
+
+                        EditorUtility.SetDirty(content);
+                        fixedCount++;
+                    }
+                }
+            }
+
+            if (fixedCount > 0)
+            {
+                UnityEditor.SceneManagement.EditorSceneManager.MarkAllScenesDirty();
+                Debug.Log($"Mágica Feita! Corrigidas {fixedCount} caixas de rolagem. Pode testar o Clamped!");
+            }
+            else
+            {
+                Debug.LogWarning("Nenhum PassiveListModal encontrado na cena para corrigir.");
+            }
+        }
+
         [MenuItem("Celestial Cross/3. UI Builders/5. Skills/Setup Combat Passives UI")]
         public static void SetupPassivesUI()
         {

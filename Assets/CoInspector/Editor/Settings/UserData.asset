@@ -105,18 +105,18 @@ MonoBehaviour:
       recentlyClickedContents: []
     sceneGUID: 03d58314661be71469defb5607568be7
     sceneName: InventoryScene
-    lastSaveTimePrint: 09:19 PM (June 15, 2026)
+    lastSaveTimePrint: 10:32 PM (June 17, 2026)
     gracePeriod: 3
     activeIndex: 0
     checkingToLoad: 0
-    assetsCollapsed: 0
+    assetsCollapsed: 1
     lockedAsset: 0
     maximizedAssetView: 0
     showImportSettings: 1
     suggestedHeight: 0
-    userAssetViewSize: 230
+    userAssetViewSize: -1
     previewHeight: 0
-    scrollPosition: {x: 0, y: 23}
+    scrollPosition: {x: 0, y: 0}
     toolbarScrollPosition: {x: 0, y: 0}
     rawUserHeight: 0
     lastValidTabWidth: 95
@@ -131,7 +131,7 @@ MonoBehaviour:
       shortName: EventSystem
       filterString: 
       newTab: 0
-      scrollPosition: 23
+      scrollPosition: 0
       isSelected: 0
       allCollapsed: 0
       runtimeFoldouts: 
@@ -246,30 +246,33 @@ MonoBehaviour:
     playModeTransforms: []
     historyAssets:
     - assetGUIDs:
-      - 6d7fc2a7a7b163446a4695cb3bdd963a
+      - fec72274543004aff8768fda2a73da01
     - assetGUIDs:
-      - 8e33882f7fba925478cbd19e61365198
+      - 8e7c1c09c33d12647bde5c4458b82c61
     - assetGUIDs:
-      - 642b786367762f940aded926f739f0ba
+      - d115e0bc68e6adf42a7c6f7c6d914978
     - assetGUIDs:
-      - 7e89744f8bca69d4da142c1385affc30
+      - 67ec913167e69cc4989a746ba58eede0
     - assetGUIDs:
-      - 600f4b74746dbf944901257f81a8af6d
+      - 3aa9d9faf1e93ac47bb155d811c2cf71
     - assetGUIDs:
-      - 41ab50bd04fdfce42875fe6724f71972
+      - 5b57ca8cfbde6b344adfc40ad11d7841
     - assetGUIDs:
-      - 97b19df7a35c77244a576584a154beaf
+      - 41ac0598862a52a4388b1cf64820d50f
     - assetGUIDs:
-      - 5c42034be61968b43b87e9313ed36971
+      - ac296acd9831fe642a5514ed8cee5fea
     - assetGUIDs:
-      - 3ef58f34cb2df3143aa344b65b65187e
+      - 98cd48ef67a5b704098e30547ba2068d
     - assetGUIDs:
-      - 4d539f01f5aa919419c747ff0d1b9b07
+      - 67ec913167e69cc4989a746ba58eede0
+      - 98cd48ef67a5b704098e30547ba2068d
+      - 8e7c1c09c33d12647bde5c4458b82c61
+      - bc60dce0dd546f146bec84d86641d689
     - assetGUIDs:
-      - 140ced9bbd8982243b49a9ae3cc59249
-    targetObject: {fileID: 11400000, guid: 6d7fc2a7a7b163446a4695cb3bdd963a, type: 2}
+      - bc60dce0dd546f146bec84d86641d689
+    targetObject: {fileID: 11400000, guid: a9644b9cf968da748bbf12a4c0810c07, type: 2}
     targetObjects: []
-    lastSelectedAsset: Assets/Celestial-Cross/Prefabs/Units/Enemies/Alien_Ranged_base/Data/Alien_Ranged_base.asset
+    lastSelectedAsset: Assets/CoInspector/Editor/Core/Helpers/MissingScriptManager.asset
     lastClickedTab: -1
     previousTab: 0
   - tracker:
@@ -309,11 +312,11 @@ MonoBehaviour:
       recentlyClickedContents: []
     sceneGUID: aae55989abe44784197dd80958fdd0f5
     sceneName: HubScene
-    lastSaveTimePrint: 01:18 PM (June 17, 2026)
+    lastSaveTimePrint: 12:27 AM (June 18, 2026)
     gracePeriod: 3
     activeIndex: 0
     checkingToLoad: 0
-    assetsCollapsed: 0
+    assetsCollapsed: 1
     lockedAsset: 0
     maximizedAssetView: 0
     showImportSettings: 1
@@ -323,13 +326,13 @@ MonoBehaviour:
     scrollPosition: {x: 0, y: 0}
     toolbarScrollPosition: {x: 0, y: 0}
     rawUserHeight: 0
-    lastValidTabWidth: 61
+    lastValidTabWidth: 64
     alreadyCalculatedHeight: 0
     lastKnownHeight: 0
     tabs:
     - path: 
       paths: []
-      tabWidth: 58
+      tabWidth: 61
       name: New Tab
       icon: {fileID: 0}
       shortName: New Tab
@@ -392,6 +395,10 @@ MonoBehaviour:
     - assetGUIDs:
       - fec72274543004aff8768fda2a73da01
     - assetGUIDs:
+      - 8e7c1c09c33d12647bde5c4458b82c61
+    - assetGUIDs:
+      - d115e0bc68e6adf42a7c6f7c6d914978
+    - assetGUIDs:
       - 67ec913167e69cc4989a746ba58eede0
     - assetGUIDs:
       - 3aa9d9faf1e93ac47bb155d811c2cf71
@@ -410,10 +417,6 @@ MonoBehaviour:
       - bc60dce0dd546f146bec84d86641d689
     - assetGUIDs:
       - bc60dce0dd546f146bec84d86641d689
-    - assetGUIDs:
-      - 8e7c1c09c33d12647bde5c4458b82c61
-    - assetGUIDs:
-      - 762c9f2f48d0df0408cc3dae952e021e
     targetObject: {fileID: 11500000, guid: fec72274543004aff8768fda2a73da01, type: 3}
     targetObjects: []
     lastSelectedAsset: Packages/com.unity.purchasing/Runtime/Security/Asn1Processor/Asn1Node.cs
@@ -426,11 +429,11 @@ MonoBehaviour:
       recentlyClickedContents: []
     sceneGUID: 41797f812614b484c878b87c4d6155a1
     sceneName: PreparationScene
-    lastSaveTimePrint: 01:18 PM (June 17, 2026)
+    lastSaveTimePrint: 12:27 AM (June 18, 2026)
     gracePeriod: 3
     activeIndex: 0
     checkingToLoad: 0
-    assetsCollapsed: 0
+    assetsCollapsed: 1
     lockedAsset: 0
     maximizedAssetView: 0
     showImportSettings: 1
@@ -509,6 +512,10 @@ MonoBehaviour:
     - assetGUIDs:
       - fec72274543004aff8768fda2a73da01
     - assetGUIDs:
+      - 8e7c1c09c33d12647bde5c4458b82c61
+    - assetGUIDs:
+      - d115e0bc68e6adf42a7c6f7c6d914978
+    - assetGUIDs:
       - 67ec913167e69cc4989a746ba58eede0
     - assetGUIDs:
       - 3aa9d9faf1e93ac47bb155d811c2cf71
@@ -527,10 +534,6 @@ MonoBehaviour:
       - bc60dce0dd546f146bec84d86641d689
     - assetGUIDs:
       - bc60dce0dd546f146bec84d86641d689
-    - assetGUIDs:
-      - 8e7c1c09c33d12647bde5c4458b82c61
-    - assetGUIDs:
-      - 762c9f2f48d0df0408cc3dae952e021e
     targetObject: {fileID: 11500000, guid: fec72274543004aff8768fda2a73da01, type: 3}
     targetObjects: []
     lastSelectedAsset: Packages/com.unity.purchasing/Runtime/Security/Asn1Processor/Asn1Node.cs
@@ -539,52 +542,123 @@ MonoBehaviour:
   - tracker:
       mostClicked:
       - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/MainPanel[0]/VerticalGroup[0]/Section3_CharacterPassives[0]/PassivesScroll[0]/Viewport[0]/Content[0]"}'
+        count: 61
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/MainPanel[0]/VerticalGroup[0]/Section3_CharacterPassives[0]/PassivesScroll[0]"}'
+        count: 46
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]"}'
+        count: 42
+        gameObjects:
+        - {fileID: 0}
+      - paths:
         - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]"}'
-        count: 1
+        count: 36
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/MainPanel[0]/VerticalGroup[0]/Section3_CharacterPassives[0]/PassivesScroll[0]/Viewport[0]"}'
+        count: 29
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/MainPanel[0]/VerticalGroup[0]/Section3_CharacterPassives[0]/Title[0]"}'
+        count: 7
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/CombatUiCanvas[0]/Game
+          Render View[0]"}'
+        count: 5
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/MainPanel[0]/VerticalGroup[0]/Section3_CharacterPassives[0]"}'
+        count: 5
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]"}'
+        count: 4
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]/Image[0]/Image
+          (1)[0]/PassiveItemPrefab[0]/Text[0]"}'
+        count: 2
         gameObjects:
         - {fileID: 0}
       recentlyClicked:
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]"}'
+        count: 1
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]/Image[0]/Image
+          (1)[0]/PassiveItemPrefab[0]/Text[0]"}'
+        count: 1
+        gameObjects:
+        - {fileID: 0}
       - paths:
         - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]"}'
         count: 1
         gameObjects:
         - {fileID: 0}
-      - paths: []
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]"}'
         count: 1
-        gameObjects: []
-      - paths: []
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/ModifierItemPrefab[0]"}'
         count: 1
-        gameObjects: []
-      - paths: []
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/ConditionIcon[0]"}'
         count: 1
-        gameObjects: []
-      - paths: []
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/ConditionIcon[0]"}'
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/ModifierItemPrefab[0]"}'
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]"}'
         count: 1
-        gameObjects: []
-      - paths: []
+        gameObjects:
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]/Image[0]/Image
+          (1)[0]/PassiveItemPrefab[0]/Icon[0]"}'
         count: 1
-        gameObjects: []
-      - paths: []
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/MainPanel[0]/VerticalGroup[0]/Section1_TemporaryConditions[0]"}'
         count: 1
-        gameObjects: []
-      - paths: []
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/MainPanel[0]/VerticalGroup[0]/Section3_CharacterPassives[0]"}'
         count: 1
-        gameObjects: []
-      - paths: []
-        count: 1
-        gameObjects: []
-      - paths: []
-        count: 1
-        gameObjects: []
+        gameObjects:
+        - {fileID: 0}
       mostClickedContents: []
       recentlyClickedContents: []
     sceneGUID: 8e33882f7fba925478cbd19e61365198
     sceneName: Teste 1
-    lastSaveTimePrint: 01:19 PM (June 17, 2026)
+    lastSaveTimePrint: 12:32 AM (June 18, 2026)
     gracePeriod: 3
-    activeIndex: 0
+    activeIndex: 23
     checkingToLoad: 0
-    assetsCollapsed: 0
+    assetsCollapsed: 1
     lockedAsset: 0
     maximizedAssetView: 0
     showImportSettings: 1
@@ -592,230 +666,18 @@ MonoBehaviour:
     userAssetViewSize: -1
     previewHeight: 0
     scrollPosition: {x: 0, y: 0}
-    toolbarScrollPosition: {x: 0, y: 0}
+    toolbarScrollPosition: {x: 909, y: 0}
     rawUserHeight: 0
-    lastValidTabWidth: 116
+    lastValidTabWidth: 1447
     alreadyCalculatedHeight: 0
     lastKnownHeight: 0
     tabs:
-    - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]"}'
+    - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/ModifierItemPrefab[0]/Icon[0]"}'
       paths: []
-      tabWidth: 113
-      name: PassiveListModal
-      icon: {fileID: 5779557562189929939, guid: 0000000000000000d000000000000000, type: 0}
-      shortName: PassiveListModal
-      filterString: 
-      newTab: 0
-      scrollPosition: 0
-      isSelected: 0
-      allCollapsed: 0
-      runtimeFoldouts: 
-      runtimeMultiComponents: []
-      tabTextContent:
-        m_Text: PassiveListModal
-        m_Image: {fileID: 0}
-        m_Tooltip: 
-        m_TextWithWhitespace: "PassiveListModal\u200B"
-      multiEditMode: 0
-      locked: 0
-      hasPreview: 0
-      previewHeight: 13
-      debug: 0
-      filtering: 0
-      prefab: 0
-      multiFoldout: 1
-      target: {fileID: 0}
-      targets: []
-      linkedPrefabs: []
-      trackMultiTarget: {fileID: 0}
-      serializedTransform:
-        owner: {fileID: 0}
-        localPosition: {x: 0, y: 0, z: 0}
-        localRotation: {x: 0, y: 0, z: 0, w: 0}
-        localScale: {x: 0, y: 0, z: 0}
-        originalPosition: {x: 0, y: 0, z: 0}
-        originalRotation: {x: 0, y: 0, z: 0, w: 0}
-        originalLocalScale: {x: 0, y: 0, z: 0}
-        anchorMin: {x: 0, y: 0}
-        anchorMax: {x: 0, y: 0}
-        anchoredPosition: {x: 0, y: 0}
-        sizeDelta: {x: 0, y: 0}
-        pivot: {x: 0, y: 0}
-        originalAnchorMin: {x: 0, y: 0}
-        originalAnchorMax: {x: 0, y: 0}
-        originalAnchoredPosition: {x: 0, y: 0}
-        originalSizeDelta: {x: 0, y: 0}
-        originalPivot: {x: 0, y: 0}
-        isRectTransform: 0
-        appliedTransform: 0
-        undidTransform: 0
-        autoSave: 0
-      serializedTransforms: []
-      savePlayModeTransform: 0
-      index: 0
-      historyPosition: 0
-      componentMaps:
-      - index: 0
-        component: {fileID: 0}
-        missingComponentID: -1
-        foldout: 1
-        focusAfter: 0
-        awaitingScroll: 0
-        hidden: 0
-        componentName: recttransform
-        niceComponentName: rect transform
-      - index: 0
-        component: {fileID: 0}
-        missingComponentID: -1
-        foldout: 1
-        focusAfter: 0
-        awaitingScroll: 0
-        hidden: 0
-        componentName: passivelistmodal
-        niceComponentName: passive list modal
-      - index: 0
-        component: {fileID: 0}
-        missingComponentID: -1
-        foldout: 1
-        focusAfter: 0
-        awaitingScroll: 0
-        hidden: 0
-        componentName: canvasgroup
-        niceComponentName: canvas group
-      historyPaths:
-      - paths:
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]"}'
-        prefab: 0
-      - paths:
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/ConditionIcon[0]"}'
-        prefab: 0
-      - paths:
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/MainPanel[0]/VerticalGroup[0]/Section3_CharacterPassives[0]/PassivesScroll[0]"}'
-        prefab: 0
-      - paths:
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/ConditionIcon[0]/Icon[0]/Image[0]"}'
-        prefab: 0
-      - paths:
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/ConditionIcon[0]/Icon[0]"}'
-        prefab: 0
-      - paths:
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/MainPanel[0]/VerticalGroup[0]/Section1_TemporaryConditions[0]/ConditionsGrid[0]"}'
-        prefab: 0
-      - paths:
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/MainPanel[0]/VerticalGroup[0]/Section1_TemporaryConditions[0]"}'
-        prefab: 0
-      - paths:
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/MainPanel[0]/VerticalGroup[0]/Section2_AttributeModifiers[0]/NegativeModifiersArea[0]/NegScroll[0]"}'
-        prefab: 0
-      - paths:
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/MainPanel[0]/VerticalGroup[0]/Section2_AttributeModifiers[0]/PositiveModifiersArea[0]/PosScroll[0]"}'
-        prefab: 0
-      - paths:
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/MainPanel[0]/VerticalGroup[0]/Section2_AttributeModifiers[0]/PositiveModifiersArea[0]/PosScroll[0]/Viewport[0]"}'
-        prefab: 0
-      - paths:
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/EnemyPointerManager[0]"}'
-        prefab: 0
-      owner: {fileID: 0}
-    closedTabs: []
-    playModeTransforms: []
-    historyAssets:
-    - assetGUIDs:
-      - fec72274543004aff8768fda2a73da01
-    - assetGUIDs:
-      - 67ec913167e69cc4989a746ba58eede0
-    - assetGUIDs:
-      - 3aa9d9faf1e93ac47bb155d811c2cf71
-    - assetGUIDs:
-      - 5b57ca8cfbde6b344adfc40ad11d7841
-    - assetGUIDs:
-      - 41ac0598862a52a4388b1cf64820d50f
-    - assetGUIDs:
-      - ac296acd9831fe642a5514ed8cee5fea
-    - assetGUIDs:
-      - 98cd48ef67a5b704098e30547ba2068d
-    - assetGUIDs:
-      - 67ec913167e69cc4989a746ba58eede0
-      - 98cd48ef67a5b704098e30547ba2068d
-      - 8e7c1c09c33d12647bde5c4458b82c61
-      - bc60dce0dd546f146bec84d86641d689
-    - assetGUIDs:
-      - bc60dce0dd546f146bec84d86641d689
-    - assetGUIDs:
-      - 8e7c1c09c33d12647bde5c4458b82c61
-    - assetGUIDs:
-      - 762c9f2f48d0df0408cc3dae952e021e
-    targetObject: {fileID: 11500000, guid: fec72274543004aff8768fda2a73da01, type: 3}
-    targetObjects: []
-    lastSelectedAsset: Packages/com.unity.purchasing/Runtime/Security/Asn1Processor/Asn1Node.cs
-    lastClickedTab: 0
-    previousTab: 0
-  - tracker:
-      mostClicked:
-      - paths:
-        - 
-        count: 1
-        gameObjects: []
-      recentlyClicked:
-      - paths:
-        - 
-        count: 1
-        gameObjects: []
-      - paths: []
-        count: 1
-        gameObjects: []
-      - paths: []
-        count: 1
-        gameObjects: []
-      - paths: []
-        count: 1
-        gameObjects: []
-      - paths: []
-        count: 1
-        gameObjects: []
-      - paths: []
-        count: 1
-        gameObjects: []
-      - paths: []
-        count: 1
-        gameObjects: []
-      - paths: []
-        count: 1
-        gameObjects: []
-      - paths: []
-        count: 1
-        gameObjects: []
-      - paths: []
-        count: 1
-        gameObjects: []
-      mostClickedContents: []
-      recentlyClickedContents: []
-    sceneGUID: e625a3e42d710e542b4c986f567fb23b
-    sceneName: UnitScene
-    lastSaveTimePrint: 12:59 PM (June 17, 2026)
-    gracePeriod: 3
-    activeIndex: 0
-    checkingToLoad: 0
-    assetsCollapsed: 0
-    lockedAsset: 0
-    maximizedAssetView: 0
-    showImportSettings: 1
-    suggestedHeight: 0
-    userAssetViewSize: -1
-    previewHeight: 0
-    scrollPosition: {x: 0, y: 0}
-    toolbarScrollPosition: {x: 0, y: 0}
-    rawUserHeight: 0
-    lastValidTabWidth: 86
-    alreadyCalculatedHeight: 0
-    lastKnownHeight: 0
-    tabs:
-    - path: '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitBanner[0]/BannerText[0]"}'
-      paths: []
-      tabWidth: 83
-      name: BannerText
+      tabWidth: 49
+      name: Icon
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
-      shortName: BannerText
+      shortName: Icon
       filterString: 
       newTab: 0
       scrollPosition: 0
@@ -824,13 +686,13 @@ MonoBehaviour:
       runtimeFoldouts: 
       runtimeMultiComponents: []
       tabTextContent:
-        m_Text: BannerText
+        m_Text: Icon
         m_Image: {fileID: 0}
         m_Tooltip: 
-        m_TextWithWhitespace: "BannerText\u200B"
+        m_TextWithWhitespace: "Icon\u200B"
       multiEditMode: 0
       locked: 0
-      hasPreview: 0
+      hasPreview: 1
       previewHeight: 13
       debug: 0
       filtering: 0
@@ -892,54 +754,2228 @@ MonoBehaviour:
         focusAfter: 0
         awaitingScroll: 0
         hidden: 0
+        componentName: mpimage
+        niceComponentName: mp image
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/ModifierItemPrefab[0]/Icon[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/ModifierItemPrefab[0]/Text[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/ModifierItemPrefab[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/MainPanel[0]/VerticalGroup[0]/Section3_CharacterPassives[0]/PassivesScroll[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/MainPanel[0]/VerticalGroup[0]/Section3_CharacterPassives[0]/Title[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/MainPanel[0]/VerticalGroup[0]/Section1_TemporaryConditions[0]/Title[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/MainPanel[0]/VerticalGroup[0]/Section3_CharacterPassives[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/LeftModal[0]/Image[0]/HpValueText[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/GameObject[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]/Image[0]/Image
+        (1)[0]"}'
+      paths: []
+      tabWidth: 61
+      name: Image (1)
+      icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Imag\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Imag\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Imag\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 1
+      previewHeight: 13
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 1
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasrenderer
+        niceComponentName: canvas renderer
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: image
+        niceComponentName: image
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: shadow
+        niceComponentName: shadow
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]/Image[0]/Image
+          (1)[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/MainPanel[0]/VerticalGroup[0]/Section3_CharacterPassives[0]/PassivesScroll[0]/Viewport[0]/Content[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/MainPanel[0]/VerticalGroup[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]/Image[0]/Image
+          (1)[0]/PassiveItemPrefab[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]/Image[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]/Image[0]/Image
+          (1)[0]/PassiveItemPrefab[0]/Text[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/MainPanel[0]/VerticalGroup[0]/Section3_CharacterPassives[0]/PassivesScroll[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/CombatUiCanvas[0]/TimeLineBar[0]/Image[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PassiveDetailModal[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/ModifierItemPrefab[0]"}'
+      paths: []
+      tabWidth: 62
+      name: ModifierItemPrefab
+      icon: {fileID: 7334568976493443608, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Modi\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Modi\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Modi\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 13
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 2
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: horizontallayoutgroup
+        niceComponentName: horizontal layout group
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 0
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: 
+        niceComponentName: 
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/ModifierItemPrefab[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"DisplayCamera[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/MainPanel[0]/VerticalGroup[0]/Section3_CharacterPassives[0]/PassivesScroll[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/MainPanel[0]/VerticalGroup[0]/Section3_CharacterPassives[0]/PassivesScroll[0]/Viewport[0]/Content[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]/Image[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]/Image[0]/Image
+          (1)[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]/Image[0]/Image
+          (1)[0]/PassiveItemPrefab[0]/Icon[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/MainPanel[0]/VerticalGroup[0]/Section3_CharacterPassives[0]/PassivesScroll[0]/Viewport[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/MainPanel[0]/VerticalGroup[0]/Section3_CharacterPassives[0]/Title[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/ModifierItemPrefab[0]"}'
+      paths: []
+      tabWidth: 62
+      name: ModifierItemPrefab
+      icon: {fileID: 7334568976493443608, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Modi\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Modi\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Modi\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 150
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 3
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: horizontallayoutgroup
+        niceComponentName: horizontal layout group
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 0
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: 
+        niceComponentName: 
+      historyPaths: []
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/MainPanel[0]/VerticalGroup[0]/Section3_CharacterPassives[0]/PassivesScroll[0]/Viewport[0]/Content[0]"}'
+      paths: []
+      tabWidth: 61
+      name: Content
+      icon: {fileID: 3922097781858013310, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Cont\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Cont\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Cont\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 13
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 4
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: verticallayoutgroup
+        niceComponentName: vertical layout group
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/MainPanel[0]/VerticalGroup[0]/Section3_CharacterPassives[0]/PassivesScroll[0]/Viewport[0]/Content[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/MainPanel[0]/VerticalGroup[0]/Section3_CharacterPassives[0]/PassivesScroll[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/MainPanel[0]/VerticalGroup[0]/Section3_CharacterPassives[0]/PassivesScroll[0]/Viewport[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/EnemyPointerManager[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/ModifierItemPrefab[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/MainPanel[0]/VerticalGroup[0]/Section3_CharacterPassives[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/MainPanel[0]/VerticalGroup[0]/Section3_CharacterPassives[0]/Title[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/MainPanel[0]/VerticalGroup[0]/Section1_TemporaryConditions[0]/ConditionsGrid[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]"}'
+      paths: []
+      tabWidth: 61
+      name: PassiveListModal
+      icon: {fileID: 5779557562189929939, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Pass\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Pass\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Pass\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 150
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 5
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: passivelistmodal
+        niceComponentName: passive list modal
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasgroup
+        niceComponentName: canvas group
+      historyPaths: []
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]"}'
+      paths: []
+      tabWidth: 61
+      name: PassiveListModal
+      icon: {fileID: 5779557562189929939, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Pass\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Pass\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Pass\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 150
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 6
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: passivelistmodal
+        niceComponentName: passive list modal
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasgroup
+        niceComponentName: canvas group
+      historyPaths: []
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]"}'
+      paths: []
+      tabWidth: 61
+      name: PassiveListModal
+      icon: {fileID: 5779557562189929939, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Pass\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 82
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Pass\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Pass\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 150
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 7
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: passivelistmodal
+        niceComponentName: passive list modal
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasgroup
+        niceComponentName: canvas group
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/MainPanel[0]/VerticalGroup[0]/Section1_TemporaryConditions[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/MainPanel[0]/VerticalGroup[0]/Section3_CharacterPassives[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/MainPanel[0]/VerticalGroup[0]/Section2_AttributeModifiers[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]"}'
+      paths: []
+      tabWidth: 61
+      name: PassiveListModal
+      icon: {fileID: 5779557562189929939, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Pass\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Pass\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Pass\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 150
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 8
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: passivelistmodal
+        niceComponentName: passive list modal
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasgroup
+        niceComponentName: canvas group
+      historyPaths: []
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]"}'
+      paths: []
+      tabWidth: 61
+      name: PassiveListModal
+      icon: {fileID: 5779557562189929939, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Pass\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Pass\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Pass\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 150
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 9
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: passivelistmodal
+        niceComponentName: passive list modal
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasgroup
+        niceComponentName: canvas group
+      historyPaths: []
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]"}'
+      paths: []
+      tabWidth: 61
+      name: PassiveListModal
+      icon: {fileID: 5779557562189929939, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Pass\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Pass\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Pass\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 150
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 10
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: passivelistmodal
+        niceComponentName: passive list modal
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasgroup
+        niceComponentName: canvas group
+      historyPaths: []
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/ConditionIcon[0]"}'
+      paths: []
+      tabWidth: 64
+      name: ConditionIcon
+      icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Cond\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Cond\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Cond\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 1
+      previewHeight: 13
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 11
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasrenderer
+        niceComponentName: canvas renderer
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: image
+        niceComponentName: image
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: shadow
+        niceComponentName: shadow
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 0
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: 
+        niceComponentName: 
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/ConditionIcon[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/ConditionIcon[0]"}'
+      paths: []
+      tabWidth: 64
+      name: ConditionIcon
+      icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Cond\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Cond\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Cond\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 1
+      previewHeight: 13
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 12
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasrenderer
+        niceComponentName: canvas renderer
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: image
+        niceComponentName: image
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: shadow
+        niceComponentName: shadow
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 0
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: 
+        niceComponentName: 
+      historyPaths: []
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]"}'
+      paths: []
+      tabWidth: 61
+      name: PassiveItem
+      icon: {fileID: -7943610116366264489, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Pass\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 1
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Pass\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Pass\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 13
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 13
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: layoutelement
+        niceComponentName: layout element
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: passiveitemui
+        niceComponentName: passive item ui
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/ModifierItemPrefab[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/ConditionIcon[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/ConditionIcon[0]"}'
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/ModifierItemPrefab[0]"}'
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]/Image[0]/Image
+          (1)[0]/PassiveItemPrefab[0]/Icon[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]"}'
+      paths: []
+      tabWidth: 61
+      name: PassiveItem
+      icon: {fileID: -7943610116366264489, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Pass\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 1
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Pass\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Pass\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 150
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 14
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: layoutelement
+        niceComponentName: layout element
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: passiveitemui
+        niceComponentName: passive item ui
+      historyPaths: []
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]"}'
+      paths: []
+      tabWidth: 61
+      name: PassiveListModal
+      icon: {fileID: 5779557562189929939, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Pass\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Pass\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Pass\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 150
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 15
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: passivelistmodal
+        niceComponentName: passive list modal
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasgroup
+        niceComponentName: canvas group
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]"}'
+      paths: []
+      tabWidth: 57
+      name: PrefabsGroup
+      icon: {fileID: -1575620288787673585, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Pref\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Pref\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Pref\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 150
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 16
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]"}'
+      paths: []
+      tabWidth: 61
+      name: PassiveItem
+      icon: {fileID: -7943610116366264489, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Pass\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 1
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Pass\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Pass\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 150
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 17
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: layoutelement
+        niceComponentName: layout element
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: passiveitemui
+        niceComponentName: passive item ui
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]"}'
+      paths: []
+      tabWidth: 61
+      name: PassiveItem
+      icon: {fileID: -7943610116366264489, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Pass\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 1
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Pass\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Pass\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 150
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 18
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: layoutelement
+        niceComponentName: layout element
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: passiveitemui
+        niceComponentName: passive item ui
+      historyPaths: []
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]"}'
+      paths: []
+      tabWidth: 61
+      name: PassiveListModal
+      icon: {fileID: 5779557562189929939, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Pass\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Pass\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Pass\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 150
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 19
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: passivelistmodal
+        niceComponentName: passive list modal
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasgroup
+        niceComponentName: canvas group
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]"}'
+      paths: []
+      tabWidth: 61
+      name: PassiveItem
+      icon: {fileID: -7943610116366264489, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Pass\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 1
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Pass\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Pass\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 150
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 20
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: layoutelement
+        niceComponentName: layout element
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: passiveitemui
+        niceComponentName: passive item ui
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]/Image[0]/Image
+        (1)[0]/PassiveItemPrefab[0]/Text[0]"}'
+      paths: []
+      tabWidth: 49
+      name: Text
+      icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: Text
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: Text
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Text\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 150
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 21
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasrenderer
+        niceComponentName: canvas renderer
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
         componentName: textmeshprougui
         niceComponentName: text mesh pro ugui
       historyPaths:
       - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitBanner[0]/BannerText[0]"}'
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]/Image[0]/Image
+          (1)[0]/PassiveItemPrefab[0]/Text[0]"}'
         prefab: 0
       - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/Modals_Container[0]"}'
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]"}'
+      paths: []
+      tabWidth: 61
+      name: PassiveItem
+      icon: {fileID: -7943610116366264489, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Pass\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 1
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Pass\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Pass\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 150
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 22
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: layoutelement
+        niceComponentName: layout element
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: passiveitemui
+        niceComponentName: passive item ui
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]"}'
+      paths: []
+      tabWidth: 61
+      name: PassiveItem
+      icon: {fileID: -7943610116366264489, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Pass\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 1
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Pass\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Pass\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 150
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 23
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: layoutelement
+        niceComponentName: layout element
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: passiveitemui
+        niceComponentName: passive item ui
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]"}'
         prefab: 0
       - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/Background[0]"}'
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]/Image[0]/Image
+          (1)[0]/PassiveItemPrefab[0]/Text[0]"}'
         prefab: 0
       - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/Stars[0]"}'
-        prefab: 0
-      - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitListScroll[0]/Viewport[0]"}'
-        prefab: 0
-      - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]/UnitNameContainerBorder[0]/UnitNameContainer[0]/UnitName[0]"}'
-        prefab: 0
-      - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/Modals_Container[0]/SkillSelectionModal[0]"}'
-        prefab: 0
-      - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/Modals_Container[0]/SkillSelectionModal[0]/Window[0]/Scroll[0]/Viewport[0]/Content[0]"}'
-        prefab: 0
-      - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/Modals_Container[0]/SkillSelectionModal[0]/Window[0]/Scroll[0]/Viewport[0]"}'
-        prefab: 0
-      - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/Modals_Container[0]/SkillSelectionModal[0]/Window[0]/Scroll[0]"}'
-        prefab: 0
-      - paths:
-        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitMainPanel[0]"}'
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]"}'
         prefab: 0
       owner: {fileID: 0}
     closedTabs: []
     playModeTransforms: []
     historyAssets:
     - assetGUIDs:
+      - fec72274543004aff8768fda2a73da01
+    - assetGUIDs:
+      - 8e7c1c09c33d12647bde5c4458b82c61
+    - assetGUIDs:
+      - d115e0bc68e6adf42a7c6f7c6d914978
+    - assetGUIDs:
       - 67ec913167e69cc4989a746ba58eede0
     - assetGUIDs:
       - 3aa9d9faf1e93ac47bb155d811c2cf71
     - assetGUIDs:
       - 5b57ca8cfbde6b344adfc40ad11d7841
-    - assetGUIDs:
-      - fec72274543004aff8768fda2a73da01
     - assetGUIDs:
       - 41ac0598862a52a4388b1cf64820d50f
     - assetGUIDs:
@@ -953,13 +2989,126 @@ MonoBehaviour:
       - bc60dce0dd546f146bec84d86641d689
     - assetGUIDs:
       - bc60dce0dd546f146bec84d86641d689
+    targetObject: {fileID: 11500000, guid: fec72274543004aff8768fda2a73da01, type: 3}
+    targetObjects: []
+    lastSelectedAsset: Packages/com.unity.purchasing/Runtime/Security/Asn1Processor/Asn1Node.cs
+    lastClickedTab: 0
+    previousTab: 22
+  - tracker:
+      mostClicked: []
+      recentlyClicked: []
+      mostClickedContents: []
+      recentlyClickedContents: []
+    sceneGUID: e625a3e42d710e542b4c986f567fb23b
+    sceneName: UnitScene
+    lastSaveTimePrint: 11:39 PM (June 17, 2026)
+    gracePeriod: 3
+    activeIndex: 0
+    checkingToLoad: 0
+    assetsCollapsed: 1
+    lockedAsset: 0
+    maximizedAssetView: 0
+    showImportSettings: 1
+    suggestedHeight: 0
+    userAssetViewSize: -1
+    previewHeight: 0
+    scrollPosition: {x: 0, y: 0}
+    toolbarScrollPosition: {x: 0, y: 0}
+    rawUserHeight: 0
+    lastValidTabWidth: 61
+    alreadyCalculatedHeight: 0
+    lastKnownHeight: 0
+    tabs:
+    - path: 
+      paths: []
+      tabWidth: 58
+      name: 
+      icon: {fileID: 0}
+      shortName: New Tab
+      filterString: 
+      newTab: 1
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: New Tab
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "New Tab\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 150
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 0
+      historyPosition: 0
+      componentMaps: []
+      historyPaths: []
+      owner: {fileID: 0}
+    closedTabs: []
+    playModeTransforms: []
+    historyAssets:
+    - assetGUIDs:
+      - fec72274543004aff8768fda2a73da01
     - assetGUIDs:
       - 8e7c1c09c33d12647bde5c4458b82c61
     - assetGUIDs:
-      - 762c9f2f48d0df0408cc3dae952e021e
-    targetObject: {fileID: 11400000, guid: a9644b9cf968da748bbf12a4c0810c07, type: 2}
+      - d115e0bc68e6adf42a7c6f7c6d914978
+    - assetGUIDs:
+      - 67ec913167e69cc4989a746ba58eede0
+    - assetGUIDs:
+      - 3aa9d9faf1e93ac47bb155d811c2cf71
+    - assetGUIDs:
+      - 5b57ca8cfbde6b344adfc40ad11d7841
+    - assetGUIDs:
+      - 41ac0598862a52a4388b1cf64820d50f
+    - assetGUIDs:
+      - ac296acd9831fe642a5514ed8cee5fea
+    - assetGUIDs:
+      - 98cd48ef67a5b704098e30547ba2068d
+    - assetGUIDs:
+      - 67ec913167e69cc4989a746ba58eede0
+      - 98cd48ef67a5b704098e30547ba2068d
+      - 8e7c1c09c33d12647bde5c4458b82c61
+      - bc60dce0dd546f146bec84d86641d689
+    - assetGUIDs:
+      - bc60dce0dd546f146bec84d86641d689
+    targetObject: {fileID: 11500000, guid: fec72274543004aff8768fda2a73da01, type: 3}
     targetObjects: []
-    lastSelectedAsset: Assets/CoInspector/Editor/Core/Helpers/MissingScriptManager.asset
+    lastSelectedAsset: Packages/com.unity.purchasing/Runtime/Security/Asn1Processor/Asn1Node.cs
     lastClickedTab: -1
     previousTab: 0
   - tracker:
@@ -1004,11 +3153,11 @@ MonoBehaviour:
       recentlyClickedContents: []
     sceneGUID: 3bea51b30b1a74742b70e245c7a07f9c
     sceneName: ShopScene
-    lastSaveTimePrint: 10:43 PM (June 15, 2026)
+    lastSaveTimePrint: 10:33 PM (June 17, 2026)
     gracePeriod: 3
     activeIndex: 0
     checkingToLoad: 0
-    assetsCollapsed: 0
+    assetsCollapsed: 1
     lockedAsset: 0
     maximizedAssetView: 0
     showImportSettings: 1
@@ -1159,30 +3308,33 @@ MonoBehaviour:
     playModeTransforms: []
     historyAssets:
     - assetGUIDs:
-      - 6d7fc2a7a7b163446a4695cb3bdd963a
+      - fec72274543004aff8768fda2a73da01
     - assetGUIDs:
-      - 8e33882f7fba925478cbd19e61365198
+      - 8e7c1c09c33d12647bde5c4458b82c61
     - assetGUIDs:
-      - b1aeb5d725201a641bc40f21512ddeae
+      - d115e0bc68e6adf42a7c6f7c6d914978
     - assetGUIDs:
-      - e625a3e42d710e542b4c986f567fb23b
+      - 67ec913167e69cc4989a746ba58eede0
     - assetGUIDs:
-      - 3ef58f34cb2df3143aa344b65b65187e
+      - 3aa9d9faf1e93ac47bb155d811c2cf71
     - assetGUIDs:
-      - 3bea51b30b1a74742b70e245c7a07f9c
+      - 5b57ca8cfbde6b344adfc40ad11d7841
     - assetGUIDs:
-      - 642b786367762f940aded926f739f0ba
+      - 41ac0598862a52a4388b1cf64820d50f
     - assetGUIDs:
-      - 7e89744f8bca69d4da142c1385affc30
+      - ac296acd9831fe642a5514ed8cee5fea
     - assetGUIDs:
-      - 600f4b74746dbf944901257f81a8af6d
+      - 98cd48ef67a5b704098e30547ba2068d
     - assetGUIDs:
-      - 41ab50bd04fdfce42875fe6724f71972
+      - 67ec913167e69cc4989a746ba58eede0
+      - 98cd48ef67a5b704098e30547ba2068d
+      - 8e7c1c09c33d12647bde5c4458b82c61
+      - bc60dce0dd546f146bec84d86641d689
     - assetGUIDs:
-      - 97b19df7a35c77244a576584a154beaf
-    targetObject: {fileID: 11400000, guid: 6d7fc2a7a7b163446a4695cb3bdd963a, type: 2}
+      - bc60dce0dd546f146bec84d86641d689
+    targetObject: {fileID: 11400000, guid: a9644b9cf968da748bbf12a4c0810c07, type: 2}
     targetObjects: []
-    lastSelectedAsset: Assets/Celestial-Cross/Prefabs/Units/Enemies/Alien_Ranged_base/Data/Alien_Ranged_base.asset
+    lastSelectedAsset: Assets/CoInspector/Editor/Core/Helpers/MissingScriptManager.asset
     lastClickedTab: -1
     previousTab: 0
   - tracker:
@@ -1192,352 +3344,7 @@ MonoBehaviour:
       recentlyClickedContents: []
     sceneGUID: 99c9720ab356a0642a771bea13969a05
     sceneName: SampleScene
-    lastSaveTimePrint: 10:26 AM (June 15, 2026)
-    gracePeriod: 3
-    activeIndex: 0
-    checkingToLoad: 0
-    assetsCollapsed: 0
-    lockedAsset: 0
-    maximizedAssetView: 0
-    showImportSettings: 1
-    suggestedHeight: 0
-    userAssetViewSize: -1
-    previewHeight: 0
-    scrollPosition: {x: 0, y: 0}
-    toolbarScrollPosition: {x: 0, y: 0}
-    rawUserHeight: 0
-    lastValidTabWidth: 65
-    alreadyCalculatedHeight: 0
-    lastKnownHeight: 0
-    tabs:
-    - path: 
-      paths: []
-      tabWidth: 62
-      name: 
-      icon: {fileID: 0}
-      shortName: New Tab
-      filterString: 
-      newTab: 1
-      scrollPosition: 0
-      isSelected: 0
-      allCollapsed: 0
-      runtimeFoldouts: 
-      runtimeMultiComponents: []
-      tabTextContent:
-        m_Text: New Tab
-        m_Image: {fileID: 0}
-        m_Tooltip: 
-        m_TextWithWhitespace: "New Tab\u200B"
-      multiEditMode: 0
-      locked: 0
-      hasPreview: 0
-      previewHeight: 150
-      debug: 0
-      filtering: 0
-      prefab: 0
-      multiFoldout: 1
-      target: {fileID: 0}
-      targets: []
-      linkedPrefabs: []
-      trackMultiTarget: {fileID: 0}
-      serializedTransform:
-        owner: {fileID: 0}
-        localPosition: {x: 0, y: 0, z: 0}
-        localRotation: {x: 0, y: 0, z: 0, w: 0}
-        localScale: {x: 0, y: 0, z: 0}
-        originalPosition: {x: 0, y: 0, z: 0}
-        originalRotation: {x: 0, y: 0, z: 0, w: 0}
-        originalLocalScale: {x: 0, y: 0, z: 0}
-        anchorMin: {x: 0, y: 0}
-        anchorMax: {x: 0, y: 0}
-        anchoredPosition: {x: 0, y: 0}
-        sizeDelta: {x: 0, y: 0}
-        pivot: {x: 0, y: 0}
-        originalAnchorMin: {x: 0, y: 0}
-        originalAnchorMax: {x: 0, y: 0}
-        originalAnchoredPosition: {x: 0, y: 0}
-        originalSizeDelta: {x: 0, y: 0}
-        originalPivot: {x: 0, y: 0}
-        isRectTransform: 0
-        appliedTransform: 0
-        undidTransform: 0
-        autoSave: 0
-      serializedTransforms: []
-      savePlayModeTransform: 0
-      index: 0
-      historyPosition: 0
-      componentMaps: []
-      historyPaths: []
-      owner: {fileID: 0}
-    closedTabs: []
-    playModeTransforms: []
-    historyAssets:
-    - assetGUIDs:
-      - 642b786367762f940aded926f739f0ba
-    - assetGUIDs:
-      - 80fded43a33aed7478506a4152043fb2
-    - assetGUIDs:
-      - 9b5ced1b51f474049bce4a69601096bd
-      - 80fded43a33aed7478506a4152043fb2
-    - assetGUIDs:
-      - 9b5ced1b51f474049bce4a69601096bd
-    - assetGUIDs:
-      - 8105016687592461f977c054a80ce2f2
-    - assetGUIDs:
-      - 6d7fc2a7a7b163446a4695cb3bdd963a
-    - assetGUIDs:
-      - 3000b6c32a91e9b4991eaee2dc268568
-    - assetGUIDs:
-      - 44b481785305ce14896d60bc64211682
-    - assetGUIDs:
-      - 7e89744f8bca69d4da142c1385affc30
-    - assetGUIDs:
-      - ca55dfa99cc743a468122c6c92a9f7d2
-    - assetGUIDs:
-      - acc86a1db7a2abd4c98cbb1f233ecc83
-    targetObject: {fileID: 11400000, guid: 642b786367762f940aded926f739f0ba, type: 2}
-    targetObjects: []
-    lastSelectedAsset: Assets/Celestial-Cross/Data/Units/MagicalGirls/SNIPER.asset
-    lastClickedTab: -1
-    previousTab: 25
-  - tracker:
-      mostClicked: []
-      recentlyClicked: []
-      mostClickedContents: []
-      recentlyClickedContents: []
-    sceneGUID: 589ee8b52c987334996a55c9d02cc3ce
-    sceneName: RestScene
-    lastSaveTimePrint: 10:26 AM (June 15, 2026)
-    gracePeriod: 3
-    activeIndex: 0
-    checkingToLoad: 0
-    assetsCollapsed: 0
-    lockedAsset: 0
-    maximizedAssetView: 0
-    showImportSettings: 1
-    suggestedHeight: 0
-    userAssetViewSize: -1
-    previewHeight: 0
-    scrollPosition: {x: 0, y: 0}
-    toolbarScrollPosition: {x: 0, y: 0}
-    rawUserHeight: 0
-    lastValidTabWidth: 65
-    alreadyCalculatedHeight: 0
-    lastKnownHeight: 0
-    tabs:
-    - path: 
-      paths: []
-      tabWidth: 62
-      name: 
-      icon: {fileID: 0}
-      shortName: New Tab
-      filterString: 
-      newTab: 1
-      scrollPosition: 0
-      isSelected: 0
-      allCollapsed: 0
-      runtimeFoldouts: 
-      runtimeMultiComponents: []
-      tabTextContent:
-        m_Text: New Tab
-        m_Image: {fileID: 0}
-        m_Tooltip: 
-        m_TextWithWhitespace: "New Tab\u200B"
-      multiEditMode: 0
-      locked: 0
-      hasPreview: 0
-      previewHeight: 150
-      debug: 0
-      filtering: 0
-      prefab: 0
-      multiFoldout: 1
-      target: {fileID: 0}
-      targets: []
-      linkedPrefabs: []
-      trackMultiTarget: {fileID: 0}
-      serializedTransform:
-        owner: {fileID: 0}
-        localPosition: {x: 0, y: 0, z: 0}
-        localRotation: {x: 0, y: 0, z: 0, w: 0}
-        localScale: {x: 0, y: 0, z: 0}
-        originalPosition: {x: 0, y: 0, z: 0}
-        originalRotation: {x: 0, y: 0, z: 0, w: 0}
-        originalLocalScale: {x: 0, y: 0, z: 0}
-        anchorMin: {x: 0, y: 0}
-        anchorMax: {x: 0, y: 0}
-        anchoredPosition: {x: 0, y: 0}
-        sizeDelta: {x: 0, y: 0}
-        pivot: {x: 0, y: 0}
-        originalAnchorMin: {x: 0, y: 0}
-        originalAnchorMax: {x: 0, y: 0}
-        originalAnchoredPosition: {x: 0, y: 0}
-        originalSizeDelta: {x: 0, y: 0}
-        originalPivot: {x: 0, y: 0}
-        isRectTransform: 0
-        appliedTransform: 0
-        undidTransform: 0
-        autoSave: 0
-      serializedTransforms: []
-      savePlayModeTransform: 0
-      index: 0
-      historyPosition: 0
-      componentMaps: []
-      historyPaths: []
-      owner: {fileID: 0}
-    closedTabs: []
-    playModeTransforms: []
-    historyAssets:
-    - assetGUIDs:
-      - 642b786367762f940aded926f739f0ba
-    - assetGUIDs:
-      - 80fded43a33aed7478506a4152043fb2
-    - assetGUIDs:
-      - 9b5ced1b51f474049bce4a69601096bd
-      - 80fded43a33aed7478506a4152043fb2
-    - assetGUIDs:
-      - 9b5ced1b51f474049bce4a69601096bd
-    - assetGUIDs:
-      - 8105016687592461f977c054a80ce2f2
-    - assetGUIDs:
-      - 6d7fc2a7a7b163446a4695cb3bdd963a
-    - assetGUIDs:
-      - 3000b6c32a91e9b4991eaee2dc268568
-    - assetGUIDs:
-      - 44b481785305ce14896d60bc64211682
-    - assetGUIDs:
-      - 7e89744f8bca69d4da142c1385affc30
-    - assetGUIDs:
-      - ca55dfa99cc743a468122c6c92a9f7d2
-    - assetGUIDs:
-      - acc86a1db7a2abd4c98cbb1f233ecc83
-    targetObject: {fileID: 11400000, guid: 642b786367762f940aded926f739f0ba, type: 2}
-    targetObjects: []
-    lastSelectedAsset: Assets/Celestial-Cross/Data/Units/MagicalGirls/SNIPER.asset
-    lastClickedTab: -1
-    previousTab: 25
-  - tracker:
-      mostClicked: []
-      recentlyClicked: []
-      mostClickedContents: []
-      recentlyClickedContents: []
-    sceneGUID: 3a34bb65e0b98494faa8fe5f88d53f86
-    sceneName: MainMenu
-    lastSaveTimePrint: 10:26 AM (June 15, 2026)
-    gracePeriod: 3
-    activeIndex: 0
-    checkingToLoad: 0
-    assetsCollapsed: 0
-    lockedAsset: 0
-    maximizedAssetView: 0
-    showImportSettings: 1
-    suggestedHeight: 0
-    userAssetViewSize: -1
-    previewHeight: 0
-    scrollPosition: {x: 0, y: 0}
-    toolbarScrollPosition: {x: 0, y: 0}
-    rawUserHeight: 0
-    lastValidTabWidth: 65
-    alreadyCalculatedHeight: 0
-    lastKnownHeight: 0
-    tabs:
-    - path: 
-      paths: []
-      tabWidth: 62
-      name: 
-      icon: {fileID: 0}
-      shortName: New Tab
-      filterString: 
-      newTab: 1
-      scrollPosition: 0
-      isSelected: 0
-      allCollapsed: 0
-      runtimeFoldouts: 
-      runtimeMultiComponents: []
-      tabTextContent:
-        m_Text: New Tab
-        m_Image: {fileID: 0}
-        m_Tooltip: 
-        m_TextWithWhitespace: "New Tab\u200B"
-      multiEditMode: 0
-      locked: 0
-      hasPreview: 0
-      previewHeight: 150
-      debug: 0
-      filtering: 0
-      prefab: 0
-      multiFoldout: 1
-      target: {fileID: 0}
-      targets: []
-      linkedPrefabs: []
-      trackMultiTarget: {fileID: 0}
-      serializedTransform:
-        owner: {fileID: 0}
-        localPosition: {x: 0, y: 0, z: 0}
-        localRotation: {x: 0, y: 0, z: 0, w: 0}
-        localScale: {x: 0, y: 0, z: 0}
-        originalPosition: {x: 0, y: 0, z: 0}
-        originalRotation: {x: 0, y: 0, z: 0, w: 0}
-        originalLocalScale: {x: 0, y: 0, z: 0}
-        anchorMin: {x: 0, y: 0}
-        anchorMax: {x: 0, y: 0}
-        anchoredPosition: {x: 0, y: 0}
-        sizeDelta: {x: 0, y: 0}
-        pivot: {x: 0, y: 0}
-        originalAnchorMin: {x: 0, y: 0}
-        originalAnchorMax: {x: 0, y: 0}
-        originalAnchoredPosition: {x: 0, y: 0}
-        originalSizeDelta: {x: 0, y: 0}
-        originalPivot: {x: 0, y: 0}
-        isRectTransform: 0
-        appliedTransform: 0
-        undidTransform: 0
-        autoSave: 0
-      serializedTransforms: []
-      savePlayModeTransform: 0
-      index: 0
-      historyPosition: 0
-      componentMaps: []
-      historyPaths: []
-      owner: {fileID: 0}
-    closedTabs: []
-    playModeTransforms: []
-    historyAssets:
-    - assetGUIDs:
-      - 642b786367762f940aded926f739f0ba
-    - assetGUIDs:
-      - 80fded43a33aed7478506a4152043fb2
-    - assetGUIDs:
-      - 9b5ced1b51f474049bce4a69601096bd
-      - 80fded43a33aed7478506a4152043fb2
-    - assetGUIDs:
-      - 9b5ced1b51f474049bce4a69601096bd
-    - assetGUIDs:
-      - 8105016687592461f977c054a80ce2f2
-    - assetGUIDs:
-      - 6d7fc2a7a7b163446a4695cb3bdd963a
-    - assetGUIDs:
-      - 3000b6c32a91e9b4991eaee2dc268568
-    - assetGUIDs:
-      - 44b481785305ce14896d60bc64211682
-    - assetGUIDs:
-      - 7e89744f8bca69d4da142c1385affc30
-    - assetGUIDs:
-      - ca55dfa99cc743a468122c6c92a9f7d2
-    - assetGUIDs:
-      - acc86a1db7a2abd4c98cbb1f233ecc83
-    targetObject: {fileID: 11400000, guid: 642b786367762f940aded926f739f0ba, type: 2}
-    targetObjects: []
-    lastSelectedAsset: Assets/Celestial-Cross/Data/Units/MagicalGirls/SNIPER.asset
-    lastClickedTab: -1
-    previousTab: 25
-  - tracker:
-      mostClicked: []
-      recentlyClicked: []
-      mostClickedContents: []
-      recentlyClickedContents: []
-    sceneGUID: b64aa4f30b1fd1548b757958394826b6
-    sceneName: DialogueScene
-    lastSaveTimePrint: 09:27 PM (June 16, 2026)
+    lastSaveTimePrint: 01:34 PM (June 17, 2026)
     gracePeriod: 3
     activeIndex: 0
     checkingToLoad: 0
@@ -1618,62 +3425,384 @@ MonoBehaviour:
     playModeTransforms: []
     historyAssets:
     - assetGUIDs:
-      - 8e33882f7fba925478cbd19e61365198
-    - assetGUIDs:
-      - b64aa4f30b1fd1548b757958394826b6
-    - assetGUIDs:
-      - 73750401bf6aa114dbfd0b2f089f7c1a
-    - assetGUIDs:
-      - 9b10a1dceb139d24eaf68cb12b5b8bb3
-    - assetGUIDs:
-      - e625a3e42d710e542b4c986f567fb23b
-    - assetGUIDs:
-      - c16c15a166b8e5447b4eae243b620703
-    - assetGUIDs:
-      - 775b3648bd43caa419fbf2ae75a1862c
-      - 8211fb7b4a68c33458c1f49e880b10b4
-      - 07587bb6089b02740b56285d10b983c9
-      - b78377532a5408a40af0a6ffe6ed2c93
-      - f7151531f50437c4bb0ccc64b9d00ed3
-      - b814ef00ba1f87f438dc202600094989
-      - 10988850e3ea1b84796b21b9dafeda93
-      - 8286d5c4c10dfb042829bd828bcc2988
-      - 9958ad80375838a4fae4d1fe17310d7c
-      - db4e202fc3055bb4ba906600ac57918e
-      - c8a7a13d973767a48961b37c37cdc21a
-      - dcc001dd3716db049a2c7d156ae1393c
-      - eaed98aafc206734095a099743c03b00
-      - c16c15a166b8e5447b4eae243b620703
-      - be69ce7415a1a0e44b70f4acb0438e38
-      - 9c5cd0cf63625664e83d6b6b2405093a
-      - d68e64b140d2f9446bee4fa0c677fc16
-      - 54ff0b800280f464ab401654deb471ae
-      - 932e125c9e2b09d4d8d011ccc2339e2d
-      - 962618a89e4574142b0f9ddbe58d28ca
-      - 41b88ebd79080744bbc0eb7a7635f773
-      - 6ff36aaa955fb244383483cbdbc7c03b
-      - 219e4c49f19418146aef524c2691664f
-      - 868ff97a2dd5a0c4ab1d1017d014a901
-      - 999f779395f410c49a06900d07d0e0cc
-      - 5f7c42cf917829e48bb873b9a8dede0b
-      - 592d6158468754840b8b813fc53ff582
-      - 3a855302ccfdad246899f546afd8fd6b
-      - cc241bbe708959946b886d004ab23fc9
-      - d804608245238c042b98fa9e30e2a510
-      - 781d792869bb9c142bf7b3d784dcfae1
-      - 97b7f3cc20ebff0409479d19c169f86b
-      - 724ed35fb6c344041911cc7c649c31ef
-    - assetGUIDs:
-      - 724ed35fb6c344041911cc7c649c31ef
-    - assetGUIDs:
-      - 775b3648bd43caa419fbf2ae75a1862c
-    - assetGUIDs:
-      - d68e64b140d2f9446bee4fa0c677fc16
+      - fec72274543004aff8768fda2a73da01
     - assetGUIDs:
       - 67ec913167e69cc4989a746ba58eede0
-    targetObject: {fileID: 102900000, guid: 8e33882f7fba925478cbd19e61365198, type: 3}
+    - assetGUIDs:
+      - 3aa9d9faf1e93ac47bb155d811c2cf71
+    - assetGUIDs:
+      - 5b57ca8cfbde6b344adfc40ad11d7841
+    - assetGUIDs:
+      - 41ac0598862a52a4388b1cf64820d50f
+    - assetGUIDs:
+      - ac296acd9831fe642a5514ed8cee5fea
+    - assetGUIDs:
+      - 98cd48ef67a5b704098e30547ba2068d
+    - assetGUIDs:
+      - 67ec913167e69cc4989a746ba58eede0
+      - 98cd48ef67a5b704098e30547ba2068d
+      - 8e7c1c09c33d12647bde5c4458b82c61
+      - bc60dce0dd546f146bec84d86641d689
+    - assetGUIDs:
+      - bc60dce0dd546f146bec84d86641d689
+    - assetGUIDs:
+      - 8e7c1c09c33d12647bde5c4458b82c61
+    - assetGUIDs:
+      - 762c9f2f48d0df0408cc3dae952e021e
+    targetObject: {fileID: 11500000, guid: fec72274543004aff8768fda2a73da01, type: 3}
     targetObjects: []
-    lastSelectedAsset: Assets/Celestial-Cross/Scenes/Teste 1.unity
+    lastSelectedAsset: Packages/com.unity.purchasing/Runtime/Security/Asn1Processor/Asn1Node.cs
+    lastClickedTab: -1
+    previousTab: 0
+  - tracker:
+      mostClicked: []
+      recentlyClicked: []
+      mostClickedContents: []
+      recentlyClickedContents: []
+    sceneGUID: 589ee8b52c987334996a55c9d02cc3ce
+    sceneName: RestScene
+    lastSaveTimePrint: 01:35 PM (June 17, 2026)
+    gracePeriod: 3
+    activeIndex: 0
+    checkingToLoad: 0
+    assetsCollapsed: 0
+    lockedAsset: 0
+    maximizedAssetView: 0
+    showImportSettings: 1
+    suggestedHeight: 0
+    userAssetViewSize: -1
+    previewHeight: 0
+    scrollPosition: {x: 0, y: 0}
+    toolbarScrollPosition: {x: 0, y: 0}
+    rawUserHeight: 0
+    lastValidTabWidth: 64
+    alreadyCalculatedHeight: 0
+    lastKnownHeight: 0
+    tabs:
+    - path: 
+      paths: []
+      tabWidth: 61
+      name: 
+      icon: {fileID: 0}
+      shortName: New Tab
+      filterString: 
+      newTab: 1
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: New Tab
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "New Tab\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 150
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 0
+      historyPosition: 0
+      componentMaps: []
+      historyPaths: []
+      owner: {fileID: 0}
+    closedTabs: []
+    playModeTransforms: []
+    historyAssets:
+    - assetGUIDs:
+      - fec72274543004aff8768fda2a73da01
+    - assetGUIDs:
+      - 67ec913167e69cc4989a746ba58eede0
+    - assetGUIDs:
+      - 3aa9d9faf1e93ac47bb155d811c2cf71
+    - assetGUIDs:
+      - 5b57ca8cfbde6b344adfc40ad11d7841
+    - assetGUIDs:
+      - 41ac0598862a52a4388b1cf64820d50f
+    - assetGUIDs:
+      - ac296acd9831fe642a5514ed8cee5fea
+    - assetGUIDs:
+      - 98cd48ef67a5b704098e30547ba2068d
+    - assetGUIDs:
+      - 67ec913167e69cc4989a746ba58eede0
+      - 98cd48ef67a5b704098e30547ba2068d
+      - 8e7c1c09c33d12647bde5c4458b82c61
+      - bc60dce0dd546f146bec84d86641d689
+    - assetGUIDs:
+      - bc60dce0dd546f146bec84d86641d689
+    - assetGUIDs:
+      - 8e7c1c09c33d12647bde5c4458b82c61
+    - assetGUIDs:
+      - 762c9f2f48d0df0408cc3dae952e021e
+    targetObject: {fileID: 11500000, guid: fec72274543004aff8768fda2a73da01, type: 3}
+    targetObjects: []
+    lastSelectedAsset: Packages/com.unity.purchasing/Runtime/Security/Asn1Processor/Asn1Node.cs
+    lastClickedTab: -1
+    previousTab: 0
+  - tracker:
+      mostClicked: []
+      recentlyClicked: []
+      mostClickedContents: []
+      recentlyClickedContents: []
+    sceneGUID: 3a34bb65e0b98494faa8fe5f88d53f86
+    sceneName: MainMenu
+    lastSaveTimePrint: 01:35 PM (June 17, 2026)
+    gracePeriod: 3
+    activeIndex: 0
+    checkingToLoad: 0
+    assetsCollapsed: 0
+    lockedAsset: 0
+    maximizedAssetView: 0
+    showImportSettings: 1
+    suggestedHeight: 0
+    userAssetViewSize: -1
+    previewHeight: 0
+    scrollPosition: {x: 0, y: 0}
+    toolbarScrollPosition: {x: 0, y: 0}
+    rawUserHeight: 0
+    lastValidTabWidth: 64
+    alreadyCalculatedHeight: 0
+    lastKnownHeight: 0
+    tabs:
+    - path: 
+      paths: []
+      tabWidth: 61
+      name: 
+      icon: {fileID: 0}
+      shortName: New Tab
+      filterString: 
+      newTab: 1
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: New Tab
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "New Tab\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 150
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 0
+      historyPosition: 0
+      componentMaps: []
+      historyPaths: []
+      owner: {fileID: 0}
+    closedTabs: []
+    playModeTransforms: []
+    historyAssets:
+    - assetGUIDs:
+      - fec72274543004aff8768fda2a73da01
+    - assetGUIDs:
+      - 67ec913167e69cc4989a746ba58eede0
+    - assetGUIDs:
+      - 3aa9d9faf1e93ac47bb155d811c2cf71
+    - assetGUIDs:
+      - 5b57ca8cfbde6b344adfc40ad11d7841
+    - assetGUIDs:
+      - 41ac0598862a52a4388b1cf64820d50f
+    - assetGUIDs:
+      - ac296acd9831fe642a5514ed8cee5fea
+    - assetGUIDs:
+      - 98cd48ef67a5b704098e30547ba2068d
+    - assetGUIDs:
+      - 67ec913167e69cc4989a746ba58eede0
+      - 98cd48ef67a5b704098e30547ba2068d
+      - 8e7c1c09c33d12647bde5c4458b82c61
+      - bc60dce0dd546f146bec84d86641d689
+    - assetGUIDs:
+      - bc60dce0dd546f146bec84d86641d689
+    - assetGUIDs:
+      - 8e7c1c09c33d12647bde5c4458b82c61
+    - assetGUIDs:
+      - 762c9f2f48d0df0408cc3dae952e021e
+    targetObject: {fileID: 11500000, guid: fec72274543004aff8768fda2a73da01, type: 3}
+    targetObjects: []
+    lastSelectedAsset: Packages/com.unity.purchasing/Runtime/Security/Asn1Processor/Asn1Node.cs
+    lastClickedTab: -1
+    previousTab: 0
+  - tracker:
+      mostClicked: []
+      recentlyClicked: []
+      mostClickedContents: []
+      recentlyClickedContents: []
+    sceneGUID: b64aa4f30b1fd1548b757958394826b6
+    sceneName: DialogueScene
+    lastSaveTimePrint: 01:35 PM (June 17, 2026)
+    gracePeriod: 3
+    activeIndex: 0
+    checkingToLoad: 0
+    assetsCollapsed: 0
+    lockedAsset: 0
+    maximizedAssetView: 0
+    showImportSettings: 1
+    suggestedHeight: 0
+    userAssetViewSize: -1
+    previewHeight: 0
+    scrollPosition: {x: 0, y: 0}
+    toolbarScrollPosition: {x: 0, y: 0}
+    rawUserHeight: 0
+    lastValidTabWidth: 64
+    alreadyCalculatedHeight: 0
+    lastKnownHeight: 0
+    tabs:
+    - path: 
+      paths: []
+      tabWidth: 61
+      name: 
+      icon: {fileID: 0}
+      shortName: New Tab
+      filterString: 
+      newTab: 1
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: New Tab
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "New Tab\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 150
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 0
+      historyPosition: 0
+      componentMaps: []
+      historyPaths: []
+      owner: {fileID: 0}
+    closedTabs: []
+    playModeTransforms: []
+    historyAssets:
+    - assetGUIDs:
+      - fec72274543004aff8768fda2a73da01
+    - assetGUIDs:
+      - 67ec913167e69cc4989a746ba58eede0
+    - assetGUIDs:
+      - 3aa9d9faf1e93ac47bb155d811c2cf71
+    - assetGUIDs:
+      - 5b57ca8cfbde6b344adfc40ad11d7841
+    - assetGUIDs:
+      - 41ac0598862a52a4388b1cf64820d50f
+    - assetGUIDs:
+      - ac296acd9831fe642a5514ed8cee5fea
+    - assetGUIDs:
+      - 98cd48ef67a5b704098e30547ba2068d
+    - assetGUIDs:
+      - 67ec913167e69cc4989a746ba58eede0
+      - 98cd48ef67a5b704098e30547ba2068d
+      - 8e7c1c09c33d12647bde5c4458b82c61
+      - bc60dce0dd546f146bec84d86641d689
+    - assetGUIDs:
+      - bc60dce0dd546f146bec84d86641d689
+    - assetGUIDs:
+      - 8e7c1c09c33d12647bde5c4458b82c61
+    - assetGUIDs:
+      - 762c9f2f48d0df0408cc3dae952e021e
+    targetObject: {fileID: 11500000, guid: fec72274543004aff8768fda2a73da01, type: 3}
+    targetObjects: []
+    lastSelectedAsset: Packages/com.unity.purchasing/Runtime/Security/Asn1Processor/Asn1Node.cs
     lastClickedTab: -1
     previousTab: 0
   - tracker:
@@ -2129,6 +4258,6 @@ MonoBehaviour:
     lastSelectedAsset: 
     lastClickedTab: -1
     previousTab: 0
-  tipsShown: 01000000000000000000000001000000000000000000000000000000010000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000
+  tipsShown: 01000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000001000000
   playModeStartScene: {}
   enteringPlayMode: 0

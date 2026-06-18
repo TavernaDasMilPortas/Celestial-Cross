@@ -11,14 +11,19 @@ public class DamagePopupManager : MonoBehaviour
     [SerializeField] private Vector3 spawnOffset = new Vector3(0, 1.5f, 0);
     [SerializeField] private Vector3 uiScale = Vector3.one;
 
-    private List<GameObject> activePopups = new();
+    private Queue<GameObject> popupPool = new Queue<GameObject>();
+    private int activePopupCount = 0;
 
-    public bool HasActivePopups
+    public bool HasActivePopups => activePopupCount > 0;
+
+    public void ReturnToPool(GameObject popup)
     {
-        get
+        if (popup != null)
         {
-            activePopups.RemoveAll(p => p == null);
-            return activePopups.Count > 0;
+            popup.SetActive(false);
+            popupPool.Enqueue(popup);
+            activePopupCount--;
+            if (activePopupCount < 0) activePopupCount = 0;
         }
     }
 
@@ -59,14 +64,26 @@ public class DamagePopupManager : MonoBehaviour
         Vector3 randomJitter = new Vector3(Random.Range(-0.3f, 0.3f), Random.Range(-0.2f, 0.2f), 0);
         GameObject obj = null;
 
-        Transform parent = canvasParent != null ? canvasParent : transform;
-        obj = Instantiate(damageNumberPrefab, parent);
+        if (popupPool.Count > 0)
+        {
+            obj = popupPool.Dequeue();
+            obj.SetActive(true);
+            obj.transform.SetAsLastSibling();
+        }
+        else
+        {
+            Transform parent = canvasParent != null ? canvasParent : transform;
+            obj = Instantiate(damageNumberPrefab, parent);
+            if (obj != null)
+            {
+                obj.transform.localScale = uiScale;
+                obj.layer = LayerMask.NameToLayer("UI");
+            }
+        }
 
         if (obj != null)
         {
-            obj.transform.localScale = uiScale;
-            obj.layer = LayerMask.NameToLayer("UI");
-            activePopups.Add(obj);
+            activePopupCount++;
         }
 
         DamageNumberUI ui = obj.GetComponent<DamageNumberUI>();
