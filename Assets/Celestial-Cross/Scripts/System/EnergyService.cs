@@ -100,6 +100,7 @@ namespace CelestialCross.System
             
             if (DateTime.TryParse(energyData.LastServerTimestampUTC, out DateTime lastServerTime))
             {
+                lastServerTime = lastServerTime.ToUniversalTime();
                 if (now < lastServerTime)
                 {
                     Debug.LogWarning("[EnergyService] Manipulação de relógio detectada! Regeneração congelada.");
@@ -118,8 +119,9 @@ namespace CelestialCross.System
             {
                 if (DateTime.TryParse(energyData.LastRegenTimestampUTC, out DateTime lastRegenTime))
                 {
+                    lastRegenTime = lastRegenTime.ToUniversalTime();
                     TimeSpan passed = now - lastRegenTime;
-                    float regenInterval = activeConfig != null ? activeConfig.RegenIntervalSeconds : 300f; // 5 minutes default
+                    float regenInterval = (activeConfig != null && activeConfig.RegenIntervalSeconds > 0) ? activeConfig.RegenIntervalSeconds : 60f; // 1 minute default
                     int energyToAdd = (int)(passed.TotalSeconds / regenInterval);
 
                     if (energyToAdd > 0)
@@ -149,6 +151,7 @@ namespace CelestialCross.System
                     var acc = AccountManager.Instance?.PlayerAccount;
                     if (acc?.EnergyInfo != null && DateTime.TryParse(acc.EnergyInfo.LastServerTimestampUTC, out DateTime lastServerTime))
                     {
+                        lastServerTime = lastServerTime.ToUniversalTime();
                         if (DateTime.UtcNow >= lastServerTime)
                         {
                             _isFrozen = false;
@@ -170,8 +173,9 @@ namespace CelestialCross.System
                     DateTime now = DateTime.UtcNow;
                     if (DateTime.TryParse(energyData.LastRegenTimestampUTC, out DateTime lastRegenTime))
                     {
+                        lastRegenTime = lastRegenTime.ToUniversalTime();
                         var activeConfig = GetActiveConfig();
-                        float regenInterval = activeConfig != null ? activeConfig.RegenIntervalSeconds : 300f;
+                        float regenInterval = (activeConfig != null && activeConfig.RegenIntervalSeconds > 0) ? activeConfig.RegenIntervalSeconds : 60f;
                         if ((now - lastRegenTime).TotalSeconds >= regenInterval)
                         {
                             energyData.CurrentEnergy++;
@@ -200,6 +204,7 @@ namespace CelestialCross.System
             if (account.EnergyInfo.CurrentEnergy >= amount)
             {
                 account.EnergyInfo.CurrentEnergy -= amount;
+                Debug.Log($"[EnergyService] Consumiu {amount} de energia. Energia atual agora é: {account.EnergyInfo.CurrentEnergy}");
                 
                 int maxE = GetMaxEnergy();
                 if (account.EnergyInfo.CurrentEnergy + amount >= maxE && account.EnergyInfo.CurrentEnergy < maxE)
@@ -240,20 +245,24 @@ namespace CelestialCross.System
 
         public float GetTimeUntilNextRegen()
         {
-            var activeConfig = GetActiveConfig();
-            if (activeConfig == null || _isFrozen) return -1f;
+            if (_isFrozen) return -1f;
             var account = AccountManager.Instance?.PlayerAccount;
             if (account?.EnergyInfo == null) return -1f;
 
-            if (account.EnergyInfo.CurrentEnergy >= activeConfig.MaxEnergy) return 0f;
+            int maxEnergy = GetMaxEnergy();
+            if (account.EnergyInfo.CurrentEnergy >= maxEnergy) return 0f;
+
+            var activeConfig = GetActiveConfig();
+            float regenInterval = (activeConfig != null && activeConfig.RegenIntervalSeconds > 0) ? activeConfig.RegenIntervalSeconds : 60f;
 
             if (DateTime.TryParse(account.EnergyInfo.LastRegenTimestampUTC, out DateTime lastRegenTime))
             {
+                lastRegenTime = lastRegenTime.ToUniversalTime();
                 float passed = (float)(DateTime.UtcNow - lastRegenTime).TotalSeconds;
-                return Mathf.Max(0f, activeConfig.RegenIntervalSeconds - passed);
+                return Mathf.Max(0f, regenInterval - passed);
             }
 
-            return activeConfig.RegenIntervalSeconds;
+            return regenInterval;
         }
 
         private void NotifyEnergyChanged()

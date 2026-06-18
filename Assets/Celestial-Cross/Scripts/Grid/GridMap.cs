@@ -162,9 +162,7 @@ public class GridMap : MonoBehaviour
 
     public GridTile GetTile(Vector2Int pos)
     {
-        bool found = tiles.TryGetValue(pos, out var tile);
-        if (!found)
-            Debug.LogWarning($"[GridMap] GetTile FALHOU em {pos}");
+        tiles.TryGetValue(pos, out var tile);
         return tile;
     }
 

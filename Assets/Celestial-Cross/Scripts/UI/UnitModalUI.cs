@@ -88,11 +88,28 @@ namespace CelestialCross.UI
             UpdateHealthUI(current, max, isDamage);
         }
 
+        private Tween hpTextTween;
+
         private void UpdateHealthUI(int current, int max, bool shake)
         {
             if (hpValueText != null && hpValueText.gameObject.activeSelf)
             {
-                hpValueText.text = $"HP: {current} / {max}";
+                // Extrai o valor atual mostrado no texto (ou usa o último conhecido se falhar)
+                int startValue = lastHp;
+                if (hpValueText.text.Contains("/"))
+                {
+                    string[] parts = hpValueText.text.Split('/');
+                    if (parts.Length > 0 && int.TryParse(parts[0].Trim(), out int parsedVal))
+                    {
+                        startValue = parsedVal;
+                    }
+                }
+
+                hpTextTween?.Kill();
+                hpTextTween = DOVirtual.Float(startValue, current, 0.3f, v => 
+                {
+                    hpValueText.text = $"{Mathf.RoundToInt(v)} / {max}";
+                }).SetEase(Ease.OutQuad);
             }
 
             if (hpFillImage != null)

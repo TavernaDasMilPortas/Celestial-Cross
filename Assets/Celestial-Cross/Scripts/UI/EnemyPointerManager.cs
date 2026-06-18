@@ -200,7 +200,7 @@ public class EnemyPointerManager : MonoBehaviour
 
         if (currentEnemies.Length == 0)
         {
-            Debug.LogWarning("[EnemyPointerManager] UpdatePointers: Nenhum EnemyUnit encontrado na cena.");
+            // É normal não haver inimigos na cena dependendo da fase ou do fluxo (ex: todos morreram)
             return;
         }
 

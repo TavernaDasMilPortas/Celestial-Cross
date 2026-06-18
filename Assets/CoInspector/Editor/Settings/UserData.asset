@@ -276,11 +276,18 @@ MonoBehaviour:
     lastClickedTab: -1
     previousTab: 0
   - tracker:
-      mostClicked: []
+      mostClicked:
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"_HubSceneManager[0]"}'
+        count: 3
+        gameObjects:
+        - {fileID: 0}
       recentlyClicked:
-      - paths: []
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"_HubSceneManager[0]"}'
         count: 1
-        gameObjects: []
+        gameObjects:
+        - {fileID: 0}
       - paths: []
         count: 1
         gameObjects: []
@@ -312,7 +319,7 @@ MonoBehaviour:
       recentlyClickedContents: []
     sceneGUID: aae55989abe44784197dd80958fdd0f5
     sceneName: HubScene
-    lastSaveTimePrint: 12:27 AM (June 18, 2026)
+    lastSaveTimePrint: 01:27 PM (June 18, 2026)
     gracePeriod: 3
     activeIndex: 0
     checkingToLoad: 0
@@ -326,28 +333,28 @@ MonoBehaviour:
     scrollPosition: {x: 0, y: 0}
     toolbarScrollPosition: {x: 0, y: 0}
     rawUserHeight: 0
-    lastValidTabWidth: 64
+    lastValidTabWidth: 135
     alreadyCalculatedHeight: 0
     lastKnownHeight: 0
     tabs:
-    - path: 
+    - path: '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"_HubSceneManager[0]"}'
       paths: []
-      tabWidth: 61
-      name: New Tab
-      icon: {fileID: 0}
-      shortName: New Tab
+      tabWidth: 132
+      name: _HubSceneManager
+      icon: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: _HubSceneManager
       filterString: 
-      newTab: 1
+      newTab: 0
       scrollPosition: 0
       isSelected: 0
       allCollapsed: 0
       runtimeFoldouts: 
       runtimeMultiComponents: []
       tabTextContent:
-        m_Text: New Tab
+        m_Text: _HubSceneManager
         m_Image: {fileID: 0}
         m_Tooltip: 
-        m_TextWithWhitespace: "New Tab\u200B"
+        m_TextWithWhitespace: "_HubSceneManager\u200B"
       multiEditMode: 0
       locked: 0
       hasPreview: 0
@@ -386,12 +393,71 @@ MonoBehaviour:
       savePlayModeTransform: 0
       index: 0
       historyPosition: 0
-      componentMaps: []
-      historyPaths: []
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 0
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: transform
+        niceComponentName: transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 0
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: hubscenecontroller
+        niceComponentName: hub scene controller
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"_HubSceneManager[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"_Managers[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/Container[0]/TopBar[0]/Txt_EnergyTimer[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/Container[0]/TopBar[0]/Txt_Energy[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/Container[0]/TopBar[0]/Txt_Money[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]/Container[0]/TopBar[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"HubUI_Canvas[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"EventSystem[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"_Menu[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"Directional Light[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"Main Camera[0]"}'
+        prefab: 0
       owner: {fileID: 0}
     closedTabs: []
     playModeTransforms: []
     historyAssets:
+    - assetGUIDs:
+      - a30103f890e517a41b45396447311ad4
+    - assetGUIDs:
+      - aae55989abe44784197dd80958fdd0f5
+    - assetGUIDs:
+      - 8e33882f7fba925478cbd19e61365198
+    - assetGUIDs:
+      - 8105016687592461f977c054a80ce2f2
     - assetGUIDs:
       - fec72274543004aff8768fda2a73da01
     - assetGUIDs:
@@ -406,22 +472,11 @@ MonoBehaviour:
       - 5b57ca8cfbde6b344adfc40ad11d7841
     - assetGUIDs:
       - 41ac0598862a52a4388b1cf64820d50f
-    - assetGUIDs:
-      - ac296acd9831fe642a5514ed8cee5fea
-    - assetGUIDs:
-      - 98cd48ef67a5b704098e30547ba2068d
-    - assetGUIDs:
-      - 67ec913167e69cc4989a746ba58eede0
-      - 98cd48ef67a5b704098e30547ba2068d
-      - 8e7c1c09c33d12647bde5c4458b82c61
-      - bc60dce0dd546f146bec84d86641d689
-    - assetGUIDs:
-      - bc60dce0dd546f146bec84d86641d689
-    targetObject: {fileID: 11500000, guid: fec72274543004aff8768fda2a73da01, type: 3}
+    targetObject: {fileID: 11500000, guid: a30103f890e517a41b45396447311ad4, type: 3}
     targetObjects: []
-    lastSelectedAsset: Packages/com.unity.purchasing/Runtime/Security/Asn1Processor/Asn1Node.cs
+    lastSelectedAsset: Assets/TheraBytes/BetterUI/Editor/Scripts/Navigation/InputModuleAdditions/AdditionForRewiredStandaloneInputModuleEditor.cs
     lastClickedTab: 0
-    previousTab: 0
+    previousTab: 35
   - tracker:
       mostClicked: []
       recentlyClicked: []
@@ -429,7 +484,7 @@ MonoBehaviour:
       recentlyClickedContents: []
     sceneGUID: 41797f812614b484c878b87c4d6155a1
     sceneName: PreparationScene
-    lastSaveTimePrint: 12:27 AM (June 18, 2026)
+    lastSaveTimePrint: 01:22 PM (June 18, 2026)
     gracePeriod: 3
     activeIndex: 0
     checkingToLoad: 0
@@ -510,6 +565,14 @@ MonoBehaviour:
     playModeTransforms: []
     historyAssets:
     - assetGUIDs:
+      - a30103f890e517a41b45396447311ad4
+    - assetGUIDs:
+      - aae55989abe44784197dd80958fdd0f5
+    - assetGUIDs:
+      - 8e33882f7fba925478cbd19e61365198
+    - assetGUIDs:
+      - 8105016687592461f977c054a80ce2f2
+    - assetGUIDs:
       - fec72274543004aff8768fda2a73da01
     - assetGUIDs:
       - 8e7c1c09c33d12647bde5c4458b82c61
@@ -523,140 +586,56 @@ MonoBehaviour:
       - 5b57ca8cfbde6b344adfc40ad11d7841
     - assetGUIDs:
       - 41ac0598862a52a4388b1cf64820d50f
-    - assetGUIDs:
-      - ac296acd9831fe642a5514ed8cee5fea
-    - assetGUIDs:
-      - 98cd48ef67a5b704098e30547ba2068d
-    - assetGUIDs:
-      - 67ec913167e69cc4989a746ba58eede0
-      - 98cd48ef67a5b704098e30547ba2068d
-      - 8e7c1c09c33d12647bde5c4458b82c61
-      - bc60dce0dd546f146bec84d86641d689
-    - assetGUIDs:
-      - bc60dce0dd546f146bec84d86641d689
-    targetObject: {fileID: 11500000, guid: fec72274543004aff8768fda2a73da01, type: 3}
+    targetObject: {fileID: 11500000, guid: a30103f890e517a41b45396447311ad4, type: 3}
     targetObjects: []
-    lastSelectedAsset: Packages/com.unity.purchasing/Runtime/Security/Asn1Processor/Asn1Node.cs
+    lastSelectedAsset: Assets/TheraBytes/BetterUI/Editor/Scripts/Navigation/InputModuleAdditions/AdditionForRewiredStandaloneInputModuleEditor.cs
     lastClickedTab: -1
-    previousTab: 0
+    previousTab: 35
   - tracker:
       mostClicked:
       - paths:
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/MainPanel[0]/VerticalGroup[0]/Section3_CharacterPassives[0]/PassivesScroll[0]/Viewport[0]/Content[0]"}'
-        count: 61
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/MainPanel[0]/VerticalGroup[0]/Section3_CharacterPassives[0]/PassivesScroll[0]"}'
-        count: 46
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]"}'
-        count: 42
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]"}'
-        count: 36
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/MainPanel[0]/VerticalGroup[0]/Section3_CharacterPassives[0]/PassivesScroll[0]/Viewport[0]"}'
-        count: 29
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/MainPanel[0]/VerticalGroup[0]/Section3_CharacterPassives[0]/Title[0]"}'
-        count: 7
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/CombatUiCanvas[0]/Game
-          Render View[0]"}'
-        count: 5
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/MainPanel[0]/VerticalGroup[0]/Section3_CharacterPassives[0]"}'
-        count: 5
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]"}'
-        count: 4
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]/Image[0]/Image
-          (1)[0]/PassiveItemPrefab[0]/Text[0]"}'
-        count: 2
-        gameObjects:
-        - {fileID: 0}
+        - 
+        count: 1
+        gameObjects: []
       recentlyClicked:
       - paths:
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]"}'
+        - 
         count: 1
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]/Image[0]/Image
-          (1)[0]/PassiveItemPrefab[0]/Text[0]"}'
+        gameObjects: []
+      - paths: []
         count: 1
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]"}'
+        gameObjects: []
+      - paths: []
         count: 1
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]"}'
+        gameObjects: []
+      - paths: []
         count: 1
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/ModifierItemPrefab[0]"}'
+        gameObjects: []
+      - paths: []
         count: 1
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/ConditionIcon[0]"}'
+        gameObjects: []
+      - paths: []
         count: 1
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/ConditionIcon[0]"}'
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/ModifierItemPrefab[0]"}'
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]"}'
+        gameObjects: []
+      - paths: []
         count: 1
-        gameObjects:
-        - {fileID: 0}
-        - {fileID: 0}
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]/Image[0]/Image
-          (1)[0]/PassiveItemPrefab[0]/Icon[0]"}'
+        gameObjects: []
+      - paths: []
         count: 1
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/MainPanel[0]/VerticalGroup[0]/Section1_TemporaryConditions[0]"}'
+        gameObjects: []
+      - paths: []
         count: 1
-        gameObjects:
-        - {fileID: 0}
-      - paths:
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/MainPanel[0]/VerticalGroup[0]/Section3_CharacterPassives[0]"}'
+        gameObjects: []
+      - paths: []
         count: 1
-        gameObjects:
-        - {fileID: 0}
+        gameObjects: []
       mostClickedContents: []
       recentlyClickedContents: []
     sceneGUID: 8e33882f7fba925478cbd19e61365198
     sceneName: Teste 1
-    lastSaveTimePrint: 12:32 AM (June 18, 2026)
+    lastSaveTimePrint: 01:22 PM (June 18, 2026)
     gracePeriod: 3
-    activeIndex: 23
+    activeIndex: 36
     checkingToLoad: 0
     assetsCollapsed: 1
     lockedAsset: 0
@@ -666,15 +645,15 @@ MonoBehaviour:
     userAssetViewSize: -1
     previewHeight: 0
     scrollPosition: {x: 0, y: 0}
-    toolbarScrollPosition: {x: 909, y: 0}
+    toolbarScrollPosition: {x: 1709, y: 0}
     rawUserHeight: 0
-    lastValidTabWidth: 1447
+    lastValidTabWidth: 2262
     alreadyCalculatedHeight: 0
     lastKnownHeight: 0
     tabs:
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/ModifierItemPrefab[0]/Icon[0]"}'
       paths: []
-      tabWidth: 49
+      tabWidth: 48
       name: Icon
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: Icon
@@ -794,7 +773,7 @@ MonoBehaviour:
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]/Image[0]/Image
         (1)[0]"}'
       paths: []
-      tabWidth: 61
+      tabWidth: 62
       name: Image (1)
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Imag\u2026"
@@ -1239,7 +1218,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]"}'
       paths: []
-      tabWidth: 61
+      tabWidth: 62
       name: PassiveListModal
       icon: {fileID: 5779557562189929939, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Pass\u2026"
@@ -1325,7 +1304,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]"}'
       paths: []
-      tabWidth: 61
+      tabWidth: 62
       name: PassiveListModal
       icon: {fileID: 5779557562189929939, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Pass\u2026"
@@ -1411,7 +1390,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]"}'
       paths: []
-      tabWidth: 61
+      tabWidth: 62
       name: PassiveListModal
       icon: {fileID: 5779557562189929939, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Pass\u2026"
@@ -1512,7 +1491,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]"}'
       paths: []
-      tabWidth: 61
+      tabWidth: 62
       name: PassiveListModal
       icon: {fileID: 5779557562189929939, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Pass\u2026"
@@ -1598,7 +1577,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]"}'
       paths: []
-      tabWidth: 61
+      tabWidth: 62
       name: PassiveListModal
       icon: {fileID: 5779557562189929939, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Pass\u2026"
@@ -1684,7 +1663,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]"}'
       paths: []
-      tabWidth: 61
+      tabWidth: 62
       name: PassiveListModal
       icon: {fileID: 5779557562189929939, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Pass\u2026"
@@ -1981,14 +1960,14 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]"}'
       paths: []
-      tabWidth: 61
+      tabWidth: 62
       name: PassiveItem
       icon: {fileID: -7943610116366264489, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Pass\u2026"
       filterString: 
       newTab: 0
       scrollPosition: 0
-      isSelected: 1
+      isSelected: 0
       allCollapsed: 0
       runtimeFoldouts: 
       runtimeMultiComponents: []
@@ -2085,14 +2064,14 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]"}'
       paths: []
-      tabWidth: 61
+      tabWidth: 62
       name: PassiveItem
       icon: {fileID: -7943610116366264489, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Pass\u2026"
       filterString: 
       newTab: 0
       scrollPosition: 0
-      isSelected: 1
+      isSelected: 0
       allCollapsed: 0
       runtimeFoldouts: 
       runtimeMultiComponents: []
@@ -2171,7 +2150,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]"}'
       paths: []
-      tabWidth: 61
+      tabWidth: 62
       name: PassiveListModal
       icon: {fileID: 5779557562189929939, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Pass\u2026"
@@ -2260,7 +2239,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]"}'
       paths: []
-      tabWidth: 57
+      tabWidth: 58
       name: PrefabsGroup
       icon: {fileID: -1575620288787673585, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Pref\u2026"
@@ -2331,14 +2310,14 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]"}'
       paths: []
-      tabWidth: 61
+      tabWidth: 62
       name: PassiveItem
       icon: {fileID: -7943610116366264489, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Pass\u2026"
       filterString: 
       newTab: 0
       scrollPosition: 0
-      isSelected: 1
+      isSelected: 0
       allCollapsed: 0
       runtimeFoldouts: 
       runtimeMultiComponents: []
@@ -2420,14 +2399,14 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]"}'
       paths: []
-      tabWidth: 61
+      tabWidth: 62
       name: PassiveItem
       icon: {fileID: -7943610116366264489, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Pass\u2026"
       filterString: 
       newTab: 0
       scrollPosition: 0
-      isSelected: 1
+      isSelected: 0
       allCollapsed: 0
       runtimeFoldouts: 
       runtimeMultiComponents: []
@@ -2506,7 +2485,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]"}'
       paths: []
-      tabWidth: 61
+      tabWidth: 62
       name: PassiveListModal
       icon: {fileID: 5779557562189929939, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Pass\u2026"
@@ -2595,14 +2574,14 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]"}'
       paths: []
-      tabWidth: 61
+      tabWidth: 62
       name: PassiveItem
       icon: {fileID: -7943610116366264489, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Pass\u2026"
       filterString: 
       newTab: 0
       scrollPosition: 0
-      isSelected: 1
+      isSelected: 0
       allCollapsed: 0
       runtimeFoldouts: 
       runtimeMultiComponents: []
@@ -2685,7 +2664,7 @@ MonoBehaviour:
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]/Image[0]/Image
         (1)[0]/PassiveItemPrefab[0]/Text[0]"}'
       paths: []
-      tabWidth: 49
+      tabWidth: 47
       name: Text
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: Text
@@ -2778,14 +2757,14 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]"}'
       paths: []
-      tabWidth: 61
+      tabWidth: 62
       name: PassiveItem
       icon: {fileID: -7943610116366264489, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Pass\u2026"
       filterString: 
       newTab: 0
       scrollPosition: 0
-      isSelected: 1
+      isSelected: 0
       allCollapsed: 0
       runtimeFoldouts: 
       runtimeMultiComponents: []
@@ -2865,28 +2844,28 @@ MonoBehaviour:
         - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]"}'
         prefab: 0
       owner: {fileID: 0}
-    - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]"}'
+    - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/EnemyFocusSkipUI[0]"}'
       paths: []
-      tabWidth: 61
-      name: PassiveItem
-      icon: {fileID: -7943610116366264489, guid: 0000000000000000d000000000000000, type: 0}
-      shortName: "Pass\u2026"
+      tabWidth: 67
+      name: EnemyFocusSkipUI
+      icon: {fileID: 5779557562189929939, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Enem\u2026"
       filterString: 
       newTab: 0
       scrollPosition: 0
-      isSelected: 1
+      isSelected: 0
       allCollapsed: 0
       runtimeFoldouts: 
       runtimeMultiComponents: []
       tabTextContent:
-        m_Text: "Pass\u2026"
+        m_Text: "Enem\u2026"
         m_Image: {fileID: 0}
         m_Tooltip: 
-        m_TextWithWhitespace: "Pass\u2026\u200B"
+        m_TextWithWhitespace: "Enem\u2026\u200B"
       multiEditMode: 0
       locked: 0
-      hasPreview: 0
-      previewHeight: 150
+      hasPreview: 1
+      previewHeight: 13
       debug: 0
       filtering: 0
       prefab: 0
@@ -2938,8 +2917,8 @@ MonoBehaviour:
         focusAfter: 0
         awaitingScroll: 0
         hidden: 0
-        componentName: layoutelement
-        niceComponentName: layout element
+        componentName: canvasgroup
+        niceComponentName: canvas group
       - index: 0
         component: {fileID: 0}
         missingComponentID: -1
@@ -2947,9 +2926,57 @@ MonoBehaviour:
         focusAfter: 0
         awaitingScroll: 0
         hidden: 0
-        componentName: passiveitemui
-        niceComponentName: passive item ui
+        componentName: button
+        niceComponentName: button
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: enemyfocusskipui
+        niceComponentName: enemy focus skip ui
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasrenderer
+        niceComponentName: canvas renderer
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: image
+        niceComponentName: image
       historyPaths:
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/EnemyFocusSkipUI[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/IntroModal[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/WhiteFlashOverlay[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/IntroModal[0]/StageImageContainerBorder2[0]/StageImageContainerBorder[0]/StageImageContainer[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/IntroModal[0]/ChapterText[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/EnemyFocusSkipUI[0]/SkipText[0]"}'
+        prefab: 0
       - paths:
         - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]"}'
         prefab: 0
@@ -2961,9 +2988,1293 @@ MonoBehaviour:
         - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]"}'
         prefab: 0
       owner: {fileID: 0}
+    - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/WhiteFlashOverlay[0]"}'
+      paths: []
+      tabWidth: 60
+      name: WhiteFlashOverlay
+      icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Whit\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Whit\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Whit\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 1
+      previewHeight: 13
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 24
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasrenderer
+        niceComponentName: canvas renderer
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: image
+        niceComponentName: image
+      historyPaths: []
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/IntroModal[0]"}'
+      paths: []
+      tabWidth: 54
+      name: IntroModal
+      icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Intr\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Intr\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Intr\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 1
+      previewHeight: 13
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 25
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasrenderer
+        niceComponentName: canvas renderer
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: betterimage
+        niceComponentName: better image
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: intromodalui
+        niceComponentName: intro modal ui
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: shadow
+        niceComponentName: shadow
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 0
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: 
+        niceComponentName: 
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/IntroModal[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/EnemyFocusSkipUI[0]"}'
+      paths: []
+      tabWidth: 67
+      name: EnemyFocusSkipUI
+      icon: {fileID: 5779557562189929939, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Enem\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Enem\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Enem\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 1
+      previewHeight: 13
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 26
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasgroup
+        niceComponentName: canvas group
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: button
+        niceComponentName: button
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: enemyfocusskipui
+        niceComponentName: enemy focus skip ui
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasrenderer
+        niceComponentName: canvas renderer
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: image
+        niceComponentName: image
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/EnemyFocusSkipUI[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/CombatUiCanvas[0]/Game
+        Render View[0]"}'
+      paths: []
+      tabWidth: 68
+      name: Game Render View
+      icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Game\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Game\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Game\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 1
+      previewHeight: 13
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 27
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasrenderer
+        niceComponentName: canvas renderer
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: rawimage
+        niceComponentName: raw image
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 0
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: 
+        niceComponentName: 
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/CombatUiCanvas[0]/Game
+          Render View[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/EnemyPointerManager[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/EnemyFocusSkipUI[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]"}'
+      paths: []
+      tabWidth: 56
+      name: SplitScreenUI
+      icon: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Spli\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Spli\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Spli\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 150
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 28
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: splitscreenuimanager
+        niceComponentName: split screen ui manager
+      historyPaths: []
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]"}'
+      paths: []
+      tabWidth: 56
+      name: SplitScreenUI
+      icon: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Spli\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Spli\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Spli\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 150
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 29
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: splitscreenuimanager
+        niceComponentName: split screen ui manager
+      historyPaths: []
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]"}'
+      paths: []
+      tabWidth: 56
+      name: SplitScreenUI
+      icon: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Spli\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Spli\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Spli\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 150
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 30
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: splitscreenuimanager
+        niceComponentName: split screen ui manager
+      historyPaths: []
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/EnemyFocusSkipUI[0]"}'
+      paths: []
+      tabWidth: 67
+      name: EnemyFocusSkipUI
+      icon: {fileID: 5779557562189929939, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Enem\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Enem\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Enem\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 1
+      previewHeight: 13
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 31
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasgroup
+        niceComponentName: canvas group
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: button
+        niceComponentName: button
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: enemyfocusskipui
+        niceComponentName: enemy focus skip ui
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasrenderer
+        niceComponentName: canvas renderer
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: image
+        niceComponentName: image
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/EnemyFocusSkipUI[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/CombatUiCanvas[0]/Game
+        Render View[0]"}'
+      paths: []
+      tabWidth: 68
+      name: Game Render View
+      icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Game\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Game\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Game\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 1
+      previewHeight: 13
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 32
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasrenderer
+        niceComponentName: canvas renderer
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: rawimage
+        niceComponentName: raw image
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: gamerendertween
+        niceComponentName: game render tween
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/CombatUiCanvas[0]/Game
+          Render View[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/EnemyFocusSkipUI[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/IntroModal[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/EnemyPointerManager[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]"}'
+      paths: []
+      tabWidth: 56
+      name: SplitScreenUI
+      icon: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Spli\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Spli\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Spli\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 150
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 33
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: splitscreenuimanager
+        niceComponentName: split screen ui manager
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/CombatUiCanvas[0]/Game
+        Render View[0]"}'
+      paths: []
+      tabWidth: 68
+      name: Game Render View
+      icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Game\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Game\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Game\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 13
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 34
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvas
+        niceComponentName: canvas
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasscaler
+        niceComponentName: canvas scaler
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 0
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: 
+        niceComponentName: 
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/CombatUiCanvas[0]/Game
+          Render View[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/EnemyFocusSkipUI[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/IntroModal[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]"}'
+      paths: []
+      tabWidth: 56
+      name: SplitScreenUI
+      icon: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Spli\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Spli\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Spli\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 150
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 35
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: splitscreenuimanager
+        niceComponentName: split screen ui manager
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"RenderTexture
+        Controller[0]"}'
+      paths: []
+      tabWidth: 64
+      name: RenderTexture Controller
+      icon: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Rend\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Rend\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Rend\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 13
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 36
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: transform
+        niceComponentName: transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: rendertextureinputmanager
+        niceComponentName: render texture input manager
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: raycasthovermanager
+        niceComponentName: raycast hover manager
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"RenderTexture
+          Controller[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"Camera Limits[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"GameManager[0]/PathVisualizer[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"GameManager[0]/_HIghlightPool[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"GameManager[0]/_placementManager[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"GameManager[0]/_LevelBuilder[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"GameManager[0]/GameLogger[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"GameManager[0]/PlayerControler[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"GameManager[0]/CombatManager[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"GameManager[0]/TurnManager[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"GameManager[0]/GridManager[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
     closedTabs: []
     playModeTransforms: []
     historyAssets:
+    - assetGUIDs:
+      - a30103f890e517a41b45396447311ad4
+    - assetGUIDs:
+      - aae55989abe44784197dd80958fdd0f5
+    - assetGUIDs:
+      - 8e33882f7fba925478cbd19e61365198
+    - assetGUIDs:
+      - 8105016687592461f977c054a80ce2f2
     - assetGUIDs:
       - fec72274543004aff8768fda2a73da01
     - assetGUIDs:
@@ -2978,22 +4289,11 @@ MonoBehaviour:
       - 5b57ca8cfbde6b344adfc40ad11d7841
     - assetGUIDs:
       - 41ac0598862a52a4388b1cf64820d50f
-    - assetGUIDs:
-      - ac296acd9831fe642a5514ed8cee5fea
-    - assetGUIDs:
-      - 98cd48ef67a5b704098e30547ba2068d
-    - assetGUIDs:
-      - 67ec913167e69cc4989a746ba58eede0
-      - 98cd48ef67a5b704098e30547ba2068d
-      - 8e7c1c09c33d12647bde5c4458b82c61
-      - bc60dce0dd546f146bec84d86641d689
-    - assetGUIDs:
-      - bc60dce0dd546f146bec84d86641d689
-    targetObject: {fileID: 11500000, guid: fec72274543004aff8768fda2a73da01, type: 3}
+    targetObject: {fileID: 11500000, guid: a30103f890e517a41b45396447311ad4, type: 3}
     targetObjects: []
-    lastSelectedAsset: Packages/com.unity.purchasing/Runtime/Security/Asn1Processor/Asn1Node.cs
+    lastSelectedAsset: Assets/TheraBytes/BetterUI/Editor/Scripts/Navigation/InputModuleAdditions/AdditionForRewiredStandaloneInputModuleEditor.cs
     lastClickedTab: 0
-    previousTab: 22
+    previousTab: 35
   - tracker:
       mostClicked: []
       recentlyClicked: []
@@ -4258,6 +5558,6 @@ MonoBehaviour:
     lastSelectedAsset: 
     lastClickedTab: -1
     previousTab: 0
-  tipsShown: 01000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000001000000
+  tipsShown: 01000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   playModeStartScene: {}
   enteringPlayMode: 0
