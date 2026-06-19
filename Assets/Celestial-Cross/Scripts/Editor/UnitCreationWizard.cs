@@ -79,8 +79,13 @@ namespace CelestialCross.Editor
 
         // Step 5: Visuals
         private Sprite unitIcon;
+        private Sprite unitSprite;
         private AnimationClip idleAnim;
         private AnimationClip combatIdleAnim;
+
+        // Default skills
+        private AbilityGraphSO defaultSlot1SkillGraph;
+        private AbilityGraphSO defaultSlot2SkillGraph;
 
         // --- UI Toolkit Containers (Hybrid Model) ---
         private IMGUIContainer wizardStepsContainer;
@@ -499,6 +504,7 @@ namespace CelestialCross.Editor
             associatedGraphs = new List<AbilityGraphSO>(source.abilityGraphs);
             
             unitIcon = source.icon;
+            unitSprite = source.sprite;
             idleAnim = source.idleAnim;
             combatIdleAnim = source.combatIdleAnim;
 
@@ -574,6 +580,8 @@ namespace CelestialCross.Editor
                     }
                 }
                 #pragma warning restore 612, 618
+                if (source.skillTreeConfig.defaultSlot1Skill != null) defaultSlot1SkillGraph = source.skillTreeConfig.defaultSlot1Skill;
+                if (source.skillTreeConfig.defaultSlot2Skill != null) defaultSlot2SkillGraph = source.skillTreeConfig.defaultSlot2Skill;
             }
             else
             {
@@ -1004,6 +1012,46 @@ namespace CelestialCross.Editor
                 }
             }
 
+            GUILayout.Space(12);
+            GUILayout.Label("Habilidades Padrão (Auto-equipadas no primeiro acesso):", EditorStyles.boldLabel);
+            
+            // Opção "Nenhuma" (None) sempre presente
+            List<string> slot1Options = new List<string> { "Nenhuma" };
+            List<AbilityGraphSO> slot1Graphs = new List<AbilityGraphSO> { null };
+            
+            List<string> slot2Options = new List<string> { "Nenhuma" };
+            List<AbilityGraphSO> slot2Graphs = new List<AbilityGraphSO> { null };
+
+            foreach (var graph in associatedGraphs)
+            {
+                if (graph == null) continue;
+                if (skillSlotAssignments.TryGetValue(graph, out int slotId))
+                {
+                    if (slotId == 1)
+                    {
+                        slot1Options.Add(graph.abilityName);
+                        slot1Graphs.Add(graph);
+                    }
+                    else if (slotId == 2)
+                    {
+                        slot2Options.Add(graph.abilityName);
+                        slot2Graphs.Add(graph);
+                    }
+                }
+            }
+
+            int default1Index = slot1Graphs.IndexOf(defaultSlot1SkillGraph);
+            if (default1Index == -1) default1Index = 0; // Se não for encontrado, "Nenhuma"
+            
+            int newDefault1Index = EditorGUILayout.Popup("Default Slot 1", default1Index, slot1Options.ToArray());
+            defaultSlot1SkillGraph = slot1Graphs[newDefault1Index];
+
+            int default2Index = slot2Graphs.IndexOf(defaultSlot2SkillGraph);
+            if (default2Index == -1) default2Index = 0; // Se não for encontrado, "Nenhuma"
+            
+            int newDefault2Index = EditorGUILayout.Popup("Default Slot 2", default2Index, slot2Options.ToArray());
+            defaultSlot2SkillGraph = slot2Graphs[newDefault2Index];
+
             EditorGUILayout.EndToggleGroup();
             GUILayout.EndVertical();
 
@@ -1041,6 +1089,7 @@ namespace CelestialCross.Editor
             GUILayout.BeginVertical(cardStyle);
 
             unitIcon = (Sprite)EditorGUILayout.ObjectField("Ícone da Unidade (Sprite)", unitIcon, typeof(Sprite), false);
+            unitSprite = (Sprite)EditorGUILayout.ObjectField("Sprite de Combate (Inimigos/Aliados)", unitSprite, typeof(Sprite), false);
             GUILayout.Space(8);
 
             GUILayout.Label("Animações Base da Unidade (Usadas no combate):", EditorStyles.boldLabel);
@@ -1146,6 +1195,7 @@ namespace CelestialCross.Editor
                 unitData.role = role;
                 unitData.unitClass = unitClass;
                 unitData.icon = unitIcon;
+                unitData.sprite = unitSprite;
                 unitData.idleAnim = idleAnim;
                 unitData.combatIdleAnim = combatIdleAnim;
                 unitData.baseStats = baseStats;
@@ -1202,6 +1252,9 @@ namespace CelestialCross.Editor
                             skillTree.slot2Skills.Add(cGraph);
                         }
                     }
+                    
+                    skillTree.defaultSlot1Skill = defaultSlot1SkillGraph;
+                    skillTree.defaultSlot2Skill = defaultSlot2SkillGraph;
                     #pragma warning restore 612, 618
 
                     if (isNewSkillTree)

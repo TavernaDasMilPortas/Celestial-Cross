@@ -12,7 +12,15 @@ namespace Celestial_Cross.Scripts.UI
         [Header("Prefabs & References")]
         [SerializeField] private GameObject multiplierTextPrefab; // Prefab com TargetMultiplierUI
         [SerializeField] private TextMeshProUGUI remainingTargetsText; // Texto UI principal na tela
+        [Tooltip("O pai onde os multiplicadores serão instanciados. Se vazio, usará o Canvas principal.")]
+        [SerializeField] private Transform multiplierParent; 
         [SerializeField] private Canvas mainScreenCanvas; // Onde os textos de multiplier (se screen space) ou o remaining vão
+
+        [Header("Offsets")]
+        [Tooltip("Deslocamento do texto '2x, 3x' em relação ao centro da unidade")]
+        [SerializeField] private Vector3 unitOffset = new Vector3(0, 2f, 0);
+        [Tooltip("Deslocamento do texto '2x, 3x' em relação ao centro do tile (chão)")]
+        [SerializeField] private Vector3 tileOffset = new Vector3(0, 1f, 0);
 
         private List<TargetMultiplierUI> activeMultipliers = new List<TargetMultiplierUI>();
         private Queue<TargetMultiplierUI> multiplierPool = new Queue<TargetMultiplierUI>();
@@ -70,6 +78,7 @@ namespace Celestial_Cross.Scripts.UI
         {
             currentRule = rule;
             currentTargetCount = 0;
+            ClearMultipliers(); // Limpa alvos anteriores ao clicar em nova habilidade
             
             // Ativa o texto de "restantes" apenas se tiver múltiplos alvos e a origem for Unit ou Point com repetição
             if (rule.maxTargets > 1)
@@ -143,7 +152,7 @@ namespace Celestial_Cross.Scripts.UI
                 if (kvp.Value > 1)
                 {
                     var ui = GetMultiplierUI();
-                    ui.Setup(kvp.Key.transform.position + Vector3.up * 2f, kvp.Value); // Offset acima da unidade
+                    ui.Setup(kvp.Key.transform.position + unitOffset, kvp.Value);
                     activeMultipliers.Add(ui);
                 }
             }
@@ -162,7 +171,7 @@ namespace Celestial_Cross.Scripts.UI
                     if (tile != null)
                     {
                         var ui = GetMultiplierUI();
-                        ui.Setup(tile.transform.position + Vector3.up * 1f, kvp.Value); // Offset acima do tile
+                        ui.Setup(tile.transform.position + tileOffset, kvp.Value);
                         activeMultipliers.Add(ui);
                     }
                 }
@@ -199,16 +208,30 @@ namespace Celestial_Cross.Scripts.UI
 
         private TargetMultiplierUI GetMultiplierUI()
         {
-            if (multiplierPool.Count > 0)
+            while (multiplierPool.Count > 0)
             {
                 var ui = multiplierPool.Dequeue();
-                ui.gameObject.SetActive(true);
-                return ui;
+                if (ui != null && ui.gameObject != null)
+                {
+                    ui.gameObject.SetActive(true);
+                    return ui;
+                }
             }
 
-            if (multiplierTextPrefab != null && mainScreenCanvas != null)
+            Transform parentTransform = multiplierParent != null ? multiplierParent : (mainScreenCanvas != null ? mainScreenCanvas.transform : transform);
+
+            if (multiplierTextPrefab != null)
             {
-                GameObject go = Instantiate(multiplierTextPrefab, mainScreenCanvas.transform);
+                GameObject go = Instantiate(multiplierTextPrefab, parentTransform);
+                go.SetActive(true); // Ensures Awake is called even if prefab was disabled
+                
+                // Previne conflitos se o usuário esqueceu o script no objeto filho (Texto) em vez da Raiz (Imagem de Fundo)
+                var childUIs = go.GetComponentsInChildren<TargetMultiplierUI>();
+                foreach (var oldUi in childUIs)
+                {
+                    if (oldUi.gameObject != go) Destroy(oldUi);
+                }
+
                 var ui = go.GetComponent<TargetMultiplierUI>();
                 if (ui == null) ui = go.AddComponent<TargetMultiplierUI>();
                 return ui;
@@ -216,6 +239,7 @@ namespace Celestial_Cross.Scripts.UI
 
             // Fallback (se não setado no inspector, cria um gameObject simples vazio, só pra não dar nullref)
             GameObject emptyGo = new GameObject("MultiplierFallback");
+            emptyGo.transform.SetParent(parentTransform, false);
             return emptyGo.AddComponent<TargetMultiplierUI>();
         }
     }

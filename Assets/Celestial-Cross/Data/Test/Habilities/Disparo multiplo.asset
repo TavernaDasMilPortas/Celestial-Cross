@@ -1,0 +1,88 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b74335336934364f92171120eea7025, type: 3}
+  m_Name: Disparo multiplo
+  m_EditorClassIdentifier: Assembly-CSharp::Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO
+  abilityName: Disparo Duplo
+  abilityIcon: {fileID: 21300000, guid: c3d451f524ccd6a41a425bd1b8cd8858, type: 3}
+  abilityDescription: Ability description here...
+  displayRange: 1
+  NodeLinks:
+  - BaseNodeGuid: 89c92193-2f30-417c-9ce3-1a0324385dbf
+    PortName: Out
+    TargetNodeGuid: 682a25da-1ead-414a-8a00-295617b6a639
+    TargetPortName: In
+  - BaseNodeGuid: 682a25da-1ead-414a-8a00-295617b6a639
+    PortName: Out
+    TargetNodeGuid: ce5fa467-e7bf-4876-957c-8dbae736a627
+    TargetPortName: In
+  - BaseNodeGuid: ce5fa467-e7bf-4876-957c-8dbae736a627
+    PortName: Out
+    TargetNodeGuid: 267f27ca-8282-49d4-aabe-4a106010755d
+    TargetPortName: In
+  - BaseNodeGuid: 267f27ca-8282-49d4-aabe-4a106010755d
+    PortName: Out
+    TargetNodeGuid: e1ea4ace-f14f-4c47-a789-5ca1f3e002ca
+    TargetPortName: In
+  NodeData:
+  - Guid: 682a25da-1ead-414a-8a00-295617b6a639
+    NodeType: TriggerNode
+    NodeTitle: Trigger Event
+    Position: {x: 409, y: 250}
+    JsonData: '{"trigger":0}'
+    areaPattern: {fileID: 0}
+  - Guid: 89c92193-2f30-417c-9ce3-1a0324385dbf
+    NodeType: StartNode
+    NodeTitle: Start
+    Position: {x: 181, y: 250}
+    JsonData: '{"type":1,"subtype":0,"isBuff":false}'
+    areaPattern: {fileID: 0}
+  - Guid: 267f27ca-8282-49d4-aabe-4a106010755d
+    NodeType: VariableModifierNode
+    NodeTitle: Modifier
+    Position: {x: 1041, y: 200}
+    JsonData: '{"variableName":"Damage","operation":0,"value":1.0,"valueVariableReference":"","useCasterAttribute":false,"casterAttribute":0}'
+    areaPattern: {fileID: 0}
+  - Guid: e1ea4ace-f14f-4c47-a789-5ca1f3e002ca
+    NodeType: DamageEffectNode
+    NodeTitle: Damage Effect
+    Position: {x: 1309, y: 200}
+    JsonData: '{"variableReference":"Damage","scalings":[{"statType":3,"percentage":100.0,"useTargetStat":false}],"scaleWithDistance":false,"distanceScaleFactor":0.10000000149011612}'
+    areaPattern: {fileID: 0}
+  - Guid: ce5fa467-e7bf-4876-957c-8dbae736a627
+    NodeType: TargetNode
+    NodeTitle: Targeting
+    Position: {x: 707, y: 250}
+    JsonData: '{"reusePrevious":false,"sourceType":0,"mode":0,"range":4,"multipleTargets":true,"allowSameTargetMultipleTimes":true,"maxTargets":4,"origin":1,"strategy":0,"attributeType":0,"factionType":2,"targetCount":1,"autoRotate":true,"preferredDirection":0,"patternReferenceId":"","areaPattern":{"instanceID":0},"rangeVariable":"","maxTargetsVariable":"max_targets_ce5f","useExtraRangeVariable":false}'
+    areaPattern: {fileID: 0}
+  Dependencies: []
+  Variables:
+  - name: max_targets_ce5f
+    initialValue: 1
+    description: 
+  - name: dmg_amount_e1ea
+    initialValue: 10
+    description: 
+  MaxLevel: 1
+  aiHint:
+    category: 0
+    basePriority: 59
+    cooldownTurns: 0
+    lowHPTargetBonus: 40
+    freshApplicationBonus: 0
+    targetsFriendlies: 0
+    estimatedValue: 100
+    isLocked: 0
+  GeneratedDescription: "<b>--- DESCRI\xC7\xC3O AUTOM\xC1TICA ---</b>\r\n- Esta \xE9
+    uma habilidade do tipo Active. Subtipo: None.\r\n- Escolhe manualmente at\xE9
+    4 unidade(s) a um range de 4 a partir de Point.\r\n- Modifica 'Damage' (Set 1).\r\n-
+    Dano escalado (1 stats).\r\n"

@@ -117,6 +117,14 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Runtime
             else if (node is Conditions.ConditionTargetHasBuff targetBuff) JsonUtility.FromJsonOverwrite(json, targetBuff);
             else if (node is Conditions.ConditionAoEHitCount aoeHit) JsonUtility.FromJsonOverwrite(json, aoeHit);
             else if (node is Conditions.ConditionAbilityReady abilityReady) JsonUtility.FromJsonOverwrite(json, abilityReady);
+            else if (node is BTCooldownDecorator cooldownDecorator)
+            {
+                var data = JsonUtility.FromJson<BTCooldownData>(json);
+                if (data != null)
+                {
+                    cooldownDecorator.CooldownTurns = data.cooldownTurns;
+                }
+            }
         }
 
         public BTResult Evaluate(AIBlackboard blackboard)

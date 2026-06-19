@@ -47,11 +47,26 @@ public class AIBrain : MonoBehaviour
     void OnEnable()
     {
         TurnManager.OnTurnEnded += HandleTurnEnded;
+        TurnManager.OnRoundStarted += HandleRoundStarted;
     }
 
     void OnDisable()
     {
         TurnManager.OnTurnEnded -= HandleTurnEnded;
+        TurnManager.OnRoundStarted -= HandleRoundStarted;
+    }
+
+    private void HandleRoundStarted(int round)
+    {
+        if (round == 1)
+        {
+            if (blackboard != null)
+            {
+                blackboard.abilityCooldowns.Clear();
+                blackboard.turnsAlive = 0;
+                blackboard.currentTurnNumber = 0;
+            }
+        }
     }
 
     void HandleTurnEnded()
@@ -234,21 +249,30 @@ public class AIBrain : MonoBehaviour
             if (actIdx >= 0)
             {
                 Vector2Int targetPos = enemy.GridPosition;
+                List<Vector2Int> targetPositions = new List<Vector2Int>();
                 
-                if (plan.targetUnit != null)
+                if (plan.targetPositions != null && plan.targetPositions.Count > 0)
+                {
+                    targetPositions = plan.targetPositions;
+                    targetPos = targetPositions[0];
+                }
+                else if (plan.targetUnit != null)
                 {
                     targetPos = plan.targetUnit.GridPosition;
+                    targetPositions.Add(targetPos);
                 }
                 else if (plan.moveTarget.HasValue)
                 {
                     targetPos = plan.moveTarget.Value;
+                    targetPositions.Add(targetPos);
                 }
                 
                 // Registro do Cooldown (Fase 1)
                 var abInfo = blackboard.availableAbilities.FirstOrDefault(a => a.action == plan.actionToExecute);
                 if (abInfo != null && abInfo.hint != null && abInfo.hint.cooldownTurns > 0)
                 {
-                    blackboard.abilityCooldowns[plan.actionToExecute.ActionName] = abInfo.hint.cooldownTurns;
+                    // + 1 para compensar o decremento feito no final do mesmo turno de uso
+                    blackboard.abilityCooldowns[plan.actionToExecute.ActionName] = abInfo.hint.cooldownTurns + 1;
                 }
                 
                 // --- VISUAL FEEDBACK (Fase 1) ---
@@ -283,6 +307,25 @@ public class AIBrain : MonoBehaviour
                         }
                     }
                     
+                    // Desenhar caminho e fantasma se for movimento
+                    if (plan.moveTarget.HasValue)
+                    {
+                        var validTiles = blackboard.reachableTiles.Select(p => GridMap.Instance.GetTile(p)).Where(t => t != null);
+                        var currentPath = GridMap.Instance.FindPath(enemy.GridPosition, plan.moveTarget.Value, validTiles);
+                        enemy.lastCalculatedPath = currentPath;
+                        
+                        if (currentPath != null && currentPath.Count > 0)
+                        {
+                            if (PathVisualizer.Instance != null)
+                                PathVisualizer.Instance.DrawPath(currentPath, enemy.GridPosition);
+                            
+                            var ghostPreview = enemy.GetComponent<UnitGhostPreview>();
+                            if (ghostPreview == null) ghostPreview = enemy.gameObject.AddComponent<UnitGhostPreview>();
+                            ghostPreview.Initialize(enemy);
+                            ghostPreview.ShowAt(GridMap.Instance.GridToWorld(plan.moveTarget.Value), enemy.GridPosition.x > plan.moveTarget.Value.x);
+                        }
+                    }
+                    
                     if (areaToHighlight != null)
                     {
                         foreach (var pos in areaToHighlight)
@@ -304,13 +347,16 @@ public class AIBrain : MonoBehaviour
                     yield return new WaitForSeconds(0.8f);
                     
                     // Passo 3: Foca por um tempo onde está o alvo voltando para o zoom que estava antes
-                    GridTile targetTile = GridMap.Instance.GetTile(targetPos);
-                    if (targetTile != null)
+                    foreach (var pos in targetPositions)
                     {
-                        if (plan.targetUnit != null)
-                            targetTile.PreviewArea(); // Destaca vermelho/agressivo
-                        else
-                            targetTile.Select(); // Destaca selecionado/movimento
+                        GridTile targetTile = GridMap.Instance.GetTile(pos);
+                        if (targetTile != null)
+                        {
+                            if (plan.targetUnit != null || (plan.targetPositions != null && plan.targetPositions.Count > 0))
+                                targetTile.PreviewArea(); // Destaca vermelho/agressivo
+                            else
+                                targetTile.Select(); // Destaca selecionado/movimento
+                        }
                     }
                     GridMap.Instance.RefreshDynamicHighlights();
 
@@ -325,11 +371,18 @@ public class AIBrain : MonoBehaviour
                     // Passo 4: Limpa visualizações antes de executar a ação
                     GridMap.Instance.ResetAllTileVisuals();
                     GridMap.Instance.RefreshDynamicHighlights();
+                    if (PathVisualizer.Instance != null) PathVisualizer.Instance.ClearPath();
+                    var ghostPreviewHide = enemy.GetComponent<UnitGhostPreview>();
+                    if (ghostPreviewHide != null) ghostPreviewHide.Hide();
                 }
                 // ---------------------------------
                 
                 // Configura o alvo ANTES do SelectAction
                 enemy.Actions[actIdx].Target = targetPos;
+                if (enemy.Actions[actIdx] is GraphActionWrapper wrapper)
+                {
+                    wrapper.PresetTargetPositions = targetPositions;
+                }
                 
                 // Dispara a execução da habilidade (GraphActionWrapper executa no EnterAction)
                 enemy.SelectAction(actIdx);

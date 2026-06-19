@@ -199,6 +199,18 @@ namespace Celestial_Cross.Scripts.Abilities.Graph
             public float initialValue;
             public string description;
         }
+
+        public Celestial_Cross.Scripts.Abilities.Graph.Runtime.MoveEffectNodeData GetPreviewMoveData()
+        {
+            foreach (var node in NodeData)
+            {
+                if (node.NodeType == "MoveEffectNode")
+                {
+                    return UnityEngine.JsonUtility.FromJson<Celestial_Cross.Scripts.Abilities.Graph.Runtime.MoveEffectNodeData>(node.JsonData);
+                }
+            }
+            return null;
+        }
     }
 
     [System.Serializable]

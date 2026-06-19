@@ -162,9 +162,7 @@ public class GridMap : MonoBehaviour
 
     public GridTile GetTile(Vector2Int pos)
     {
-        bool found = tiles.TryGetValue(pos, out var tile);
-        if (!found)
-            Debug.LogWarning($"[GridMap] GetTile FALHOU em {pos}");
+        tiles.TryGetValue(pos, out var tile);
         return tile;
     }
 
@@ -483,5 +481,63 @@ public class GridMap : MonoBehaviour
         {
             kvp.Value.ClearTelegraph();
         }
+    }
+
+    /// <summary>
+    /// Finds the shortest path using BFS. Returns points from start to destination (inclusive of destination, exclusive of start).
+    /// </summary>
+    public List<Vector2Int> FindPath(Vector2Int start, Vector2Int end, IEnumerable<GridTile> whitelist = null)
+    {
+        if (start == end) return new List<Vector2Int>();
+        
+        Queue<Vector2Int> queue = new Queue<Vector2Int>();
+        Dictionary<Vector2Int, Vector2Int> cameFrom = new Dictionary<Vector2Int, Vector2Int>();
+        
+        queue.Enqueue(start);
+        cameFrom[start] = start; // Mark as visited
+
+        Vector2Int[] dirs = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+
+        bool found = false;
+        while (queue.Count > 0)
+        {
+            Vector2Int current = queue.Dequeue();
+            
+            if (current == end)
+            {
+                found = true;
+                break;
+            }
+
+            foreach (var dir in dirs)
+            {
+                Vector2Int next = current + dir;
+                
+                if (cameFrom.ContainsKey(next)) continue;
+                
+                GridTile nextTile = GetTile(next);
+                if (nextTile == null || !nextTile.IsWalkable) continue;
+
+                // Check whitelist if provided
+                if (whitelist != null && !whitelist.Contains(nextTile)) continue;
+
+                cameFrom[next] = current;
+                queue.Enqueue(next);
+            }
+        }
+
+        List<Vector2Int> path = new List<Vector2Int>();
+        if (found)
+        {
+            Vector2Int current = end;
+            while (current != start)
+            {
+                path.Add(current);
+                current = cameFrom[current];
+            }
+            path.Reverse();
+        }
+        
+        return path;
     }
 }

@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 
 public class TurnTimelineUI : MonoBehaviour
 {
@@ -23,6 +24,7 @@ public class TurnTimelineUI : MonoBehaviour
 
     private bool isDrawerOpen = true;
     private List<GameObject> activePortraits = new();
+    private List<GameObject> portraitPool = new();
 
     private void Awake()
     {
@@ -47,6 +49,12 @@ public class TurnTimelineUI : MonoBehaviour
             toggleDrawerButton.onClick.RemoveListener(ToggleDrawer);
             toggleDrawerButton.onClick.AddListener(ToggleDrawer);
         }
+
+        // Garante que a gaveta inicie na posição correta, evitando que ela "viaje" torta na primeira vez
+        if (drawerPanel != null && openPositionRef != null && closedPositionRef != null)
+        {
+            drawerPanel.position = isDrawerOpen ? openPositionRef.position : closedPositionRef.position;
+        }
     }
 
     private void HandleRoundStarted(int round)
@@ -59,16 +67,19 @@ public class TurnTimelineUI : MonoBehaviour
 
     private void Update()
     {
-        if (drawerPanel != null && openPositionRef != null && closedPositionRef != null)
-        {
-            Vector3 targetPos = isDrawerOpen ? openPositionRef.position : closedPositionRef.position;
-            drawerPanel.position = Vector3.Lerp(drawerPanel.position, targetPos, Time.deltaTime * slideSpeed);
-        }
+        // Movimento substituído por DOTween no ToggleDrawer
     }
 
     public void ToggleDrawer()
     {
         isDrawerOpen = !isDrawerOpen;
+        if (drawerPanel != null && openPositionRef != null && closedPositionRef != null)
+        {
+            Vector3 targetPos = isDrawerOpen ? openPositionRef.position : closedPositionRef.position;
+            drawerPanel.DOKill();
+            // Acentuado o bounce usando DOMove para garantir o alinhamento mundial com o marcador
+            drawerPanel.DOMove(targetPos, 0.5f).SetEase(Ease.OutBack, 2.5f);
+        }
     }
 
     public void UpdateTimeline(IEnumerable<Unit> turnQueue)
@@ -79,24 +90,66 @@ public class TurnTimelineUI : MonoBehaviour
             return;
 
         int turnIndex = 1;
+
+        // Garante que a unidade atual sempre seja mostrada primeiro, se ela existir.
+        List<Unit> orderedQueue = new List<Unit>();
+        if (TurnManager.Instance != null && TurnManager.Instance.CurrentUnit != null)
+        {
+            orderedQueue.Add(TurnManager.Instance.CurrentUnit);
+        }
+
+        // Adiciona as unidades da fila (exceto a atual, que já foi adicionada, caso esteja na fila por algum motivo)
         foreach (var unit in turnQueue)
         {
-            GameObject portraitObj = Instantiate(portraitPrefab, container);
+            if (TurnManager.Instance != null && unit == TurnManager.Instance.CurrentUnit)
+                continue;
+                
+            orderedQueue.Add(unit);
+        }
+
+        foreach (var unit in orderedQueue)
+        {
+            GameObject portraitObj = GetPortraitFromPool();
             TurnPortraitUI pUI = portraitObj.GetComponent<TurnPortraitUI>();
             if (pUI != null) 
             {
                 pUI.Setup(unit, turnIndex);
                 turnIndex++;
             }
-            
-            activePortraits.Add(portraitObj);
         }
+    }
+
+    private GameObject GetPortraitFromPool()
+    {
+        GameObject portraitObj;
+        if (portraitPool.Count > 0)
+        {
+            portraitObj = portraitPool[0];
+            portraitPool.RemoveAt(0);
+            portraitObj.SetActive(true);
+        }
+        else
+        {
+            portraitObj = Instantiate(portraitPrefab, container);
+        }
+        activePortraits.Add(portraitObj);
+        
+        // Garante que a ordem na hierarquia está correta (o mais recente vai pro final)
+        portraitObj.transform.SetAsLastSibling();
+        
+        return portraitObj;
     }
 
     private void ClearTimeline()
     {
         foreach (var p in activePortraits)
-            if (p != null) Destroy(p);
+        {
+            if (p != null)
+            {
+                p.SetActive(false);
+                portraitPool.Add(p);
+            }
+        }
         activePortraits.Clear();
     }
 }

@@ -22,6 +22,7 @@ namespace CelestialCross.Scenes.Hub
         [Header("Top Bar")]
         [SerializeField] private TMP_Text moneyText;
         [SerializeField] private TMP_Text energyText;
+        [SerializeField] private TMP_Text energyRegenText;
         [SerializeField] private Button btnGoInventory;
         [SerializeField] private Button btnGoUnit;
         [SerializeField] private Button btnGoShop;
@@ -51,6 +52,9 @@ namespace CelestialCross.Scenes.Hub
             if (btnGoShop != null) btnGoShop.onClick.AddListener(GoToShopScene);
             if (btnBack != null) btnBack.onClick.AddListener(PopScreen);
 
+            if (CelestialCross.System.EnergyService.Instance != null)
+                CelestialCross.System.EnergyService.Instance.OnEnergyChanged += HandleEnergyChanged;
+
             // Initial state
             PushScreen("Modo de Jogo", BuildCategoryCards);
         }
@@ -64,6 +68,13 @@ namespace CelestialCross.Scenes.Hub
         private void OnDestroy()
         {
             AccountManager.OnAccountReady -= HandleAccountReady;
+            if (CelestialCross.System.EnergyService.Instance != null)
+                CelestialCross.System.EnergyService.Instance.OnEnergyChanged -= HandleEnergyChanged;
+        }
+
+        private void HandleEnergyChanged(int current, int max)
+        {
+            RefreshAccountUI();
         }
 
         public void RefreshAccountUI()
@@ -71,6 +82,36 @@ namespace CelestialCross.Scenes.Hub
             if (AccountManager.Instance == null || AccountManager.Instance.PlayerAccount == null) return;
             if (moneyText != null) moneyText.text = $"Dinheiro: {AccountManager.Instance.PlayerAccount.Money}";
             if (energyText != null) energyText.text = $"Energia: {AccountManager.Instance.PlayerAccount.Energy}";
+        }
+
+        private void Update()
+        {
+            if (energyRegenText == null) return;
+
+            if (CelestialCross.System.EnergyService.Instance != null && AccountManager.Instance != null && AccountManager.Instance.PlayerAccount != null)
+            {
+                int currentEnergy = CelestialCross.System.EnergyService.Instance.GetCurrentEnergy();
+                int maxEnergy = CelestialCross.System.EnergyService.Instance.GetMaxEnergy();
+                
+                if (currentEnergy >= maxEnergy)
+                {
+                    energyRegenText.text = "Máximo";
+                }
+                else
+                {
+                    float timeUntilNext = CelestialCross.System.EnergyService.Instance.GetTimeUntilNextRegen();
+                    if (timeUntilNext >= 0)
+                    {
+                        int minutes = Mathf.FloorToInt(timeUntilNext / 60f);
+                        int seconds = Mathf.FloorToInt(timeUntilNext % 60f);
+                        energyRegenText.text = $"{minutes:00}:{seconds:00}";
+                    }
+                    else
+                    {
+                        energyRegenText.text = "--:--";
+                    }
+                }
+            }
         }
 
         #region Navigation Stack
@@ -212,6 +253,11 @@ namespace CelestialCross.Scenes.Hub
 
                 card.buttonComponent.onClick.AddListener(() => 
                 {
+                    if (GameFlowManager.Instance != null)
+                    {
+                        GameFlowManager.Instance.CurrentChapter = chapter;
+                    }
+
                     if (bottomSheet != null)
                         bottomSheet.Show(node);
                     else

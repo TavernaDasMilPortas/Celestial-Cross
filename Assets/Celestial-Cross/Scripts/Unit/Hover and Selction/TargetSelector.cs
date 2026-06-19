@@ -35,6 +35,7 @@ public class TargetSelector : MonoBehaviour
     void Awake()
     {
         cam = Camera.main;
+        CombatUIManager.Instance?.RegisterTargetSelector(this);
     }
 
     void Update()
@@ -232,6 +233,11 @@ public class TargetSelector : MonoBehaviour
             tile.HardClearAllStates();
     }
 
+    public GridTile CurrentHoveredTile => currentHoveredTile;
+    public Unit CurrentHoveredUnit => currentHoveredUnit;
+    public HashSet<GridTile> ValidTiles => validTiles;
+    public HashSet<Unit> ValidTargets => validTargets;
+
     GridTile currentHoveredTile;
     Unit currentHoveredUnit;
 
@@ -295,41 +301,32 @@ public class TargetSelector : MonoBehaviour
 
         if (selectedTargets.Count >= targetingRule.maxTargets)
         {
-            if (targetingRule.maxTargets == 1)
-            {
-                if (selectedTargets.Contains(unit))
-                {
-                    Confirm();
-                    return;
-                }
-                else
-                {
-                    Unit previous = selectedTargets[0];
-                    previous.GetComponent<UnitOutlineController>()?.SetSelected(false);
-                    GridMap.Instance?.GetTile(previous.GridPosition)?.ClearSelect();
-                    selectedTargets.Clear();
-                }
-            }
-            else
+            if (selectedTargets.Contains(unit))
             {
                 Confirm();
                 return;
             }
+            else
+            {
+                Unit previousUnit = selectedTargets[0];
+                selectedTargets.RemoveAt(0);
+                if (!selectedTargets.Contains(previousUnit))
+                {
+                    previousUnit.GetComponent<UnitOutlineController>()?.SetSelected(false);
+                    GridMap.Instance?.GetTile(previousUnit.GridPosition)?.ClearSelect();
+                }
+            }
         }
         else
         {
-            if (targetingRule.maxTargets == 1 && selectedTargets.Count > 0)
-            {
-                Unit previous = selectedTargets[0];
-                previous.GetComponent<UnitOutlineController>()?.SetSelected(false);
-                GridMap.Instance?.GetTile(previous.GridPosition)?.ClearSelect();
-                selectedTargets.Clear();
-            }
-            else if (selectedTargets.Contains(unit) && !targetingRule.allowSameTargetMultipleTimes)
+            if (selectedTargets.Contains(unit) && !targetingRule.allowSameTargetMultipleTimes)
             {
                 selectedTargets.Remove(unit);
-                outline?.SetSelected(false);
-                tileUnderUnit?.ClearSelect();
+                if (!selectedTargets.Contains(unit))
+                {
+                    outline?.SetSelected(false);
+                    tileUnderUnit?.ClearSelect();
+                }
                 RefreshAreaPreview();
                 OnSelectedTargetsChanged?.Invoke(GetResolvedTargets(selectedTargets, selectedPoints));
                 return;
@@ -348,38 +345,30 @@ public class TargetSelector : MonoBehaviour
     {
         if (selectedPoints.Count >= targetingRule.maxTargets)
         {
-            if (targetingRule.maxTargets == 1)
-            {
-                if (selectedPoints.Contains(tile.GridPosition))
-                {
-                    Confirm();
-                    return;
-                }
-                else
-                {
-                    Vector2Int previousPos = selectedPoints[0];
-                    GridMap.Instance?.GetTile(previousPos)?.ClearSelect();
-                    selectedPoints.Clear();
-                }
-            }
-            else
+            if (selectedPoints.Contains(tile.GridPosition))
             {
                 Confirm();
                 return;
             }
+            else
+            {
+                Vector2Int previousPos = selectedPoints[0];
+                selectedPoints.RemoveAt(0);
+                if (!selectedPoints.Contains(previousPos))
+                {
+                    GridMap.Instance?.GetTile(previousPos)?.ClearSelect();
+                }
+            }
         }
         else
         {
-            if (targetingRule.maxTargets == 1 && selectedPoints.Count > 0)
-            {
-                Vector2Int previousPos = selectedPoints[0];
-                GridMap.Instance?.GetTile(previousPos)?.ClearSelect();
-                selectedPoints.Clear();
-            }
-            else if (selectedPoints.Contains(tile.GridPosition) && !targetingRule.allowSameTargetMultipleTimes)
+            if (selectedPoints.Contains(tile.GridPosition) && !targetingRule.allowSameTargetMultipleTimes)
             {
                 selectedPoints.Remove(tile.GridPosition);
-                tile.ClearSelect();
+                if (!selectedPoints.Contains(tile.GridPosition))
+                {
+                    tile.ClearSelect();
+                }
                 RefreshAreaPreview();
                 OnSelectedTargetsChanged?.Invoke(GetResolvedTargets(selectedTargets, selectedPoints));
                 return;
@@ -395,73 +384,112 @@ public class TargetSelector : MonoBehaviour
 
     List<Unit> GetResolvedTargets(IEnumerable<Unit> baseTargets, IEnumerable<Vector2Int> basePoints)
     {
-        HashSet<Vector2Int> affectedCells = new();
-
-        if (targetingRule.mode == TargetingMode.Area && areaPattern != null)
+        if (targetingRule.allowSameTargetMultipleTimes)
         {
+            List<Unit> finalResult = new List<Unit>();
+            var allUnits = UnityEngine.Object.FindObjectsByType<Unit>(FindObjectsSortMode.None)
+                .Where(u => u != null && (targetingRule.canTargetSelf || u != sourceUnit))
+                .ToList();
+
             if (targetingRule.origin == TargetOrigin.Point)
             {
                 foreach (var point in basePoints)
                 {
-                    foreach (var cell in AreaResolver.ResolveCells(point, areaPattern, currentRotation))
-                        affectedCells.Add(cell);
+                    if (targetingRule.mode == TargetingMode.Area && areaPattern != null)
+                    {
+                        var cells = new HashSet<Vector2Int>(AreaResolver.ResolveCells(point, areaPattern, currentRotation));
+                        foreach (var u in allUnits)
+                        {
+                            if (cells.Contains(u.GridPosition))
+                            {
+                                finalResult.Add(u);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        foreach (var u in allUnits)
+                        {
+                            if (u.GridPosition == point)
+                            {
+                                finalResult.Add(u);
+                            }
+                        }
+                    }
                 }
             }
             else
             {
-                foreach (var target in baseTargets)
+                foreach (var t in baseTargets)
                 {
-                    if (target == null) continue;
-                    foreach (var cell in AreaResolver.ResolveCells(target.GridPosition, areaPattern, currentRotation))
-                        affectedCells.Add(cell);
+                    if (t == null || (!targetingRule.canTargetSelf && t == sourceUnit))
+                        continue;
+
+                    if (targetingRule.mode == TargetingMode.Area && areaPattern != null)
+                    {
+                        var cells = new HashSet<Vector2Int>(AreaResolver.ResolveCells(t.GridPosition, areaPattern, currentRotation));
+                        foreach (var u in allUnits)
+                        {
+                            if (cells.Contains(u.GridPosition))
+                            {
+                                finalResult.Add(u);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        finalResult.Add(t);
+                    }
                 }
-            }
-        }
-        else
-        {
-            foreach (var point in basePoints)
-                affectedCells.Add(point);
-        }
-
-        var result = UnityEngine.Object.FindObjectsByType<Unit>(FindObjectsSortMode.None)
-            .Where(u => affectedCells.Contains(u.GridPosition))
-            .Where(u => targetingRule.canTargetSelf || u != sourceUnit)
-            .ToList();
-
-        // Se allowSameTargetMultipleTimes for true, a duplicação no selectedTargets e selectedPoints
-        // DEVE ser refletida para os targets de base, sem Distinct.
-        if (targetingRule.allowSameTargetMultipleTimes)
-        {
-            // Se for targetOrigin de unit, os proprios baseTargets são a referência (repetidos).
-            // Em targetOrigin Point, a area pode acertar uma unidade n vezes se a area sobrepor,
-            // mas tipicamente só usamos point repetido para jogar N magias lá, gerando N vezes o dano nos result.
-            // Para repetição, precisamos devolver a lista completa multiplicada, mas isso afeta "Area".
-            // Para simplificar: adicionamos baseTargets.
-            List<Unit> finalResult = new List<Unit>();
-            foreach (var t in baseTargets)
-            {
-                if (t != null && (!targetingRule.canTargetSelf && t == sourceUnit ? false : true)) 
-                {
-                    finalResult.Add(t);
-                }
-            }
-
-            if (targetingRule.origin == TargetOrigin.Point)
-            {
-                // Para origin Point, a repetição está em basePoints
-                // Cada ponto gera os affectedCells, já lidamos com area. 
-                // Wait, o `affectedCells` acima é um HashSet, então sobreposições foram perdidas.
-                // Mas para simplicidade, se for allowMultiple, não queremos unificar as chamadas de area se elas ocorreram N vezes?
-                // Como não estamos calculando hit por hit do "Point", podemos apenas repetir as unidades atingidas pelo numero de pontos selecionados.
-                return result; 
             }
 
             return finalResult;
         }
         else
         {
+            HashSet<Vector2Int> affectedCells = new();
+
+            if (targetingRule.mode == TargetingMode.Area && areaPattern != null)
+            {
+                if (targetingRule.origin == TargetOrigin.Point)
+                {
+                    foreach (var point in basePoints)
+                    {
+                        foreach (var cell in AreaResolver.ResolveCells(point, areaPattern, currentRotation))
+                            affectedCells.Add(cell);
+                    }
+                }
+                else
+                {
+                    foreach (var target in baseTargets)
+                    {
+                        if (target == null) continue;
+                        foreach (var cell in AreaResolver.ResolveCells(target.GridPosition, areaPattern, currentRotation))
+                            affectedCells.Add(cell);
+                    }
+                }
+            }
+            else
+            {
+                if (targetingRule.origin == TargetOrigin.Point)
+                {
+                    foreach (var point in basePoints)
+                        affectedCells.Add(point);
+                }
+            }
+
+            var result = UnityEngine.Object.FindObjectsByType<Unit>(FindObjectsSortMode.None)
+                .Where(u => u != null && affectedCells.Contains(u.GridPosition))
+                .Where(u => targetingRule.canTargetSelf || u != sourceUnit)
+                .ToList();
+
             foreach (var t in baseTargets)
-                if (t != null && (!targetingRule.canTargetSelf && t == sourceUnit ? false : true) && !result.Contains(t)) result.Add(t);
+            {
+                if (t != null && (targetingRule.canTargetSelf || t != sourceUnit) && !result.Contains(t))
+                {
+                    result.Add(t);
+                }
+            }
 
             return result.Distinct().ToList();
         }
@@ -513,6 +541,7 @@ public class TargetSelector : MonoBehaviour
 
     void Confirm()
     {
+        sourceUnit.ConfirmAction();
         OnTargetsConfirmed?.Invoke(GetResolvedTargets(selectedTargets, selectedPoints));
         isActive = false;
         ClearAllHighlights();
@@ -520,6 +549,7 @@ public class TargetSelector : MonoBehaviour
 
     void Cancel()
     {
+        sourceUnit.CancelAction();
         isActive = false;
         ClearAllHighlights();
         ClearSelection();

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using DG.Tweening;
 using CelestialCross.Combat;
 using Celestial_Cross.Scripts.Combat.Execution;
 using Celestial_Cross.Scripts.Abilities.Conditions;
@@ -39,7 +40,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                 Destroy(gameObject);
             }
         }
-        public IEnumerator ExecuteGraphCoroutine(Unit caster, AbilityGraphSO graph, CombatHook hook, Action onComplete, int level = 1, string slotId = "", Vector2Int? presetTargetPos = null)
+        public IEnumerator ExecuteGraphCoroutine(Unit caster, AbilityGraphSO graph, CombatHook hook, Action onComplete, int level = 1, string slotId = "", Vector2Int? presetTargetPos = null, List<Vector2Int> presetTargetPositions = null)
         {
             if (graph == null || graph.NodeData.Count == 0)
             {
@@ -54,7 +55,18 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
             context.abilityLevel = level;
             context.slotId = slotId;
 
-            if (presetTargetPos.HasValue)
+            if (presetTargetPositions != null && presetTargetPositions.Count > 0)
+            {
+                context.targetPos = presetTargetPositions[0];
+                context.targets.Clear();
+                foreach (var pos in presetTargetPositions)
+                {
+                    var unit = GridMap.Instance?.GetTile(pos)?.OccupyingUnit;
+                    if (unit != null) context.targets.Add(unit);
+                }
+                if (context.targets.Count > 0) context.target = context.targets[0];
+            }
+            else if (presetTargetPos.HasValue)
             {
                 context.targetPos = presetTargetPos.Value;
                 var presetUnit = GridMap.Instance?.GetTile(presetTargetPos.Value)?.OccupyingUnit;
@@ -560,12 +572,12 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
 
                 case "DamageEffectNode":
                     var dmgData = JsonUtility.FromJson<DamageNodeData>(node.JsonData);
-                    ExecuteDamage(dmgData, context);
+                    yield return StartCoroutine(ExecuteDamageRoutine(dmgData, context));
                     break;
 
                 case "HealEffectNode":
                     var healData = JsonUtility.FromJson<HealNodeData>(node.JsonData);
-                    ExecuteHeal(healData, context);
+                    yield return StartCoroutine(ExecuteHealRoutine(healData, context));
                     break;
 
                 case "ConditionalFlowNode":
@@ -860,8 +872,49 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
 
             if (context.source != null && context.source.Team != Team.Player)
             {
-                // Para a IA, se o Behavior Tree forneceu um alvo explícito (targetPos), ele tem prioridade
-                if (context.targetPos.HasValue)
+                // Para a IA, se o Behavior Tree forneceu alvos explícitos, eles têm prioridade
+                if (context.targets != null && context.targets.Count > 0)
+                {
+                    Debug.Log($"[Interpreter] Usando {context.targets.Count} alvos do Behavior Tree para a IA.");
+                    
+                    // Se for um ataque em área, calcular os alvos na área a partir de cada ponto central
+                    if (data.mode == GraphTargetMode.Area && data.areaPattern != null)
+                    {
+                        var expandedTargets = new List<Unit>();
+                        var hitPositions = new HashSet<Vector2Int>();
+                        if (GridMap.Instance != null)
+                        {
+                            foreach (var t in context.targets)
+                            {
+                                var areaPoints = AreaResolver.ResolveCells(t.GridPosition, data.areaPattern, data.preferredDirection);
+                                foreach (var pt in areaPoints)
+                                {
+                                    var tile = GridMap.Instance.GetTile(pt);
+                                    if (tile != null && tile.OccupyingUnit != null)
+                                    {
+                                        bool isAlly = tile.OccupyingUnit.Team == context.source.Team;
+                                        if (data.factionType == GraphFactionType.Ally && !isAlly) continue;
+                                        if (data.factionType == GraphFactionType.Enemy && isAlly) continue;
+                                        
+                                        // Apenas adicionar se não bateu nessa unidade para esse ponto
+                                        if (hitPositions.Add(tile.OccupyingUnit.GridPosition))
+                                        {
+                                            expandedTargets.Add(tile.OccupyingUnit);
+                                        }
+                                        else if (data.allowSameTargetMultipleTimes)
+                                        {
+                                            // Se permite múltiplas vezes, e já foi atingido, nós adicionamos mesmo assim
+                                            expandedTargets.Add(tile.OccupyingUnit);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        context.targets = expandedTargets;
+                    }
+                    yield break;
+                }
+                else if (context.targetPos.HasValue)
                 {
                     Debug.Log($"[Interpreter] Usando alvo do Behavior Tree ({context.targetPos.Value}) para a IA.");
                     
@@ -896,6 +949,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                 rule.mode = data.mode == GraphTargetMode.Single ? TargetingMode.Unit : TargetingMode.Area;
                 rule.origin = data.origin == GraphTargetOrigin.Unit ? TargetOrigin.Unit : TargetOrigin.Point;
                 rule.allowMultiple = data.multipleTargets;
+                rule.allowSameTargetMultipleTimes = data.allowSameTargetMultipleTimes;
                 rule.maxTargets = data.maxTargets;
                 rule.targetFaction = (TargetFaction)data.factionType;
 
@@ -940,7 +994,81 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
 
         private void ExecuteDamage(DamageNodeData data, CombatContext context)
         {
-            foreach (var target in context.targets)
+            var targetsCopy = context.targets.ToList();
+            foreach (var target in targetsCopy)
+            {
+                if (target == null) continue;
+                var stepContext = new CombatContext(context.source, target);
+                
+                float baseVal = 0;
+
+                if (data.scalings != null && data.scalings.Count > 0)
+                {
+                    foreach (var scaling in data.scalings)
+                    {
+                        var u = scaling.useTargetStat ? target : context.source;
+                        if (u != null && u.VariableStore != null)
+                        {
+                            float statVal = u.VariableStore.GetStat(scaling.statType);
+                            baseVal += statVal * (scaling.percentage / 100f);
+                        }
+                    }
+                }
+                else
+                {
+                    baseVal = context.source != null ? context.source.Stats.attack : 0;
+                }
+
+                float multiplier = 1.0f;
+                if (!string.IsNullOrEmpty(data.variableReference))
+                    multiplier = GetVariable(context, data.variableReference, multiplier);
+
+                int finalAmount = Mathf.FloorToInt(baseVal * multiplier);
+                stepContext.amount = finalAmount;
+
+                CombatLogger.Log($"  <color=#ff4d4d>[Dano]</color> Causando <b>{finalAmount}</b> de dano em <b>{target.DisplayName}</b>", LogCategory.Damage);
+                DamageProcessor.ProcessAndApplyDamage(stepContext, true);
+            }
+        }
+
+        private void ExecuteHeal(HealNodeData data, CombatContext context)
+        {
+            var targetsCopy = context.targets.ToList();
+            foreach (var target in targetsCopy)
+            {
+                if (target == null) continue;
+                
+                float baseVal = 0;
+                
+                if (data.scalings != null && data.scalings.Count > 0)
+                {
+                    foreach (var scaling in data.scalings)
+                    {
+                        var u = scaling.useTargetStat ? target : context.source;
+                        if (u != null && u.VariableStore != null)
+                        {
+                            float statVal = u.VariableStore.GetStat(scaling.statType);
+                            baseVal += statVal * (scaling.percentage / 100f);
+                        }
+                    }
+                }
+
+                float multiplier = 1.0f;
+                if (!string.IsNullOrEmpty(data.variableReference))
+                    multiplier = GetVariable(context, data.variableReference, multiplier);
+
+                int finalAmount = Mathf.FloorToInt(baseVal * multiplier);
+                
+                var stepContext = new CombatContext(context.source, target, finalAmount);
+                CombatLogger.Log($"  <color=#4dff4d>[Cura]</color> Curando <b>{finalAmount}</b> em <b>{target.DisplayName}</b>", LogCategory.Damage);
+                DamageProcessor.ProcessAndApplyHeal(stepContext, data.canCrit);
+            }
+        }
+
+        private IEnumerator ExecuteDamageRoutine(DamageNodeData data, CombatContext context)
+        {
+            var targetsCopy = context.targets.ToList();
+            foreach (var target in targetsCopy)
             {
                 if (target == null) continue;
                 var stepContext = new CombatContext(context.source, target);
@@ -974,12 +1102,16 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
 
                 CombatLogger.Log($"  <color=#ff4d4d>[Dano]</color> Causando <b>{finalAmount}</b> de dano em <b>{target.DisplayName}</b>", LogCategory.Damage);
                 DamageProcessor.ProcessAndApplyDamage(stepContext, true);
+                
+                // Pequeno delay para que múltiplos hits sejam visíveis e não se sobreponham num único frame
+                yield return new WaitForSeconds(0.2f);
             }
         }
 
-        private void ExecuteHeal(HealNodeData data, CombatContext context)
+        private IEnumerator ExecuteHealRoutine(HealNodeData data, CombatContext context)
         {
-            foreach (var target in context.targets)
+            var targetsCopy = context.targets.ToList();
+            foreach (var target in targetsCopy)
             {
                 if (target == null) continue;
                 
@@ -1010,8 +1142,10 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                 int finalAmount = Mathf.FloorToInt(baseVal * multiplier);
                 
                 var stepContext = new CombatContext(context.source, target, finalAmount);
-                CombatLogger.Log($"  <color=#4dff88>[Cura]</color> Curando <b>{finalAmount}</b> de HP em <b>{target.DisplayName}</b>", LogCategory.Healing);
+                CombatLogger.Log($"  <color=#4dff4d>[Cura]</color> Curando <b>{finalAmount}</b> em <b>{target.DisplayName}</b>", LogCategory.Damage);
                 DamageProcessor.ProcessAndApplyHeal(stepContext, data.canCrit);
+                
+                yield return new WaitForSeconds(0.2f);
             }
         }
 
@@ -1101,15 +1235,96 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                     var oldTile = gridMap.GetTile(subject.GridPosition);
                     if (oldTile != null) { oldTile.IsOccupied = false; oldTile.OccupyingUnit = null; }
 
-                    var moveAction = subject.GetComponent<MoveAction>();
-                    if (moveAction != null)
+                    if (data.moveMode == MoveEffectNodeData.MoveMode.MoveCaster && data.moveType != MoveEffectNodeData.MoveType.TeleportToTarget)
                     {
-                        yield return StartCoroutine(moveAction.MoveRoutine(destination));
+                        HashSet<GridTile> validMoveTiles = new HashSet<GridTile>();
+                        foreach (var tile in gridMap.GetAllTiles())
+                        {
+                            int dist = UnityEngine.Mathf.Abs(subject.GridPosition.x - tile.GridPosition.x) + UnityEngine.Mathf.Abs(subject.GridPosition.y - tile.GridPosition.y);
+                            if (dist <= data.range)
+                                validMoveTiles.Add(tile);
+                        }
+
+                        var path = subject.lastCalculatedPath;
+                        if (path == null || path.Count == 0 || path[path.Count - 1] != destination)
+                        {
+                            path = gridMap.FindPath(subject.GridPosition, destination, validMoveTiles);
+                        }
+                        
+                        if (path != null && path.Count > 0)
+                        {
+                            if (PathVisualizer.Instance != null && PathVisualizer.Instance.cameraFollowsMovement)
+                            {
+                                CameraController.Instance?.Follow(subject);
+                            }
+
+                            float moveSpeed = PathVisualizer.Instance != null ? PathVisualizer.Instance.unitWalkSpeed : 8f;
+                            Vector3[] waypoints = new Vector3[path.Count];
+                            for (int i = 0; i < path.Count; i++)
+                            {
+                                waypoints[i] = gridMap.GridToWorld(path[i]);
+                                waypoints[i].y = subject.transform.position.y;
+                            }
+                            
+                            float totalDistance = 0f;
+                            Vector3 currentPos = subject.transform.position;
+                            foreach (var wp in waypoints)
+                            {
+                                totalDistance += Vector3.Distance(currentPos, wp);
+                                currentPos = wp;
+                            }
+                            float duration = totalDistance / moveSpeed;
+
+                            yield return subject.transform.DOPath(waypoints, duration, DG.Tweening.PathType.Linear)
+                                .SetEase(DG.Tweening.Ease.Linear)
+                                .WaitForCompletion();
+                        }
+                        else
+                        {
+                            // Fallback caso caminho não seja encontrado
+                            float distance = Vector3.Distance(subject.transform.position, gridMap.GridToWorld(destination));
+                            float duration = distance / 4f;
+                            Vector3 finalPos = gridMap.GridToWorld(destination);
+                            finalPos.y = subject.transform.position.y;
+                            yield return subject.transform.DOMove(finalPos, duration)
+                                .SetEase(DG.Tweening.Ease.Linear)
+                                .WaitForCompletion();
+                        }
+                        subject.GridPosition = destination;
                     }
                     else
                     {
+                        // Reposicionamento via Habilidade (Push, Pull, Dash, Teleport)
+                        float duration = 0.3f;
+                        Vector3 finalWorldPos = gridMap.GridToWorld(destination);
+                        finalWorldPos.y = subject.transform.position.y;
+                        
+                        if (data.moveType == MoveEffectNodeData.MoveType.TeleportToTarget)
+                        {
+                            // Teleporte: desaparece e aparece
+                            Sequence seq = DG.Tweening.DOTween.Sequence();
+                            seq.Append(subject.transform.DOScale(0f, 0.15f).SetEase(DG.Tweening.Ease.InBack));
+                            seq.AppendCallback(() => subject.transform.position = finalWorldPos);
+                            seq.Append(subject.transform.DOScale(Vector3.one, 0.15f).SetEase(DG.Tweening.Ease.OutBack));
+                            yield return seq.WaitForCompletion();
+                        }
+                        else if (data.moveType == MoveEffectNodeData.MoveType.Push)
+                        {
+                            // Knockback (Push): Impacto forte
+                            yield return subject.transform.DOMove(finalWorldPos, duration).SetEase(DG.Tweening.Ease.OutExpo).WaitForCompletion();
+                        }
+                        else if (data.moveType == MoveEffectNodeData.MoveType.Pull)
+                        {
+                            // Puxão (Pull): Volta elástica ou rápida
+                            yield return subject.transform.DOMove(finalWorldPos, duration).SetEase(DG.Tweening.Ease.InBack).WaitForCompletion();
+                        }
+                        else
+                        {
+                            // Padrão ou Dash
+                            yield return subject.transform.DOMove(finalWorldPos, duration).SetEase(DG.Tweening.Ease.InOutQuad).WaitForCompletion();
+                        }
+                        
                         subject.GridPosition = destination;
-                        subject.transform.position = gridMap.GridToWorld(destination);
                     }
 
                     if (targetTile != null) { targetTile.IsOccupied = true; targetTile.OccupyingUnit = subject; }
@@ -1280,7 +1495,8 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
 
             bool isBuff = conditionGraph.GetIsBuff();
 
-            foreach (var target in context.targets)
+            var targetsCopy = context.targets.ToList();
+            foreach (var target in targetsCopy)
             {
                 if (target == null) continue;
 

@@ -56,6 +56,12 @@ namespace CelestialCross.UI.Skills
             // Buscar o SkillTreeConfigSO via UnitData
             SkillTreeConfigSO treeConfig = GetTreeConfig();
 
+            if (loadout != null && treeConfig != null && !loadout.hasInitializedDefaultSkills)
+            {
+                loadout.InitializeDefaults(treeConfig);
+                AccountManager.Instance?.SaveAccount();
+            }
+
             AbilityGraphSO basicGraph = treeConfig != null ? treeConfig.basicAttack : null;
             AbilityGraphSO moveGraph = treeConfig != null ? treeConfig.movementSkill : null;
 

@@ -285,6 +285,7 @@ namespace CelestialCross.System
 
             if (node.EntryCost != null && node.EntryCost.EnergyCost > 0)
             {
+                Debug.Log($"[ProgressionService] Tentando consumir {node.EntryCost.EnergyCost} de energia para iniciar {node.Title}...");
                 if (!CanAffordEnergy(node.EntryCost.EnergyCost))
                 {
                     OnProgressionError?.Invoke("Energia Insuficiente.");

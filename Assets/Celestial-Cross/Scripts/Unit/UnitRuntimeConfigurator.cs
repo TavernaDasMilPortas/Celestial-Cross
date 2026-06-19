@@ -72,9 +72,14 @@ public class UnitRuntimeConfigurator : MonoBehaviour
         if (unit == null || unitData == null) return;
         if (AccountManager.Instance == null || AccountManager.Instance.PlayerAccount == null) return;
 
-        // UnitLoadout is keyed by UnitID
         var loadout = AccountManager.Instance.PlayerAccount.GetLoadoutForUnit(unitData.UnitID);
         if (loadout == null) return;
+
+        if (!loadout.hasInitializedDefaultSkills && unitData.skillTreeConfig != null)
+        {
+            loadout.InitializeDefaults(unitData.skillTreeConfig);
+            AccountManager.Instance.SaveAccount();
+        }
 
         unit.ConfigureLoadout(loadout);
 

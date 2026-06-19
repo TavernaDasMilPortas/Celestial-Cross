@@ -5,6 +5,7 @@ using Celestial_Cross.Scripts.Abilities;
 using Celestial_Cross.Scripts.Units;
 using CelestialCross.Artifacts;
 using Celestial_Cross.Scripts.Abilities.Graph;
+using DG.Tweening;
 
 [RequireComponent(typeof(Health))]
 [RequireComponent(typeof(Collider))]
@@ -12,6 +13,11 @@ using Celestial_Cross.Scripts.Abilities.Graph;
 [RequireComponent(typeof(PassiveManager))]
 public abstract class Unit : MonoBehaviour
 {
+
+    [Header("Death VFX")]
+    public Color allyDeathColor = new Color(1f, 0.8f, 0.2f); // Dourado
+    public Color enemyDeathColor = new Color(0.6f, 0f, 0.8f); // Roxo Corrompidos
+
     [Header("Base Data")]
     public UnitData unitData { get; set; }
     public CelestialCross.Data.Pets.PetSpeciesSO petSpeciesData { get; set; }
@@ -213,6 +219,9 @@ public abstract class Unit : MonoBehaviour
     
     protected IUnitAction currentAction;
     public IUnitAction CurrentAction => currentAction;
+    
+    // Armazena o path visualizado no targeting para sincronizar perfeitamente a execução real
+    [HideInInspector] public System.Collections.Generic.List<UnityEngine.Vector2Int> lastCalculatedPath;
 
     public System.Action<IUnitAction> OnActionChanged;
 
@@ -578,12 +587,6 @@ public abstract class Unit : MonoBehaviour
         {
             #pragma warning disable 612, 618
             string slot1Id = Loadout.Slot1SkillId;
-            if (string.IsNullOrEmpty(slot1Id))
-            {
-                var pool1 = (treeConfig.slot1Skills != null && treeConfig.slot1Skills.Count > 0) ? treeConfig.slot1Skills : treeConfig.combatSkills;
-                var firstActive1 = pool1?.Find(x => x != null && !x.IsPassive);
-                if (firstActive1 != null) slot1Id = firstActive1.name;
-            }
 
             if (!string.IsNullOrEmpty(slot1Id))
             {
@@ -598,18 +601,11 @@ public abstract class Unit : MonoBehaviour
                     wrapper.SlotId = "Slot1";
                     actions.Add(wrapper);
                     addedGraphs.Add(g);
-                    Debug.Log($"[Unit] Habilidade do Slot 1 '{g.name}' injetada em {DisplayName} (via Loadout ou Fallback).");
+                    Debug.Log($"[Unit] Habilidade do Slot 1 '{g.name}' injetada em {DisplayName} (via Loadout).");
                 }
             }
 
             string slot2Id = Loadout.Slot2SkillId;
-            if (string.IsNullOrEmpty(slot2Id))
-            {
-                var pool2 = (treeConfig.slot2Skills != null && treeConfig.slot2Skills.Count > 0) ? treeConfig.slot2Skills : treeConfig.combatSkills;
-                // Avoid duplicating slot 1
-                var firstActive2 = pool2?.Find(x => x != null && !x.IsPassive && x.name != slot1Id);
-                if (firstActive2 != null) slot2Id = firstActive2.name;
-            }
 
             if (!string.IsNullOrEmpty(slot2Id))
             {
@@ -624,7 +620,7 @@ public abstract class Unit : MonoBehaviour
                     wrapper.SlotId = "Slot2";
                     actions.Add(wrapper);
                     addedGraphs.Add(g);
-                    Debug.Log($"[Unit] Habilidade do Slot 2 '{g.name}' injetada em {DisplayName} (via Loadout ou Fallback).");
+                    Debug.Log($"[Unit] Habilidade do Slot 2 '{g.name}' injetada em {DisplayName} (via Loadout).");
                 }
             }
             #pragma warning restore 612, 618
@@ -748,8 +744,8 @@ public abstract class Unit : MonoBehaviour
     public void Die()
     {
         // 1. Desativar componentes
-        GetComponent<Collider>().enabled = false;
-        // Adicione aqui outros componentes a serem desativados, como IA, scripts de movimento, etc.
+        var col = GetComponent<Collider>();
+        if (col != null) col.enabled = false;
 
         // Limpar o Grid
         if (GridMap.Instance != null)
@@ -762,25 +758,61 @@ public abstract class Unit : MonoBehaviour
             }
         }
 
-        // 2. Ativar animação/efeito de morte
-        // Ex: GetComponent<Animator>().SetTrigger("Die");
         Debug.Log($"{DisplayName} foi derrotado(a).");
 
-        // 3. Adicionar ao cemitério
+        // 2. Adicionar ao cemitério
         if (GraveyardManager.Instance != null)
         {
             GraveyardManager.Instance.AddDeadUnit(this);
         }
 
-        // 4. Notificar o PhaseManager
+        // 3. Notificar o PhaseManager
         if (PhaseManager.Instance != null)
         {
             PhaseManager.Instance.UnregisterUnit(this);
         }
 
-        // 5. Desativar o GameObject após um tempo para a animação tocar
-        // Destroy(gameObject, 2f); // Exemplo: Destruir após 2 segundos
-        gameObject.SetActive(false); // Ou simplesmente desativar
+        // 4. Morte Estelar (Cometa)
+        Transform visualTransform = transform.Find("Visual"); 
+        if (visualTransform == null && transform.childCount > 0) 
+            visualTransform = transform.GetChild(0);
+        
+        if (visualTransform != null)
+        {
+            // Implosão
+            DG.Tweening.Sequence deathSeq = DG.Tweening.DOTween.Sequence();
+            deathSeq.Join(visualTransform.DOPunchScale(Vector3.one * 0.3f, 0.2f, 10, 1f));
+            deathSeq.Append(visualTransform.DOScale(0f, 0.2f).SetEase(DG.Tweening.Ease.InBack));
+            deathSeq.OnComplete(() =>
+            {
+                SpawnComet();
+                gameObject.SetActive(false);
+            });
+        }
+        else
+        {
+            SpawnComet();
+            gameObject.SetActive(false);
+        }
+    }
+
+    private void SpawnComet()
+    {
+        GameObject cometPrefab = Resources.Load<GameObject>("VFX/CometDeathVFX");
+        if (cometPrefab != null)
+        {
+            GameObject cometInst = Instantiate(cometPrefab);
+            var cometVfx = cometInst.GetComponent<CelestialCross.VFX.CometDeathVFX>();
+            if (cometVfx != null)
+            {
+                Color c = (Team == Team.Player) ? allyDeathColor : enemyDeathColor;
+                cometVfx.Play(c, transform.position + Vector3.up * 0.5f);
+            }
+        }
+        else
+        {
+            Debug.LogWarning("[Unit] CometDeathVFX prefab não encontrado na pasta Resources/VFX!");
+        }
     }
 }
 

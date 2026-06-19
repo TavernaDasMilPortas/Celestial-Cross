@@ -1,6 +1,6 @@
 using UnityEngine;
 using TMPro;
-using System.Collections;
+using DG.Tweening;
 
 public class DamageNumberUI : MonoBehaviour
 {
@@ -16,6 +16,10 @@ public class DamageNumberUI : MonoBehaviour
     private Vector3 jitterOffset;
     private Vector3 lastWorldPos;
 
+    private Sequence currentSequence;
+    private float currentAnimYOffset = 0f;
+    private Vector2 startAnchoredPos;
+
     public void Setup(int amount, Color color, string prefix, bool worldSpace = true)
     {
         this.followTarget = false;
@@ -29,7 +33,10 @@ public class DamageNumberUI : MonoBehaviour
             textMesh.color = color;
         }
 
-        StartCoroutine(Animate());
+        RectTransform rect = GetComponent<RectTransform>();
+        if (rect != null && !worldSpace) startAnchoredPos = rect.anchoredPosition;
+
+        StartAnimation();
     }
 
     public void Setup(Transform target, Vector3 offset, Vector3 jitter, int amount, Color color, string prefix)
@@ -53,17 +60,81 @@ public class DamageNumberUI : MonoBehaviour
         }
 
         // Posicionamento imediato para evitar glitch visual de 1 frame
-        RectTransform rect = GetComponent<RectTransform>();
-        if (rect != null)
+        UpdatePosition(0f);
+
+        StartAnimation();
+    }
+
+    private void StartAnimation()
+    {
+        if (currentSequence != null) currentSequence.Kill();
+        
+        Vector3 initialScale = Vector3.one; 
+        Color startColor = textMesh != null ? textMesh.color : Color.white;
+        startColor.a = 1f;
+        if (textMesh != null) textMesh.color = startColor;
+
+        transform.localScale = Vector3.zero;
+        currentAnimYOffset = 0f;
+
+        currentSequence = DOTween.Sequence();
+        
+        // 1. Pop-in Elástico e rápido (0.3s)
+        currentSequence.Append(transform.DOScale(initialScale * 1.3f, 0.3f).SetEase(Ease.OutBack, 2f));
+        currentSequence.Append(transform.DOScale(initialScale, 0.1f));
+        
+        // 2. Movimento Y fluído durante toda a duração
+        currentSequence.Insert(0, DOTween.To(() => currentAnimYOffset, x => currentAnimYOffset = x, moveSpeed, duration).SetEase(Ease.OutQuad));
+        
+        // 3. Fade out na reta final
+        float fadeDuration = duration * 0.4f;
+        float fadeStartTime = duration - fadeDuration;
+        
+        currentSequence.Insert(fadeStartTime, transform.DOScale(Vector3.zero, fadeDuration).SetEase(Ease.InBack));
+        if (textMesh != null)
         {
-            Vector3 current3DPos = lastWorldPos + spawnOffset + jitterOffset;
+            currentSequence.Insert(fadeStartTime, textMesh.DOFade(0f, fadeDuration));
+        }
+
+        // 4. Retornar ao Pool
+        currentSequence.OnComplete(() => {
+            if (DamagePopupManager.Instance != null) {
+                DamagePopupManager.Instance.ReturnToPool(gameObject);
+            } else {
+                Destroy(gameObject);
+            }
+        });
+    }
+
+    private void Update()
+    {
+        if (currentSequence != null && currentSequence.IsPlaying())
+        {
+            UpdatePosition(currentAnimYOffset);
+        }
+    }
+
+    private void UpdatePosition(float yOffset)
+    {
+        RectTransform rect = GetComponent<RectTransform>();
+        
+        if (followTarget && rect != null)
+        {
+            if (targetTransform != null)
+            {
+                lastWorldPos = targetTransform.position;
+            }
+
+            Vector3 current3DPos = lastWorldPos + spawnOffset + jitterOffset + (Vector3.up * yOffset);
             Vector3 canvasWorldPos = Vector3.zero;
             bool positionFound = false;
 
+            // 1. Tenta converter usando o RenderTextureInputManager (caso esteja ativo)
             if (RenderTextureInputManager.Instance != null && RenderTextureInputManager.Instance.WorldToCanvasWorldPoint(current3DPos, out canvasWorldPos))
             {
                 positionFound = true;
             }
+            // 2. Se não estiver ativo, tenta projetar usando a Câmera Principal diretamente no Canvas da UI
             else if (Camera.main != null && transform.parent != null)
             {
                 Vector3 screenPos = Camera.main.WorldToScreenPoint(current3DPos);
@@ -86,93 +157,18 @@ public class DamageNumberUI : MonoBehaviour
                 rect.position = canvasWorldPos;
             }
         }
-
-        StartCoroutine(Animate());
-    }
-
-    private IEnumerator Animate()
-    {
-        float elapsed = 0f;
-        RectTransform rect = GetComponent<RectTransform>();
-        Vector2 startAnchoredPos = (rect != null && !isWorldSpace) ? rect.anchoredPosition : Vector2.zero;
-        Vector3 startWorldPos = transform.position;
-        Vector3 initialScale = transform.localScale;
-        Color startColor = textMesh != null ? textMesh.color : Color.white;
-
-        while (elapsed < duration)
+        else
         {
-            elapsed += Time.deltaTime;
-            float t = elapsed / duration;
-
-            if (followTarget && rect != null)
+            // Movimento clássico para cima sem seguir um alvo
+            if (!isWorldSpace && rect != null)
             {
-                if (targetTransform != null)
-                {
-                    lastWorldPos = targetTransform.position;
-                }
-
-                // Calcula a posição 3D do alvo atualizada, somando a subida da animação e o jitter
-                Vector3 current3DPos = lastWorldPos + spawnOffset + jitterOffset + (Vector3.up * (elapsed * moveSpeed));
-                Vector3 canvasWorldPos = Vector3.zero;
-                bool positionFound = false;
-
-                // 1. Tenta converter usando o RenderTextureInputManager (caso esteja ativo)
-                if (RenderTextureInputManager.Instance != null && RenderTextureInputManager.Instance.WorldToCanvasWorldPoint(current3DPos, out canvasWorldPos))
-                {
-                    positionFound = true;
-                }
-                // 2. Se não estiver ativo, tenta projetar usando a Câmera Principal diretamente no Canvas da UI
-                else if (Camera.main != null && transform.parent != null)
-                {
-                    Vector3 screenPos = Camera.main.WorldToScreenPoint(current3DPos);
-                    if (screenPos.z >= 0)
-                    {
-                        RectTransform parentRect = transform.parent as RectTransform;
-                        Canvas canvas = GetComponentInParent<Canvas>();
-                        Camera uiCamera = (canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay) ? canvas.worldCamera : null;
-
-                        if (parentRect != null && RectTransformUtility.ScreenPointToWorldPointInRectangle(parentRect, screenPos, uiCamera, out Vector3 worldPoint))
-                        {
-                            canvasWorldPos = worldPoint;
-                            positionFound = true;
-                        }
-                    }
-                }
-
-                if (positionFound)
-                {
-                    rect.position = canvasWorldPos;
-                }
+                rect.anchoredPosition = startAnchoredPos + Vector2.up * (yOffset * 100f);
             }
             else
             {
-                // Movimento clássico para cima
-                if (!isWorldSpace && rect != null)
-                {
-                    rect.anchoredPosition = startAnchoredPos + Vector2.up * (elapsed * moveSpeed * 100f);
-                }
-                else
-                {
-                    transform.position = startWorldPos + Vector3.up * (elapsed * moveSpeed);
-                }
+                transform.position = lastWorldPos + spawnOffset + jitterOffset + (Vector3.up * yOffset);
             }
-
-            // Escala (pop-in respeitando a escala inicial do prefab)
-            float scaleValue = scaleCurve.Evaluate(t);
-            transform.localScale = initialScale * scaleValue;
-
-            // Fade out
-            if (textMesh != null)
-            {
-                Color c = startColor;
-                c.a = 1f - t;
-                textMesh.color = c;
-            }
-
-            yield return null;
         }
-
-        Destroy(gameObject);
     }
 
     private void LateUpdate()

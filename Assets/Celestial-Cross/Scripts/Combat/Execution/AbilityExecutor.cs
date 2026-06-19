@@ -78,17 +78,17 @@ namespace Celestial_Cross.Scripts.Combat.Execution
             activeAbilityRoutine = StartCoroutine(ExecuteBlueprintCoroutine(caster, blueprint, currentHook, onComplete));
         }
 
-        public void ExecuteGraph(Unit caster, AbilityGraphSO graph, CombatHook currentHook = CombatHook.OnManualCast, Action onComplete = null, int level = 1, string slotId = "", Vector2Int? presetTargetPos = null)
+        public void ExecuteGraph(Unit caster, AbilityGraphSO graph, CombatHook currentHook = CombatHook.OnManualCast, Action onComplete = null, int level = 1, string slotId = "", Vector2Int? presetTargetPos = null, List<Vector2Int> presetTargetPositions = null)
         {
             if (currentHook == CombatHook.OnManualCast)
             {
                 AbortCurrentAbility();
             }
 
-            activeAbilityRoutine = StartCoroutine(ExecuteGraphCoroutine(caster, graph, currentHook, onComplete, level, slotId, presetTargetPos));
+            activeAbilityRoutine = StartCoroutine(ExecuteGraphCoroutine(caster, graph, currentHook, onComplete, level, slotId, presetTargetPos, presetTargetPositions));
         }
 
-        private IEnumerator ExecuteGraphCoroutine(Unit caster, AbilityGraphSO graph, CombatHook currentHook, Action onComplete, int level = 1, string slotId = "", Vector2Int? presetTargetPos = null)
+        private IEnumerator ExecuteGraphCoroutine(Unit caster, AbilityGraphSO graph, CombatHook currentHook, Action onComplete, int level = 1, string slotId = "", Vector2Int? presetTargetPos = null, List<Vector2Int> presetTargetPositions = null)
         {
             try
             {
@@ -97,7 +97,7 @@ namespace Celestial_Cross.Scripts.Combat.Execution
                 
                 if (AbilityGraphInterpreter.Instance != null)
                 {
-                    yield return StartCoroutine(AbilityGraphInterpreter.Instance.ExecuteGraphCoroutine(caster, graph, currentHook, onComplete, level, slotId, presetTargetPos));
+                    yield return StartCoroutine(AbilityGraphInterpreter.Instance.ExecuteGraphCoroutine(caster, graph, currentHook, onComplete, level, slotId, presetTargetPos, presetTargetPositions));
                 }
                 else
                 {

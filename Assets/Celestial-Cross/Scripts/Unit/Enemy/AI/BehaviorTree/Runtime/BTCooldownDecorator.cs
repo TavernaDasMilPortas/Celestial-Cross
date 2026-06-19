@@ -21,8 +21,8 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Runtime
 
             if (result == BTResult.Success)
             {
-                // Set cooldown
-                blackboard.abilityCooldowns[Guid] = CooldownTurns;
+                // Set cooldown (+ 1 to offset the turn-end decrement)
+                blackboard.abilityCooldowns[Guid] = CooldownTurns + 1;
             }
 
             return result;

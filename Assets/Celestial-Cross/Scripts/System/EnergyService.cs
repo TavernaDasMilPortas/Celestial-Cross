@@ -53,16 +53,28 @@ namespace CelestialCross.System
             AccountManager.OnAccountReady -= InitializeEnergy;
         }
 
+        private EnergyConfig GetActiveConfig()
+        {
+            if (config != null) return config;
+            if (AccountManager.Instance != null && AccountManager.Instance.BootstrapConfig != null)
+            {
+                return AccountManager.Instance.BootstrapConfig.StartingEnergyConfig;
+            }
+            return null;
+        }
+
         private void InitializeEnergy()
         {
             var account = AccountManager.Instance.PlayerAccount;
             if (account == null) return;
+            
+            var activeConfig = GetActiveConfig();
 
             if (account.EnergyInfo == null)
             {
                 account.EnergyInfo = new EnergyData
                 {
-                    CurrentEnergy = config != null ? config.MaxEnergy : 100,
+                    CurrentEnergy = activeConfig != null ? activeConfig.MaxEnergy : 100,
                     LastRegenTimestampUTC = DateTime.UtcNow.ToString("O"),
                     LastServerTimestampUTC = DateTime.UtcNow.ToString("O")
                 };
@@ -81,12 +93,14 @@ namespace CelestialCross.System
 
         private void ValidateTimestampsAndCalculateOfflineRegen(EnergyData energyData)
         {
-            if (config == null) return;
+            var activeConfig = GetActiveConfig();
+            if (activeConfig == null) return;
 
             DateTime now = DateTime.UtcNow;
             
             if (DateTime.TryParse(energyData.LastServerTimestampUTC, out DateTime lastServerTime))
             {
+                lastServerTime = lastServerTime.ToUniversalTime();
                 if (now < lastServerTime)
                 {
                     Debug.LogWarning("[EnergyService] Manipulação de relógio detectada! Regeneração congelada.");
@@ -105,8 +119,9 @@ namespace CelestialCross.System
             {
                 if (DateTime.TryParse(energyData.LastRegenTimestampUTC, out DateTime lastRegenTime))
                 {
+                    lastRegenTime = lastRegenTime.ToUniversalTime();
                     TimeSpan passed = now - lastRegenTime;
-                    float regenInterval = config != null ? config.RegenIntervalSeconds : 300f; // 5 minutes default
+                    float regenInterval = (activeConfig != null && activeConfig.RegenIntervalSeconds > 0) ? activeConfig.RegenIntervalSeconds : 60f; // 1 minute default
                     int energyToAdd = (int)(passed.TotalSeconds / regenInterval);
 
                     if (energyToAdd > 0)
@@ -136,6 +151,7 @@ namespace CelestialCross.System
                     var acc = AccountManager.Instance?.PlayerAccount;
                     if (acc?.EnergyInfo != null && DateTime.TryParse(acc.EnergyInfo.LastServerTimestampUTC, out DateTime lastServerTime))
                     {
+                        lastServerTime = lastServerTime.ToUniversalTime();
                         if (DateTime.UtcNow >= lastServerTime)
                         {
                             _isFrozen = false;
@@ -157,7 +173,9 @@ namespace CelestialCross.System
                     DateTime now = DateTime.UtcNow;
                     if (DateTime.TryParse(energyData.LastRegenTimestampUTC, out DateTime lastRegenTime))
                     {
-                        float regenInterval = config != null ? config.RegenIntervalSeconds : 300f;
+                        lastRegenTime = lastRegenTime.ToUniversalTime();
+                        var activeConfig = GetActiveConfig();
+                        float regenInterval = (activeConfig != null && activeConfig.RegenIntervalSeconds > 0) ? activeConfig.RegenIntervalSeconds : 60f;
                         if ((now - lastRegenTime).TotalSeconds >= regenInterval)
                         {
                             energyData.CurrentEnergy++;
@@ -186,6 +204,7 @@ namespace CelestialCross.System
             if (account.EnergyInfo.CurrentEnergy >= amount)
             {
                 account.EnergyInfo.CurrentEnergy -= amount;
+                Debug.Log($"[EnergyService] Consumiu {amount} de energia. Energia atual agora é: {account.EnergyInfo.CurrentEnergy}");
                 
                 int maxE = GetMaxEnergy();
                 if (account.EnergyInfo.CurrentEnergy + amount >= maxE && account.EnergyInfo.CurrentEnergy < maxE)
@@ -220,24 +239,30 @@ namespace CelestialCross.System
 
         public int GetMaxEnergy()
         {
-            return config != null ? config.MaxEnergy : 100;
+            var activeConfig = GetActiveConfig();
+            return activeConfig != null ? activeConfig.MaxEnergy : 100;
         }
 
         public float GetTimeUntilNextRegen()
         {
-            if (config == null || _isFrozen) return -1f;
+            if (_isFrozen) return -1f;
             var account = AccountManager.Instance?.PlayerAccount;
             if (account?.EnergyInfo == null) return -1f;
 
-            if (account.EnergyInfo.CurrentEnergy >= config.MaxEnergy) return 0f;
+            int maxEnergy = GetMaxEnergy();
+            if (account.EnergyInfo.CurrentEnergy >= maxEnergy) return 0f;
+
+            var activeConfig = GetActiveConfig();
+            float regenInterval = (activeConfig != null && activeConfig.RegenIntervalSeconds > 0) ? activeConfig.RegenIntervalSeconds : 60f;
 
             if (DateTime.TryParse(account.EnergyInfo.LastRegenTimestampUTC, out DateTime lastRegenTime))
             {
+                lastRegenTime = lastRegenTime.ToUniversalTime();
                 float passed = (float)(DateTime.UtcNow - lastRegenTime).TotalSeconds;
-                return Mathf.Max(0f, config.RegenIntervalSeconds - passed);
+                return Mathf.Max(0f, regenInterval - passed);
             }
 
-            return config.RegenIntervalSeconds;
+            return regenInterval;
         }
 
         private void NotifyEnergyChanged()

@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using CelestialCross.System;
 
 public class PreparationSceneController : MonoBehaviour
 {
@@ -217,15 +218,27 @@ public class PreparationSceneController : MonoBehaviour
         }
 
         var level = GameFlowManager.Instance.SelectedLevel;
-        if (string.IsNullOrWhiteSpace(level.SceneName))
+        if (level != null && !string.IsNullOrEmpty(level.SceneName))
         {
-            Debug.LogError($"[PreparationScene] LevelData '{level.name}' sem SceneName.");
-            return;
+            Debug.Log($"[PreparationScene] Iniciando combate! Carregando cena: {level.SceneName}");
+            GameFlowManager.Instance.SelectedUnitIDs = selectedUnitIds.ToList();
+            GameFlowManager.Instance.PlayerFormation.Clear();
+
+            if (SceneTransitionManager.Instance != null)
+            {
+                SceneTransitionManager.Instance.LoadSceneWithFlash(level.SceneName);
+            }
+            else
+            {
+                // Fallback se não configurou o manager antes
+                GameObject transitionObj = new GameObject("TempTransitionManager");
+                SceneTransitionManager tempManager = transitionObj.AddComponent<SceneTransitionManager>();
+                tempManager.LoadSceneWithFlash(level.SceneName);
+            }
         }
-
-        GameFlowManager.Instance.SelectedUnitIDs = selectedUnitIds.ToList();
-        GameFlowManager.Instance.PlayerFormation.Clear();
-
-        SceneManager.LoadScene(level.SceneName);
+        else
+        {
+            Debug.LogError("[PreparationScene] Falha ao iniciar combate: Level ou SceneName inválido.");
+        }
     }
 }

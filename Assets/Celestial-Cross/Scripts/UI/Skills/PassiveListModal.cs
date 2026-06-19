@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
+using DG.Tweening;
+using MoreMountains.Feedbacks;
 
 namespace CelestialCross.UI.Skills
 {
@@ -9,6 +11,16 @@ namespace CelestialCross.UI.Skills
     {
         public GameObject modalRoot;
         
+        [Header("Animações (DOTween & Feel)")]
+        public RectTransform paperBackground; // O fundo que representa a folha de caderno
+        public CanvasGroup modalCanvasGroup;
+        public float animationSpeed = 1f;
+        public MMF_Player openPaperFeedback;
+        public MMF_Player closePaperFeedback;
+        public MMF_Player stickerPopFeedback;
+
+        private Sequence currentAnimSeq;
+
         [Header("Seção 1: Condições Temporárias")]
         public RectTransform conditionsGrid;
         public GameObject conditionIconPrefab;
@@ -35,13 +47,159 @@ namespace CelestialCross.UI.Skills
         {
             if (unit == null) return;
             if (modalRoot != null) modalRoot.SetActive(true);
+            
             Populate(unit);
+            PlayOpenAnimation();
         }
 
         public void Close()
         {
-            if (modalRoot != null) modalRoot.SetActive(false);
             if (detailModal != null) detailModal.Close();
+            PlayCloseAnimation();
+        }
+
+        private void PlayCloseAnimation()
+        {
+            if (currentAnimSeq != null && currentAnimSeq.IsActive())
+            {
+                currentAnimSeq.Kill();
+            }
+
+            currentAnimSeq = DOTween.Sequence();
+            currentAnimSeq.timeScale = animationSpeed;
+
+            List<Transform> allStickers = GetAllGeneratedItems(); 
+            float delayPops = 0f;
+            
+            // "Descola" os adesivos rapidamente, de trás para frente
+            for (int i = allStickers.Count - 1; i >= 0; i--)
+            {
+                Transform sticker = allStickers[i];
+                foreach (Transform innerChild in sticker)
+                {
+                    currentAnimSeq.Insert(delayPops, innerChild.DOScale(0f, 0.15f).SetEase(Ease.InBack));
+                }
+                delayPops += 0.02f; // Extremamente rápido pra não travar muito o fechamento
+            }
+
+            float paperStartDelay = delayPops;
+
+            // A Folha "puxada" da mesa
+            if (paperBackground != null)
+            {
+                currentAnimSeq.Insert(paperStartDelay, paperBackground.DOAnchorPos(new Vector2(0, -800), 0.3f).SetEase(Ease.InBack));
+                currentAnimSeq.Insert(paperStartDelay, paperBackground.DORotate(new Vector3(0, 0, -15f), 0.3f).SetEase(Ease.InBack));
+                currentAnimSeq.Insert(paperStartDelay, paperBackground.DOScale(0.8f, 0.3f).SetEase(Ease.InBack));
+                
+                if (closePaperFeedback != null)
+                {
+                    currentAnimSeq.InsertCallback(paperStartDelay, () => closePaperFeedback.PlayFeedbacks());
+                }
+            }
+
+            // Fade out geral de sombra do fundo
+            if (modalCanvasGroup != null)
+            {
+                currentAnimSeq.Insert(paperStartDelay + 0.1f, modalCanvasGroup.DOFade(0f, 0.2f));
+            }
+
+            // Finalmente desativa a tela ao fim de tudo
+            currentAnimSeq.OnComplete(() => {
+                if (modalRoot != null) modalRoot.SetActive(false);
+            });
+        }
+
+        private void PlayOpenAnimation()
+        {
+            if (currentAnimSeq != null && currentAnimSeq.IsActive())
+            {
+                currentAnimSeq.Kill();
+            }
+
+            if (modalCanvasGroup != null) modalCanvasGroup.alpha = 0f;
+            
+            if (paperBackground != null)
+            {
+                // Joga a folha pra fora da tela, pra baixo e inclinada
+                paperBackground.anchoredPosition = new Vector2(0, -800); 
+                paperBackground.localRotation = Quaternion.Euler(0, 0, -15f);
+                paperBackground.localScale = Vector3.one * 0.8f;
+            }
+
+            List<Transform> allStickers = GetAllGeneratedItems(); 
+            foreach (var sticker in allStickers)
+            {
+                foreach (Transform innerChild in sticker)
+                {
+                    innerChild.localScale = Vector3.zero; // Encolhe o conteúdo interno, mantendo a "caixa" (layout) do mesmo tamanho
+                }
+            }
+
+            currentAnimSeq = DOTween.Sequence();
+            currentAnimSeq.timeScale = animationSpeed;
+
+            // BUGFIX DO UNITY: Desativar temporariamente os limites do ScrollRect durante a animação
+            // O Unity quebra a matemática do "Clamped" se o ScrollRect for rotacionado/escalado (o que fazemos na paperBackground)
+            var allScrolls = GetComponentsInChildren<ScrollRect>(true);
+            foreach(var scroll in allScrolls)
+            {
+                scroll.movementType = ScrollRect.MovementType.Unrestricted;
+            }
+
+            // Ao terminar toda a animação (quando a escala for 1 e a rotação 0), ligamos o Clamped de volta!
+            currentAnimSeq.OnComplete(() => {
+                foreach(var scroll in allScrolls)
+                {
+                    scroll.movementType = ScrollRect.MovementType.Clamped;
+                    scroll.verticalNormalizedPosition = 1f; // Garante que o scroll volte pro topo
+                    Canvas.ForceUpdateCanvases();
+                }
+            });
+
+            // a) Fade in rápido geral do Modal
+            if (modalCanvasGroup != null) 
+                currentAnimSeq.Join(modalCanvasGroup.DOFade(1f, 0.15f));
+
+            // b) A Folha "Bate" na mesa
+            if (paperBackground != null)
+            {
+                currentAnimSeq.Join(paperBackground.DOAnchorPos(Vector2.zero, 0.35f).SetEase(Ease.OutBack, 1.2f));
+                currentAnimSeq.Join(paperBackground.DORotate(Vector3.zero, 0.3f).SetEase(Ease.OutBack));
+                currentAnimSeq.Join(paperBackground.DOScale(1f, 0.3f).SetEase(Ease.OutBack));
+                
+                // Feedback tátil/sonoro de folha sendo manipulada
+                if (openPaperFeedback != null)
+                {
+                    currentAnimSeq.InsertCallback(0.15f, () => openPaperFeedback.PlayFeedbacks());
+                }
+            }
+
+            // c) Pipocar o conteúdo dos adesivos em cascata
+            float delayPops = 0f;
+            foreach (var sticker in allStickers)
+            {
+                foreach (Transform innerChild in sticker)
+                {
+                    currentAnimSeq.Insert(0.25f + delayPops, innerChild.DOScale(1f, 0.3f).SetEase(Ease.OutBack, 1.5f));
+                }
+                
+                // Feedback sonoro curtinho (tip, tip, tip)
+                if (stickerPopFeedback != null)
+                {
+                    currentAnimSeq.InsertCallback(0.25f + delayPops, () => stickerPopFeedback.PlayFeedbacks());
+                }
+                delayPops += 0.04f; // Pequeno intervalo para criar o efeito cascata
+            }
+        }
+
+        private List<Transform> GetAllGeneratedItems()
+        {
+            List<Transform> items = new List<Transform>();
+            if (conditionsGrid != null) foreach(Transform child in conditionsGrid) items.Add(child);
+            if (positiveModifiersContainer != null) foreach(Transform child in positiveModifiersContainer) items.Add(child);
+            if (negativeModifiersContainer != null) foreach(Transform child in negativeModifiersContainer) items.Add(child);
+            if (allPassivesContainer != null) foreach(Transform child in allPassivesContainer) items.Add(child);
+            return items;
         }
 
         private void Populate(global::Unit unit)
@@ -65,16 +223,20 @@ namespace CelestialCross.UI.Skills
                     var go = Instantiate(conditionIconPrefab, conditionsGrid);
                     go.SetActive(true);
 
-                    // Configurar imagem do botão (ícone da condição)
-                    var btn = go.GetComponent<Button>();
-                    var img = go.GetComponent<Image>();
+                    // Configurar componentes via PassiveItemUI ou Find
+                    var pUI = go.GetComponent<PassiveItemUI>();
+                    var btn = pUI != null && pUI.clickButton != null ? pUI.clickButton : go.GetComponent<Button>();
+                    
+                    var imgTransform = go.transform.Find("Icon");
+                    var img = pUI != null && pUI.icon != null ? pUI.icon : (imgTransform != null ? imgTransform.GetComponent<Image>() : go.GetComponent<Image>());
+                    
                     if (img != null)
                     {
                         img.sprite = c.icon;
                     }
 
                     // Exibir turnos restantes no texto (ex: "3t")
-                    var turnTxt = go.GetComponentInChildren<TextMeshProUGUI>();
+                    var turnTxt = pUI != null && pUI.turnText != null ? pUI.turnText : go.GetComponentInChildren<TextMeshProUGUI>();
                     if (turnTxt != null)
                     {
                         turnTxt.text = $"{c.remainingTurns}t";
@@ -108,8 +270,10 @@ namespace CelestialCross.UI.Skills
                         var go = Instantiate(modifierItemPrefab, container);
                         go.SetActive(true);
 
+                        var pUI = go.GetComponent<PassiveItemUI>();
+
                         // Icone do Modificador
-                        var img = go.transform.Find("Icon")?.GetComponent<Image>();
+                        var img = pUI != null && pUI.icon != null ? pUI.icon : go.transform.Find("Icon")?.GetComponent<Image>();
                         if (img != null)
                         {
                             img.sprite = mod.icon;
@@ -117,7 +281,7 @@ namespace CelestialCross.UI.Skills
                         }
 
                         // Texto do Modificador
-                        var txt = go.transform.Find("Text")?.GetComponent<TextMeshProUGUI>();
+                        var txt = pUI != null && pUI.text != null ? pUI.text : go.transform.Find("Text")?.GetComponent<TextMeshProUGUI>();
                         if (txt != null)
                         {
                             string colorTag = mod.isPositive ? "#4f4" : "#f44";
@@ -136,8 +300,10 @@ namespace CelestialCross.UI.Skills
                     var go = Instantiate(passiveItemPrefab, allPassivesContainer);
                     go.SetActive(true);
 
+                    var pUI = go.GetComponent<PassiveItemUI>();
+
                     // Icone da Passiva
-                    var img = go.transform.Find("Icon")?.GetComponent<Image>();
+                    var img = pUI != null && pUI.icon != null ? pUI.icon : go.transform.Find("Icon")?.GetComponent<Image>();
                     if (img != null)
                     {
                         img.sprite = sp.icon;
@@ -145,13 +311,39 @@ namespace CelestialCross.UI.Skills
                     }
 
                     // Texto e Descrição da Passiva
-                    var txt = go.transform.Find("Text")?.GetComponent<TextMeshProUGUI>();
+                    var txt = pUI != null && pUI.text != null ? pUI.text : go.transform.Find("Text")?.GetComponent<TextMeshProUGUI>();
                     if (txt != null)
                     {
-                        string sourceStr = $"<color=#8bf>[{sp.source}]</color>";
                         string desc = string.IsNullOrEmpty(sp.description) ? "Sem descrição disponível." : sp.description;
-                        txt.text = $"<b>{sp.name}</b> {sourceStr}\n<size=85%>{desc}</size>";
+                        txt.text = $"<b>{sp.name}</b>\n<size=85%>{desc}</size>";
                     }
+                }
+            }
+
+            // Forçar o recálculo do Layout para que o ScrollView (Clamped) reconheça o novo tamanho imediatamente
+            if (conditionsGrid != null) LayoutRebuilder.ForceRebuildLayoutImmediate(conditionsGrid);
+            if (positiveModifiersContainer != null) LayoutRebuilder.ForceRebuildLayoutImmediate(positiveModifiersContainer);
+            if (negativeModifiersContainer != null) LayoutRebuilder.ForceRebuildLayoutImmediate(negativeModifiersContainer);
+            if (allPassivesContainer != null) 
+            {
+                LayoutRebuilder.ForceRebuildLayoutImmediate(allPassivesContainer);
+                
+                // Ligamos a automação original
+                var fitter = allPassivesContainer.GetComponent<ContentSizeFitter>();
+                if (fitter != null) fitter.enabled = true;
+                LayoutRebuilder.ForceRebuildLayoutImmediate(allPassivesContainer);
+                
+                // SISTEMA SALVA-VIDAS (FALLBACK):
+                // Se por algum motivo o Unity calcular a altura como 0 (porque esqueceu de aplicar o prefab, ou o layout bugou)
+                // O script entra em ação, desliga o automator, e calcula o tamanho da lista na raça!
+                if (allPassivesContainer.sizeDelta.y < 50f && allPassivesContainer.childCount > 0)
+                {
+                    if (fitter != null) fitter.enabled = false;
+                    
+                    // Assumimos uma altura média de 300 pixels por passiva + um espacinho de 20.
+                    float calculatedHeight = (allPassivesContainer.childCount * 300f) + 20f;
+                    allPassivesContainer.sizeDelta = new Vector2(allPassivesContainer.sizeDelta.x, calculatedHeight);
+                    Debug.LogWarning($"[PassiveListModal] O Unity falhou ao calcular a altura do Content. O sistema Salva-Vidas forçou a altura para {calculatedHeight}. Verifique o LayoutElement do PassiveItemPrefab!");
                 }
             }
         }
@@ -159,10 +351,13 @@ namespace CelestialCross.UI.Skills
         private void ClearContainer(RectTransform container)
         {
             if (container == null) return;
-            foreach (Transform child in container)
+            for (int i = container.childCount - 1; i >= 0; i--)
             {
+                Transform child = container.GetChild(i);
+                child.DOKill(); // Mata qualquer animação pendente
                 Destroy(child.gameObject);
             }
+            container.DetachChildren(); // Remove imediatamente da hierarquia para que as animações não peguem "fantasmas"
         }
     }
 }

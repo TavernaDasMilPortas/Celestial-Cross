@@ -64,8 +64,11 @@ namespace CelestialCross.Editor
         private int newAbilityRange = 1;
         private AbilityType newAbilityType = AbilityType.Active;
 
+
+
         // Step 4: Visuals
         private Sprite unitIcon;
+        private Sprite unitSprite;
         private AnimationClip idleAnim;
         private AnimationClip combatIdleAnim;
 
@@ -309,6 +312,7 @@ namespace CelestialCross.Editor
                 case WizardStep.Abilities:
                     DrawAbilitiesStep();
                     break;
+
                 case WizardStep.Visuals:
                     DrawVisualsStep();
                     break;
@@ -530,9 +534,14 @@ namespace CelestialCross.Editor
             unitClass = source.unitClass;
             enemyStats = source.baseStats; // Enemies use flat stats
             maxAP = source.maxAP;
-            
+            // Step 3
             associatedGraphs = new List<AbilityGraphSO>(source.abilityGraphs);
+            
+
+
+            // Step 4
             unitIcon = source.icon;
+            unitSprite = source.sprite;
             idleAnim = source.idleAnim;
             combatIdleAnim = source.combatIdleAnim;
             defaultBehaviorTree = source.defaultBehaviorTree;
@@ -739,6 +748,8 @@ namespace CelestialCross.Editor
             ShowNotification(new GUIContent("Grafo criado e salvo no disco!"));
         }
 
+
+
         // ==========================================
         // STEP 4: VISUALS
         // ==========================================
@@ -749,6 +760,7 @@ namespace CelestialCross.Editor
             GUILayout.Space(10);
             GUILayout.BeginVertical(cardStyle);
             unitIcon = (Sprite)EditorGUILayout.ObjectField("Ícone da Unidade (Sprite)", unitIcon, typeof(Sprite), false);
+            unitSprite = (Sprite)EditorGUILayout.ObjectField("Sprite de Combate (Inimigos/Aliados)", unitSprite, typeof(Sprite), false);
             GUILayout.Space(8);
             GUILayout.Label("Animações Base:", EditorStyles.boldLabel);
             idleAnim = (AnimationClip)EditorGUILayout.ObjectField("Idle Animation Clip", idleAnim, typeof(AnimationClip), false);
@@ -826,6 +838,7 @@ namespace CelestialCross.Editor
                 unitData.role = role;
                 unitData.unitClass = unitClass;
                 unitData.icon = unitIcon;
+                unitData.sprite = unitSprite;
                 unitData.idleAnim = idleAnim;
                 unitData.combatIdleAnim = combatIdleAnim;
                 unitData.baseStats = enemyStats;
@@ -840,6 +853,10 @@ namespace CelestialCross.Editor
                     AssetDatabase.CreateAsset(unitData, unitDataPath);
                 }
                 else EditorUtility.SetDirty(unitData);
+
+                string unitGuid = AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(unitData));
+
+
 
                 EditorUtility.SetDirty(unitData);
                 AssetDatabase.SaveAssets();

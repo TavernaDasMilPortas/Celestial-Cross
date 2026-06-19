@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Celestial_Cross.Scripts.Units.Enemy;
+using CelestialCross.UI;
 
 public class BattleLevelBuilder : MonoBehaviour
 {
@@ -75,8 +76,7 @@ public class BattleLevelBuilder : MonoBehaviour
         // Spawns dos inimigos
         List<EnemyUnit> enemies = SpawnEnemies(flow, grid);
 
-        // Aguarda a Câmera terminar seu setup inicial (Zoom/Enquadramento do mapa)
-        // para garantir que ela não roube o controle da câmera durante a animação do primeiro inimigo.
+        // Aguarda a Câmera terminar seu setup inicial
         if (CameraController.Instance != null)
         {
             float maxWait = Time.realtimeSinceStartup + 2f;
@@ -84,14 +84,13 @@ public class BattleLevelBuilder : MonoBehaviour
             {
                 yield return null;
             }
-            if (!CameraController.Instance.IsSetupComplete)
-            {
-                Debug.LogWarning("[BattleLevelBuilder] CameraController não terminou o setup após 2s. Prosseguindo...");
-            }
         }
         
-        // Aguarda mais um frame para garantir estabilidade do engine
-        yield return null;
+        // Fase 1: Animação de Intro da Fase (IntroModalUI)
+        if (IntroModalUI.Instance != null)
+        {
+            yield return IntroModalUI.Instance.PlayIntroSequence();
+        }
 
         // Se a lista retornada por SpawnEnemies estiver vazia, tenta coletar todas as EnemyUnits da cena (fallback robusto)
         if (enemies == null || enemies.Count == 0)
@@ -99,70 +98,81 @@ public class BattleLevelBuilder : MonoBehaviour
             enemies = Object.FindObjectsByType<EnemyUnit>(FindObjectsSortMode.None).ToList();
         }
 
-        // Fase de foco da câmera em cada inimigo antes do posicionamento (Highlight dos Inimigos)
+        // Fase de foco da câmera em cada inimigo antes do posicionamento
         if (enableEnemyFocusPhase && CameraController.Instance != null)
         {
             if (enemies != null && enemies.Count > 0)
             {
                 Debug.Log($"[BattleLevelBuilder] Iniciando fase de foco/highlight nos inimigos. Total={enemies.Count}");
                 
-                // Coloca a câmera em modo livre para mover programaticamente
+                // Mostrar botão de Skip
+                if (EnemyFocusSkipUI.Instance != null)
+                {
+                    EnemyFocusSkipUI.Instance.Show();
+                }
+
                 CameraController.Instance.EnableFreeCamera(true);
                 
                 foreach (var enemy in enemies)
                 {
                     if (enemy == null) continue;
                     
-                    Debug.Log($"[BattleLevelBuilder] Focando e destacando inimigo: {enemy.DisplayName} em {enemy.transform.position}");
+                    if (EnemyFocusSkipUI.Instance != null && EnemyFocusSkipUI.Instance.IsSkipRequested)
+                    {
+                        Debug.Log("[BattleLevelBuilder] Foco de inimigos pulado pelo jogador.");
+                        break;
+                    }
+
                     CameraController.Instance.TargetProjectedPoint = enemy.transform.position;
-                    CameraController.Instance.TargetZoom = enemyFocusZoom;
+                    // Aplica um leve zoom out em relação ao foco original, por exemplo, multiplicando ou usando o valor base
+                    CameraController.Instance.TargetZoom = enemyFocusZoom * 1.2f; 
                     
-                // Se for o primeiro inimigo, pula direto para ele para não perder o início da animação viajando pelo mapa
-                bool isFirstEnemy = (enemy == enemies[0]);
-                
-                if (isFirstEnemy)
-                {
-                    CameraController.Instance.SnapToTarget();
-                }
-                else
-                {
-                    // Anima suavemente para os próximos inimigos usando DOTween (ex: 0.6s de viagem)
-                    CameraController.Instance.AnimateToTarget(0.6f);
-                }
-                
-                // Ativa o outline visual para destacar o inimigo
-                var outline = enemy.GetComponent<UnitOutlineController>();
-                if (outline == null) outline = enemy.GetComponentInChildren<UnitOutlineController>();
-                outline?.SetSelected(true);
+                    bool isFirstEnemy = (enemy == enemies[0]);
                     
-                    // Espera pelo tempo determinado ou até que o jogador arraste a tela
-                    // Usa Time.time ao invés de Time.deltaTime para evitar que o lag de instanciação do mapa 
-                    // (que faz o deltaTime ser > 1.5s no primeiro frame) pule instantaneamente o primeiro inimigo.
+                    if (isFirstEnemy)
+                    {
+                        // Se for o primeiro, faz um pan um pouco mais rápido mas ainda suave
+                        CameraController.Instance.AnimateToTarget(0.8f);
+                    }
+                    else
+                    {
+                        CameraController.Instance.AnimateToTarget(0.6f);
+                    }
+                    
+                    var outline = enemy.GetComponent<UnitOutlineController>();
+                    if (outline == null) outline = enemy.GetComponentInChildren<UnitOutlineController>();
+                    outline?.SetSelected(true);
+                    
                     float startTime = Time.time;
                     while (Time.time - startTime < enemyFocusDuration)
                     {
+                        if (EnemyFocusSkipUI.Instance != null && EnemyFocusSkipUI.Instance.IsSkipRequested)
+                            break;
+
                         if (CameraController.Instance.IsDragging)
                         {
-                            Debug.Log("[BattleLevelBuilder] Foco de câmera cancelado pelo arrasto do jogador.");
                             break;
                         }
                         yield return null;
                     }
                     
-                    // Desativa o outline após focar nele
                     outline?.SetSelected(false);
                     
+                    if (EnemyFocusSkipUI.Instance != null && EnemyFocusSkipUI.Instance.IsSkipRequested)
+                        break;
+
                     if (CameraController.Instance.IsDragging)
                         break;
                 }
                 
-                // Redefine a câmera para o enquadramento inicial
+                // Esconder botão de Skip
+                if (EnemyFocusSkipUI.Instance != null)
+                {
+                    EnemyFocusSkipUI.Instance.Hide();
+                }
+
                 CameraController.Instance.ResetToInitialFraming();
                 yield return new WaitForSeconds(0.8f);
-            }
-            else
-            {
-                Debug.LogWarning("[BattleLevelBuilder] Fase de foco pulada: nenhuma unidade EnemyUnit foi instanciada.");
             }
         }
 
@@ -202,6 +212,17 @@ public class BattleLevelBuilder : MonoBehaviour
 
     private void StartCombat()
     {
+        if (IntroModalUI.Instance != null)
+        {
+            IntroModalUI.Instance.HideIntroImmediate();
+        }
+
+        // Animação para diminuir a Game Render View ao entrar em modo combate
+        if (GameRenderTween.Instance != null)
+        {
+            GameRenderTween.Instance.SetCombatMode();
+        }
+
         var initializer = FindFirstObjectByType<CombatInitializer>();
         if (initializer != null)
         {

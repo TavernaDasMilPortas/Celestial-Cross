@@ -9,7 +9,7 @@ public class CombatUIManager : MonoBehaviour
 {
     public static CombatUIManager Instance { get; private set; }
 
-    [SerializeField] private UnitPanelUI unitPanelUI;
+    [SerializeField] private SplitScreenUIManager splitScreenUI;
     [SerializeField] private ActionBarUI actionBarUI;
     [SerializeField] private CombatForecastUI combatForecastUI;
     [SerializeField] private TurnTimelineUI turnTimelineUI;
@@ -49,14 +49,20 @@ public class CombatUIManager : MonoBehaviour
             backgroundShadow = turnBackgroundImage.GetComponent<SoftShadow>();
     }
 
+    private TargetSelector targetSelector;
+
     private void Start()
     {
         TurnManager.OnTurnStarted += HandleTurnStarted;
         TurnManager.OnTurnEnded += HandleTurnEnded;
         TurnManager.OnQueueChanged += HandleQueueChanged;
 
-        UnitHoverDetector.OnHoverStarted += HandleUnitHoverStarted;
-        UnitHoverDetector.OnHoverEnded += HandleUnitHoverEnded;
+        targetSelector = FindFirstObjectByType<TargetSelector>(FindObjectsInactive.Include);
+        if (targetSelector != null)
+        {
+            targetSelector.OnSelectedTargetsChanged += HandleSelectedTargetsChanged;
+            targetSelector.OnCanceled += HandleTargetingCanceled;
+        }
 
         // Sync initial state if combat already started
         if (TurnManager.Instance != null && TurnManager.Instance.CurrentUnit != null)
@@ -73,11 +79,53 @@ public class CombatUIManager : MonoBehaviour
         TurnManager.OnTurnStarted -= HandleTurnStarted;
         TurnManager.OnTurnEnded -= HandleTurnEnded;
         TurnManager.OnQueueChanged -= HandleQueueChanged;
+        
+        if (targetSelector != null)
+        {
+            targetSelector.OnSelectedTargetsChanged -= HandleSelectedTargetsChanged;
+            targetSelector.OnCanceled -= HandleTargetingCanceled;
+        }
 
-        UnitHoverDetector.OnHoverStarted -= HandleUnitHoverStarted;
-        UnitHoverDetector.OnHoverEnded -= HandleUnitHoverEnded;
         if (currentActiveUnit != null)
             currentActiveUnit.OnActionChanged -= HandleActionChanged;
+    }
+
+    private void HandleSelectedTargetsChanged(List<Unit> targets)
+    {
+        Debug.Log($"[CombatUIManager] HandleSelectedTargetsChanged called. Targets count: {(targets != null ? targets.Count : 0)}");
+        
+        if (splitScreenUI != null && currentActiveUnit != null && targets != null)
+        {
+            List<Unit> oppositeFactionTargets = new List<Unit>();
+            foreach(var t in targets)
+            {
+                if (t != null && t.Team != currentActiveUnit.Team)
+                    oppositeFactionTargets.Add(t);
+            }
+
+            Debug.Log($"[CombatUIManager] Opposite faction targets: {oppositeFactionTargets.Count}");
+
+            if (oppositeFactionTargets.Count > 0)
+            {
+                splitScreenUI.ShowSplit(currentActiveUnit, oppositeFactionTargets);
+            }
+            else
+            {
+                splitScreenUI.ShowFullScreenTurn(currentActiveUnit);
+            }
+        }
+        else
+        {
+            Debug.LogWarning($"[CombatUIManager] Failed to handle targets. SplitScreenUI: {splitScreenUI != null}, ActiveUnit: {currentActiveUnit != null}");
+        }
+    }
+
+    private void HandleTargetingCanceled()
+    {
+        if (splitScreenUI != null && currentActiveUnit != null)
+        {
+            splitScreenUI.ShowFullScreenTurn(currentActiveUnit);
+        }
     }
 
     private void HandleTurnEnded()
@@ -105,12 +153,12 @@ public class CombatUIManager : MonoBehaviour
         
         if (isPlayerTurn)
         {
-            if (unitPanelUI != null) unitPanelUI.UpdatePanel(unit);
+            if (splitScreenUI != null) splitScreenUI.ShowFullScreenTurn(unit);
             if (actionBarUI != null) actionBarUI.GenerateButtons(unit);
         }
         else
         {
-            if (unitPanelUI != null) unitPanelUI.UpdatePanel(unit);
+            if (splitScreenUI != null) splitScreenUI.ShowFullScreenTurn(unit);
             if (actionBarUI != null) actionBarUI.ClearButtons();
             if (combatForecastUI != null) combatForecastUI.Hide();
         }
@@ -177,23 +225,35 @@ public class CombatUIManager : MonoBehaviour
             backgroundShadow.effectDistance = new Vector2(5f, -5f);
     }
 
+    public void RegisterTargetSelector(TargetSelector selector)
+    {
+        if (selector == null) return;
+        
+        if (targetSelector != null)
+        {
+            targetSelector.OnSelectedTargetsChanged -= HandleSelectedTargetsChanged;
+            targetSelector.OnCanceled -= HandleTargetingCanceled;
+        }
+
+        targetSelector = selector;
+        targetSelector.OnSelectedTargetsChanged += HandleSelectedTargetsChanged;
+        targetSelector.OnCanceled += HandleTargetingCanceled;
+        
+        Debug.Log($"[CombatUIManager] Novo TargetSelector registrado com sucesso!");
+    }
+
     private void HandleActionChanged(IUnitAction newAction)
     {
+        if (newAction == null)
+        {
+            if (splitScreenUI != null && currentActiveUnit != null)
+            {
+                splitScreenUI.ShowFullScreenTurn(currentActiveUnit);
+            }
+        }
+
         if (combatForecastUI != null)
             combatForecastUI.SetAction(newAction);
-    }
-
-    private void HandleUnitHoverStarted(Unit hoveredUnit)
-    {
-        if (unitPanelUI != null && hoveredUnit != null)
-            unitPanelUI.UpdatePanel(hoveredUnit);
-    }
-
-    private void HandleUnitHoverEnded(Unit hoveredUnit)
-    {
-        // Ao sair do hover, voltamos a exibir a unidade que está jogando no momento
-        if (unitPanelUI != null && currentActiveUnit != null)
-            unitPanelUI.UpdatePanel(currentActiveUnit);
     }
 
     private void HandleQueueChanged(IEnumerable<Unit> queue)

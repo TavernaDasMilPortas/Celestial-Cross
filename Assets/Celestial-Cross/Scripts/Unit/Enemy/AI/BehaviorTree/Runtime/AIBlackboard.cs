@@ -35,6 +35,8 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Runtime
             public IUnitAction actionToExecute;
             public Vector2Int? moveTarget;
             public Unit targetUnit;
+            public List<Unit> targetUnits;
+            public List<Vector2Int> targetPositions;
         }
         public PlannedAction bestPlan;
 

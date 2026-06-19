@@ -109,6 +109,7 @@ public class CameraController : MonoBehaviour
     Plane mapPlane = new(Vector3.up, Vector3.zero);
 
     [Header("Clamping & Framing")]
+    public bool allowZoomOutsideBounds = false;
     public float edgePadding = 0f;
     public float verticalCenterOffset = 1f; // Sobe um pouco o foco dos pés para o corpo
 
@@ -514,11 +515,10 @@ public class CameraController : MonoBehaviour
         float maxAllowedZoomByWidth = (mapWidth / 2f) / currentAspect;
         float maxAllowedZoomByHeight = (mapHeight / 2f) * Mathf.Sin(cameraRotation.x * Mathf.Deg2Rad);
         
-        // Usa o menor dos dois limites lógicos para garantir que ele caiba nos dois eixos (se quiser limitar estrito)
         float maxGlobalZoom = Mathf.Min(maxAllowedZoomByWidth, maxAllowedZoomByHeight);
         
         // Assegura que o targetZoom nunca ultrapassa esse limite de mapa (e aplica sua const de maxZoom)
-        float currentAllowedMaxZoom = Mathf.Min(maxZoom, maxGlobalZoom);
+        float currentAllowedMaxZoom = allowZoomOutsideBounds ? maxZoom : Mathf.Min(maxZoom, maxGlobalZoom);
         targetZoom = Mathf.Clamp(targetZoom, minZoom, currentAllowedMaxZoom);
 
         // Recalcular as extensões pós clamp de zoom de segurança
