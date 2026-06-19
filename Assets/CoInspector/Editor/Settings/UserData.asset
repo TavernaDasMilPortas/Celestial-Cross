@@ -105,7 +105,7 @@ MonoBehaviour:
       recentlyClickedContents: []
     sceneGUID: 03d58314661be71469defb5607568be7
     sceneName: InventoryScene
-    lastSaveTimePrint: 10:32 PM (June 17, 2026)
+    lastSaveTimePrint: 03:01 PM (June 18, 2026)
     gracePeriod: 3
     activeIndex: 0
     checkingToLoad: 0
@@ -119,13 +119,13 @@ MonoBehaviour:
     scrollPosition: {x: 0, y: 0}
     toolbarScrollPosition: {x: 0, y: 0}
     rawUserHeight: 0
-    lastValidTabWidth: 95
+    lastValidTabWidth: 99
     alreadyCalculatedHeight: 0
     lastKnownHeight: 0
     tabs:
     - path: '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"EventSystem[0]"}'
       paths: []
-      tabWidth: 92
+      tabWidth: 96
       name: EventSystem
       icon: {fileID: -4387529911086606607, guid: 0000000000000000d000000000000000, type: 0}
       shortName: EventSystem
@@ -143,7 +143,7 @@ MonoBehaviour:
         m_TextWithWhitespace: "EventSystem\u200B"
       multiEditMode: 0
       locked: 0
-      hasPreview: 1
+      hasPreview: 0
       previewHeight: 13
       debug: 0
       filtering: 0
@@ -207,15 +207,6 @@ MonoBehaviour:
         hidden: 0
         componentName: standaloneinputmodule
         niceComponentName: standalone input module
-      - index: 0
-        component: {fileID: 0}
-        missingComponentID: -1
-        foldout: 1
-        focusAfter: 0
-        awaitingScroll: 0
-        hidden: 0
-        componentName: baseinput
-        niceComponentName: base input
       historyPaths:
       - paths:
         - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"EventSystem[0]"}'
@@ -246,6 +237,14 @@ MonoBehaviour:
     playModeTransforms: []
     historyAssets:
     - assetGUIDs:
+      - a30103f890e517a41b45396447311ad4
+    - assetGUIDs:
+      - aae55989abe44784197dd80958fdd0f5
+    - assetGUIDs:
+      - 8e33882f7fba925478cbd19e61365198
+    - assetGUIDs:
+      - 8105016687592461f977c054a80ce2f2
+    - assetGUIDs:
       - fec72274543004aff8768fda2a73da01
     - assetGUIDs:
       - 8e7c1c09c33d12647bde5c4458b82c61
@@ -259,35 +258,22 @@ MonoBehaviour:
       - 5b57ca8cfbde6b344adfc40ad11d7841
     - assetGUIDs:
       - 41ac0598862a52a4388b1cf64820d50f
-    - assetGUIDs:
-      - ac296acd9831fe642a5514ed8cee5fea
-    - assetGUIDs:
-      - 98cd48ef67a5b704098e30547ba2068d
-    - assetGUIDs:
-      - 67ec913167e69cc4989a746ba58eede0
-      - 98cd48ef67a5b704098e30547ba2068d
-      - 8e7c1c09c33d12647bde5c4458b82c61
-      - bc60dce0dd546f146bec84d86641d689
-    - assetGUIDs:
-      - bc60dce0dd546f146bec84d86641d689
-    targetObject: {fileID: 11400000, guid: a9644b9cf968da748bbf12a4c0810c07, type: 2}
+    targetObject: {fileID: 11500000, guid: a30103f890e517a41b45396447311ad4, type: 3}
     targetObjects: []
-    lastSelectedAsset: Assets/CoInspector/Editor/Core/Helpers/MissingScriptManager.asset
+    lastSelectedAsset: Assets/TheraBytes/BetterUI/Editor/Scripts/Navigation/InputModuleAdditions/AdditionForRewiredStandaloneInputModuleEditor.cs
     lastClickedTab: -1
-    previousTab: 0
+    previousTab: 25
   - tracker:
       mostClicked:
       - paths:
-        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"_HubSceneManager[0]"}'
-        count: 3
-        gameObjects:
-        - {fileID: 0}
+        - 
+        count: 1
+        gameObjects: []
       recentlyClicked:
       - paths:
-        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"_HubSceneManager[0]"}'
+        - 
         count: 1
-        gameObjects:
-        - {fileID: 0}
+        gameObjects: []
       - paths: []
         count: 1
         gameObjects: []
@@ -319,7 +305,7 @@ MonoBehaviour:
       recentlyClickedContents: []
     sceneGUID: aae55989abe44784197dd80958fdd0f5
     sceneName: HubScene
-    lastSaveTimePrint: 01:27 PM (June 18, 2026)
+    lastSaveTimePrint: 10:49 AM (June 19, 2026)
     gracePeriod: 3
     activeIndex: 0
     checkingToLoad: 0
@@ -333,13 +319,13 @@ MonoBehaviour:
     scrollPosition: {x: 0, y: 0}
     toolbarScrollPosition: {x: 0, y: 0}
     rawUserHeight: 0
-    lastValidTabWidth: 135
+    lastValidTabWidth: 136
     alreadyCalculatedHeight: 0
     lastKnownHeight: 0
     tabs:
     - path: '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"_HubSceneManager[0]"}'
       paths: []
-      tabWidth: 132
+      tabWidth: 133
       name: _HubSceneManager
       icon: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
       shortName: _HubSceneManager
@@ -451,13 +437,13 @@ MonoBehaviour:
     playModeTransforms: []
     historyAssets:
     - assetGUIDs:
-      - a30103f890e517a41b45396447311ad4
-    - assetGUIDs:
-      - aae55989abe44784197dd80958fdd0f5
-    - assetGUIDs:
       - 8e33882f7fba925478cbd19e61365198
     - assetGUIDs:
       - 8105016687592461f977c054a80ce2f2
+    - assetGUIDs:
+      - a30103f890e517a41b45396447311ad4
+    - assetGUIDs:
+      - aae55989abe44784197dd80958fdd0f5
     - assetGUIDs:
       - fec72274543004aff8768fda2a73da01
     - assetGUIDs:
@@ -472,11 +458,11 @@ MonoBehaviour:
       - 5b57ca8cfbde6b344adfc40ad11d7841
     - assetGUIDs:
       - 41ac0598862a52a4388b1cf64820d50f
-    targetObject: {fileID: 11500000, guid: a30103f890e517a41b45396447311ad4, type: 3}
+    targetObject: {fileID: 102900000, guid: 8e33882f7fba925478cbd19e61365198, type: 3}
     targetObjects: []
-    lastSelectedAsset: Assets/TheraBytes/BetterUI/Editor/Scripts/Navigation/InputModuleAdditions/AdditionForRewiredStandaloneInputModuleEditor.cs
+    lastSelectedAsset: Assets/Celestial-Cross/Scenes/Teste 1.unity
     lastClickedTab: 0
-    previousTab: 35
+    previousTab: 25
   - tracker:
       mostClicked: []
       recentlyClicked: []
@@ -484,7 +470,7 @@ MonoBehaviour:
       recentlyClickedContents: []
     sceneGUID: 41797f812614b484c878b87c4d6155a1
     sceneName: PreparationScene
-    lastSaveTimePrint: 01:22 PM (June 18, 2026)
+    lastSaveTimePrint: 07:39 AM (June 19, 2026)
     gracePeriod: 3
     activeIndex: 0
     checkingToLoad: 0
@@ -565,13 +551,13 @@ MonoBehaviour:
     playModeTransforms: []
     historyAssets:
     - assetGUIDs:
+      - 8105016687592461f977c054a80ce2f2
+    - assetGUIDs:
       - a30103f890e517a41b45396447311ad4
     - assetGUIDs:
       - aae55989abe44784197dd80958fdd0f5
     - assetGUIDs:
       - 8e33882f7fba925478cbd19e61365198
-    - assetGUIDs:
-      - 8105016687592461f977c054a80ce2f2
     - assetGUIDs:
       - fec72274543004aff8768fda2a73da01
     - assetGUIDs:
@@ -586,54 +572,120 @@ MonoBehaviour:
       - 5b57ca8cfbde6b344adfc40ad11d7841
     - assetGUIDs:
       - 41ac0598862a52a4388b1cf64820d50f
-    targetObject: {fileID: 11500000, guid: a30103f890e517a41b45396447311ad4, type: 3}
+    targetObject: {fileID: 11400000, guid: 8105016687592461f977c054a80ce2f2, type: 2}
     targetObjects: []
-    lastSelectedAsset: Assets/TheraBytes/BetterUI/Editor/Scripts/Navigation/InputModuleAdditions/AdditionForRewiredStandaloneInputModuleEditor.cs
+    lastSelectedAsset: Assets/Readme.asset
     lastClickedTab: -1
-    previousTab: 35
+    previousTab: 25
   - tracker:
       mostClicked:
       - paths:
-        - 
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/EnemyFocusSkipUI[0]"}'
+        count: 3
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]"}'
+        count: 2
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/ConditionIcon[0]"}'
+        count: 2
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/ConditionIcon[0]/Icon[0]/Image[0]"}'
+        count: 2
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/ConditionIcon[0]/Icon[0]/TurnText[0]"}'
+        count: 2
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/IntroModal[0]"}'
+        count: 2
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"RenderTexture
+          Controller[0]"}'
         count: 1
-        gameObjects: []
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]"}'
+        count: 1
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/ConditionIcon[0]/Icon[0]"}'
+        count: 1
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/LeftBackground[0]"}'
+        count: 1
+        gameObjects:
+        - {fileID: 0}
       recentlyClicked:
       - paths:
-        - 
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/LeftBackground[0]"}'
         count: 1
-        gameObjects: []
-      - paths: []
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/Btn_Passives[0]"}'
         count: 1
-        gameObjects: []
-      - paths: []
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/RightModal[0]"}'
         count: 1
-        gameObjects: []
-      - paths: []
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/RightBackground[0]"}'
         count: 1
-        gameObjects: []
-      - paths: []
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]"}'
         count: 1
-        gameObjects: []
-      - paths: []
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/IntroModal[0]"}'
         count: 1
-        gameObjects: []
-      - paths: []
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]"}'
         count: 1
-        gameObjects: []
-      - paths: []
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/EnemyFocusSkipUI[0]"}'
         count: 1
-        gameObjects: []
-      - paths: []
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/ConditionIcon[0]/Icon[0]/TurnText[0]"}'
         count: 1
-        gameObjects: []
-      - paths: []
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/ConditionIcon[0]/Icon[0]/Image[0]"}'
         count: 1
-        gameObjects: []
+        gameObjects:
+        - {fileID: 0}
       mostClickedContents: []
       recentlyClickedContents: []
     sceneGUID: 8e33882f7fba925478cbd19e61365198
     sceneName: Teste 1
-    lastSaveTimePrint: 01:22 PM (June 18, 2026)
+    lastSaveTimePrint: 10:57 AM (June 19, 2026)
     gracePeriod: 3
     activeIndex: 36
     checkingToLoad: 0
@@ -645,15 +697,15 @@ MonoBehaviour:
     userAssetViewSize: -1
     previewHeight: 0
     scrollPosition: {x: 0, y: 0}
-    toolbarScrollPosition: {x: 1709, y: 0}
+    toolbarScrollPosition: {x: 1757.6, y: 0}
     rawUserHeight: 0
-    lastValidTabWidth: 2262
+    lastValidTabWidth: 2235
     alreadyCalculatedHeight: 0
     lastKnownHeight: 0
     tabs:
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/ModifierItemPrefab[0]/Icon[0]"}'
       paths: []
-      tabWidth: 48
+      tabWidth: 49
       name: Icon
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: Icon
@@ -1111,7 +1163,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/MainPanel[0]/VerticalGroup[0]/Section3_CharacterPassives[0]/PassivesScroll[0]/Viewport[0]/Content[0]"}'
       paths: []
-      tabWidth: 61
+      tabWidth: 62
       name: Content
       icon: {fileID: 3922097781858013310, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Cont\u2026"
@@ -1218,7 +1270,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]"}'
       paths: []
-      tabWidth: 62
+      tabWidth: 61
       name: PassiveListModal
       icon: {fileID: 5779557562189929939, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Pass\u2026"
@@ -1304,7 +1356,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]"}'
       paths: []
-      tabWidth: 62
+      tabWidth: 61
       name: PassiveListModal
       icon: {fileID: 5779557562189929939, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Pass\u2026"
@@ -1390,7 +1442,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]"}'
       paths: []
-      tabWidth: 62
+      tabWidth: 61
       name: PassiveListModal
       icon: {fileID: 5779557562189929939, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Pass\u2026"
@@ -1491,7 +1543,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]"}'
       paths: []
-      tabWidth: 62
+      tabWidth: 61
       name: PassiveListModal
       icon: {fileID: 5779557562189929939, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Pass\u2026"
@@ -1577,7 +1629,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]"}'
       paths: []
-      tabWidth: 62
+      tabWidth: 61
       name: PassiveListModal
       icon: {fileID: 5779557562189929939, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Pass\u2026"
@@ -1663,7 +1715,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]"}'
       paths: []
-      tabWidth: 62
+      tabWidth: 61
       name: PassiveListModal
       icon: {fileID: 5779557562189929939, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Pass\u2026"
@@ -1749,7 +1801,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/ConditionIcon[0]"}'
       paths: []
-      tabWidth: 64
+      tabWidth: 65
       name: ConditionIcon
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Cond\u2026"
@@ -1856,7 +1908,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/ConditionIcon[0]"}'
       paths: []
-      tabWidth: 64
+      tabWidth: 65
       name: ConditionIcon
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Cond\u2026"
@@ -1960,7 +2012,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]"}'
       paths: []
-      tabWidth: 62
+      tabWidth: 61
       name: PassiveItem
       icon: {fileID: -7943610116366264489, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Pass\u2026"
@@ -2064,7 +2116,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]"}'
       paths: []
-      tabWidth: 62
+      tabWidth: 61
       name: PassiveItem
       icon: {fileID: -7943610116366264489, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Pass\u2026"
@@ -2150,7 +2202,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]"}'
       paths: []
-      tabWidth: 62
+      tabWidth: 61
       name: PassiveListModal
       icon: {fileID: 5779557562189929939, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Pass\u2026"
@@ -2239,7 +2291,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]"}'
       paths: []
-      tabWidth: 58
+      tabWidth: 57
       name: PrefabsGroup
       icon: {fileID: -1575620288787673585, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Pref\u2026"
@@ -2310,7 +2362,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]"}'
       paths: []
-      tabWidth: 62
+      tabWidth: 61
       name: PassiveItem
       icon: {fileID: -7943610116366264489, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Pass\u2026"
@@ -2399,7 +2451,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]"}'
       paths: []
-      tabWidth: 62
+      tabWidth: 61
       name: PassiveItem
       icon: {fileID: -7943610116366264489, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Pass\u2026"
@@ -2485,7 +2537,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]"}'
       paths: []
-      tabWidth: 62
+      tabWidth: 61
       name: PassiveListModal
       icon: {fileID: 5779557562189929939, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Pass\u2026"
@@ -2574,7 +2626,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]"}'
       paths: []
-      tabWidth: 62
+      tabWidth: 61
       name: PassiveItem
       icon: {fileID: -7943610116366264489, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Pass\u2026"
@@ -2664,7 +2716,7 @@ MonoBehaviour:
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]/Image[0]/Image
         (1)[0]/PassiveItemPrefab[0]/Text[0]"}'
       paths: []
-      tabWidth: 47
+      tabWidth: 50
       name: Text
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: Text
@@ -2757,7 +2809,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/PassiveItem[0]"}'
       paths: []
-      tabWidth: 62
+      tabWidth: 61
       name: PassiveItem
       icon: {fileID: -7943610116366264489, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Pass\u2026"
@@ -2846,7 +2898,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/EnemyFocusSkipUI[0]"}'
       paths: []
-      tabWidth: 67
+      tabWidth: 66
       name: EnemyFocusSkipUI
       icon: {fileID: 5779557562189929939, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Enem\u2026"
@@ -3076,7 +3128,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/IntroModal[0]"}'
       paths: []
-      tabWidth: 54
+      tabWidth: 53
       name: IntroModal
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Intr\u2026"
@@ -3192,7 +3244,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/EnemyFocusSkipUI[0]"}'
       paths: []
-      tabWidth: 67
+      tabWidth: 66
       name: EnemyFocusSkipUI
       icon: {fileID: 5779557562189929939, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Enem\u2026"
@@ -3312,7 +3364,7 @@ MonoBehaviour:
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/CombatUiCanvas[0]/Game
         Render View[0]"}'
       paths: []
-      tabWidth: 68
+      tabWidth: 67
       name: Game Render View
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Game\u2026"
@@ -3417,14 +3469,14 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]"}'
       paths: []
-      tabWidth: 56
+      tabWidth: 55
       name: SplitScreenUI
       icon: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Spli\u2026"
       filterString: 
       newTab: 0
       scrollPosition: 0
-      isSelected: 0
+      isSelected: 1
       allCollapsed: 0
       runtimeFoldouts: 
       runtimeMultiComponents: []
@@ -3494,14 +3546,14 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]"}'
       paths: []
-      tabWidth: 56
+      tabWidth: 55
       name: SplitScreenUI
       icon: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Spli\u2026"
       filterString: 
       newTab: 0
       scrollPosition: 0
-      isSelected: 0
+      isSelected: 1
       allCollapsed: 0
       runtimeFoldouts: 
       runtimeMultiComponents: []
@@ -3571,14 +3623,14 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]"}'
       paths: []
-      tabWidth: 56
+      tabWidth: 55
       name: SplitScreenUI
       icon: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Spli\u2026"
       filterString: 
       newTab: 0
       scrollPosition: 0
-      isSelected: 0
+      isSelected: 1
       allCollapsed: 0
       runtimeFoldouts: 
       runtimeMultiComponents: []
@@ -3648,7 +3700,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/EnemyFocusSkipUI[0]"}'
       paths: []
-      tabWidth: 67
+      tabWidth: 66
       name: EnemyFocusSkipUI
       icon: {fileID: 5779557562189929939, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Enem\u2026"
@@ -3765,7 +3817,7 @@ MonoBehaviour:
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/CombatUiCanvas[0]/Game
         Render View[0]"}'
       paths: []
-      tabWidth: 68
+      tabWidth: 67
       name: Game Render View
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Game\u2026"
@@ -3876,14 +3928,14 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]"}'
       paths: []
-      tabWidth: 56
+      tabWidth: 55
       name: SplitScreenUI
       icon: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Spli\u2026"
       filterString: 
       newTab: 0
       scrollPosition: 0
-      isSelected: 0
+      isSelected: 1
       allCollapsed: 0
       runtimeFoldouts: 
       runtimeMultiComponents: []
@@ -3957,7 +4009,7 @@ MonoBehaviour:
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/CombatUiCanvas[0]/Game
         Render View[0]"}'
       paths: []
-      tabWidth: 68
+      tabWidth: 67
       name: Game Render View
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Game\u2026"
@@ -4065,14 +4117,14 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]"}'
       paths: []
-      tabWidth: 56
+      tabWidth: 55
       name: SplitScreenUI
       icon: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Spli\u2026"
       filterString: 
       newTab: 0
       scrollPosition: 0
-      isSelected: 0
+      isSelected: 1
       allCollapsed: 0
       runtimeFoldouts: 
       runtimeMultiComponents: []
@@ -4143,28 +4195,27 @@ MonoBehaviour:
         - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]"}'
         prefab: 0
       owner: {fileID: 0}
-    - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"RenderTexture
-        Controller[0]"}'
+    - path: '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/LeftBackground[0]"}'
       paths: []
-      tabWidth: 64
-      name: RenderTexture Controller
-      icon: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
-      shortName: "Rend\u2026"
+      tabWidth: 57
+      name: LeftBackground
+      icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Left\u2026"
       filterString: 
       newTab: 0
       scrollPosition: 0
-      isSelected: 0
+      isSelected: 1
       allCollapsed: 0
       runtimeFoldouts: 
       runtimeMultiComponents: []
       tabTextContent:
-        m_Text: "Rend\u2026"
+        m_Text: "Left\u2026"
         m_Image: {fileID: 0}
         m_Tooltip: 
-        m_TextWithWhitespace: "Rend\u2026\u200B"
+        m_TextWithWhitespace: "Left\u2026\u200B"
       multiEditMode: 0
       locked: 0
-      hasPreview: 0
+      hasPreview: 1
       previewHeight: 13
       debug: 0
       filtering: 0
@@ -4208,8 +4259,8 @@ MonoBehaviour:
         focusAfter: 0
         awaitingScroll: 0
         hidden: 0
-        componentName: transform
-        niceComponentName: transform
+        componentName: recttransform
+        niceComponentName: rect transform
       - index: 0
         component: {fileID: 0}
         missingComponentID: -1
@@ -4217,8 +4268,8 @@ MonoBehaviour:
         focusAfter: 0
         awaitingScroll: 0
         hidden: 0
-        componentName: rendertextureinputmanager
-        niceComponentName: render texture input manager
+        componentName: canvasrenderer
+        niceComponentName: canvas renderer
       - index: 0
         component: {fileID: 0}
         missingComponentID: -1
@@ -4226,55 +4277,54 @@ MonoBehaviour:
         focusAfter: 0
         awaitingScroll: 0
         hidden: 0
-        componentName: raycasthovermanager
-        niceComponentName: raycast hover manager
+        componentName: image
+        niceComponentName: image
       historyPaths:
       - paths:
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"RenderTexture
-          Controller[0]"}'
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/LeftBackground[0]"}'
         prefab: 0
       - paths:
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"Camera Limits[0]"}'
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/Btn_Passives[0]"}'
         prefab: 0
       - paths:
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"GameManager[0]/PathVisualizer[0]"}'
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/RightModal[0]"}'
         prefab: 0
       - paths:
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"GameManager[0]/_HIghlightPool[0]"}'
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/RightBackground[0]"}'
         prefab: 0
       - paths:
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"GameManager[0]/_placementManager[0]"}'
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]"}'
         prefab: 0
       - paths:
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"GameManager[0]/_LevelBuilder[0]"}'
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/IntroModal[0]"}'
         prefab: 0
       - paths:
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"GameManager[0]/GameLogger[0]"}'
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]"}'
         prefab: 0
       - paths:
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"GameManager[0]/PlayerControler[0]"}'
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/EnemyFocusSkipUI[0]"}'
         prefab: 0
       - paths:
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"GameManager[0]/CombatManager[0]"}'
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/ConditionIcon[0]/Icon[0]/TurnText[0]"}'
         prefab: 0
       - paths:
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"GameManager[0]/TurnManager[0]"}'
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/ConditionIcon[0]/Icon[0]/Image[0]"}'
         prefab: 0
       - paths:
-        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"GameManager[0]/GridManager[0]"}'
+        - '{"sceneGUID":"8e33882f7fba925478cbd19e61365198","path":"UIManager[0]/MainCanvas[0]/SplitScreenUI[0]/PassiveListModal[0]/PrefabsGroup[0]/ConditionIcon[0]"}'
         prefab: 0
       owner: {fileID: 0}
     closedTabs: []
     playModeTransforms: []
     historyAssets:
     - assetGUIDs:
-      - a30103f890e517a41b45396447311ad4
-    - assetGUIDs:
-      - aae55989abe44784197dd80958fdd0f5
-    - assetGUIDs:
       - 8e33882f7fba925478cbd19e61365198
     - assetGUIDs:
       - 8105016687592461f977c054a80ce2f2
+    - assetGUIDs:
+      - a30103f890e517a41b45396447311ad4
+    - assetGUIDs:
+      - aae55989abe44784197dd80958fdd0f5
     - assetGUIDs:
       - fec72274543004aff8768fda2a73da01
     - assetGUIDs:
@@ -4289,11 +4339,11 @@ MonoBehaviour:
       - 5b57ca8cfbde6b344adfc40ad11d7841
     - assetGUIDs:
       - 41ac0598862a52a4388b1cf64820d50f
-    targetObject: {fileID: 11500000, guid: a30103f890e517a41b45396447311ad4, type: 3}
+    targetObject: {fileID: 102900000, guid: 8e33882f7fba925478cbd19e61365198, type: 3}
     targetObjects: []
-    lastSelectedAsset: Assets/TheraBytes/BetterUI/Editor/Scripts/Navigation/InputModuleAdditions/AdditionForRewiredStandaloneInputModuleEditor.cs
+    lastSelectedAsset: Assets/Celestial-Cross/Scenes/Teste 1.unity
     lastClickedTab: 0
-    previousTab: 35
+    previousTab: 25
   - tracker:
       mostClicked: []
       recentlyClicked: []
@@ -4301,7 +4351,7 @@ MonoBehaviour:
       recentlyClickedContents: []
     sceneGUID: e625a3e42d710e542b4c986f567fb23b
     sceneName: UnitScene
-    lastSaveTimePrint: 11:39 PM (June 17, 2026)
+    lastSaveTimePrint: 03:10 PM (June 18, 2026)
     gracePeriod: 3
     activeIndex: 0
     checkingToLoad: 0
@@ -4315,13 +4365,13 @@ MonoBehaviour:
     scrollPosition: {x: 0, y: 0}
     toolbarScrollPosition: {x: 0, y: 0}
     rawUserHeight: 0
-    lastValidTabWidth: 61
+    lastValidTabWidth: 65
     alreadyCalculatedHeight: 0
     lastKnownHeight: 0
     tabs:
     - path: 
       paths: []
-      tabWidth: 58
+      tabWidth: 62
       name: 
       icon: {fileID: 0}
       shortName: New Tab
@@ -4382,6 +4432,14 @@ MonoBehaviour:
     playModeTransforms: []
     historyAssets:
     - assetGUIDs:
+      - a30103f890e517a41b45396447311ad4
+    - assetGUIDs:
+      - aae55989abe44784197dd80958fdd0f5
+    - assetGUIDs:
+      - 8e33882f7fba925478cbd19e61365198
+    - assetGUIDs:
+      - 8105016687592461f977c054a80ce2f2
+    - assetGUIDs:
       - fec72274543004aff8768fda2a73da01
     - assetGUIDs:
       - 8e7c1c09c33d12647bde5c4458b82c61
@@ -4395,22 +4453,11 @@ MonoBehaviour:
       - 5b57ca8cfbde6b344adfc40ad11d7841
     - assetGUIDs:
       - 41ac0598862a52a4388b1cf64820d50f
-    - assetGUIDs:
-      - ac296acd9831fe642a5514ed8cee5fea
-    - assetGUIDs:
-      - 98cd48ef67a5b704098e30547ba2068d
-    - assetGUIDs:
-      - 67ec913167e69cc4989a746ba58eede0
-      - 98cd48ef67a5b704098e30547ba2068d
-      - 8e7c1c09c33d12647bde5c4458b82c61
-      - bc60dce0dd546f146bec84d86641d689
-    - assetGUIDs:
-      - bc60dce0dd546f146bec84d86641d689
-    targetObject: {fileID: 11500000, guid: fec72274543004aff8768fda2a73da01, type: 3}
+    targetObject: {fileID: 11500000, guid: a30103f890e517a41b45396447311ad4, type: 3}
     targetObjects: []
-    lastSelectedAsset: Packages/com.unity.purchasing/Runtime/Security/Asn1Processor/Asn1Node.cs
+    lastSelectedAsset: Assets/TheraBytes/BetterUI/Editor/Scripts/Navigation/InputModuleAdditions/AdditionForRewiredStandaloneInputModuleEditor.cs
     lastClickedTab: -1
-    previousTab: 0
+    previousTab: 25
   - tracker:
       mostClicked:
       - paths:
@@ -4453,7 +4500,7 @@ MonoBehaviour:
       recentlyClickedContents: []
     sceneGUID: 3bea51b30b1a74742b70e245c7a07f9c
     sceneName: ShopScene
-    lastSaveTimePrint: 10:33 PM (June 17, 2026)
+    lastSaveTimePrint: 03:01 PM (June 18, 2026)
     gracePeriod: 3
     activeIndex: 0
     checkingToLoad: 0
@@ -4467,13 +4514,13 @@ MonoBehaviour:
     scrollPosition: {x: 0, y: 0}
     toolbarScrollPosition: {x: 0, y: 0}
     rawUserHeight: 0
-    lastValidTabWidth: 154
+    lastValidTabWidth: 163
     alreadyCalculatedHeight: 0
     lastKnownHeight: 0
     tabs:
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/HoleScrollingBackground[0]"}'
       paths: []
-      tabWidth: 151
+      tabWidth: 160
       name: HoleScrollingBackground
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: HoleScrollingBackground
@@ -4608,6 +4655,14 @@ MonoBehaviour:
     playModeTransforms: []
     historyAssets:
     - assetGUIDs:
+      - a30103f890e517a41b45396447311ad4
+    - assetGUIDs:
+      - aae55989abe44784197dd80958fdd0f5
+    - assetGUIDs:
+      - 8e33882f7fba925478cbd19e61365198
+    - assetGUIDs:
+      - 8105016687592461f977c054a80ce2f2
+    - assetGUIDs:
       - fec72274543004aff8768fda2a73da01
     - assetGUIDs:
       - 8e7c1c09c33d12647bde5c4458b82c61
@@ -4621,22 +4676,11 @@ MonoBehaviour:
       - 5b57ca8cfbde6b344adfc40ad11d7841
     - assetGUIDs:
       - 41ac0598862a52a4388b1cf64820d50f
-    - assetGUIDs:
-      - ac296acd9831fe642a5514ed8cee5fea
-    - assetGUIDs:
-      - 98cd48ef67a5b704098e30547ba2068d
-    - assetGUIDs:
-      - 67ec913167e69cc4989a746ba58eede0
-      - 98cd48ef67a5b704098e30547ba2068d
-      - 8e7c1c09c33d12647bde5c4458b82c61
-      - bc60dce0dd546f146bec84d86641d689
-    - assetGUIDs:
-      - bc60dce0dd546f146bec84d86641d689
-    targetObject: {fileID: 11400000, guid: a9644b9cf968da748bbf12a4c0810c07, type: 2}
+    targetObject: {fileID: 11500000, guid: a30103f890e517a41b45396447311ad4, type: 3}
     targetObjects: []
-    lastSelectedAsset: Assets/CoInspector/Editor/Core/Helpers/MissingScriptManager.asset
+    lastSelectedAsset: Assets/TheraBytes/BetterUI/Editor/Scripts/Navigation/InputModuleAdditions/AdditionForRewiredStandaloneInputModuleEditor.cs
     lastClickedTab: -1
-    previousTab: 0
+    previousTab: 25
   - tracker:
       mostClicked: []
       recentlyClicked: []
@@ -4644,11 +4688,11 @@ MonoBehaviour:
       recentlyClickedContents: []
     sceneGUID: 99c9720ab356a0642a771bea13969a05
     sceneName: SampleScene
-    lastSaveTimePrint: 01:34 PM (June 17, 2026)
+    lastSaveTimePrint: 03:01 PM (June 18, 2026)
     gracePeriod: 3
     activeIndex: 0
     checkingToLoad: 0
-    assetsCollapsed: 0
+    assetsCollapsed: 1
     lockedAsset: 0
     maximizedAssetView: 0
     showImportSettings: 1
@@ -4658,13 +4702,13 @@ MonoBehaviour:
     scrollPosition: {x: 0, y: 0}
     toolbarScrollPosition: {x: 0, y: 0}
     rawUserHeight: 0
-    lastValidTabWidth: 64
+    lastValidTabWidth: 65
     alreadyCalculatedHeight: 0
     lastKnownHeight: 0
     tabs:
     - path: 
       paths: []
-      tabWidth: 61
+      tabWidth: 62
       name: 
       icon: {fileID: 0}
       shortName: New Tab
@@ -4725,7 +4769,19 @@ MonoBehaviour:
     playModeTransforms: []
     historyAssets:
     - assetGUIDs:
+      - a30103f890e517a41b45396447311ad4
+    - assetGUIDs:
+      - aae55989abe44784197dd80958fdd0f5
+    - assetGUIDs:
+      - 8e33882f7fba925478cbd19e61365198
+    - assetGUIDs:
+      - 8105016687592461f977c054a80ce2f2
+    - assetGUIDs:
       - fec72274543004aff8768fda2a73da01
+    - assetGUIDs:
+      - 8e7c1c09c33d12647bde5c4458b82c61
+    - assetGUIDs:
+      - d115e0bc68e6adf42a7c6f7c6d914978
     - assetGUIDs:
       - 67ec913167e69cc4989a746ba58eede0
     - assetGUIDs:
@@ -4734,26 +4790,11 @@ MonoBehaviour:
       - 5b57ca8cfbde6b344adfc40ad11d7841
     - assetGUIDs:
       - 41ac0598862a52a4388b1cf64820d50f
-    - assetGUIDs:
-      - ac296acd9831fe642a5514ed8cee5fea
-    - assetGUIDs:
-      - 98cd48ef67a5b704098e30547ba2068d
-    - assetGUIDs:
-      - 67ec913167e69cc4989a746ba58eede0
-      - 98cd48ef67a5b704098e30547ba2068d
-      - 8e7c1c09c33d12647bde5c4458b82c61
-      - bc60dce0dd546f146bec84d86641d689
-    - assetGUIDs:
-      - bc60dce0dd546f146bec84d86641d689
-    - assetGUIDs:
-      - 8e7c1c09c33d12647bde5c4458b82c61
-    - assetGUIDs:
-      - 762c9f2f48d0df0408cc3dae952e021e
-    targetObject: {fileID: 11500000, guid: fec72274543004aff8768fda2a73da01, type: 3}
+    targetObject: {fileID: 11500000, guid: a30103f890e517a41b45396447311ad4, type: 3}
     targetObjects: []
-    lastSelectedAsset: Packages/com.unity.purchasing/Runtime/Security/Asn1Processor/Asn1Node.cs
+    lastSelectedAsset: Assets/TheraBytes/BetterUI/Editor/Scripts/Navigation/InputModuleAdditions/AdditionForRewiredStandaloneInputModuleEditor.cs
     lastClickedTab: -1
-    previousTab: 0
+    previousTab: 25
   - tracker:
       mostClicked: []
       recentlyClicked: []
@@ -4761,11 +4802,11 @@ MonoBehaviour:
       recentlyClickedContents: []
     sceneGUID: 589ee8b52c987334996a55c9d02cc3ce
     sceneName: RestScene
-    lastSaveTimePrint: 01:35 PM (June 17, 2026)
+    lastSaveTimePrint: 03:01 PM (June 18, 2026)
     gracePeriod: 3
     activeIndex: 0
     checkingToLoad: 0
-    assetsCollapsed: 0
+    assetsCollapsed: 1
     lockedAsset: 0
     maximizedAssetView: 0
     showImportSettings: 1
@@ -4775,13 +4816,13 @@ MonoBehaviour:
     scrollPosition: {x: 0, y: 0}
     toolbarScrollPosition: {x: 0, y: 0}
     rawUserHeight: 0
-    lastValidTabWidth: 64
+    lastValidTabWidth: 65
     alreadyCalculatedHeight: 0
     lastKnownHeight: 0
     tabs:
     - path: 
       paths: []
-      tabWidth: 61
+      tabWidth: 62
       name: 
       icon: {fileID: 0}
       shortName: New Tab
@@ -4842,7 +4883,19 @@ MonoBehaviour:
     playModeTransforms: []
     historyAssets:
     - assetGUIDs:
+      - a30103f890e517a41b45396447311ad4
+    - assetGUIDs:
+      - aae55989abe44784197dd80958fdd0f5
+    - assetGUIDs:
+      - 8e33882f7fba925478cbd19e61365198
+    - assetGUIDs:
+      - 8105016687592461f977c054a80ce2f2
+    - assetGUIDs:
       - fec72274543004aff8768fda2a73da01
+    - assetGUIDs:
+      - 8e7c1c09c33d12647bde5c4458b82c61
+    - assetGUIDs:
+      - d115e0bc68e6adf42a7c6f7c6d914978
     - assetGUIDs:
       - 67ec913167e69cc4989a746ba58eede0
     - assetGUIDs:
@@ -4851,26 +4904,11 @@ MonoBehaviour:
       - 5b57ca8cfbde6b344adfc40ad11d7841
     - assetGUIDs:
       - 41ac0598862a52a4388b1cf64820d50f
-    - assetGUIDs:
-      - ac296acd9831fe642a5514ed8cee5fea
-    - assetGUIDs:
-      - 98cd48ef67a5b704098e30547ba2068d
-    - assetGUIDs:
-      - 67ec913167e69cc4989a746ba58eede0
-      - 98cd48ef67a5b704098e30547ba2068d
-      - 8e7c1c09c33d12647bde5c4458b82c61
-      - bc60dce0dd546f146bec84d86641d689
-    - assetGUIDs:
-      - bc60dce0dd546f146bec84d86641d689
-    - assetGUIDs:
-      - 8e7c1c09c33d12647bde5c4458b82c61
-    - assetGUIDs:
-      - 762c9f2f48d0df0408cc3dae952e021e
-    targetObject: {fileID: 11500000, guid: fec72274543004aff8768fda2a73da01, type: 3}
+    targetObject: {fileID: 11500000, guid: a30103f890e517a41b45396447311ad4, type: 3}
     targetObjects: []
-    lastSelectedAsset: Packages/com.unity.purchasing/Runtime/Security/Asn1Processor/Asn1Node.cs
+    lastSelectedAsset: Assets/TheraBytes/BetterUI/Editor/Scripts/Navigation/InputModuleAdditions/AdditionForRewiredStandaloneInputModuleEditor.cs
     lastClickedTab: -1
-    previousTab: 0
+    previousTab: 25
   - tracker:
       mostClicked: []
       recentlyClicked: []
@@ -4878,11 +4916,11 @@ MonoBehaviour:
       recentlyClickedContents: []
     sceneGUID: 3a34bb65e0b98494faa8fe5f88d53f86
     sceneName: MainMenu
-    lastSaveTimePrint: 01:35 PM (June 17, 2026)
+    lastSaveTimePrint: 03:01 PM (June 18, 2026)
     gracePeriod: 3
     activeIndex: 0
     checkingToLoad: 0
-    assetsCollapsed: 0
+    assetsCollapsed: 1
     lockedAsset: 0
     maximizedAssetView: 0
     showImportSettings: 1
@@ -4892,13 +4930,13 @@ MonoBehaviour:
     scrollPosition: {x: 0, y: 0}
     toolbarScrollPosition: {x: 0, y: 0}
     rawUserHeight: 0
-    lastValidTabWidth: 64
+    lastValidTabWidth: 65
     alreadyCalculatedHeight: 0
     lastKnownHeight: 0
     tabs:
     - path: 
       paths: []
-      tabWidth: 61
+      tabWidth: 62
       name: 
       icon: {fileID: 0}
       shortName: New Tab
@@ -4959,7 +4997,19 @@ MonoBehaviour:
     playModeTransforms: []
     historyAssets:
     - assetGUIDs:
+      - a30103f890e517a41b45396447311ad4
+    - assetGUIDs:
+      - aae55989abe44784197dd80958fdd0f5
+    - assetGUIDs:
+      - 8e33882f7fba925478cbd19e61365198
+    - assetGUIDs:
+      - 8105016687592461f977c054a80ce2f2
+    - assetGUIDs:
       - fec72274543004aff8768fda2a73da01
+    - assetGUIDs:
+      - 8e7c1c09c33d12647bde5c4458b82c61
+    - assetGUIDs:
+      - d115e0bc68e6adf42a7c6f7c6d914978
     - assetGUIDs:
       - 67ec913167e69cc4989a746ba58eede0
     - assetGUIDs:
@@ -4968,26 +5018,11 @@ MonoBehaviour:
       - 5b57ca8cfbde6b344adfc40ad11d7841
     - assetGUIDs:
       - 41ac0598862a52a4388b1cf64820d50f
-    - assetGUIDs:
-      - ac296acd9831fe642a5514ed8cee5fea
-    - assetGUIDs:
-      - 98cd48ef67a5b704098e30547ba2068d
-    - assetGUIDs:
-      - 67ec913167e69cc4989a746ba58eede0
-      - 98cd48ef67a5b704098e30547ba2068d
-      - 8e7c1c09c33d12647bde5c4458b82c61
-      - bc60dce0dd546f146bec84d86641d689
-    - assetGUIDs:
-      - bc60dce0dd546f146bec84d86641d689
-    - assetGUIDs:
-      - 8e7c1c09c33d12647bde5c4458b82c61
-    - assetGUIDs:
-      - 762c9f2f48d0df0408cc3dae952e021e
-    targetObject: {fileID: 11500000, guid: fec72274543004aff8768fda2a73da01, type: 3}
+    targetObject: {fileID: 11500000, guid: a30103f890e517a41b45396447311ad4, type: 3}
     targetObjects: []
-    lastSelectedAsset: Packages/com.unity.purchasing/Runtime/Security/Asn1Processor/Asn1Node.cs
+    lastSelectedAsset: Assets/TheraBytes/BetterUI/Editor/Scripts/Navigation/InputModuleAdditions/AdditionForRewiredStandaloneInputModuleEditor.cs
     lastClickedTab: -1
-    previousTab: 0
+    previousTab: 25
   - tracker:
       mostClicked: []
       recentlyClicked: []
@@ -4995,11 +5030,11 @@ MonoBehaviour:
       recentlyClickedContents: []
     sceneGUID: b64aa4f30b1fd1548b757958394826b6
     sceneName: DialogueScene
-    lastSaveTimePrint: 01:35 PM (June 17, 2026)
+    lastSaveTimePrint: 03:01 PM (June 18, 2026)
     gracePeriod: 3
     activeIndex: 0
     checkingToLoad: 0
-    assetsCollapsed: 0
+    assetsCollapsed: 1
     lockedAsset: 0
     maximizedAssetView: 0
     showImportSettings: 1
@@ -5009,13 +5044,13 @@ MonoBehaviour:
     scrollPosition: {x: 0, y: 0}
     toolbarScrollPosition: {x: 0, y: 0}
     rawUserHeight: 0
-    lastValidTabWidth: 64
+    lastValidTabWidth: 65
     alreadyCalculatedHeight: 0
     lastKnownHeight: 0
     tabs:
     - path: 
       paths: []
-      tabWidth: 61
+      tabWidth: 62
       name: 
       icon: {fileID: 0}
       shortName: New Tab
@@ -5076,7 +5111,19 @@ MonoBehaviour:
     playModeTransforms: []
     historyAssets:
     - assetGUIDs:
+      - a30103f890e517a41b45396447311ad4
+    - assetGUIDs:
+      - aae55989abe44784197dd80958fdd0f5
+    - assetGUIDs:
+      - 8e33882f7fba925478cbd19e61365198
+    - assetGUIDs:
+      - 8105016687592461f977c054a80ce2f2
+    - assetGUIDs:
       - fec72274543004aff8768fda2a73da01
+    - assetGUIDs:
+      - 8e7c1c09c33d12647bde5c4458b82c61
+    - assetGUIDs:
+      - d115e0bc68e6adf42a7c6f7c6d914978
     - assetGUIDs:
       - 67ec913167e69cc4989a746ba58eede0
     - assetGUIDs:
@@ -5085,26 +5132,11 @@ MonoBehaviour:
       - 5b57ca8cfbde6b344adfc40ad11d7841
     - assetGUIDs:
       - 41ac0598862a52a4388b1cf64820d50f
-    - assetGUIDs:
-      - ac296acd9831fe642a5514ed8cee5fea
-    - assetGUIDs:
-      - 98cd48ef67a5b704098e30547ba2068d
-    - assetGUIDs:
-      - 67ec913167e69cc4989a746ba58eede0
-      - 98cd48ef67a5b704098e30547ba2068d
-      - 8e7c1c09c33d12647bde5c4458b82c61
-      - bc60dce0dd546f146bec84d86641d689
-    - assetGUIDs:
-      - bc60dce0dd546f146bec84d86641d689
-    - assetGUIDs:
-      - 8e7c1c09c33d12647bde5c4458b82c61
-    - assetGUIDs:
-      - 762c9f2f48d0df0408cc3dae952e021e
-    targetObject: {fileID: 11500000, guid: fec72274543004aff8768fda2a73da01, type: 3}
+    targetObject: {fileID: 11500000, guid: a30103f890e517a41b45396447311ad4, type: 3}
     targetObjects: []
-    lastSelectedAsset: Packages/com.unity.purchasing/Runtime/Security/Asn1Processor/Asn1Node.cs
+    lastSelectedAsset: Assets/TheraBytes/BetterUI/Editor/Scripts/Navigation/InputModuleAdditions/AdditionForRewiredStandaloneInputModuleEditor.cs
     lastClickedTab: -1
-    previousTab: 0
+    previousTab: 25
   - tracker:
       mostClicked: []
       recentlyClicked: []
@@ -5558,6 +5590,6 @@ MonoBehaviour:
     lastSelectedAsset: 
     lastClickedTab: -1
     previousTab: 0
-  tipsShown: 01000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  tipsShown: 01000000010000000000000001000000000000000000000000000000000000000100000000000000010000000100000000000000010000000100000000000000010000000000000001000000000000000000000000000000010000000000000001000000000000000100000001000000000000000100000000000000010000000100000001000000000000000100000001000000000000000000000000000000010000000000000001000000000000000000000000000000
   playModeStartScene: {}
   enteringPlayMode: 0
