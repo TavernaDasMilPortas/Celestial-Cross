@@ -10,7 +10,7 @@ namespace CelestialCross.EditorTools
 {
     public class GachaAnimationBuilder : OdinEditorWindow
     {
-        [MenuItem("Celestial Cross/4. Tools/Misc/Gacha Animation Builder")]
+        [MenuItem("Celestial Cross/3. UI Builders/Gacha Animation Builder")]
         private static void OpenWindow()
         {
             GetWindow<GachaAnimationBuilder>("Gacha Builder").Show();
@@ -280,6 +280,94 @@ namespace CelestialCross.EditorTools
             else
             {
                 Debug.LogWarning("Controlador de Animação não encontrado na cena atual!");
+            }
+        }
+
+        [Button("5. Full Update Supreme Reveal", ButtonSizes.Large)]
+        [GUIColor(1f, 0.5f, 0.8f)]
+        private void ApplySupremeRevealUpdate()
+        {
+            GachaAnimationController controller = FindObjectOfType<GachaAnimationController>(true);
+            if (controller != null)
+            {
+                if (controller.supremeRevealContainer == null)
+                {
+                    GameObject supremeContainerGo = new GameObject("SupremeRevealContainer", typeof(RectTransform), typeof(CanvasGroup));
+                    supremeContainerGo.transform.SetParent(controller.transform, false);
+                    RectTransform supremeRect = supremeContainerGo.GetComponent<RectTransform>();
+                    supremeRect.anchorMin = Vector2.zero;
+                    supremeRect.anchorMax = Vector2.one;
+                    supremeRect.sizeDelta = Vector2.zero;
+                    supremeContainerGo.SetActive(false);
+                    controller.supremeRevealContainer = supremeRect;
+
+                    GameObject silhouetteGo = new GameObject("SupremeSilhouetteImage", typeof(RectTransform), typeof(Image));
+                    silhouetteGo.transform.SetParent(supremeContainerGo.transform, false);
+                    RectTransform silhouetteRect = silhouetteGo.GetComponent<RectTransform>();
+                    silhouetteRect.anchorMin = new Vector2(0.5f, 0.5f);
+                    silhouetteRect.anchorMax = new Vector2(0.5f, 0.5f);
+                    silhouetteRect.sizeDelta = new Vector2(800, 1000);
+                    controller.supremeSilhouetteImage = silhouetteGo.GetComponent<Image>();
+
+                    GameObject splashGo = new GameObject("SupremeSplashImage", typeof(RectTransform), typeof(Image));
+                    splashGo.transform.SetParent(supremeContainerGo.transform, false);
+                    RectTransform splashRect = splashGo.GetComponent<RectTransform>();
+                    splashRect.anchorMin = new Vector2(0.5f, 0.5f);
+                    splashRect.anchorMax = new Vector2(0.5f, 0.5f);
+                    splashRect.sizeDelta = new Vector2(800, 1000);
+                    var splashImage = splashGo.GetComponent<Image>();
+                    splashImage.color = new Color(1f, 1f, 1f, 0f);
+                    controller.supremeSplashImage = splashImage;
+
+                    GameObject nameTxtGo = new GameObject("SupremeNameText", typeof(RectTransform), typeof(TextMeshProUGUI));
+                    nameTxtGo.transform.SetParent(supremeContainerGo.transform, false);
+                    RectTransform nameTxtRect = nameTxtGo.GetComponent<RectTransform>();
+                    nameTxtRect.anchorMin = new Vector2(0.5f, 0.2f);
+                    nameTxtRect.anchorMax = new Vector2(0.5f, 0.2f);
+                    nameTxtRect.sizeDelta = new Vector2(1000, 100);
+                    var tmpro = nameTxtGo.GetComponent<TextMeshProUGUI>();
+                    tmpro.text = "SUPREME CHARACTER";
+                    tmpro.alignment = TextAlignmentOptions.Center;
+                    tmpro.fontSize = 72;
+                    tmpro.fontStyle = FontStyles.Bold | FontStyles.Italic;
+                    tmpro.color = new Color(1f, 0.2f, 0.2f, 0f); // Reddish alpha 0
+                    controller.supremeNameText = tmpro;
+
+                    if (controller.whiteFlashPanel != null)
+                    {
+                        supremeContainerGo.transform.SetSiblingIndex(controller.whiteFlashPanel.transform.GetSiblingIndex());
+                    }
+
+                    // Move buttons to the end
+                    if (controller.btnSkip != null) controller.btnSkip.transform.SetAsLastSibling();
+                    if (controller.btnContinue != null) controller.btnContinue.transform.SetAsLastSibling();
+                }
+
+                if (controller.silhouetteMaterial == null)
+                {
+                    Material mat = AssetDatabase.LoadAssetAtPath<Material>("Assets/Celestial-Cross/Shaders/UI_Silhouette_Mat.mat");
+                    if (mat == null)
+                    {
+                        Shader shader = Shader.Find("UI/Silhouette");
+                        if (shader != null)
+                        {
+                            mat = new Material(shader);
+                            AssetDatabase.CreateAsset(mat, "Assets/Celestial-Cross/Shaders/UI_Silhouette_Mat.mat");
+                        }
+                        else
+                        {
+                            Debug.LogWarning("Shader UI/Silhouette not found. Please create it first.");
+                        }
+                    }
+                    controller.silhouetteMaterial = mat;
+                }
+
+                EditorUtility.SetDirty(controller);
+                Debug.Log("Supreme Reveal Update: Modificações aplicadas!");
+            }
+            else
+            {
+                Debug.LogError("GachaAnimationController não encontrado!");
             }
         }
     }

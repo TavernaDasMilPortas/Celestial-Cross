@@ -69,6 +69,7 @@ public class Account
     public Dictionary<string, int> NodeCompletionCounts = new Dictionary<string, int>();
     public Dictionary<string, string> NodeLastCompletionTime = new Dictionary<string, string>();
     public List<string> UnlockedDiaryNodeIDs = new List<string>();
+    public List<string> PendingUnlockAnimations = new List<string>();
 
     [Header("Meta")]
     public string LastSaveTime;
@@ -93,6 +94,7 @@ public class Account
         NodeCompletionCounts = new Dictionary<string, int>();
         NodeLastCompletionTime = new Dictionary<string, string>();
         UnlockedDiaryNodeIDs = new List<string>();
+        PendingUnlockAnimations = new List<string>();
         OwnedItems = new List<ItemQuantity>();
     }
 
@@ -111,6 +113,7 @@ public class Account
         NodeCompletionCounts ??= new Dictionary<string, int>();
         NodeLastCompletionTime ??= new Dictionary<string, string>();
         UnlockedDiaryNodeIDs ??= new List<string>();
+        PendingUnlockAnimations ??= new List<string>();
         OwnedItems ??= new List<ItemQuantity>();
 
         // Migrar units legacy

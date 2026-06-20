@@ -61,13 +61,13 @@ Shader "UI/TutorialSpotlight"
             struct v2f
             {
                 float4 vertex   : SV_POSITION;
-                fixed4 color    : COLOR;
+                half4 color     : COLOR;
                 float2 texcoord : TEXCOORD0;
                 float4 worldPosition : TEXCOORD1;
             };
 
             sampler2D _MainTex;
-            fixed4 _Color;
+            half4 _Color;
             float4 _HoleCenter; // xy = center in screen pixels, zw = unused
             float4 _HoleSize;   // xy = width/height in pixels
             float _Feather;

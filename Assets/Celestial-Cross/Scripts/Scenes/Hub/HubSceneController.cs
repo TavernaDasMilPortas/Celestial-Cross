@@ -210,7 +210,31 @@ namespace CelestialCross.Scenes.Hub
                 if (CelestialCross.System.ProgressionService.Instance != null)
                     isLocked = !CelestialCross.System.ProgressionService.Instance.IsChapterUnlocked(chapter);
 
+                bool playUnlockAnim = false;
+                if (!isLocked && completed < total)
+                {
+                    if (account != null && !account.PendingUnlockAnimations.Contains(chapter.name))
+                    {
+                        playUnlockAnim = true;
+                        isLocked = true; // Força inicial visual de trancado para purificar
+                    }
+                }
+
                 card.SetupAsChapter(chapter, completed, total, isLocked);
+
+                // Lógica de animação de desbloqueio automático
+                if (playUnlockAnim)
+                {
+                    card.PlayUnlockAnimation(() => 
+                    {
+                        account.PendingUnlockAnimations.Add(chapter.name);
+                        AccountManager.Instance.SaveAccount();
+                    });
+                }
+                else if (!isLocked && account != null && !account.PendingUnlockAnimations.Contains(chapter.name))
+                {
+                    account.PendingUnlockAnimations.Add(chapter.name); // Retroativo
+                }
 
                 card.buttonComponent.onClick.AddListener(() => 
                 {
@@ -234,6 +258,7 @@ namespace CelestialCross.Scenes.Hub
                 bool isCompleted = false;
                 int remainingAttempts = -1;
                 bool isLocked = false;
+                bool canAffordItems = true;
 
                 if (CelestialCross.System.ProgressionService.Instance != null)
                 {
@@ -247,22 +272,53 @@ namespace CelestialCross.Scenes.Hub
                     {
                         isLocked = !CelestialCross.System.ProgressionService.Instance.IsNodeCompleted(node.Requirement.PreviousNodeID);
                     }
+
+                    canAffordItems = CelestialCross.System.ProgressionService.Instance.CanAffordItemCosts(node);
                 }
 
-                card.SetupAsNode(node, isCompleted, isLocked, remainingAttempts);
+                card.SetupAsNode(node, isCompleted, isLocked, remainingAttempts, canAffordItems);
 
-                card.buttonComponent.onClick.AddListener(() => 
+                // Lógica de animação de desbloqueio automático
+                var account = AccountManager.Instance?.PlayerAccount;
+                bool playUnlockAnim = false;
+
+                if (!isLocked && !isCompleted)
+                {
+                    if (account != null && !account.PendingUnlockAnimations.Contains(node.NodeID))
+                    {
+                        playUnlockAnim = true;
+                        isLocked = true; // Força inicial visual de trancado para a purificação funcionar
+                    }
+                }
+
+                card.SetupAsNode(node, isCompleted, isLocked, remainingAttempts, canAffordItems);
+
+                if (playUnlockAnim)
+                {
+                    card.PlayUnlockAnimation(() => 
+                    {
+                        account.PendingUnlockAnimations.Add(node.NodeID);
+                        AccountManager.Instance.SaveAccount();
+                    });
+                }
+                else if (!isLocked && account != null && !account.PendingUnlockAnimations.Contains(node.NodeID))
+                {
+                    account.PendingUnlockAnimations.Add(node.NodeID); // Retroativo
+                }
+
+                card.OnNodeClicked = () => 
                 {
                     if (GameFlowManager.Instance != null)
                     {
                         GameFlowManager.Instance.CurrentChapter = chapter;
                     }
 
+                    // Se requer item e o jogador tem, podemos consumir/confirmar aqui ou no progression service
                     if (bottomSheet != null)
                         bottomSheet.Show(node);
                     else
                         CelestialCross.System.ProgressionService.Instance?.TryStartNode(node);
-                });
+                };
             }
         }
         #endregion

@@ -1,11 +1,11 @@
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using Sirenix.OdinInspector;
 using CelestialCross.Gacha;
+using DG.Tweening;
 
 namespace CelestialCross.Gacha.UI
 {
@@ -18,6 +18,18 @@ namespace CelestialCross.Gacha.UI
         [Tooltip("Objeto que será ativado DEPOIS do flash branco.")]
         public GameObject objectToActivateAfterFlash;
         public CanvasGroup whiteFlashPanel;
+
+        [Title("Supreme Reveal")]
+        [Tooltip("Container pai de todo o reveal. Deve ter CanvasGroup.")]
+        public RectTransform supremeRevealContainer;
+        [Tooltip("Image que exibe a silhueta (usa Material UI/Silhouette)")]
+        public Image supremeSilhouetteImage;
+        [Tooltip("Image que exibe a splash art real (Material default)")]
+        public Image supremeSplashImage;
+        [Tooltip("Texto com o nome do personagem Supreme")]
+        public TextMeshProUGUI supremeNameText;
+        [Tooltip("Material com o shader UI/Silhouette para geração automática de silhueta")]
+        public Material silhouetteMaterial;
 
         [Title("Prefabs")]
         public GameObject starStickerPrefab;
@@ -45,6 +57,11 @@ namespace CelestialCross.Gacha.UI
         [Tooltip("Tempo total (em segundos) que a constelação inteira leva para ser desenhada")]
         public float totalConstellationTime = 2.0f;
 
+        [Title("Animation Settings — DOTween")]
+        public float backgroundFadeInDuration = 0.5f;
+        public float stampShakeIntensity = 5f;
+        public float epicStampShakeIntensity = 12f;
+
         private AudioSource audioSource;
         private global::System.Action onSequenceFinished;
         private List<GameObject> activeStickers = new List<GameObject>();
@@ -52,7 +69,9 @@ namespace CelestialCross.Gacha.UI
         private List<GameObject> activeStamps = new List<GameObject>();
         private List<GachaRewardEntry> currentResults;
         private CelestialCross.Data.BannerPullVisualConfigSO activeBannerConfig;
+        private GachaBannerSO activeBanner; // Added to access Silhouette
         private bool isFinished = false;
+        private Sequence _masterSequence;
 
         private Vector2[] constellationPositions = new Vector2[]
         {
@@ -64,11 +83,18 @@ namespace CelestialCross.Gacha.UI
 
         void Awake()
         {
+            DOTween.Init(recycleAllByDefault: true);
+            
             audioSource = GetComponent<AudioSource>();
             if (audioSource == null) audioSource = gameObject.AddComponent<AudioSource>();
 
             if (btnContinue) btnContinue.onClick.AddListener(FinishAnimation);
             if (btnSkip) btnSkip.onClick.AddListener(SkipAnimation);
+        }
+
+        private void OnDestroy()
+        {
+            _masterSequence?.Kill();
         }
 
         public void PlayGachaSequence(List<GachaRewardEntry> results, CelestialCross.Data.BannerPullVisualConfigSO bannerConfig, global::System.Action onFinished)
@@ -78,29 +104,90 @@ namespace CelestialCross.Gacha.UI
             this.onSequenceFinished = onFinished;
             this.isFinished = false;
             
+            // Try to find the active banner from ShopSceneUI to get the Silhouette if needed
+            ShopSceneUI shopUI = FindObjectOfType<ShopSceneUI>();
+            if (shopUI != null && shopUI.availableBanners != null && shopUI.availableBanners.Count > 0)
+            {
+                // This is a small hack to get the banner, in a real scenario we'd pass it in
+                this.activeBanner = shopUI.availableBanners.Find(b => b.pullVisualConfig == bannerConfig);
+                if (this.activeBanner == null) this.activeBanner = shopUI.availableBanners[0];
+            }
+            
             gameObject.SetActive(true);
             if (btnContinue) btnContinue.gameObject.SetActive(false);
             if (btnSkip) btnSkip.gameObject.SetActive(true);
-            if (backgroundPanel) backgroundPanel.SetActive(true);
+            
+            if (backgroundPanel) 
+            {
+                backgroundPanel.SetActive(true);
+                var cg = backgroundPanel.GetComponent<CanvasGroup>();
+                if (!cg) cg = backgroundPanel.AddComponent<CanvasGroup>();
+                cg.alpha = 0f;
+            }
+            
             if (whiteFlashPanel) { whiteFlashPanel.alpha = 0; whiteFlashPanel.gameObject.SetActive(false); }
             if (stickerSpawnArea) stickerSpawnArea.gameObject.SetActive(true);
             if (stampsSpawnArea) stampsSpawnArea.gameObject.SetActive(false);
             if (objectToActivateAfterFlash) objectToActivateAfterFlash.SetActive(false);
             
+            if (supremeRevealContainer) 
+            {
+                supremeRevealContainer.gameObject.SetActive(false);
+                var cg = supremeRevealContainer.GetComponent<CanvasGroup>();
+                if (cg) cg.alpha = 0f;
+            }
+
             ClearBoard();
-            StartCoroutine(SequenceRoutine());
+            PlayFullSequenceDOTween();
         }
 
-        private IEnumerator SequenceRoutine()
+        private void PlayFullSequenceDOTween()
+        {
+            _masterSequence?.Kill();
+            _masterSequence = DOTween.Sequence()
+                .SetRecyclable(true)
+                .SetAutoKill(true);
+
+            BuildPhase0_BackgroundFadeIn(_masterSequence);
+            BuildPhase1_Constellation(_masterSequence);
+            
+            bool hasSupreme = currentResults.Any(r => r.Rarity == GachaRarity.Supreme);
+            
+            if (hasSupreme)
+            {
+                BuildPhase4_5_SupremeReveal(_masterSequence);
+            }
+            else
+            {
+                BuildPhase2_ColorTransition(_masterSequence);
+                BuildPhase3_PulseReveal(_masterSequence);
+                BuildPhase4_Flash(_masterSequence);
+            }
+
+            BuildPhase5_StampSlap(_masterSequence);
+            
+            _masterSequence.AppendCallback(() => FinishSequenceVisuals());
+        }
+
+        private void BuildPhase0_BackgroundFadeIn(Sequence seq)
+        {
+            if (!backgroundPanel) return;
+            
+            var cg = backgroundPanel.GetComponent<CanvasGroup>();
+            var bgTransform = backgroundPanel.transform;
+            
+            bgTransform.localScale = Vector3.one * 1.05f;
+            
+            seq.Append(cg.DOFade(1f, backgroundFadeInDuration).SetEase(Ease.OutCubic));
+            seq.Join(bgTransform.DOScale(1f, backgroundFadeInDuration).SetEase(Ease.OutCubic));
+        }
+
+        private void BuildPhase1_Constellation(Sequence seq)
         {
             int pullCount = currentResults.Count;
-            GachaRewardEntry bestReward = currentResults.OrderByDescending(r => (int)r.Rarity).First();
-            Color bestColor = GetRarityColor(bestReward.Rarity);
+            if (pullCount == 0) return;
 
-            // Phase 1: Spawn da Constelacao (Em branco)
-            // Mapeando posições
             List<Vector2> spawnedPositions = new List<Vector2>();
-            
             float stepDelay = totalConstellationTime / Mathf.Max(1, pullCount);
 
             for (int i = 0; i < pullCount; i++)
@@ -111,33 +198,25 @@ namespace CelestialCross.Gacha.UI
                 if (pullCount > 1) 
                 {
                     if (activeBannerConfig != null && activeBannerConfig.pullPositions.Count > i)
-                    {
                         pos = activeBannerConfig.pullPositions[i].position;
-                    }
                     else
-                    {
                         pos = constellationPositions[i % constellationPositions.Length];
-                    }
                 }
                 
                 spawnedPositions.Add(pos);
-
                 float waitTime = stepDelay;
 
-                // Iniciar animação das linhas vindo das estrelas anteriores para esta
                 if (pullCount > 1)
                 {
                     float lineAnimDuration = waitTime > 0 ? waitTime : 0.15f;
                     
-                    // Se o FadeInStars ligado, nascemos a Estrela junto com o começo da trajetória da linha (mas não a primeira, que não tem linha chegando)
                     if (fadeInStars && i > 0)
                     {
-                        StartCoroutine(SpawnSticker(pos, Color.white, lineAnimDuration));
+                        seq.Join(SpawnStickerSeq(pos, Color.white, lineAnimDuration));
                     }
                     
                     if (activeBannerConfig != null && activeBannerConfig.connectionIndices != null && activeBannerConfig.connectionIndices.Length > 0)
                     {
-                        // Checar se a estrela atual (i) conecta com alguma já spawnada (j < i)
                         for (int c = 0; c < activeBannerConfig.connectionIndices.Length; c += 2)
                         {
                             int idx1 = activeBannerConfig.connectionIndices[c];
@@ -146,117 +225,305 @@ namespace CelestialCross.Gacha.UI
                             if ((idx1 == i && idx2 < i) || (idx2 == i && idx1 < i))
                             {
                                 int otherIdx = (idx1 == i) ? idx2 : idx1;
-                                StartCoroutine(DrawLineAnimated(spawnedPositions[otherIdx], pos, lineAnimDuration));
+                                seq.Join(DrawLineAnimatedSeq(spawnedPositions[otherIdx], pos, lineAnimDuration));
                             }
                         }
                     }
                     else if (i > 0) 
                     {
-                        // Fallback (liga em sequencia)
-                        StartCoroutine(DrawLineAnimated(spawnedPositions[i-1], pos, lineAnimDuration));
+                        seq.Join(DrawLineAnimatedSeq(spawnedPositions[i-1], pos, lineAnimDuration));
                     }
                 }
 
                 if (waitTime > 0 && pullCount > 1 && i > 0)
                 {
-                    yield return new WaitForSeconds(waitTime);
+                    seq.AppendInterval(waitTime);
                 }
                 
-                // Dispara o SpawnSticker se o fadeIn estiver desligado (comportamento original ao fim do trajeto da linha),  
-                // ou se for a primeiríssima estrela gerada, ou se for Single Pull
                 if (!fadeInStars || pullCount == 1 || i == 0)
                 {
-                    yield return StartCoroutine(SpawnSticker(pos, Color.white, 0.15f));
+                    seq.Append(SpawnStickerSeq(pos, Color.white, 0.15f));
                 }
             }
+            seq.AppendInterval(0.4f);
+        }
 
-            yield return new WaitForSeconds(0.4f);
+        private void BuildPhase2_ColorTransition(Sequence seq)
+        {
+            GachaRewardEntry bestReward = currentResults.OrderByDescending(r => (int)r.Rarity).First();
+            Color bestColor = GetRarityColor(bestReward.Rarity);
 
-            // Phase 2: Transição para a cor do Tier Máximo
-            PlaySound(sfxClimax);
-            if (climaxParticles != null) climaxParticles.Play();
-            
+            seq.AppendCallback(() => {
+                PlaySound(sfxClimax);
+                if (climaxParticles != null) climaxParticles.Play();
+            });
+
             float colorTransitionTime = 0.5f;
-            float tColor = 0;
-            while (tColor < colorTransitionTime)
+            foreach (var st in activeStickers)
             {
-                tColor += Time.deltaTime;
-                float pct = tColor / colorTransitionTime;
-                foreach (var st in activeStickers)
+                if (st != null)
                 {
-                    if (st != null)
-                    {
-                        var img = st.GetComponent<Image>();
-                        if (img) img.color = Color.Lerp(Color.white, bestColor, pct);
-                    }
+                    var img = st.GetComponent<Image>();
+                    if (img) seq.Join(img.DOColor(bestColor, colorTransitionTime).SetEase(Ease.InOutSine));
                 }
-                yield return null;
             }
+            seq.AppendInterval(0.5f);
+        }
 
-            yield return new WaitForSeconds(0.5f);
-
-            // Phase 3: Piscam e revelam o tier de cada item
-            PlaySound(sfxSinoLight);
-            yield return StartCoroutine(PulseAllStickers(1.15f, 0.2f));
+        private void BuildPhase3_PulseReveal(Sequence seq)
+        {
+            // Pulse 1
+            seq.AppendCallback(() => PlaySound(sfxSinoLight));
+            seq.Append(PulseTween(1.15f, 0.2f));
             
-            PlaySound(sfxCrescendo);
-            yield return StartCoroutine(PulseAllStickers(1.25f, 0.2f));
+            // Pulse 2
+            seq.AppendCallback(() => PlaySound(sfxCrescendo));
+            seq.Append(PulseTween(1.25f, 0.2f));
 
-            yield return StartCoroutine(FinalRevealColors(1.5f, 0.5f));
+            // Final Reveal
+            seq.Append(PulseTween(1.5f, 0.5f));
+            seq.InsertCallback(seq.Duration() - 0.25f, () => {
+                for (int i = 0; i < activeStickers.Count; i++) {
+                    var st = activeStickers[i];
+                    var reward = currentResults[i];
+                    var img = st.GetComponent<Image>();
+                    if(img) img.color = GetRarityColor(reward.Rarity);
+                }
+            });
+        }
 
-            // Phase 4: Flash Branco
+        private void BuildPhase4_Flash(Sequence seq)
+        {
             if (whiteFlashPanel)
             {
-                whiteFlashPanel.gameObject.SetActive(true);
-                float t = 0;
-                while (t < 0.2f) {
-                    t += Time.deltaTime;
-                    whiteFlashPanel.alpha = Mathf.Lerp(0, 1f, t / 0.2f);
-                    yield return null;
-                }
-                whiteFlashPanel.alpha = 1f;
-                
-                // Ocultar Estrelas e Mostrar StampsArea
-                if (stickerSpawnArea) stickerSpawnArea.gameObject.SetActive(false);
-                if (stampsSpawnArea) stampsSpawnArea.gameObject.SetActive(true);
-                
-                t = 0;
-                while (t < 0.3f) {
-                    t += Time.deltaTime;
-                    whiteFlashPanel.alpha = Mathf.Lerp(1f, 0f, t / 0.3f);
-                    yield return null;
-                }
-                whiteFlashPanel.alpha = 0f;
-                whiteFlashPanel.gameObject.SetActive(false);
+                seq.AppendCallback(() => whiteFlashPanel.gameObject.SetActive(true));
+                seq.Append(whiteFlashPanel.DOFade(1f, 0.2f).SetEase(Ease.OutQuart));
+                seq.AppendCallback(() => {
+                    if (stickerSpawnArea) stickerSpawnArea.gameObject.SetActive(false);
+                    if (stampsSpawnArea) stampsSpawnArea.gameObject.SetActive(true);
+                    if (objectToActivateAfterFlash) objectToActivateAfterFlash.SetActive(true);
+                });
+                seq.Append(whiteFlashPanel.DOFade(0f, 0.3f).SetEase(Ease.InOutQuad));
+                seq.AppendCallback(() => whiteFlashPanel.gameObject.SetActive(false));
             }
             else
             {
-                if (stickerSpawnArea) stickerSpawnArea.gameObject.SetActive(false);
-                if (stampsSpawnArea) stampsSpawnArea.gameObject.SetActive(true);
+                seq.AppendCallback(() => {
+                    if (stickerSpawnArea) stickerSpawnArea.gameObject.SetActive(false);
+                    if (stampsSpawnArea) stampsSpawnArea.gameObject.SetActive(true);
+                    if (objectToActivateAfterFlash) objectToActivateAfterFlash.SetActive(true);
+                });
+            }
+        }
+
+        private void BuildPhase4_5_SupremeReveal(Sequence seq)
+        {
+            if (!supremeRevealContainer || !supremeSilhouetteImage || !supremeSplashImage || !supremeNameText) return;
+
+            var supremeReward = currentResults.First(r => r.Rarity == GachaRarity.Supreme);
+            Sprite revealSprite = GetSupremeRevealSprite(supremeReward);
+            Sprite silhouetteSprite = GetSilhouetteSprite(activeBanner, supremeReward, revealSprite);
+
+            var cg = supremeRevealContainer.GetComponent<CanvasGroup>();
+
+            // 1. Blackout
+            if (backgroundPanel)
+            {
+                var bgImg = backgroundPanel.GetComponent<Image>();
+                if (bgImg) seq.Append(bgImg.DOColor(Color.black, 0.3f));
+            }
+            if (stampsSpawnArea && stampsSpawnArea.gameObject.activeSelf)
+            {
+                var stampCg = stampsSpawnArea.GetComponent<CanvasGroup>();
+                if (!stampCg) stampCg = stampsSpawnArea.gameObject.AddComponent<CanvasGroup>();
+                seq.Join(stampCg.DOFade(0f, 0.3f));
+            }
+            if (stickerSpawnArea && stickerSpawnArea.gameObject.activeSelf)
+            {
+                var stickerCg = stickerSpawnArea.GetComponent<CanvasGroup>();
+                if (!stickerCg) stickerCg = stickerSpawnArea.gameObject.AddComponent<CanvasGroup>();
+                seq.Join(stickerCg.DOFade(0f, 0.3f));
             }
 
-            if (objectToActivateAfterFlash) objectToActivateAfterFlash.SetActive(true);
+            // 2. Silhueta Surge
+            seq.AppendCallback(() => {
+                supremeRevealContainer.gameObject.SetActive(true);
+                cg.alpha = 0f;
+                supremeSplashImage.gameObject.SetActive(false);
+                
+                supremeSilhouetteImage.gameObject.SetActive(true);
+                supremeSilhouetteImage.sprite = silhouetteSprite;
+                
+                if (activeBanner != null && activeBanner.Silhouette != null) {
+                    supremeSilhouetteImage.material = null; // Use sprite directly
+                    supremeSilhouetteImage.color = new Color(0.05f, 0.02f, 0.08f, 1f); // Dark color
+                } else if (silhouetteMaterial != null) {
+                    supremeSilhouetteImage.material = silhouetteMaterial;
+                    supremeSilhouetteImage.color = Color.white;
+                    silhouetteMaterial.SetFloat("_RevealProgress", 0f);
+                    silhouetteMaterial.SetFloat("_EdgeGlow", 0f);
+                }
 
-            // Phase 5: Spawn dos Selos/Stamps um por um
+                supremeNameText.gameObject.SetActive(false);
+                
+                supremeSilhouetteImage.rectTransform.localScale = Vector3.one * 3.0f;
+                supremeSilhouetteImage.rectTransform.localRotation = Quaternion.identity;
+            });
+
+            seq.Append(cg.DOFade(1f, 0.4f).SetEase(Ease.OutExpo));
+            seq.Join(supremeSilhouetteImage.rectTransform.DOScale(1.2f, 0.4f).SetEase(Ease.OutExpo));
+            seq.Join(supremeSilhouetteImage.rectTransform.DORotate(new Vector3(0, 0, Random.Range(-3f, 3f)), 0.4f));
+
+            // 3. Silhueta Respira
+            seq.AppendCallback(() => PlaySound(sfxCrescendo));
+            seq.Append(supremeSilhouetteImage.rectTransform.DOScale(1.15f, 0.5f).SetEase(Ease.InOutSine));
+            if (silhouetteMaterial != null && (activeBanner == null || activeBanner.Silhouette == null)) {
+                seq.Join(DOTween.To(() => silhouetteMaterial.GetFloat("_EdgeGlow"), x => silhouetteMaterial.SetFloat("_EdgeGlow", x), 1.5f, 0.5f));
+            }
+            seq.Append(supremeSilhouetteImage.rectTransform.DOScale(1.2f, 0.5f).SetEase(Ease.InOutSine));
+            if (silhouetteMaterial != null && (activeBanner == null || activeBanner.Silhouette == null)) {
+                seq.Join(DOTween.To(() => silhouetteMaterial.GetFloat("_EdgeGlow"), x => silhouetteMaterial.SetFloat("_EdgeGlow", x), 0.5f, 0.5f));
+            }
+
+            // 4. Glow Intensifica
+            seq.AppendCallback(() => PlaySound(sfxClimax));
+            seq.Append(supremeSilhouetteImage.rectTransform.DOScale(1.3f, 0.3f).SetEase(Ease.InQuad));
+            if (silhouetteMaterial != null && (activeBanner == null || activeBanner.Silhouette == null)) {
+                seq.Join(DOTween.To(() => silhouetteMaterial.GetFloat("_EdgeGlow"), x => silhouetteMaterial.SetFloat("_EdgeGlow", x), 3.0f, 0.3f));
+                seq.Join(silhouetteMaterial.DOColor(Color.white, "_EdgeGlowColor", 0.3f));
+            }
+
+            // 5. Flash Dourado
+            if (whiteFlashPanel)
+            {
+                seq.AppendCallback(() => {
+                    whiteFlashPanel.gameObject.SetActive(true);
+                    whiteFlashPanel.GetComponent<Image>().color = new Color(1f, 0.9f, 0.6f, 1f); // Dourado
+                });
+                seq.Append(whiteFlashPanel.DOFade(1f, 0.2f).SetEase(Ease.OutQuart));
+                
+                seq.AppendCallback(() => {
+                    supremeSilhouetteImage.gameObject.SetActive(false);
+                    
+                    supremeSplashImage.gameObject.SetActive(true);
+                    supremeSplashImage.sprite = revealSprite;
+                    supremeSplashImage.material = null;
+                    
+                    var splImgColor = supremeSplashImage.color;
+                    splImgColor.a = 1f;
+                    supremeSplashImage.color = splImgColor;
+                    
+                    supremeSplashImage.rectTransform.localScale = Vector3.one * 1.1f;
+                    supremeSplashImage.rectTransform.localRotation = supremeSilhouetteImage.rectTransform.localRotation;
+                });
+            }
+
+            // 6. Splash Art Reveal
+            if (whiteFlashPanel)
+            {
+                seq.Append(whiteFlashPanel.DOFade(0f, 0.6f).SetEase(Ease.InOutQuad));
+                seq.AppendCallback(() => {
+                    whiteFlashPanel.gameObject.SetActive(false);
+                    whiteFlashPanel.GetComponent<Image>().color = Color.white; // Restore
+                });
+            }
+            seq.Join(supremeSplashImage.rectTransform.DOScale(1.0f, 0.6f).SetEase(Ease.OutBack));
+            
+            if (backgroundPanel)
+            {
+                var bgImg = backgroundPanel.GetComponent<Image>();
+                if (bgImg) seq.Join(bgImg.DOColor(Color.white, 0.6f)); // Restore bg
+            }
+
+            // 7. Nome Aparece
+            seq.AppendCallback(() => {
+                supremeNameText.gameObject.SetActive(true);
+                supremeNameText.text = GetRewardName(supremeReward);
+                supremeNameText.color = GetRarityColor(GachaRarity.Supreme);
+                
+                var txtCg = supremeNameText.GetComponent<CanvasGroup>();
+                if (!txtCg) txtCg = supremeNameText.gameObject.AddComponent<CanvasGroup>();
+                txtCg.alpha = 0f;
+                
+                supremeNameText.rectTransform.anchoredPosition = new Vector2(100f, supremeNameText.rectTransform.anchoredPosition.y);
+                supremeNameText.rectTransform.localRotation = Quaternion.Euler(0, 0, -2f);
+                
+                txtCg.DOFade(1f, 0.4f);
+                supremeNameText.rectTransform.DOAnchorPosX(0f, 0.4f).SetEase(Ease.OutCubic);
+            });
+            seq.AppendInterval(0.4f);
+
+            // 8. Hold & Fade
+            seq.AppendInterval(0.8f);
+            seq.Append(cg.DOFade(0f, 0.3f));
+            seq.AppendCallback(() => {
+                supremeRevealContainer.gameObject.SetActive(false);
+                
+                if (stickerSpawnArea) stickerSpawnArea.gameObject.SetActive(false);
+                
+                if (stampsSpawnArea)
+                {
+                    stampsSpawnArea.gameObject.SetActive(true);
+                    var stampCg = stampsSpawnArea.GetComponent<CanvasGroup>();
+                    if (stampCg) stampCg.alpha = 1f; // Restaurar visibilidade pós fade-out do passo 1
+                }
+                
+                if (objectToActivateAfterFlash) objectToActivateAfterFlash.SetActive(true);
+            });
+        }
+
+        private void BuildPhase5_StampSlap(Sequence seq)
+        {
             var sortedResults = currentResults.OrderBy(r => (int)r.Rarity).ToList();
             for (int i = 0; i < sortedResults.Count; i++)
             {
                 var reward = sortedResults[i];
                 float delayAntesDeColar = (reward.Rarity >= GachaRarity.Epic) ? 0.6f : 0.1f;
-                yield return new WaitForSeconds(delayAntesDeColar);
                 
-                yield return StartCoroutine(SpawnStamp(reward));
+                if (reward.Rarity >= GachaRarity.Epic)
+                {
+                    seq.AppendInterval(0.4f); // Pausa dramática
+                    if (stampsSpawnArea) seq.Append(((RectTransform)stampsSpawnArea).DOShakeAnchorPos(0.15f, 3f, 5));
+                    seq.AppendInterval(0.2f);
+                }
+                else
+                {
+                    seq.AppendInterval(0.1f);
+                }
+                
+                seq.AppendCallback(() => {
+                    var stampSeq = SpawnStampSeq(reward);
+                    stampSeq.Play();
+                });
+                
+                seq.AppendInterval(0.2f); // Tempo base do slap
             }
-
-            FinishSequenceVisuals();
         }
 
-        private IEnumerator SpawnSticker(Vector2 pos, Color initColor, float fadeDuration = 0.15f)
+        private Sequence PulseTween(float maxScale, float duration)
+        {
+            Sequence s = DOTween.Sequence();
+            float half = duration / 2f;
+            
+            foreach (var st in activeStickers) {
+                if (st) {
+                    s.Join(st.transform.DOScale(maxScale, half).SetEase(Ease.InOutSine));
+                }
+            }
+            s.AppendInterval(0f); // just to sequence correctly
+            foreach (var st in activeStickers) {
+                if (st) {
+                    s.Join(st.transform.DOScale(1f, half).SetEase(Ease.InOutSine));
+                }
+            }
+            return s;
+        }
+
+        private Tween SpawnStickerSeq(Vector2 pos, Color initColor, float fadeDuration = 0.15f)
         {
             var sticker = Instantiate(starStickerPrefab, stickerSpawnArea);
             var rect = sticker.GetComponent<RectTransform>();
             
-            // Forçamos a âncora a ficar extamente no meio para que a posição do SO reflita puramente do centro da tela para fora (igual ao nosso Editor)
             rect.anchorMin = new Vector2(0.5f, 0.5f);
             rect.anchorMax = new Vector2(0.5f, 0.5f);
             rect.anchoredPosition = pos;
@@ -267,7 +534,6 @@ namespace CelestialCross.Gacha.UI
             var img = sticker.GetComponent<Image>();
             if (img != null) { Color c = initColor; c.a = 0; img.color = c; }
             
-            // Aqui as estrelas soh pintam, nao recebem icon nem texto. Entao escondemos se estivem la
             var icon = sticker.transform.Find("Icon")?.gameObject;
             var txt = sticker.transform.Find("NameText")?.gameObject;
             if(icon) icon.SetActive(false);
@@ -275,44 +541,67 @@ namespace CelestialCross.Gacha.UI
 
             activeStickers.Add(sticker);
 
-            float t = 0;
-            while(t < fadeDuration)
-            {
-                t += Time.deltaTime;
-                float pct = t / fadeDuration;
-                
-                // Se a duracao for longa (como no uso junto da linha), evita o bounce enorme q daria no scale e mantem normal
-                float scale = fadeDuration > 0.2f ? Mathf.Lerp(0f, 1f, pct) : (2f - Mathf.Sin(pct * Mathf.PI * 0.5f));
-                sticker.transform.localScale = Vector3.one * scale;
-                
-                if (img != null) { Color c = initColor; c.a = pct; img.color = c; }
-                yield return null;
+            Sequence s = DOTween.Sequence().SetRecyclable(true);
+            if (fadeDuration > 0.2f) {
+                s.Append(sticker.transform.DOScale(1f, fadeDuration).From(0f));
+            } else {
+                s.Append(sticker.transform.DOScale(1f, fadeDuration).From(2f).SetEase(Ease.OutBack));
             }
-            sticker.transform.localScale = Vector3.one;
-            PlaySound(sfxSlap);
+            if (img != null) s.Join(img.DOFade(1f, fadeDuration).From(0f));
+            s.AppendCallback(() => PlaySound(sfxSlap));
+            
+            return s;
         }
 
-        private IEnumerator SpawnStamp(GachaRewardEntry reward)
+        private Tween DrawLineAnimatedSeq(Vector2 start, Vector2 end, float duration)
+        {
+            if (uiLinePrefab == null) return DOTween.Sequence();
+
+            if (lineDirection == LineDrawDirection.NewToOld)
+            {
+                Vector2 temp = start;
+                start = end;
+                end = temp;
+            }
+
+            GameObject line = Instantiate(uiLinePrefab, stickerSpawnArea);
+            line.transform.SetAsFirstSibling();
+            
+            RectTransform rect = line.GetComponent<RectTransform>();
+            rect.pivot = new Vector2(0f, 0.5f);
+            rect.anchoredPosition = start;
+            Vector2 dir = end - start;
+            float finalMagnitude = dir.magnitude;
+            
+            rect.sizeDelta = new Vector2(0f, 4f);
+            float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+            rect.localRotation = Quaternion.Euler(0, 0, angle);
+            
+            activeLines.Add(line);
+
+            if (duration <= 0) duration = 0.1f;
+            
+            return rect.DOSizeDelta(new Vector2(finalMagnitude, 4f), duration)
+                .From(new Vector2(0f, 4f))
+                .SetEase(Ease.OutQuad)
+                .SetRecyclable(true);
+        }
+
+        private Sequence SpawnStampSeq(GachaRewardEntry reward)
         {
             var stamp = Instantiate(prizeStampPrefab, stampsSpawnArea);
             var rect = stamp.GetComponent<RectTransform>();
             
-            // O componente Layout Group no objeto 'stampsSpawnArea' cuidará do positionamento,
-            // então não usamos mais rect.anchoredPosition.
-            
-            stamp.transform.localScale = Vector3.one * 2f;
-            stamp.transform.localRotation = Quaternion.Euler(0, 0, Random.Range(-5f, 5f));
+            stamp.transform.localScale = Vector3.one * 2.5f;
             stamp.transform.localRotation = Quaternion.Euler(0, 0, Random.Range(-5f, 5f));
             
             activeStamps.Add(stamp);
 
-            // Popula os dados do selo
             var iconImg = stamp.transform.Find("Icon")?.GetComponent<Image>();
             var txtName = stamp.transform.Find("NameText")?.GetComponent<TextMeshProUGUI>();
             var bgImg = stamp.GetComponent<Image>();
 
             if (bgImg != null) bgImg.color = GetRarityColor(reward.Rarity);
-            
             if (txtName != null) txtName.text = GetRewardName(reward);
 
             if (iconImg != null)
@@ -326,121 +615,55 @@ namespace CelestialCross.Gacha.UI
                 }
             }
 
-            float t = 0;
-            while(t < 0.15f)
-            {
-                t += Time.deltaTime;
-                float pct = t / 0.15f;
-                float scale = 2f - Mathf.Sin(pct * Mathf.PI * 0.5f);
-                stamp.transform.localScale = Vector3.one * scale;
-                yield return null;
-            }
-            stamp.transform.localScale = Vector3.one;
-            PlaySound(sfxCarimbo);
-            
-            if (reward.Rarity >= GachaRarity.Epic)
-            {
-                PlaySound(sfxSinoLight);
-            }
+            float intensity = reward.Rarity >= GachaRarity.Epic ? epicStampShakeIntensity : stampShakeIntensity;
+
+            Sequence s = DOTween.Sequence().SetRecyclable(true).SetAutoKill(true);
+            s.Append(stamp.transform.DOScale(1f, 0.15f).From(2.5f).SetEase(Ease.OutBack));
+            s.Append(stamp.transform.DOPunchScale(new Vector3(0.1f, -0.15f, 0), 0.12f, 1, 0));
+            if (stampsSpawnArea) s.Join(((RectTransform)stampsSpawnArea).DOShakeAnchorPos(0.1f, intensity, 10, 90, false, true, ShakeRandomnessMode.Harmonic));
+            s.InsertCallback(0.15f, () => {
+                PlaySound(sfxCarimbo);
+                if (reward.Rarity >= GachaRarity.Epic) PlaySound(sfxSinoLight);
+            });
+
+            return s;
         }
 
-        private IEnumerator DrawLineAnimated(Vector2 start, Vector2 end, float duration)
+        private Sprite GetSupremeRevealSprite(GachaRewardEntry supremeReward)
         {
-            if (uiLinePrefab == null) yield break;
-
-            if (lineDirection == LineDrawDirection.NewToOld)
+            if (supremeReward.RewardType == GachaRewardType.Unit && supremeReward.UnitData != null)
             {
-                Vector2 temp = start;
-                start = end;
-                end = temp;
+                if (supremeReward.UnitData.sprite != null) return supremeReward.UnitData.sprite;
+                if (supremeReward.UnitData.icon != null) return supremeReward.UnitData.icon;
             }
-
-            GameObject line = Instantiate(uiLinePrefab, stickerSpawnArea);
-            line.transform.SetAsFirstSibling();
-            
-            RectTransform rect = line.GetComponent<RectTransform>();
-            
-            // Forçamos o Pivot para o canto esquerdo da linha (X=0), assim, 
-            // quando a largura crescer via sizeDelta, ela esticará unicamente na direção do alvo
-            rect.pivot = new Vector2(0f, 0.5f);
-            
-            rect.anchoredPosition = start;
-            Vector2 dir = end - start;
-            float finalMagnitude = dir.magnitude;
-            
-            rect.sizeDelta = new Vector2(0f, 4f);
-            float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-            rect.localRotation = Quaternion.Euler(0, 0, angle);
-            
-            // Cor/Material agora pertencem exclusivamente ao Prefab, comentado acesso forçado
-            // var img = line.GetComponent<Image>();
-            // if(img) img.color = color;
-            
-            activeLines.Add(line);
-
-            if (duration <= 0) duration = 0.1f;
-            
-            float t = 0;
-            while(t < duration)
+            if (supremeReward.RewardType == GachaRewardType.Pet && supremeReward.PetSpeciesData != null)
             {
-                t += Time.deltaTime;
-                rect.sizeDelta = new Vector2(Mathf.Lerp(0, finalMagnitude, t / duration), 4f);
-                yield return null;
+                return supremeReward.PetSpeciesData.Icon;
             }
-            rect.sizeDelta = new Vector2(finalMagnitude, 4f);
+            if (activeBanner != null) return activeBanner.BannerSplashArt;
+            return null;
         }
 
-        private IEnumerator PulseAllStickers(float maxScale, float duration)
+        private Sprite GetSilhouetteSprite(GachaBannerSO banner, GachaRewardEntry supremeReward, Sprite revealSprite)
         {
-            float half = duration / 2f;
-            for(float t=0; t<half; t+=Time.deltaTime) {
-                float s = Mathf.Lerp(1f, maxScale, t/half);
-                foreach(var st in activeStickers) if(st) st.transform.localScale = Vector3.one * s;
-                yield return null;
-            }
-            for(float t=0; t<half; t+=Time.deltaTime) {
-                float s = Mathf.Lerp(maxScale, 1f, t/half);
-                foreach(var st in activeStickers) if(st) st.transform.localScale = Vector3.one * s;
-                yield return null;
-            }
-            foreach(var st in activeStickers) if(st) st.transform.localScale = Vector3.one;
-        }
-
-        private IEnumerator FinalRevealColors(float maxScale, float duration)
-        {
-            float half = duration / 2f;
-            for(float t=0; t<half; t+=Time.deltaTime) {
-                float s = Mathf.Lerp(1f, maxScale, t/half);
-                foreach(var st in activeStickers) if(st) st.transform.localScale = Vector3.one * s;
-                yield return null;
-            }
-
-            for (int i = 0; i < activeStickers.Count; i++) {
-                var st = activeStickers[i];
-                var reward = currentResults[i];
-                Color tierColor = GetRarityColor(reward.Rarity);
-                var img = st.GetComponent<Image>();
-                if(img) img.color = tierColor;
-            }
-
-            for(float t=0; t<half; t+=Time.deltaTime) {
-                float s = Mathf.Lerp(maxScale, 1f, t/half);
-                foreach(var st in activeStickers) if(st) st.transform.localScale = Vector3.one * s;
-                yield return null;
-            }
-            foreach(var st in activeStickers) if(st) st.transform.localScale = Vector3.one;
+            if (banner != null && banner.Silhouette != null) return banner.Silhouette;
+            return revealSprite;
         }
 
         public void SkipAnimation()
         {
             if (isFinished) return;
-            StopAllCoroutines();
+            
+            _masterSequence?.Kill();
+            
             ClearBoard();
 
             if (whiteFlashPanel) { whiteFlashPanel.alpha = 0f; whiteFlashPanel.gameObject.SetActive(false); }
             if (stickerSpawnArea) stickerSpawnArea.gameObject.SetActive(false);
             if (stampsSpawnArea) stampsSpawnArea.gameObject.SetActive(true);
             if (objectToActivateAfterFlash) objectToActivateAfterFlash.SetActive(true);
+            
+            if (supremeRevealContainer) supremeRevealContainer.gameObject.SetActive(false);
 
             var sortedResults = currentResults.OrderBy(r => (int)r.Rarity).ToList();
             for (int i = 0; i < sortedResults.Count; i++)
@@ -486,6 +709,7 @@ namespace CelestialCross.Gacha.UI
 
         public void FinishAnimation()
         {
+            _masterSequence?.Kill();
             ClearBoard();
             gameObject.SetActive(false);
             onSequenceFinished?.Invoke();

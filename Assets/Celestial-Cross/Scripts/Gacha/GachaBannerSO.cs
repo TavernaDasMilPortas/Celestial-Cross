@@ -95,6 +95,10 @@ namespace CelestialCross.Gacha
         [Tooltip("Configuração visual das estrelas ao realizar um pull de 10.")]
         public CelestialCross.Data.BannerPullVisualConfigSO pullVisualConfig;
         
+        [Header("Supreme Reveal Visual")]
+        [Tooltip("Silhueta do personagem Supreme para a animação de reveal. Se vazio, será gerada automaticamente a partir da BannerSplashArt usando um shader de silhueta.")]
+        public Sprite Silhouette;
+        
         [Header("Sistema de Garantia (Pity)")]
         [Tooltip("Quantos tiros antes da chance do supremo começar a escalar (Soft)")]
         public int SoftPityThreshold = 70;

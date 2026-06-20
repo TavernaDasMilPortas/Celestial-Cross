@@ -2,6 +2,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using MoreMountains.Feedbacks;
 
 namespace CelestialCross.Gacha.Editor
 {
@@ -142,6 +143,48 @@ namespace CelestialCross.Gacha.Editor
             so.ApplyModifiedProperties();
             Selection.activeGameObject = rootUI;
             Debug.Log("[Shop UI Builder] UI Base da Shop Scene gerada com sucesso!");
+        }
+
+        [MenuItem("Celestial Cross/3. UI Builders/1. Screens/Shop Scene - Add Banner Arrows")]
+        public static void AddBannerArrows()
+        {
+            var shopUI = Object.FindObjectOfType<UI.ShopSceneUI>();
+            if (shopUI == null)
+            {
+                Debug.LogError("[Shop UI Builder] ShopSceneUI não encontrado na cena.");
+                return;
+            }
+
+            // Achar o BannerContent_Border se existir, senao vai na raiz do shopUI
+            Transform parent = shopUI.transform.Find("Content_Banners/BannerContent_Border") ?? shopUI.transform;
+
+            Undo.RecordObject(shopUI, "Add Banner Arrows");
+
+            // Seta Esquerda
+            var btnPrev = CreateButton(parent, "Btn_PrevBanner", new Vector2(0, 0.5f), new Vector2(0, 0.5f), "<", new Color(0, 0, 0, 0.7f));
+            var prevRect = btnPrev.GetComponent<RectTransform>();
+            prevRect.sizeDelta = new Vector2(50, 50);
+            prevRect.anchoredPosition = new Vector2(30, 0); // Perto da borda esquerda
+            Undo.RegisterCreatedObjectUndo(btnPrev.gameObject, "Create Prev Button");
+
+            // Seta Direita
+            var btnNext = CreateButton(parent, "Btn_NextBanner", new Vector2(1, 0.5f), new Vector2(1, 0.5f), ">", new Color(0, 0, 0, 0.7f));
+            var nextRect = btnNext.GetComponent<RectTransform>();
+            nextRect.sizeDelta = new Vector2(50, 50);
+            nextRect.anchoredPosition = new Vector2(-30, 0); // Perto da borda direita
+            Undo.RegisterCreatedObjectUndo(btnNext.gameObject, "Create Next Button");
+
+            // Atribui no script se possível (Usando SerializedObject para acessar os campos privados)
+            var so = new SerializedObject(shopUI);
+            so.FindProperty("btnPrevBanner").objectReferenceValue = btnPrev;
+            so.FindProperty("btnNextBanner").objectReferenceValue = btnNext;
+            so.ApplyModifiedProperties();
+
+            EditorUtility.SetDirty(shopUI);
+            UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(shopUI.gameObject.scene);
+
+            Selection.activeGameObject = btnNext.gameObject;
+            Debug.Log("[Shop UI Builder] Setas de Navegação do Banner criadas e ligadas com sucesso!");
         }
 
         private static GameObject CreateText(Transform parent, string name, int fontSize, Vector2 aMin, Vector2 aMax, Color col)
