@@ -78,13 +78,16 @@ namespace CelestialCross.UI.ProceduralGraphic
                 for(int i=0; i<_points.Count; i++) basePos[i] = _points[i].position;
                 return basePos;
             }
-            if (_keyframes.Count == 1) return _keyframes[0].positions.ToArray();
+            if (_keyframes.Count == 1)
+            {
+                return PadPositions(_keyframes[0].positions);
+            }
 
             ShapeKeyframe prev = _keyframes[0];
             ShapeKeyframe next = _keyframes[_keyframes.Count - 1];
 
-            if (t <= _keyframes[0].time) return _keyframes[0].positions.ToArray();
-            if (t >= _keyframes[_keyframes.Count - 1].time) return _keyframes[_keyframes.Count - 1].positions.ToArray();
+            if (t <= _keyframes[0].time) return PadPositions(_keyframes[0].positions);
+            if (t >= _keyframes[_keyframes.Count - 1].time) return PadPositions(_keyframes[_keyframes.Count - 1].positions);
 
             for (int i = 0; i < _keyframes.Count - 1; i++)
             {
@@ -100,7 +103,19 @@ namespace CelestialCross.UI.ProceduralGraphic
             Vector2[] result = new Vector2[_points.Count];
             for (int i = 0; i < _points.Count; i++)
             {
-                result[i] = Vector2.Lerp(prev.positions[i], next.positions[i], segmentT);
+                Vector2 pA = (i < prev.positions.Count) ? prev.positions[i] : _points[i].position;
+                Vector2 pB = (i < next.positions.Count) ? next.positions[i] : _points[i].position;
+                result[i] = Vector2.Lerp(pA, pB, segmentT);
+            }
+            return result;
+        }
+
+        private Vector2[] PadPositions(List<Vector2> kfPositions)
+        {
+            Vector2[] result = new Vector2[_points.Count];
+            for (int i = 0; i < _points.Count; i++)
+            {
+                result[i] = (i < kfPositions.Count) ? kfPositions[i] : _points[i].position;
             }
             return result;
         }

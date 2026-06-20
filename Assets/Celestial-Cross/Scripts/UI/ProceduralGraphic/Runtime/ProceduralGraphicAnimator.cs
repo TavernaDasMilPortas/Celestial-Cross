@@ -55,7 +55,13 @@ namespace CelestialCross.UI.ProceduralGraphic
 
         private void OnEnable()
         {
-            if (playOnAwake) Play();
+            if (playOnAwake)
+            {
+                // Aguarda o fim do frame para garantir que o ProceduralGraphic chamou seu próprio Awake
+                DOVirtual.DelayedCall(0f, () => {
+                    if (this != null && gameObject.activeInHierarchy) Play();
+                });
+            }
         }
 
         private void OnDisable()

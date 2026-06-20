@@ -6286,8 +6286,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CelestialCross.UI.ProceduralGraphic.ProceduralGraphicAnimator
   playOnAwake: 1
   mode: 0
-  keyframeA: 
-  keyframeB: 
+  keyframeA: Keyframe 0
+  keyframeB: Keyframe 3
   duration: 0.5
   totalLoopDuration: 3
 --- !u!114 &1956191574
@@ -6302,7 +6302,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbb3ba1af26d09d44b77579f6da178ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CelestialCross.UI.ProceduralGraphic.ProceduralGraphic
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 5e0838ef21a5e5a41b8fc0d37901d3db, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -6312,7 +6312,7 @@ MonoBehaviour:
       m_Calls: []
   preset: {fileID: 11400000, guid: d9f01b43edd1f9043be2a2801a50fc4d, type: 2}
   texture: {fileID: 0}
-  startingKeyframe: Keyframe 0
+  startingKeyframe: Keyframe 3
 --- !u!222 &1956191575
 CanvasRenderer:
   m_ObjectHideFlags: 0
