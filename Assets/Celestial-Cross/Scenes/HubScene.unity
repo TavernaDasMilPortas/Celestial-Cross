@@ -6252,7 +6252,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1956191572
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6289,7 +6289,7 @@ MonoBehaviour:
   keyframeA: 
   keyframeB: 
   duration: 0.5
-  totalLoopDuration: 1
+  totalLoopDuration: 3
 --- !u!114 &1956191574
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6312,7 +6312,7 @@ MonoBehaviour:
       m_Calls: []
   preset: {fileID: 11400000, guid: d9f01b43edd1f9043be2a2801a50fc4d, type: 2}
   texture: {fileID: 0}
-  startingKeyframe: Keyframe 2
+  startingKeyframe: Keyframe 0
 --- !u!222 &1956191575
 CanvasRenderer:
   m_ObjectHideFlags: 0
