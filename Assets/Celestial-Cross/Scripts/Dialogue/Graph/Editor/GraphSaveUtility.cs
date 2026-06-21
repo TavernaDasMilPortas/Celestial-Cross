@@ -74,6 +74,7 @@ namespace CelestialCross.Dialogue.Graph.Editor
                     speakerName = dialogueNode.speakerName,
                     dialogueText = dialogueNode.dialogueText,
                     characterSprite = dialogueNode.characterSprite,
+                    sceneryId = dialogueNode.sceneryId,
                     variableName = dialogueNode.variableName,
                     compareValue = dialogueNode.compareValue,
                     conditionType = dialogueNode.conditionType,
@@ -149,6 +150,7 @@ namespace CelestialCross.Dialogue.Graph.Editor
                 tempNode.speakerName = nodeData.speakerName;
                 tempNode.dialogueText = nodeData.dialogueText;
                 tempNode.characterSprite = nodeData.characterSprite;
+                tempNode.sceneryId = nodeData.sceneryId;
                 tempNode.variableName = nodeData.variableName;
                 tempNode.compareValue = nodeData.compareValue;
                 tempNode.conditionType = nodeData.conditionType;
@@ -160,6 +162,7 @@ namespace CelestialCross.Dialogue.Graph.Editor
                     tempNode.mainContainer.Q<TextField>("speaker-field")?.SetValueWithoutNotify(nodeData.speakerName);
                     tempNode.mainContainer.Q<TextField>("dialogue-field")?.SetValueWithoutNotify(nodeData.dialogueText);
                     tempNode.mainContainer.Q<ObjectField>()?.SetValueWithoutNotify(nodeData.characterSprite);
+                    tempNode.mainContainer.Q<TextField>("scenery-field")?.SetValueWithoutNotify(nodeData.sceneryId);
                 }
                 else if (nodeData.nodeType == NodeType.Condition)
                 {

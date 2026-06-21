@@ -1,9 +1,20 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
+using DG.Tweening;
 
 namespace CelestialCross.Scenes.Inventory
 {
+    [global::System.Serializable]
+    public class TabVisualHierarchy
+    {
+        public InventoryTabPanel tabPanel;
+        public RectTransform rootComponent;
+        public RectTransform middleComponent;
+        [Tooltip("Arraste apenas o botão da tab para ser animado")]
+        public RectTransform tabButtonRect;
+    }
+
     public class InventorySceneController : MonoBehaviour
     {
         public static InventorySceneController Instance { get; private set; }
@@ -20,6 +31,11 @@ namespace CelestialCross.Scenes.Inventory
         public ArtifactUpgradeSliderModal upgradeSliderModal;
 
         [Header("Tabs Config")]
+        public RectTransform activeTabContainer;
+        public List<TabVisualHierarchy> tabVisualHierarchies = new List<TabVisualHierarchy>();
+
+        // Lista antiga mantida escondida para não quebrar referências locais por enquanto
+        [HideInInspector]
         public List<InventoryTabPanel> tabPanels = new List<InventoryTabPanel>();
 
         [Header("Data References")]
@@ -40,6 +56,14 @@ namespace CelestialCross.Scenes.Inventory
             {
                 Debug.LogWarning($"[InventorySceneController] Outra instância ativa detectada no Awake! Destruindo este Canvas ({name}) para evitar duplicatas. Existente: {Instance.name}");
                 Destroy(gameObject);
+            }
+
+            // Sincronizando referências caso algo procure pela lista antiga
+            tabPanels.Clear();
+            foreach (var tabInfo in tabVisualHierarchies)
+            {
+                if (tabInfo.tabPanel != null)
+                    tabPanels.Add(tabInfo.tabPanel);
             }
         }
 
@@ -69,24 +93,45 @@ namespace CelestialCross.Scenes.Inventory
 
         public void InitializeTabs()
         {
-            Debug.Log($"[InventorySceneController] InitializeTabs chamado. tabPanels count: {tabPanels.Count}");
-            foreach (var tab in tabPanels)
+            Debug.Log($"[InventorySceneController] InitializeTabs chamado. tabVisualHierarchies count: {tabVisualHierarchies.Count}");
+            
+            float animationDelay = 0f;
+
+            foreach (var tabInfo in tabVisualHierarchies)
             {
-                if (tab == null)
+                if (tabInfo == null || tabInfo.tabPanel == null)
                 {
-                    Debug.LogError("[InventorySceneController] Encontrado painel de aba NULO na lista tabPanels!");
+                    Debug.LogError("[InventorySceneController] Encontrado painel de aba NULO na lista tabVisualHierarchies!");
                     continue;
                 }
-                Debug.Log($"[InventorySceneController] Escondendo aba: {tab.name}");
-                tab.Hide();
+                
+                Debug.Log($"[InventorySceneController] Escondendo aba: {tabInfo.tabPanel.name}");
+                tabInfo.tabPanel.Hide();
+
+                // Reparenting inicial: garantir que todos estão no seu root mantendo a posição mundial
+                if (tabInfo.middleComponent != null && tabInfo.rootComponent != null)
+                {
+                    tabInfo.middleComponent.SetParent(tabInfo.rootComponent, true);
+                }
+
+                // Animação de pop-in inicial EXCLUSIVA para os botões
+                if (tabInfo.tabButtonRect != null)
+                {
+                    tabInfo.tabButtonRect.localScale = Vector3.zero;
+                    tabInfo.tabButtonRect.DOScale(Vector3.one, 0.4f)
+                        .SetEase(Ease.OutBack)
+                        .SetDelay(animationDelay);
+                        
+                    animationDelay += 0.1f; // cascata
+                }
             }
 
-            if (tabPanels.Count > 0)
+            if (tabVisualHierarchies.Count > 0)
             {
-                if (tabPanels[0] != null)
+                if (tabVisualHierarchies[0] != null && tabVisualHierarchies[0].tabPanel != null)
                 {
-                    Debug.Log($"[InventorySceneController] Selecionando aba inicial: {tabPanels[0].name}");
-                    SelectTab(tabPanels[0]);
+                    Debug.Log($"[InventorySceneController] Selecionando aba inicial: {tabVisualHierarchies[0].tabPanel.name}");
+                    SelectTab(tabVisualHierarchies[0].tabPanel);
                 }
                 else
                 {
@@ -95,7 +140,7 @@ namespace CelestialCross.Scenes.Inventory
             }
             else
             {
-                Debug.LogWarning("[InventorySceneController] Lista tabPanels vazia! Nenhuma aba foi selecionada.");
+                Debug.LogWarning("[InventorySceneController] Lista tabVisualHierarchies vazia! Nenhuma aba foi selecionada.");
             }
         }
 
@@ -109,23 +154,56 @@ namespace CelestialCross.Scenes.Inventory
             Debug.Log($"[InventorySceneController] SelectTab: {tabToSelect.name}. Aba atual: {(currentTab != null ? currentTab.name : "null")}");
             if (currentTab == tabToSelect) return;
 
+            if (CelestialCross.Audio.AudioManager.Instance != null)
+                CelestialCross.Audio.AudioManager.Instance.PlayUI(CelestialCross.Audio.SoundKey.DropdownMenu01);
+
+            // Lidar com a aba que estava ativa antes
             if (currentTab != null)
             {
                 currentTab.Hide();
+                var previousTabInfo = tabVisualHierarchies.Find(t => t.tabPanel == currentTab);
+                if (previousTabInfo != null && previousTabInfo.middleComponent != null && previousTabInfo.rootComponent != null)
+                {
+                    previousTabInfo.middleComponent.SetParent(previousTabInfo.rootComponent, true);
+                }
             }
             
             currentTab = tabToSelect;
             
+            // Lidar com a nova aba ativa
             if (currentTab != null)
             {
                 currentTab.Show();
+                var newTabInfo = tabVisualHierarchies.Find(t => t.tabPanel == currentTab);
+                if (newTabInfo != null)
+                {
+                    // Reparentar para o Active Tab Container mantendo a posição original na tela
+                    if (newTabInfo.middleComponent != null && activeTabContainer != null)
+                    {
+                        newTabInfo.middleComponent.SetParent(activeTabContainer, true);
+                    }
+
+                    // Animação de pulso no botão
+                    if (newTabInfo.tabButtonRect != null)
+                    {
+                        newTabInfo.tabButtonRect.DOKill(true); // Cancela qualquer tween anterior no botão
+                        newTabInfo.tabButtonRect.localScale = Vector3.one; // Reseta para garantir
+                        newTabInfo.tabButtonRect.localEulerAngles = Vector3.zero; // Reseta para garantir
+                        
+                        // O DOPunchScale vai animar e ao final retorna ao scale original, garantimos o Vector3.one no OnComplete também
+                        newTabInfo.tabButtonRect.DOPunchScale(new Vector3(0.15f, 0.15f, 0.15f), 0.3f, 5, 0.5f)
+                            .OnComplete(() => newTabInfo.tabButtonRect.localScale = Vector3.one);
+                        newTabInfo.tabButtonRect.DOPunchRotation(new Vector3(0, 0, -5f), 0.3f, 5, 0.5f)
+                            .OnComplete(() => newTabInfo.tabButtonRect.localEulerAngles = Vector3.zero);
+                    }
+                }
             }
         }
 
         public void ReturnToHub()
         {
             // O nome da cena base será configurado no GameFlowManager, mas para segurança chamamos pelo nome.
-            SceneManager.LoadScene("HubScene");
+            CelestialCross.System.SceneTransitionManager.LoadScene("HubScene");
         }
     }
 }

@@ -297,7 +297,7 @@ namespace CelestialCross.Scenes.Unit
 
         public void ReturnToHub()
         {
-            SceneManager.LoadScene("HubScene");
+            CelestialCross.System.SceneTransitionManager.LoadScene("HubScene");
         }
     }
 }

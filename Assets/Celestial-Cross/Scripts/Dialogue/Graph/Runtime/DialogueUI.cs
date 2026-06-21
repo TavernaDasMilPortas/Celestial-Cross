@@ -19,6 +19,7 @@ namespace CelestialCross.Dialogue.Manager
 
         [Header("Visuals")]
         [SerializeField] private Image characterPortrait;
+        [SerializeField] private GameObject portraitContainer;
         [SerializeField] private GameObject continueIndicator;
 
         [Header("Choices")]
@@ -49,6 +50,11 @@ namespace CelestialCross.Dialogue.Manager
             {
                 characterPortrait.sprite = portrait;
                 characterPortrait.enabled = (portrait != null);
+            }
+
+            if (portraitContainer != null)
+            {
+                portraitContainer.SetActive(portrait != null);
             }
 
             if (_typingCoroutine != null) StopCoroutine(_typingCoroutine);

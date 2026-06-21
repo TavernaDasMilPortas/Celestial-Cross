@@ -32,6 +32,7 @@ namespace CelestialCross.Dialogue.Graph
         [TextArea(3, 10)]
         public string dialogueText;
         public Sprite characterSprite;
+        public string sceneryId;
         // public AudioClip voiceClip; // Futura expansão
 
         // Dados de Choice/Escolha
@@ -89,6 +90,9 @@ namespace CelestialCross.Dialogue.Graph
         public List<NodeLinkData> nodeLinks = new List<NodeLinkData>();
         public List<DialogueNodeData> nodeData = new List<DialogueNodeData>();
         
+        // Mapa de cenários usados neste grafo
+        public List<SceneryMapping> sceneryMappings = new List<SceneryMapping>();
+        
         // Blackboard para variáveis locais do grafo (como Amor Doce)
         public List<ExposedProperty> exposedProperties = new List<ExposedProperty>();
     }
@@ -102,4 +106,11 @@ namespace CelestialCross.Dialogue.Graph
     }
 
     public enum PropertyType { String, Int, Bool }
+
+    [Serializable]
+    public class SceneryMapping
+    {
+        public string sceneryId;
+        public DialogueScenery scenery;
+    }
 }

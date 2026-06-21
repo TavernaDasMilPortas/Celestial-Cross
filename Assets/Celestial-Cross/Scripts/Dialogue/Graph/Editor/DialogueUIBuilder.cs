@@ -25,6 +25,15 @@ namespace CelestialCross.Dialogue.Editor
                 canvasGO.AddComponent<GraphicRaycaster>();
             }
 
+            // Scenery Root (atrás de tudo)
+            GameObject sceneryRoot = new GameObject("SceneryRoot");
+            sceneryRoot.transform.SetParent(canvasGO.transform, false);
+            RectTransform sceneryRT = sceneryRoot.AddComponent<RectTransform>();
+            sceneryRT.anchorMin = Vector2.zero;
+            sceneryRT.anchorMax = Vector2.one;
+            sceneryRT.sizeDelta = Vector2.zero;
+            sceneryRoot.transform.SetAsFirstSibling(); // Garantir que fica atrás
+
             // 2. Criar Painel Principal
             GameObject mainPanel = new GameObject("MainDialoguePanel");
             mainPanel.transform.SetParent(canvasGO.transform, false);
@@ -101,6 +110,7 @@ namespace CelestialCross.Dialogue.Editor
             GameObject managerGO = new GameObject("DialogueManager (System)");
             var manager = managerGO.AddComponent<CelestialCross.Dialogue.Manager.DialogueManager>();
             var ui = managerGO.AddComponent<CelestialCross.Dialogue.Manager.DialogueUI>();
+            var sceneryCtrl = managerGO.AddComponent<CelestialCross.Dialogue.Graph.DialogueSceneryController>();
 
             // Linkar Referências automaticamente
             SerializedObject soUI = new SerializedObject(ui);
@@ -114,8 +124,13 @@ namespace CelestialCross.Dialogue.Editor
             if (choiceBtnPrefab != null) soUI.FindProperty("choiceButtonPrefab").objectReferenceValue = choiceBtnPrefab;
             soUI.ApplyModifiedProperties();
 
+            SerializedObject soCtrl = new SerializedObject(sceneryCtrl);
+            soCtrl.FindProperty("sceneryRoot").objectReferenceValue = sceneryRT;
+            soCtrl.ApplyModifiedProperties();
+
             SerializedObject soManager = new SerializedObject(manager);
             soManager.FindProperty("dialogueUI").objectReferenceValue = ui;
+            soManager.FindProperty("sceneryController").objectReferenceValue = sceneryCtrl;
             soManager.ApplyModifiedProperties();
 
             Selection.activeGameObject = managerGO;

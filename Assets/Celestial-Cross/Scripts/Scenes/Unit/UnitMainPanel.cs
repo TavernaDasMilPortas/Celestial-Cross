@@ -98,6 +98,7 @@ namespace CelestialCross.Scenes.Unit
                 {
                     unitXpFillImage.DOKill();
                     float targetFill = xpToNext > 0 ? (float)runtimeData.CurrentXP / xpToNext : 1f;
+                    unitXpFillImage.fillAmount = 0f;
                     unitXpFillImage.DOFillAmount(targetFill, 0.6f).SetEase(Ease.OutCubic);
                 }
             }
