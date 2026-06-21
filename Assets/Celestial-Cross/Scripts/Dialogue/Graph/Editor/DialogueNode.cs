@@ -11,6 +11,7 @@ namespace CelestialCross.Dialogue.Graph.Editor
         public string dialogueText;
         public Sprite characterSprite;
         public bool entryPoint = false;
+        public string sceneryId;
 
         // Dados de Condição / Ação
         public string variableName;

@@ -1141,6 +1141,7 @@ MonoBehaviour:
   shopSceneName: ShopScene
   categories:
   - {fileID: 11400000, guid: 7ae324cccbef89349a6be98a24ae0d9e, type: 2}
+  - {fileID: 11400000, guid: 1c8c6eee2f6208a49b39a265c6de68ac, type: 2}
   moneyText: {fileID: 698238841}
   energyText: {fileID: 1405131620}
   energyRegenText: {fileID: 495742949}

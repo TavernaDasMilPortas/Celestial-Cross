@@ -286,6 +286,13 @@ namespace CelestialCross.Dialogue.Graph.Editor
             spriteField.SetValueWithoutNotify(dialogueNode.characterSprite);
             dialogueNode.mainContainer.Add(spriteField);
 
+            // Cenário
+            var sceneryField = new TextField("Scenery ID:");
+            sceneryField.name = "scenery-field";
+            sceneryField.RegisterValueChangedCallback(evt => dialogueNode.sceneryId = evt.newValue);
+            sceneryField.SetValueWithoutNotify(dialogueNode.sceneryId ?? "");
+            dialogueNode.mainContainer.Add(sceneryField);
+
             // Removemos o botão de escolhas múltiplas daqui, pois usaremos o Choice Node
             var generatedPort = GeneratePort(dialogueNode, UnityEditor.Experimental.GraphView.Direction.Output);
             generatedPort.portName = "Next";

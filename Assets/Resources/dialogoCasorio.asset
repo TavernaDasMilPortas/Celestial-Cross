@@ -46,14 +46,16 @@ MonoBehaviour:
   nodeData:
   - guid: 0f73dd2e-aa0c-44e4-b29e-d5f73bca0a70
     nodeType: 1
-    position: {x: 332, y: 210}
+    position: {x: 0, y: 0}
     speakerName: Pessoa 1
     dialogueText: "oi voc\xEA me ama?"
     characterSprite: {fileID: 0}
+    sceneryId: dialogoCasorio_Scenery_cenarioteste
     choices: []
     conditionVariable: 
     conditionValue: 
     conditionType: 0
+    conditionPorts: []
     actionVariable: 
     actionValue: 
     actionType: 0
@@ -61,14 +63,16 @@ MonoBehaviour:
     compareValue: 
   - guid: e860889d-fae5-4924-9db6-089057c82dfd
     nodeType: 2
-    position: {x: 681, y: 254}
+    position: {x: 0, y: 0}
     speakerName: 
     dialogueText: 
     characterSprite: {fileID: 0}
+    sceneryId: 
     choices: []
     conditionVariable: 
     conditionValue: 
     conditionType: 0
+    conditionPorts: []
     actionVariable: 
     actionValue: 
     actionType: 0
@@ -76,14 +80,16 @@ MonoBehaviour:
     compareValue: 
   - guid: 720c5e11-327b-4836-a064-0296aa4a2d3e
     nodeType: 4
-    position: {x: 1069, y: 379}
+    position: {x: 0, y: 0}
     speakerName: 
     dialogueText: 
     characterSprite: {fileID: 0}
+    sceneryId: 
     choices: []
     conditionVariable: Casamento
     conditionValue: False
     conditionType: 0
+    conditionPorts: []
     actionVariable: Casamento
     actionValue: False
     actionType: 0
@@ -91,14 +97,16 @@ MonoBehaviour:
     compareValue: False
   - guid: 81c555ec-6354-4ce4-86c5-a8ad5a44ee95
     nodeType: 1
-    position: {x: 1672, y: 171}
+    position: {x: 0, y: 0}
     speakerName: Pessoa 1
     dialogueText: "Ent\xE3o casa comigo"
     characterSprite: {fileID: 0}
+    sceneryId: dialogoCasorio_Scenery_cenarioteste
     choices: []
     conditionVariable: 
     conditionValue: 
     conditionType: 0
+    conditionPorts: []
     actionVariable: 
     actionValue: 
     actionType: 0
@@ -106,14 +114,16 @@ MonoBehaviour:
     compareValue: 
   - guid: bf09a275-7f7a-4e6b-9555-28eee56dd8f1
     nodeType: 5
-    position: {x: 2061, y: 309}
+    position: {x: 0, y: 0}
     speakerName: 
     dialogueText: 
     characterSprite: {fileID: 0}
+    sceneryId: 
     choices: []
     conditionVariable: 
     conditionValue: 
     conditionType: 0
+    conditionPorts: []
     actionVariable: 
     actionValue: 
     actionType: 0
@@ -121,14 +131,16 @@ MonoBehaviour:
     compareValue: 
   - guid: 17d7610e-6b28-4e92-b4b2-9d3015e51bb1
     nodeType: 1
-    position: {x: 1698, y: 361}
+    position: {x: 0, y: 0}
     speakerName: Pessoa 2
     dialogueText: Aff otario
     characterSprite: {fileID: 0}
+    sceneryId: dialogoCasorio_Scenery_cenarioteste
     choices: []
     conditionVariable: 
     conditionValue: 
     conditionType: 0
+    conditionPorts: []
     actionVariable: 
     actionValue: 
     actionType: 0
@@ -136,14 +148,18 @@ MonoBehaviour:
     compareValue: 
   - guid: 2d9a1060-a7d0-481f-9d26-69f50c751365
     nodeType: 3
-    position: {x: 1347, y: 282}
+    position: {x: 0, y: 0}
     speakerName: 
     dialogueText: 
     characterSprite: {fileID: 0}
+    sceneryId: 
     choices: []
     conditionVariable: Casamento
     conditionValue: 
     conditionType: 3
+    conditionPorts:
+    - True
+    - False
     actionVariable: Casamento
     actionValue: 
     actionType: 0
@@ -151,19 +167,26 @@ MonoBehaviour:
     compareValue: 
   - guid: 68b91453-0697-4b8b-85db-4af588dbcf1e
     nodeType: 4
-    position: {x: 1069, y: 158}
+    position: {x: 0, y: 0}
     speakerName: 
     dialogueText: 
     characterSprite: {fileID: 0}
+    sceneryId: 
     choices: []
     conditionVariable: Casamento
     conditionValue: True
     conditionType: 0
+    conditionPorts: []
     actionVariable: Casamento
     actionValue: True
     actionType: 0
     variableName: Casamento
     compareValue: True
+  sceneryMappings:
+  - sceneryId: dialogoCasorio_Scenery_cenarioteste
+    scenery: {fileID: 11400000, guid: 8dba67d536fe0eb4a99060d05e7adfa1, type: 2}
+  - sceneryId: "dialogoCasorio_Scenery_NovoCen\xE1rio"
+    scenery: {fileID: 11400000, guid: 72b5881842cc38649a22b64c3c073a3e, type: 2}
   exposedProperties:
   - propertyName: Casamento
     propertyValue: False

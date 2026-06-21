@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c88dc071a74705e4891f163f1fc40faf, type: 3}
+  m_Name: "Ch_Uma hist\xF3ria Antiga"
+  m_EditorClassIdentifier: Assembly-CSharp::CelestialCross.Progression.ChapterData
+  ChapterID: cb5729fc-cb1f-4abe-9128-097457a56702
+  ChapterTitle: "Uma hist\xF3ria Antiga"
+  Description: "Toda hist\xF3ria tem um come\xE7o, vamos descobrir o dessa"
+  RequiredChapter: {fileID: 0}
+  RequiredUnitID: 
+  IsDiaryChapter: 0
+  Nodes:
+  - rid: 2503027714264399952
+  references:
+    version: 2
+    RefIds:
+    - rid: 2503027714264399952
+      type: {class: DialogueStoryNode, ns: CelestialCross.Progression, asm: Assembly-CSharp}
+      data:
+        NodeID: f8bdcfea-4301-4601-aa1a-f9b237a7fea6
+        Title: Casa comigo
+        IsAutoPlay: 0
+        EntryCost:
+          EnergyCost: 0
+          ItemCosts: []
+        Rewards:
+          FirstClearRewards: []
+          RepeatRewards: []
+          LootTables: []
+          MilestoneRewards: []
+        MaxCompletions: -1
+        ResetPolicy:
+          ResetType: 0
+          ResetHourUTC: 3
+          ResetDayOfWeek: 1
+          WeeklyResetHourUTC: 3
+          ResetDayOfMonth: 1
+          MonthlyResetHourUTC: 3
+          CustomResetIntervalHours: 24
+        NodeIcon: {fileID: 0}
+        Requirement:
+          RequiresInvite: 0
+          RequiresPreviousNode: 0
+          PreviousNodeID: 
+          InviteCostOptions: []
+        DialogueGraph: {fileID: 11400000, guid: a2d5531ac68657d4da472c7ff2136347, type: 2}

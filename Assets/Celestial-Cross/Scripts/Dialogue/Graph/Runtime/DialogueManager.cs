@@ -20,11 +20,13 @@ namespace CelestialCross.Dialogue.Manager
         
         [Header("UI Reference")]
         [SerializeField] private DialogueUI dialogueUI;
+        [SerializeField] private DialogueSceneryController sceneryController;
 
         private DialogueNodeData _currentNode;
         private string[] _currentPages;
         private int _currentPageIndex;
         private bool _isGraphActive;
+        private string _currentSceneryId;
 
         public static DialogueManager Instance { get; private set; }
 
@@ -80,6 +82,10 @@ namespace CelestialCross.Dialogue.Manager
             {
                 NavigateToNode(dialogueGraph.nodeData[0].guid);
             }
+            else
+            {
+                EndDialogue();
+            }
         }
 
         private void NavigateToNode(string guid)
@@ -119,6 +125,18 @@ namespace CelestialCross.Dialogue.Manager
 
         private void ShowSpeech()
         {
+            // Verificar troca de cenário
+            if (!string.IsNullOrEmpty(_currentNode.sceneryId) && _currentNode.sceneryId != _currentSceneryId)
+            {
+                var mapping = dialogueGraph.sceneryMappings?.FirstOrDefault(m => m.sceneryId == _currentNode.sceneryId);
+                if (mapping != null && mapping.scenery != null)
+                {
+                    if (sceneryController != null)
+                        sceneryController.TransitionTo(mapping.scenery);
+                    _currentSceneryId = _currentNode.sceneryId;
+                }
+            }
+
             // Divide o texto em páginas se for muito longo
             _currentPages = DialogueTextProcessor.SplitDialogueText(_currentNode.dialogueText, 150);
             _currentPageIndex = 0;
@@ -148,6 +166,12 @@ namespace CelestialCross.Dialogue.Manager
             if (dialogueUI.IsTyping)
             {
                 dialogueUI.SkipTypewriter();
+                return;
+            }
+
+            if (_currentNode == null)
+            {
+                EndDialogue();
                 return;
             }
 
