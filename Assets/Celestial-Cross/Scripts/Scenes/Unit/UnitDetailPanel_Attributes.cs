@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
+using DG.Tweening;
 
 namespace CelestialCross.Scenes.Unit
 {
@@ -16,6 +17,7 @@ namespace CelestialCross.Scenes.Unit
         public TextMeshProUGUI critDmgText;
         public TextMeshProUGUI effectAccText;
         public TextMeshProUGUI effectResText;
+        private DG.Tweening.Sequence currentAnimSeq;
 
         public ArtifactSetCatalog artifactSetCatalog;
 
@@ -159,6 +161,24 @@ namespace CelestialCross.Scenes.Unit
                 if (critDmgText != null) critDmgText.text = finalCritDmg > roundedBaseCritDmg ? $"C.DMG: <color=#00ff00>{finalCritDmg}%</color>" : $"C.DMG: {finalCritDmg}%";
                 if (effectAccText != null) effectAccText.text = finalAcc > roundedBaseAcc ? $"ACC: <color=#00ff00>{finalAcc}%</color>" : $"ACC: {finalAcc}%";
                 if (effectResText != null) effectResText.text = finalRes > roundedBaseRes ? $"RES: <color=#00ff00>{finalRes}%</color>" : $"RES: {finalRes}%";
+            }
+
+            // Animação dos Textos
+            currentAnimSeq?.Kill();
+            currentAnimSeq = DG.Tweening.DOTween.Sequence();
+            currentAnimSeq.SetUpdate(true);
+            currentAnimSeq.SetLink(gameObject);
+            TextMeshProUGUI[] texts = { hpText, atkText, defText, spdText, critRateText, critDmgText, effectAccText, effectResText };
+            float delay = 0f;
+            foreach (var t in texts)
+            {
+                if (t != null && t.gameObject.activeInHierarchy)
+                {
+                    t.transform.DOKill();
+                    t.transform.localScale = Vector3.one * 0.8f;
+                    currentAnimSeq.Insert(delay, t.transform.DOScale(1f, 0.2f).SetEase(DG.Tweening.Ease.OutBack).SetLink(t.gameObject));
+                    delay += 0.03f;
+                }
             }
         }
 

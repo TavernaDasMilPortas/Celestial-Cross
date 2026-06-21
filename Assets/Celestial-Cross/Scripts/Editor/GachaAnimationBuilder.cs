@@ -370,5 +370,276 @@ namespace CelestialCross.EditorTools
                 Debug.LogError("GachaAnimationController não encontrado!");
             }
         }
+        [Button("6. Build Reward Detail Modal", ButtonSizes.Large)]
+        private void BuildRewardDetailModal()
+        {
+            var controller = FindObjectOfType<GachaAnimationController>();
+            if (controller != null)
+            {
+                if (controller.rewardDetailModal != null)
+                {
+                    Debug.Log("O Modal já existe e está referenciado no Controller.");
+                    return;
+                }
+
+                // Cria o root do Modal
+                GameObject modalRoot = new GameObject("RewardDetailModal", typeof(RectTransform));
+                modalRoot.transform.SetParent(controller.transform, false);
+                RectTransform rootRect = modalRoot.GetComponent<RectTransform>();
+                rootRect.anchorMin = Vector2.zero;
+                rootRect.anchorMax = Vector2.one;
+                rootRect.sizeDelta = Vector2.zero;
+                modalRoot.SetActive(false); // Inicia oculto
+                controller.rewardDetailModal = modalRoot;
+
+                // Cria o background invisível ou escurecido que serve como botão para fechar
+                GameObject bgOverlay = new GameObject("ModalBackgroundOverlay", typeof(RectTransform), typeof(Image), typeof(Button));
+                bgOverlay.transform.SetParent(modalRoot.transform, false);
+                RectTransform bgRect = bgOverlay.GetComponent<RectTransform>();
+                bgRect.anchorMin = Vector2.zero;
+                bgRect.anchorMax = Vector2.one;
+                bgRect.sizeDelta = Vector2.zero;
+                var bgImg = bgOverlay.GetComponent<Image>();
+                bgImg.color = new Color(0, 0, 0, 0.8f);
+                var btnClose = bgOverlay.GetComponent<Button>();
+                btnClose.transition = Selectable.Transition.None;
+                controller.modalCloseButton = btnClose;
+
+                // Cria o painel flutuante
+                GameObject panel = new GameObject("DetailsPanel", typeof(RectTransform), typeof(Image));
+                panel.transform.SetParent(modalRoot.transform, false);
+                RectTransform panelRect = panel.GetComponent<RectTransform>();
+                panelRect.anchorMin = new Vector2(0.5f, 0.5f);
+                panelRect.anchorMax = new Vector2(0.5f, 0.5f);
+                panelRect.sizeDelta = new Vector2(500, 600);
+                var panelImg = panel.GetComponent<Image>();
+                panelImg.color = new Color(0.1f, 0.1f, 0.12f, 1f); // Dark background
+
+                // Cria o Icon
+                GameObject iconGo = new GameObject("ItemIcon", typeof(RectTransform), typeof(Image));
+                iconGo.transform.SetParent(panel.transform, false);
+                RectTransform iconRect = iconGo.GetComponent<RectTransform>();
+                iconRect.anchorMin = new Vector2(0.5f, 0.7f);
+                iconRect.anchorMax = new Vector2(0.5f, 0.7f);
+                iconRect.sizeDelta = new Vector2(200, 200);
+                iconRect.anchoredPosition = new Vector2(0, 0);
+                controller.modalIcon = iconGo.GetComponent<Image>();
+
+                // Cria o Nome
+                GameObject nameGo = new GameObject("ItemNameText", typeof(RectTransform), typeof(TextMeshProUGUI));
+                nameGo.transform.SetParent(panel.transform, false);
+                RectTransform nameRect = nameGo.GetComponent<RectTransform>();
+                nameRect.anchorMin = new Vector2(0.5f, 0.4f);
+                nameRect.anchorMax = new Vector2(0.5f, 0.4f);
+                nameRect.sizeDelta = new Vector2(450, 100);
+                nameRect.anchoredPosition = new Vector2(0, 0);
+                var tmproName = nameGo.GetComponent<TextMeshProUGUI>();
+                tmproName.text = "Item Name";
+                tmproName.alignment = TextAlignmentOptions.Center;
+                tmproName.fontSize = 42;
+                tmproName.fontStyle = FontStyles.Bold;
+                controller.modalName = tmproName;
+
+                // Cria Raridade
+                GameObject rarityGo = new GameObject("ItemRarityText", typeof(RectTransform), typeof(TextMeshProUGUI));
+                rarityGo.transform.SetParent(panel.transform, false);
+                RectTransform rarityRect = rarityGo.GetComponent<RectTransform>();
+                rarityRect.anchorMin = new Vector2(0.5f, 0.25f);
+                rarityRect.anchorMax = new Vector2(0.5f, 0.25f);
+                rarityRect.sizeDelta = new Vector2(400, 60);
+                rarityRect.anchoredPosition = new Vector2(0, 0);
+                var tmproRarity = rarityGo.GetComponent<TextMeshProUGUI>();
+                tmproRarity.text = "Rarity";
+                tmproRarity.alignment = TextAlignmentOptions.Center;
+                tmproRarity.fontSize = 28;
+                tmproRarity.fontStyle = FontStyles.Bold | FontStyles.Italic;
+                controller.modalRarityText = tmproRarity;
+
+                // Cria Descrição / Quantidade
+                GameObject descGo = new GameObject("ItemDescText", typeof(RectTransform), typeof(TextMeshProUGUI));
+                descGo.transform.SetParent(panel.transform, false);
+                RectTransform descRect = descGo.GetComponent<RectTransform>();
+                descRect.anchorMin = new Vector2(0.5f, 0.1f);
+                descRect.anchorMax = new Vector2(0.5f, 0.1f);
+                descRect.sizeDelta = new Vector2(400, 100);
+                descRect.anchoredPosition = new Vector2(0, 0);
+                var tmproDesc = descGo.GetComponent<TextMeshProUGUI>();
+                tmproDesc.text = "Description";
+                tmproDesc.alignment = TextAlignmentOptions.Center;
+                tmproDesc.fontSize = 24;
+                tmproDesc.color = new Color(0.8f, 0.8f, 0.8f, 1f);
+                controller.modalDesc = tmproDesc;
+
+                EditorUtility.SetDirty(controller);
+                Debug.Log("Reward Detail Modal construído e anexado ao Controller com sucesso!");
+            }
+            else
+            {
+                Debug.LogError("GachaAnimationController não encontrado!");
+            }
+        }
+
+        [Button("6. Build Gacha Unit Reward Modal", ButtonSizes.Large)]
+        [GUIColor(1f, 0.5f, 0.1f)]
+        private void BuildGachaUnitRewardModal()
+        {
+            var controller = FindObjectOfType<GachaAnimationController>();
+            if (controller != null)
+            {
+                if (controller.gachaUnitRewardModal != null)
+                {
+                    Debug.Log("O GachaUnitRewardModal já existe e está referenciado no Controller.");
+                    return;
+                }
+
+                GameObject modalRoot = new GameObject("GachaUnitRewardModal", typeof(RectTransform), typeof(CelestialCross.Gacha.UI.GachaUnitRewardModal));
+                modalRoot.transform.SetParent(controller.transform, false);
+                RectTransform rootRect = modalRoot.GetComponent<RectTransform>();
+                rootRect.anchorMin = Vector2.zero; rootRect.anchorMax = Vector2.one; rootRect.sizeDelta = Vector2.zero;
+                modalRoot.SetActive(false);
+                var comp = modalRoot.GetComponent<CelestialCross.Gacha.UI.GachaUnitRewardModal>();
+                controller.gachaUnitRewardModal = comp;
+
+                GameObject bgOverlay = new GameObject("BackgroundOverlay", typeof(RectTransform), typeof(Image), typeof(Button));
+                bgOverlay.transform.SetParent(modalRoot.transform, false);
+                RectTransform bgRect = bgOverlay.GetComponent<RectTransform>();
+                bgRect.anchorMin = Vector2.zero; bgRect.anchorMax = Vector2.one; bgRect.sizeDelta = Vector2.zero;
+                var bgImg = bgOverlay.GetComponent<Image>(); bgImg.color = new Color(0, 0, 0, 0.8f);
+                var btnClose = bgOverlay.GetComponent<Button>(); btnClose.transition = Selectable.Transition.None;
+                comp.closeButton = btnClose;
+
+                GameObject panel = new GameObject("ContentPanel", typeof(RectTransform), typeof(Image));
+                panel.transform.SetParent(modalRoot.transform, false);
+                RectTransform panelRect = panel.GetComponent<RectTransform>();
+                panelRect.anchorMin = new Vector2(0.5f, 0.5f); panelRect.anchorMax = new Vector2(0.5f, 0.5f);
+                panelRect.sizeDelta = new Vector2(600, 800);
+                var panelImg = panel.GetComponent<Image>(); panelImg.color = new Color(0.15f, 0.15f, 0.2f, 1f);
+
+                GameObject spriteGo = new GameObject("SpriteImage", typeof(RectTransform), typeof(Image));
+                spriteGo.transform.SetParent(panel.transform, false);
+                RectTransform spriteRect = spriteGo.GetComponent<RectTransform>();
+                spriteRect.anchorMin = new Vector2(0.5f, 0.8f); spriteRect.anchorMax = new Vector2(0.5f, 0.8f);
+                spriteRect.sizeDelta = new Vector2(250, 250); spriteRect.anchoredPosition = Vector2.zero;
+                comp.spriteImage = spriteGo.GetComponent<Image>(); comp.spriteImage.preserveAspect = true;
+
+                GameObject nameGo = new GameObject("NameText", typeof(RectTransform), typeof(TextMeshProUGUI));
+                nameGo.transform.SetParent(panel.transform, false);
+                RectTransform nameRect = nameGo.GetComponent<RectTransform>();
+                nameRect.anchorMin = new Vector2(0.5f, 0.6f); nameRect.anchorMax = new Vector2(0.5f, 0.6f);
+                nameRect.sizeDelta = new Vector2(500, 50); nameRect.anchoredPosition = Vector2.zero;
+                var tmproName = nameGo.GetComponent<TextMeshProUGUI>();
+                tmproName.text = "Unit Name"; tmproName.alignment = TextAlignmentOptions.Center; tmproName.fontSize = 36; tmproName.fontStyle = FontStyles.Bold;
+                comp.nameText = tmproName;
+
+                GameObject rarityGo = new GameObject("RarityText", typeof(RectTransform), typeof(TextMeshProUGUI));
+                rarityGo.transform.SetParent(panel.transform, false);
+                RectTransform rarityRect = rarityGo.GetComponent<RectTransform>();
+                rarityRect.anchorMin = new Vector2(0.5f, 0.55f); rarityRect.anchorMax = new Vector2(0.5f, 0.55f);
+                rarityRect.sizeDelta = new Vector2(500, 40); rarityRect.anchoredPosition = Vector2.zero;
+                var tmproRarity = rarityGo.GetComponent<TextMeshProUGUI>();
+                tmproRarity.text = "Rarity"; tmproRarity.alignment = TextAlignmentOptions.Center; tmproRarity.fontSize = 24; tmproRarity.color = Color.yellow;
+                comp.rarityText = tmproRarity;
+
+                GameObject starsGo = new GameObject("StarsContainer", typeof(RectTransform), typeof(UnityEngine.UI.HorizontalLayoutGroup));
+                starsGo.transform.SetParent(panel.transform, false);
+                RectTransform starsRect = starsGo.GetComponent<RectTransform>();
+                starsRect.anchorMin = new Vector2(0.5f, 0.48f); starsRect.anchorMax = new Vector2(0.5f, 0.48f);
+                starsRect.sizeDelta = new Vector2(300, 50); starsRect.anchoredPosition = Vector2.zero;
+                var hg = starsGo.GetComponent<UnityEngine.UI.HorizontalLayoutGroup>();
+                hg.childAlignment = TextAnchor.MiddleCenter; hg.childControlWidth = false; hg.childControlHeight = false; hg.spacing = 5;
+                comp.starsContainer = starsGo.transform;
+
+                GameObject statsGo = new GameObject("StatsText", typeof(RectTransform), typeof(TextMeshProUGUI));
+                statsGo.transform.SetParent(panel.transform, false);
+                RectTransform statsRect = statsGo.GetComponent<RectTransform>();
+                statsRect.anchorMin = new Vector2(0.5f, 0.3f); statsRect.anchorMax = new Vector2(0.5f, 0.3f);
+                statsRect.sizeDelta = new Vector2(500, 150); statsRect.anchoredPosition = Vector2.zero;
+                var tmproStats = statsGo.GetComponent<TextMeshProUGUI>();
+                tmproStats.text = "Stats"; tmproStats.alignment = TextAlignmentOptions.Center; tmproStats.fontSize = 26;
+                comp.statsText = tmproStats;
+
+                GameObject skillsGo = new GameObject("SkillsContainer", typeof(RectTransform), typeof(UnityEngine.UI.HorizontalLayoutGroup));
+                skillsGo.transform.SetParent(panel.transform, false);
+                RectTransform skillsRect = skillsGo.GetComponent<RectTransform>();
+                skillsRect.anchorMin = new Vector2(0.5f, 0.1f); skillsRect.anchorMax = new Vector2(0.5f, 0.1f);
+                skillsRect.sizeDelta = new Vector2(400, 80); skillsRect.anchoredPosition = Vector2.zero;
+                var hgSkills = skillsGo.GetComponent<UnityEngine.UI.HorizontalLayoutGroup>();
+                hgSkills.childAlignment = TextAnchor.MiddleCenter; hgSkills.childControlWidth = false; hgSkills.childControlHeight = false; hgSkills.spacing = 20;
+                comp.skillsContainer = skillsGo.transform;
+
+                EditorUtility.SetDirty(controller);
+                EditorUtility.SetDirty(comp);
+                Debug.Log("Gacha Unit Reward Modal construído e anexado ao Controller com sucesso!");
+            }
+        }
+
+        [Button("7. Fix & Instantiate Prefab Modals", ButtonSizes.Large)]
+        [GUIColor(0.2f, 0.9f, 0.4f)]
+        private void FixPrefabModals()
+        {
+            var controller = FindObjectOfType<GachaAnimationController>();
+            if (controller == null)
+            {
+                Debug.LogError("GachaAnimationController não encontrado!");
+                return;
+            }
+
+            bool changed = false;
+
+            // Busca automática caso estejam vazios
+            if (controller.artifactActionModal == null) controller.artifactActionModal = FindPrefabOfType<CelestialCross.Scenes.Unit.ArtifactActionModal>();
+            if (controller.artifactUpgradeModal == null) controller.artifactUpgradeModal = FindPrefabOfType<CelestialCross.Giulia_UI.ArtifactUpgradeModal>();
+            if (controller.gachaUnitRewardModal != null && controller.gachaUnitRewardModal.petSkillModal == null)
+                controller.gachaUnitRewardModal.petSkillModal = FindPrefabOfType<CelestialCross.Scenes.Inventory.PetSkillModal>();
+
+            if (controller.artifactActionModal != null && PrefabUtility.IsPartOfPrefabAsset(controller.artifactActionModal))
+            {
+                var instance = (CelestialCross.Scenes.Unit.ArtifactActionModal)PrefabUtility.InstantiatePrefab(controller.artifactActionModal, controller.transform);
+                instance.gameObject.SetActive(false);
+                controller.artifactActionModal = instance;
+                changed = true;
+            }
+            if (controller.artifactUpgradeModal != null && PrefabUtility.IsPartOfPrefabAsset(controller.artifactUpgradeModal))
+            {
+                var instance = (CelestialCross.Giulia_UI.ArtifactUpgradeModal)PrefabUtility.InstantiatePrefab(controller.artifactUpgradeModal, controller.transform);
+                instance.gameObject.SetActive(false);
+                controller.artifactUpgradeModal = instance;
+                changed = true;
+            }
+            if (controller.gachaUnitRewardModal != null && controller.gachaUnitRewardModal.petSkillModal != null && PrefabUtility.IsPartOfPrefabAsset(controller.gachaUnitRewardModal.petSkillModal))
+            {
+                var instance = (CelestialCross.Scenes.Inventory.PetSkillModal)PrefabUtility.InstantiatePrefab(controller.gachaUnitRewardModal.petSkillModal, controller.transform);
+                instance.gameObject.SetActive(false);
+                controller.gachaUnitRewardModal.petSkillModal = instance;
+                EditorUtility.SetDirty(controller.gachaUnitRewardModal);
+                changed = true;
+            }
+
+            if (changed)
+            {
+                EditorUtility.SetDirty(controller);
+                Debug.Log("Prefabs localizados magicamente, instanciados e atribuídos com sucesso!");
+            }
+            else
+            {
+                Debug.Log("Todos os modais já estão instanciados na cena corretamente.");
+            }
+        }
+
+        private T FindPrefabOfType<T>() where T : MonoBehaviour
+        {
+            string[] guids = AssetDatabase.FindAssets("t:Prefab");
+            foreach (string guid in guids)
+            {
+                string path = AssetDatabase.GUIDToAssetPath(guid);
+                GameObject go = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+                if (go != null)
+                {
+                    T comp = go.GetComponent<T>();
+                    if (comp != null) return comp;
+                }
+            }
+            return null;
+        }
     }
 }

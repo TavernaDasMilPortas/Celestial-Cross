@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Audio;
+using MoreMountains.Tools;
 using System.Collections.Generic;
 
 namespace CelestialCross.Audio
@@ -8,9 +9,10 @@ namespace CelestialCross.Audio
     {
         public static AudioManager Instance { get; private set; }
 
-        [SerializeField] private AudioMixer mainMixer;
-        [SerializeField] private AudioSource musicSource;
-        [SerializeField] private AudioSource sfxSourcePrefab;
+        [SerializeField] private SoundRegistrySO _soundRegistry;
+        
+        [Header("Runtime")]
+        [SerializeField] private MMSoundManager _feelSoundManager; // Reference if needed, but it's a singleton
 
         private void Awake()
         {
@@ -34,36 +36,90 @@ namespace CelestialCross.Audio
 
             var s = AccountManager.Instance.PlayerAccount.Settings;
             
-            // Define volumes no Mixer (escala logarítmica recomendada: 20 * log10(vol))
-            SetMixerVolume("MasterVol", s.MasterVolume);
-            SetMixerVolume("MusicVol", s.MusicVolume);
-            SetMixerVolume("SFXVol", s.SFXVolume);
-
             // Qualidade Gráfica
             QualitySettings.SetQualityLevel(s.QualityLevel);
+
+            if (MMSoundManager.Instance == null) return;
+
+            // Define volumes no MMSoundManager (que converte internamente para Mixer dB)
+            MMSoundManager.Instance.SetVolumeMaster(s.MasterVolume);
+            MMSoundManager.Instance.SetVolumeMusic(s.MusicVolume);
+            MMSoundManager.Instance.SetVolumeSfx(s.SFXVolume);
+            MMSoundManager.Instance.SetVolumeUI(s.SFXVolume); // Usando SFXVolume para UI por enquanto
         }
 
-        private void SetMixerVolume(string parameter, float normalizedValue)
+        public void PlayMusic(SoundKey key, bool loop = true)
         {
-            if (mainMixer == null) return;
-            // Converte 0-1 para -80dB a 0dB
-            float db = normalizedValue > 0.0001f ? Mathf.Log10(normalizedValue) * 20 : -80f;
-            mainMixer.SetFloat(parameter, db);
+            if (key == SoundKey.None || _soundRegistry == null) return;
+            
+            var mapping = _soundRegistry.GetMapping(key);
+            if (mapping == null) return;
+
+            if (mapping.SoundData != null)
+            {
+                mapping.SoundData.Play(Vector3.zero);
+            }
+            else if (mapping.Clip != null)
+            {
+                var options = MMSoundManagerPlayOptions.Default;
+                options.Loop = loop;
+                options.MmSoundManagerTrack = MMSoundManager.MMSoundManagerTracks.Music;
+                options.Volume = mapping.VolumeMultiplier;
+                options.Pitch = mapping.Pitch;
+                options.Persistent = true;
+                
+                MMSoundManagerSoundPlayEvent.Trigger(mapping.Clip, options);
+            }
+        }
+        
+        public void StopMusic()
+        {
+            MMSoundManagerTrackEvent.Trigger(MMSoundManagerTrackEventTypes.StopTrack, MMSoundManager.MMSoundManagerTracks.Music);
         }
 
-        public void PlayMusic(AudioClip clip, bool loop = true)
+        public void PlaySFX(SoundKey key, Vector3 position = default)
         {
-            if (musicSource.clip == clip) return;
-            musicSource.clip = clip;
-            musicSource.loop = loop;
-            musicSource.Play();
-        }
+            if (key == SoundKey.None || _soundRegistry == null) return;
 
-        public void PlaySFX(AudioClip clip, float pitchVar = 0.1f)
+            var mapping = _soundRegistry.GetMapping(key);
+            if (mapping == null) return;
+
+            if (mapping.SoundData != null)
+            {
+                mapping.SoundData.Play(position);
+            }
+            else if (mapping.Clip != null)
+            {
+                var options = MMSoundManagerPlayOptions.Default;
+                options.MmSoundManagerTrack = MMSoundManager.MMSoundManagerTracks.Sfx;
+                options.Location = position;
+                options.Volume = mapping.VolumeMultiplier;
+                options.Pitch = mapping.Pitch;
+                
+                MMSoundManagerSoundPlayEvent.Trigger(mapping.Clip, options);
+            }
+        }
+        
+        public void PlayUI(SoundKey key)
         {
-            if (clip == null) return;
-            // Simples por enquanto, futuramente usar um Pool
-            AudioSource.PlayClipAtPoint(clip, Camera.main.transform.position, AccountManager.Instance.PlayerAccount.Settings.SFXVolume);
+            if (key == SoundKey.None || _soundRegistry == null) return;
+
+            var mapping = _soundRegistry.GetMapping(key);
+            if (mapping == null) return;
+
+            if (mapping.SoundData != null)
+            {
+                mapping.SoundData.Play(Vector3.zero);
+            }
+            else if (mapping.Clip != null)
+            {
+                var options = MMSoundManagerPlayOptions.Default;
+                options.MmSoundManagerTrack = MMSoundManager.MMSoundManagerTracks.UI;
+                options.Volume = mapping.VolumeMultiplier;
+                options.Pitch = mapping.Pitch;
+                
+                MMSoundManagerSoundPlayEvent.Trigger(mapping.Clip, options);
+            }
         }
     }
 }

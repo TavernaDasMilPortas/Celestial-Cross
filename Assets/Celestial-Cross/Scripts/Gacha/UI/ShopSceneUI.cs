@@ -147,6 +147,12 @@ namespace CelestialCross.Gacha.UI
             // Flutuação das Setinhas (Eixo X)
             if (btnNextBanner != null) btnNextBanner.GetComponent<RectTransform>().DOAnchorPosX(10f, 1f).SetRelative(true).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InOutSine);
             if (btnPrevBanner != null) btnPrevBanner.GetComponent<RectTransform>().DOAnchorPosX(-10f, 1f).SetRelative(true).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InOutSine);
+
+            // Animação de respiração contínua para dar destaque no Ultimate garantido!
+            if (bannerCostInfo != null)
+            {
+                bannerCostInfo.transform.DOScale(1.08f, 2f).SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo);
+            }
         }
 
         private global::System.Collections.IEnumerator PullButtonsAttentionRoutine()
@@ -314,14 +320,27 @@ namespace CelestialCross.Gacha.UI
                 if (bannerSplashArt != null) bannerSplashArt.sprite = banner.BannerSplashArt;
                 
                 if (bannerCostInfo != null) 
-                    bannerCostInfo.text = $"{banner.HardPityThreshold - pity.PullsSinceLastSupreme}";
+                {
+                    string novoCusto = $"{banner.HardPityThreshold - pity.PullsSinceLastSupreme}";
+                    if (bannerCostInfo.text != novoCusto)
+                    {
+                        bannerCostInfo.text = novoCusto;
+                        // Animação de pulo (PunchScale) ao atualizar o valor
+                        bannerCostInfo.transform.DOPunchScale(Vector3.one * 0.2f, 0.5f, 5).SetUpdate(true);
+                    }
+                }
                 
                 if (pityInfoText != null)
                 {
                     string info = $"Garantia 10x (Uncommon+): {banner.GuaranteedAboveBaseEvery - pity.PullsSinceLastOverBase} tiros rest.";
                     if (banner.HasEpitomizedPath)
                         info += $"\n50/50 Anterior foi perdido? {(pity.Lost5050 ? "Sim (Garantido foco)" : "Não")}";
-                    pityInfoText.text = info;
+                    
+                    if (pityInfoText.text != info)
+                    {
+                        pityInfoText.text = info;
+                        pityInfoText.transform.DOPunchScale(Vector3.one * 0.05f, 0.4f, 2).SetUpdate(true);
+                    }
                 }
 
                 bool canPull1 = acc.StarMaps >= banner.CostPerPull * 1;
@@ -361,7 +380,7 @@ namespace CelestialCross.Gacha.UI
             }
         }
 
-        private void OnAnimationFinished(List<GachaRewardEntry> results)
+        private void OnAnimationFinished(List<RuntimeGachaResult> results)
         {
             RefreshUI();
         }

@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using CelestialCross.Artifacts;
+using DG.Tweening;
+using System.Collections.Generic;
 
 namespace CelestialCross.Scenes.Unit
 {
@@ -23,7 +25,19 @@ namespace CelestialCross.Scenes.Unit
         {
             if (set == null) return;
 
-            if (modalRoot != null) modalRoot.SetActive(true);
+            if (UnitSceneController.Instance != null) UnitSceneController.Instance.ShowModalOverlay();
+
+            if (modalRoot != null) 
+            {
+                modalRoot.SetActive(true);
+                var rect = modalRoot.GetComponent<RectTransform>();
+                if (rect != null)
+                {
+                    rect.DOKill();
+                    rect.localScale = Vector3.zero;
+                    rect.DOScale(1f, 0.3f).SetEase(Ease.OutBack).SetUpdate(true);
+                }
+            }
 
             if (titleText != null)
             {
@@ -42,6 +56,10 @@ namespace CelestialCross.Scenes.Unit
 
                 if (set.setBonuses != null)
                 {
+                    Sequence seq = DOTween.Sequence();
+                    seq.SetUpdate(true);
+                    float delay = 0.15f;
+
                     foreach (var bonus in set.setBonuses)
                     {
                         var go = Instantiate(bonusItemPrefab, bonusesContainer);
@@ -75,14 +93,13 @@ namespace CelestialCross.Scenes.Unit
                         var cg = go.GetComponent<CanvasGroup>();
                         if (cg == null) cg = go.AddComponent<CanvasGroup>();
                         
-                        if (equippedCount >= bonus.piecesRequired)
-                        {
-                            cg.alpha = 1f;
-                        }
-                        else
-                        {
-                            cg.alpha = 0.5f;
-                        }
+                        float targetAlpha = equippedCount >= bonus.piecesRequired ? 1f : 0.5f;
+                        cg.alpha = 0f;
+                        
+                        go.transform.localScale = Vector3.zero;
+                        seq.Insert(delay, go.transform.DOScale(1f, 0.25f).SetEase(Ease.OutBack));
+                        seq.Insert(delay, cg.DOFade(targetAlpha, 0.2f));
+                        delay += 0.08f;
                     }
                 }
             }
@@ -90,7 +107,23 @@ namespace CelestialCross.Scenes.Unit
 
         public void Hide()
         {
-            if (modalRoot != null) modalRoot.SetActive(false);
+            if (modalRoot != null && modalRoot.activeSelf)
+            {
+                var rect = modalRoot.GetComponent<RectTransform>();
+                if (rect != null)
+                {
+                    rect.DOKill();
+                    rect.DOScale(0f, 0.2f).SetEase(Ease.InBack).SetUpdate(true).OnComplete(() => {
+                        modalRoot.SetActive(false);
+                        if (UnitSceneController.Instance != null) UnitSceneController.Instance.HideModalOverlay();
+                    });
+                }
+                else
+                {
+                    modalRoot.SetActive(false);
+                    if (UnitSceneController.Instance != null) UnitSceneController.Instance.HideModalOverlay();
+                }
+            }
         }
     }
 }

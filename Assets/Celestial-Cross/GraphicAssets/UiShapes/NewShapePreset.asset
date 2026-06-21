@@ -13,49 +13,49 @@ MonoBehaviour:
   m_Name: NewShapePreset
   m_EditorClassIdentifier: Assembly-CSharp::CelestialCross.UI.ProceduralGraphic.ShapePreset
   _points:
-  - position: {x: 0.11433465, y: 0.8916923}
+  - position: {x: 0.13928118, y: 0.9037226}
     isSharp: 1
-  - position: {x: 0.1146201, y: 1}
+  - position: {x: 0.21603525, y: 0.91658425}
     isSharp: 1
-  - position: {x: 0.260322, y: 0.9995338}
+  - position: {x: 0.27918997, y: 0.9358544}
     isSharp: 1
-  - position: {x: 0.36773667, y: 0.9976415}
+  - position: {x: 0.3559442, y: 0.9493909}
     isSharp: 1
-  - position: {x: 0.5526628, y: 0.99863607}
+  - position: {x: 0.5361533, y: 0.9269866}
     isSharp: 1
-  - position: {x: 0.70263726, y: 0.9967469}
+  - position: {x: 0.73167115, y: 0.87038565}
     isSharp: 1
-  - position: {x: 0.8557663, y: 0.99800694}
+  - position: {x: 0.7547164, y: 0.7683373}
     isSharp: 0
-  - position: {x: 0.86520076, y: 0.8912592}
+  - position: {x: 0.7594334, y: 0.62525684}
     isSharp: 0
-  - position: {x: 0.86606413, y: 0.7527889}
+  - position: {x: 0.7617919, y: 0.5192638}
     isSharp: 0
-  - position: {x: 0.8662301, y: 0.626619}
+  - position: {x: 0.6320746, y: 0.50293946}
     isSharp: 1
-  - position: {x: 0.8655657, y: 0.48152786}
+  - position: {x: 0.45944375, y: 0.50367004}
     isSharp: 1
-  - position: {x: 0.7405654, y: 0.481713}
+  - position: {x: 0.31572303, y: 0.5095624}
     isSharp: 0
-  - position: {x: 0.58916104, y: 0.48244354}
+  - position: {x: 0.24331817, y: 0.52352923}
     isSharp: 1
-  - position: {x: 0.42893085, y: 0.483619}
-    isSharp: 0
-  - position: {x: 0.26926163, y: 0.48579335}
-    isSharp: 1
-  - position: {x: 0.117123276, y: 0.4849574}
+  - position: {x: 0.1760856, y: 0.56750476}
     isSharp: 0
   - position: {x: 0.120202996, y: 0.6623269}
     isSharp: 1
-  - position: {x: 0.12214446, y: 0.79128534}
+  - position: {x: 0.11035202, y: 0.7464739}
+    isSharp: 0
+  - position: {x: 0.07161165, y: 0.8064133}
     isSharp: 1
-  - position: {x: 0.07868712, y: 0.82528126}
+  - position: {x: 0.025943384, y: 0.8588814}
+    isSharp: 1
+  - position: {x: 0.09109713, y: 0.8501011}
     isSharp: 0
   _keyframes:
   - name: Keyframe 0
     time: 0
     positions:
-    - {x: 0.123768635, y: 0.8633903}
+    - {x: 0.13928118, y: 0.9037226}
     - {x: 0.21603525, y: 0.91658425}
     - {x: 0.27918997, y: 0.9358544}
     - {x: 0.3559442, y: 0.9493909}
@@ -73,8 +73,9 @@ MonoBehaviour:
     - {x: 0.11035202, y: 0.7464739}
     - {x: 0.07161165, y: 0.8064133}
     - {x: 0.025943384, y: 0.8588814}
+    - {x: 0.09109713, y: 0.8501011}
   - name: Keyframe 1
-    time: 1
+    time: 0.2
     positions:
     - {x: 0.10018373, y: 0.90348476}
     - {x: 0.13820502, y: 0.98026365}
@@ -96,7 +97,7 @@ MonoBehaviour:
     - {x: 0.025943384, y: 0.8588814}
     - {x: 0.025943384, y: 0.8588814}
   - name: Keyframe 2
-    time: 2
+    time: 0.4
     positions:
     - {x: 0.11433465, y: 0.8916923}
     - {x: 0.10754463, y: 1}
@@ -117,8 +118,8 @@ MonoBehaviour:
     - {x: 0.11035202, y: 0.7464739}
     - {x: 0.07161165, y: 0.8064133}
     - {x: 0.025943384, y: 0.8588814}
-  - name: Keyframe 3
-    time: 3
+  - name: keyframe 3
+    time: 0.8
     positions:
     - {x: 0.11433465, y: 0.8916923}
     - {x: 0.1146201, y: 1}

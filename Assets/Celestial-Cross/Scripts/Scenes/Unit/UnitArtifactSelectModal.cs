@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 using CelestialCross.Artifacts;
+using DG.Tweening;
+using CelestialCross.Audio;
 
 namespace CelestialCross.Scenes.Unit
 {
@@ -17,20 +19,24 @@ namespace CelestialCross.Scenes.Unit
         private string currentUnitId;
         private string selectedArtifactGuid;
         private global::System.Action onComplete;
+        private global::System.Action onEquipCallback;
         private global::System.Action onBack;
+
+        private DG.Tweening.Sequence currentAnimSeq;
 
         private void Awake()
         {
-            if (closeButton != null) closeButton.onClick.AddListener(Hide);
-            if (equipButton != null) equipButton.onClick.AddListener(OnEquipClicked);
-            if (backButton != null) backButton.onClick.AddListener(OnBackClicked);
+            if (closeButton != null) closeButton.onClick.AddListener(() => { CelestialCross.Audio.AudioManager.Instance?.PlayUI(CelestialCross.Audio.SoundKey.MenuClose01); Hide(); });
+            if (equipButton != null) equipButton.onClick.AddListener(() => { CelestialCross.Audio.AudioManager.Instance?.PlayUI(CelestialCross.Audio.SoundKey.ItemEquip01); OnEquipClicked(); });
+            if (backButton != null) backButton.onClick.AddListener(() => { CelestialCross.Audio.AudioManager.Instance?.PlayUI(CelestialCross.Audio.SoundKey.MenuClose01); OnBackClicked(); });
         }
 
         public void Show(string unitId, ArtifactType slotType, global::System.Action onCompleteCallback, global::System.Action onBackCallback = null)
         {
+            gameObject.SetActive(true);
             currentUnitId = unitId;
             currentFilterSlot = slotType;
-            onComplete = onCompleteCallback;
+            onEquipCallback = onCompleteCallback;
             onBack = onBackCallback;
             selectedArtifactGuid = string.Empty;
 
@@ -39,20 +45,59 @@ namespace CelestialCross.Scenes.Unit
                 backButton.gameObject.SetActive(onBack != null);
             }
 
-            gameObject.SetActive(true);
+            if (UnitSceneController.Instance != null) UnitSceneController.Instance.ShowModalOverlay();
+
+            transform.SetAsLastSibling();
+            
+            var rect = GetComponent<RectTransform>();
+            if (rect != null)
+            {
+                rect.DOKill();
+                rect.localScale = Vector3.zero;
+                rect.DOScale(1f, 0.3f).SetEase(Ease.OutBack).SetUpdate(true);
+            }
+
             PopulateGrid();
         }
 
         public void Hide()
         {
-            gameObject.SetActive(false);
-            onComplete?.Invoke();
+            var rect = GetComponent<RectTransform>();
+            if (rect != null && gameObject.activeSelf)
+            {
+                rect.DOKill();
+                rect.DOScale(0f, 0.2f).SetEase(Ease.InBack).SetUpdate(true).OnComplete(() => {
+                    gameObject.SetActive(false);
+                    if (UnitSceneController.Instance != null) UnitSceneController.Instance.HideModalOverlay();
+                    onComplete?.Invoke();
+                });
+            }
+            else
+            {
+                gameObject.SetActive(false);
+                if (UnitSceneController.Instance != null) UnitSceneController.Instance.HideModalOverlay();
+                onComplete?.Invoke();
+            }
         }
 
         private void OnBackClicked()
         {
-            gameObject.SetActive(false);
-            onBack?.Invoke();
+            var rect = GetComponent<RectTransform>();
+            if (rect != null && gameObject.activeSelf)
+            {
+                rect.DOKill();
+                rect.DOScale(0f, 0.2f).SetEase(Ease.InBack).SetUpdate(true).OnComplete(() => {
+                    gameObject.SetActive(false);
+                    if (UnitSceneController.Instance != null) UnitSceneController.Instance.HideModalOverlay();
+                    onBack?.Invoke();
+                });
+            }
+            else
+            {
+                gameObject.SetActive(false);
+                if (UnitSceneController.Instance != null) UnitSceneController.Instance.HideModalOverlay();
+                onBack?.Invoke();
+            }
         }
 
         private void PopulateGrid()
@@ -78,6 +123,12 @@ namespace CelestialCross.Scenes.Unit
             }
 
             var artifactCatalog = UnitSceneController.Instance?.artifactSetCatalog;
+
+            currentAnimSeq?.Kill();
+            currentAnimSeq = DG.Tweening.DOTween.Sequence();
+            currentAnimSeq.SetUpdate(true);
+            currentAnimSeq.SetLink(gameObject);
+            float delay = 0.2f;
 
             foreach (var art in account.OwnedArtifacts)
             {
@@ -105,10 +156,16 @@ namespace CelestialCross.Scenes.Unit
                 if (btn != null)
                 {
                     btn.onClick.AddListener(() => {
+                        CelestialCross.Audio.AudioManager.Instance?.PlayUI(CelestialCross.Audio.SoundKey.ButtonClick01);
                         selectedArtifactGuid = art.idGUID;
                         PopulateGrid();
                     });
                 }
+
+                go.transform.DOKill();
+                go.transform.localScale = Vector3.zero;
+                currentAnimSeq.Insert(delay, go.transform.DOScale(1f, 0.2f).SetEase(DG.Tweening.Ease.OutQuad).SetLink(go));
+                delay += 0.03f;
             }
         }
 
@@ -135,6 +192,7 @@ namespace CelestialCross.Scenes.Unit
                         }
 
                         global::AccountManager.Instance.SaveAccount();
+                        if (AudioManager.Instance != null) AudioManager.Instance.PlayUI(SoundKey.ItemEquip01);
                     }
                 }
             }

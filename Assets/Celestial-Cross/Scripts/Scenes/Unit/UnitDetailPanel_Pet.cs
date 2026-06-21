@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using CelestialCross.Data.Pets;
 using CelestialCross.Data;
+using DG.Tweening;
 
 namespace CelestialCross.Scenes.Unit
 {
@@ -46,17 +47,27 @@ namespace CelestialCross.Scenes.Unit
         private RuntimeUnitData currentRuntimeData;
         private PetCatalog currentPetCatalog;
         private string currentUnitId;
+        private DG.Tweening.Sequence currentAnimSeq;
 
         private void Awake()
         {
             if (petImageButton != null)
-                petImageButton.onClick.AddListener(OnSelectPetClicked);
+                petImageButton.onClick.AddListener(() => {
+                    CelestialCross.Audio.AudioManager.Instance?.PlayUI(CelestialCross.Audio.SoundKey.ButtonClick01);
+                    OnSelectPetClicked();
+                });
             
             if (emptySlotButton != null)
-                emptySlotButton.onClick.AddListener(OnSelectPetClicked);
+                emptySlotButton.onClick.AddListener(() => {
+                    CelestialCross.Audio.AudioManager.Instance?.PlayUI(CelestialCross.Audio.SoundKey.ButtonClick01);
+                    OnSelectPetClicked();
+                });
 
             if (skillIconButton != null)
-                skillIconButton.onClick.AddListener(OnSkillIconClicked);
+                skillIconButton.onClick.AddListener(() => {
+                    CelestialCross.Audio.AudioManager.Instance?.PlayUI(CelestialCross.Audio.SoundKey.ButtonClick01);
+                    OnSkillIconClicked();
+                });
         }
 
         public void Refresh(UnitData unitData, RuntimeUnitData runtimeData, PetCatalog petCatalog)
@@ -74,6 +85,7 @@ namespace CelestialCross.Scenes.Unit
             if (account == null || loadout == null || string.IsNullOrEmpty(loadout.PetID))
             {
                 DisplayEmpty();
+                AnimatePanel();
                 return;
             }
 
@@ -81,6 +93,7 @@ namespace CelestialCross.Scenes.Unit
             if (petInstance == null)
             {
                 DisplayEmpty();
+                AnimatePanel();
                 return;
             }
 
@@ -88,16 +101,57 @@ namespace CelestialCross.Scenes.Unit
             if (petSpecies == null)
             {
                 DisplayEmpty();
+                AnimatePanel();
                 return;
             }
 
             DisplayPet(petInstance, petSpecies);
+
+            AnimatePanel();
+        }
+
+        private void AnimatePanel()
+        {
+            currentAnimSeq?.Kill();
+            currentAnimSeq = DG.Tweening.DOTween.Sequence();
+            currentAnimSeq.SetUpdate(true);
+            currentAnimSeq.SetLink(gameObject);
+            float delay = 0f;
+
+            if (petSpriteParent != null && petSpriteParent.activeSelf)
+            {
+                petSpriteParent.transform.DOKill();
+                petSpriteParent.transform.localScale = Vector3.zero;
+                currentAnimSeq.Insert(delay, petSpriteParent.transform.DOScale(1f, 0.3f).SetEase(DG.Tweening.Ease.OutBack).SetLink(petSpriteParent));
+                delay += 0.05f;
+            }
+
+            if (skillIconButton != null && skillIconButton.gameObject.activeInHierarchy)
+            {
+                skillIconButton.transform.DOKill();
+                skillIconButton.transform.localScale = Vector3.zero;
+                currentAnimSeq.Insert(delay, skillIconButton.transform.DOScale(1f, 0.3f).SetEase(DG.Tweening.Ease.OutBack).SetLink(skillIconButton.gameObject));
+                delay += 0.05f;
+            }
+
+            TextMeshProUGUI[] texts = { hpText, atkText, defText, spdText, critChanceText, critDmgText, accText, resText };
+            foreach (var t in texts)
+            {
+                if (t != null && t.gameObject.activeInHierarchy)
+                {
+                    t.transform.DOKill();
+                    t.transform.localScale = Vector3.one * 0.8f;
+                    currentAnimSeq.Insert(delay, t.transform.DOScale(1f, 0.2f).SetEase(DG.Tweening.Ease.OutBack).SetLink(t.gameObject));
+                    delay += 0.02f;
+                }
+            }
         }
 
         private void DisplayEmpty()
         {
             if (petEquippedContainer) petEquippedContainer.SetActive(true);
             if (petEmptyContainer) petEmptyContainer.SetActive(false);
+
             
             if (petSpriteParent) petSpriteParent.SetActive(true);
             if (petSpriteImage != null) petSpriteImage.gameObject.SetActive(false);

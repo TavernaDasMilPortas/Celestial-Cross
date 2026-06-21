@@ -22,8 +22,18 @@ namespace CelestialCross.UI.ProceduralGraphic
             [InspectorName("Ping-Pong (Entre 2 Keyframes)")] PingPong 
         }
         
+        public enum TransitionStyle 
+        { 
+            [InspectorName("Suave (Fluido)")] Fluid,
+            [InspectorName("Brusco (Stepped)")] Stepped 
+        }
+
         [EnumToggleButtons]
         public AnimationMode mode = AnimationMode.LoopAllKeyframes;
+
+        [EnumToggleButtons]
+        [Tooltip("Suave interpola os pontos. Brusco pula de um frame direto pro outro.")]
+        public TransitionStyle style = TransitionStyle.Fluid;
 
         [ShowIf("mode", AnimationMode.PingPong)]
         [ValueDropdown("GetKeyframeNames")]
@@ -47,6 +57,7 @@ namespace CelestialCross.UI.ProceduralGraphic
         private ProceduralGraphic _graphic;
         private Tweener _currentTween;
         private Sequence _pingPongSequence;
+        private bool _stopRequested = false;
 
         private void Awake()
         {
@@ -82,6 +93,7 @@ namespace CelestialCross.UI.ProceduralGraphic
         public void Play()
         {
             Stop();
+            _stopRequested = false;
             if (_graphic.Preset == null || _graphic.Preset.Keyframes.Count == 0) return;
 
             if (mode == AnimationMode.PingPong)
@@ -94,31 +106,108 @@ namespace CelestialCross.UI.ProceduralGraphic
 
                 _pingPongSequence = DOTween.Sequence();
                 
-                // Primeiro vai pro A super rápido para garantir o estado inicial
+                bool isStepped = (style == TransitionStyle.Stepped);
+                float animDuration = isStepped ? 0f : duration;
+                
                 _pingPongSequence.Append(_graphic.DOTransition(keyframeA, 0.05f));
                 
-                // Vai pro B
                 _pingPongSequence.AppendCallback(() => {
-                    _currentTween = _graphic.DOTransition(keyframeB, duration).SetEase(Ease.InOutSine);
+                    _currentTween = _graphic.DOTransition(keyframeB, animDuration).SetEase(Ease.InOutSine);
                 });
                 _pingPongSequence.AppendInterval(duration);
                 
-                // Volta pro A
                 _pingPongSequence.AppendCallback(() => {
-                    _currentTween = _graphic.DOTransition(keyframeA, duration).SetEase(Ease.InOutSine);
+                    _currentTween = _graphic.DOTransition(keyframeA, animDuration).SetEase(Ease.InOutSine);
                 });
                 _pingPongSequence.AppendInterval(duration);
                 
                 _pingPongSequence.SetLoops(-1);
+                _pingPongSequence.OnStepComplete(CheckStopRequestSequence);
             }
             else if (mode == AnimationMode.LoopAllKeyframes)
             {
                 float maxTime = _graphic.Preset.Keyframes[_graphic.Preset.Keyframes.Count - 1].time;
                 if (maxTime <= 0) maxTime = 1f;
 
-                _currentTween = _graphic.DOBlendTimeline(maxTime, totalLoopDuration)
-                                        .SetEase(Ease.InOutSine)
-                                        .SetLoops(-1, LoopType.Yoyo);
+                bool isStepped = (style == TransitionStyle.Stepped);
+
+                _currentTween = _graphic.DOBlendTimeline(0f, maxTime, totalLoopDuration, isStepped)
+                                        .SetEase(isStepped ? Ease.Linear : Ease.InOutSine)
+                                        .SetLoops(-1, LoopType.Yoyo)
+                                        .OnStepComplete(CheckStopRequestTween);
+            }
+        }
+
+        // ══════════════════════════════════════════════════════════
+        //  API VIA CÓDIGO
+        // ══════════════════════════════════════════════════════════
+
+        /// <summary>
+        /// Toca a animação inteira da timeline apenas 1 vez (sem loop)
+        /// </summary>
+        public void PlayOnce()
+        {
+            Stop();
+            _stopRequested = false;
+            if (_graphic.Preset == null || _graphic.Preset.Keyframes.Count == 0) return;
+            
+            float maxTime = _graphic.Preset.Keyframes[_graphic.Preset.Keyframes.Count - 1].time;
+            bool isStepped = (style == TransitionStyle.Stepped);
+
+            _currentTween = _graphic.DOBlendTimeline(0f, maxTime, totalLoopDuration, isStepped)
+                                    .SetEase(isStepped ? Ease.Linear : Ease.InOutSine);
+        }
+
+        /// <summary>
+        /// Faz o loop entre dois frames específicos na timeline
+        /// </summary>
+        public void PlayTimelineRange(string startKeyframe, string endKeyframe, float customDuration = -1f)
+        {
+            Stop();
+            _stopRequested = false;
+            if (_graphic.Preset == null) return;
+            
+            var kfStart = _graphic.Preset.GetKeyframeByName(startKeyframe);
+            var kfEnd = _graphic.Preset.GetKeyframeByName(endKeyframe);
+            
+            float dur = customDuration > 0f ? customDuration : totalLoopDuration;
+            bool isStepped = (style == TransitionStyle.Stepped);
+
+            _currentTween = _graphic.DOBlendTimeline(kfStart.time, kfEnd.time, dur, isStepped)
+                                    .SetEase(isStepped ? Ease.Linear : Ease.InOutSine)
+                                    .SetLoops(-1, LoopType.Yoyo)
+                                    .OnStepComplete(CheckStopRequestTween);
+        }
+
+        /// <summary>
+        /// Avisa a animação atual para parar de "loppar" assim que ela terminar o ciclo atual
+        /// (garante que ela vai parar numa pose natural sem cortes secos)
+        /// </summary>
+        public void RequestStopAtEndOfLoop()
+        {
+            _stopRequested = true;
+        }
+
+        private void CheckStopRequestTween()
+        {
+            if (_stopRequested && _currentTween != null)
+            {
+                // Como é Yoyo, um ciclo completo (ida e volta) conta como 2 completed loops.
+                if (_currentTween.CompletedLoops() % 2 == 0) 
+                {
+                    _currentTween.Kill();
+                    _currentTween = null;
+                }
+            }
+        }
+
+        private void CheckStopRequestSequence()
+        {
+            if (_stopRequested && _pingPongSequence != null)
+            {
+                // Sequence inteira contém ida e volta, então cada loop é 1 ciclo
+                _pingPongSequence.Kill();
+                _pingPongSequence = null;
             }
         }
 

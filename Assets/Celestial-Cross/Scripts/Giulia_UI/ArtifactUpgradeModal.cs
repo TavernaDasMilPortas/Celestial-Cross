@@ -4,6 +4,7 @@ using TMPro;
 using System;
 using CelestialCross.Artifacts;
 using CelestialCross.System;
+using DG.Tweening;
 
 namespace CelestialCross.Giulia_UI
 {
@@ -48,20 +49,37 @@ namespace CelestialCross.Giulia_UI
             transform.SetAsLastSibling();
             
             gameObject.SetActive(true);
+            var rect = GetComponent<RectTransform>();
+            if (rect != null)
+            {
+                rect.localScale = Vector3.zero;
+                rect.DOScale(1f, 0.3f).SetEase(Ease.OutBack).SetUpdate(true);
+            }
         }
 
         public void Close()
         {
-            Debug.Log("Close Btn clicked");
-            gameObject.SetActive(false);
-            onClose?.Invoke();
+            var rect = GetComponent<RectTransform>();
+            if (rect != null && gameObject.activeSelf)
+            {
+                rect.DOScale(0f, 0.2f).SetEase(Ease.InBack).SetUpdate(true).OnComplete(() => {
+                    gameObject.SetActive(false);
+                    onClose?.Invoke();
+                });
+            }
+            else
+            {
+                gameObject.SetActive(false);
+                onClose?.Invoke();
+            }
         }
 
         private void RefreshUI()
         {
             if (currentArtifact == null) { Close(); return; }
 
-            var acc = AccountManager.Instance.PlayerAccount;
+            var acc = AccountManager.Instance?.PlayerAccount;
+            if (acc == null) Debug.LogWarning("[ArtifactUpgradeModal] AccountManager ou PlayerAccount não encontrado. Algumas funcionalidades não funcionarão.");
             
             titleText.text = $"Artefato {currentArtifact.slot} (+{currentArtifact.currentLevel})";
             
@@ -140,8 +158,8 @@ namespace CelestialCross.Giulia_UI
                 levelTargetText.text = $"Nível {target}\n(Custo Total: {totalCost})";
             }
 
-            var acc = AccountManager.Instance.PlayerAccount;
-            upgradeButton.interactable = acc.Money >= totalCost && levelsToUpgrade > 0;
+            var acc = AccountManager.Instance?.PlayerAccount;
+            upgradeButton.interactable = acc != null && acc.Money >= totalCost && levelsToUpgrade > 0;
             
             if (upgradeCostText != null)
             {
