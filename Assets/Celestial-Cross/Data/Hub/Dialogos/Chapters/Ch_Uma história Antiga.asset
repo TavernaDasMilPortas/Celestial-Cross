@@ -20,6 +20,8 @@ MonoBehaviour:
   IsDiaryChapter: 0
   Nodes:
   - rid: 2503027714264399952
+  - rid: 4322151008986202192
+  - rid: 4322151008986202193
   references:
     version: 2
     RefIds:
@@ -53,3 +55,63 @@ MonoBehaviour:
           PreviousNodeID: 
           InviteCostOptions: []
         DialogueGraph: {fileID: 11400000, guid: a2d5531ac68657d4da472c7ff2136347, type: 2}
+    - rid: 4322151008986202192
+      type: {class: DialogueStoryNode, ns: CelestialCross.Progression, asm: Assembly-CSharp}
+      data:
+        NodeID: 1bb24349-f137-45c6-ace8-268ea99b6676
+        Title: "Voc\xEA \xE9 nova aqui?"
+        IsAutoPlay: 0
+        EntryCost:
+          EnergyCost: 0
+          ItemCosts: []
+        Rewards:
+          FirstClearRewards: []
+          RepeatRewards: []
+          LootTables: []
+          MilestoneRewards: []
+        MaxCompletions: -1
+        ResetPolicy:
+          ResetType: 0
+          ResetHourUTC: 3
+          ResetDayOfWeek: 1
+          WeeklyResetHourUTC: 3
+          ResetDayOfMonth: 1
+          MonthlyResetHourUTC: 3
+          CustomResetIntervalHours: 24
+        NodeIcon: {fileID: 21300000, guid: 818165bbcf8b25a40ba19a9fc51a2e52, type: 3}
+        Requirement:
+          RequiresInvite: 0
+          RequiresPreviousNode: 0
+          PreviousNodeID: 
+          InviteCostOptions: []
+        DialogueGraph: {fileID: 11400000, guid: 5fbce2413bb0a1a46bcf6f3a201f822f, type: 2}
+    - rid: 4322151008986202193
+      type: {class: DialogueStoryNode, ns: CelestialCross.Progression, asm: Assembly-CSharp}
+      data:
+        NodeID: 48661e97-25b8-40eb-9db7-e56248cb637f
+        Title: 
+        IsAutoPlay: 0
+        EntryCost:
+          EnergyCost: 0
+          ItemCosts: []
+        Rewards:
+          FirstClearRewards: []
+          RepeatRewards: []
+          LootTables: []
+          MilestoneRewards: []
+        MaxCompletions: -1
+        ResetPolicy:
+          ResetType: 0
+          ResetHourUTC: 3
+          ResetDayOfWeek: 1
+          WeeklyResetHourUTC: 3
+          ResetDayOfMonth: 1
+          MonthlyResetHourUTC: 3
+          CustomResetIntervalHours: 24
+        NodeIcon: {fileID: 0}
+        Requirement:
+          RequiresInvite: 0
+          RequiresPreviousNode: 1
+          PreviousNodeID: 
+          InviteCostOptions: []
+        DialogueGraph: {fileID: 0}

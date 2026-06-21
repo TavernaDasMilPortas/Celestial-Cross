@@ -11,9 +11,11 @@ namespace CelestialCross.UI.ProceduralGraphic
 
         public static List<Vector2> ExtractContour(Texture2D tex, float alphaThreshold, int closeGapsRadius = 0)
         {
-            int width = tex.width;
-            int height = tex.height;
-            Color[] pixels = tex.GetPixels();
+            return ExtractContour(tex.GetPixels(), tex.width, tex.height, alphaThreshold, closeGapsRadius);
+        }
+
+        public static List<Vector2> ExtractContour(Color[] pixels, int width, int height, float alphaThreshold, int closeGapsRadius = 0)
+        {
 
             bool[,] solidGrid = new bool[width, height];
             for (int y = 0; y < height; y++)
@@ -322,6 +324,235 @@ namespace CelestialCross.UI.ProceduralGraphic
 
             Random.state = oldState;
             return jittered;
+        }
+        public static Color[] DownsamplePixels(Color[] pixels, int width, int height, out int newWidth, out int newHeight, int maxSize = 128)
+        {
+            if (width <= maxSize && height <= maxSize)
+            {
+                newWidth = width;
+                newHeight = height;
+                return pixels;
+            }
+
+            float ratio = Mathf.Min((float)maxSize / width, (float)maxSize / height);
+            newWidth = Mathf.Max(1, Mathf.RoundToInt(width * ratio));
+            newHeight = Mathf.Max(1, Mathf.RoundToInt(height * ratio));
+
+            Color[] newPixels = new Color[newWidth * newHeight];
+            
+            for (int y = 0; y < newHeight; y++)
+            {
+                for (int x = 0; x < newWidth; x++)
+                {
+                    float u = newWidth > 1 ? (float)x / (newWidth - 1) : 0f;
+                    float v = newHeight > 1 ? (float)y / (newHeight - 1) : 0f;
+
+                    int origX = Mathf.Clamp(Mathf.RoundToInt(u * (width - 1)), 0, width - 1);
+                    int origY = Mathf.Clamp(Mathf.RoundToInt(v * (height - 1)), 0, height - 1);
+
+                    newPixels[y * newWidth + x] = pixels[origY * width + origX];
+                }
+            }
+
+            return newPixels;
+        }
+
+        public static global::System.Collections.IEnumerator ExtractContourAsync(Color[] pixels, int width, int height, float alphaThreshold, int closeGapsRadius, global::System.Action<List<Vector2>> onComplete, int linesPerBatch = 64)
+        {
+            bool[,] solidGrid = new bool[width, height];
+            
+            int yStart = 0;
+            while (yStart < height)
+            {
+                int yEnd = Mathf.Min(yStart + linesPerBatch, height);
+                for (int y = yStart; y < yEnd; y++)
+                {
+                    for (int x = 0; x < width; x++)
+                    {
+                        solidGrid[x, y] = pixels[y * width + x].a >= alphaThreshold;
+                    }
+                }
+                yStart = yEnd;
+                yield return null;
+            }
+
+            if (closeGapsRadius > 0)
+            {
+                var closingRoutine = ApplyMorphologicalClosingAsync(solidGrid, width, height, closeGapsRadius, linesPerBatch, result => solidGrid = result);
+                while (closingRoutine.MoveNext())
+                {
+                    yield return closingRoutine.Current;
+                }
+            }
+
+            bool IsSolid(int x, int y)
+            {
+                if (x < 0 || x >= width || y < 0 || y >= height) return false;
+                return solidGrid[x, y];
+            }
+
+            int startX = -1, startY = -1;
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    if (IsSolid(x, y))
+                    {
+                        startX = x;
+                        startY = y;
+                        break;
+                    }
+                }
+                if (startX != -1) break;
+            }
+
+            if (startX == -1) 
+            {
+                onComplete?.Invoke(new List<Vector2>());
+                yield break;
+            }
+
+            List<Vector2> contour = new List<Vector2>();
+            int cx = startX;
+            int cy = startY;
+            int prevDir = 4;
+            int failSafe = width * height;
+
+            do
+            {
+                contour.Add(new Vector2(cx, cy));
+                int dir = (prevDir + 2) % 8;
+                bool foundNext = false;
+
+                for (int i = 0; i < 8; i++)
+                {
+                    int nx = cx + dx[dir];
+                    int ny = cy + dy[dir];
+
+                    if (IsSolid(nx, ny))
+                    {
+                        cx = nx;
+                        cy = ny;
+                        prevDir = (dir + 4) % 8;
+                        foundNext = true;
+                        break;
+                    }
+                    dir = (dir + 1) % 8;
+                }
+
+                if (!foundNext) break;
+                failSafe--;
+
+            } while ((cx != startX || cy != startY) && failSafe > 0);
+
+            onComplete?.Invoke(contour);
+        }
+
+        private static global::System.Collections.IEnumerator ApplyMorphologicalClosingAsync(bool[,] grid, int width, int height, int radius, int linesPerBatch, global::System.Action<bool[,]> onComplete)
+        {
+            // 1. Build SAT from original grid
+            int[,] sat = new int[width, height];
+            int yStart = 0;
+            while (yStart < height)
+            {
+                int yEnd = Mathf.Min(yStart + linesPerBatch, height);
+                for (int y = yStart; y < yEnd; y++)
+                {
+                    for (int x = 0; x < width; x++)
+                    {
+                        int val = grid[x, y] ? 1 : 0;
+                        int left = x > 0 ? sat[x - 1, y] : 0;
+                        int top = y > 0 ? sat[x, y - 1] : 0;
+                        int topLeft = (x > 0 && y > 0) ? sat[x - 1, y - 1] : 0;
+                        sat[x, y] = val + left + top - topLeft;
+                    }
+                }
+                yStart = yEnd;
+                yield return null;
+            }
+
+            int GetSum(int[,] integral, int x1, int y1, int x2, int y2)
+            {
+                x1 = Mathf.Max(0, x1);
+                y1 = Mathf.Max(0, y1);
+                x2 = Mathf.Min(width - 1, x2);
+                y2 = Mathf.Min(height - 1, y2);
+                
+                if (x1 > x2 || y1 > y2) return 0;
+
+                int a = (x1 > 0 && y1 > 0) ? integral[x1 - 1, y1 - 1] : 0;
+                int b = (y1 > 0) ? integral[x2, y1 - 1] : 0;
+                int c = (x1 > 0) ? integral[x1 - 1, y2] : 0;
+                int d = integral[x2, y2];
+
+                return d - b - c + a;
+            }
+
+            // 2. Dilation
+            bool[,] dilated = new bool[width, height];
+            yStart = 0;
+            while (yStart < height)
+            {
+                int yEnd = Mathf.Min(yStart + linesPerBatch, height);
+                for (int y = yStart; y < yEnd; y++)
+                {
+                    for (int x = 0; x < width; x++)
+                    {
+                        int sum = GetSum(sat, x - radius, y - radius, x + radius, y + radius);
+                        dilated[x, y] = sum > 0;
+                    }
+                }
+                yStart = yEnd;
+                yield return null;
+            }
+
+            // 3. Build SAT from dilated grid
+            int[,] dilatedSat = new int[width, height];
+            yStart = 0;
+            while (yStart < height)
+            {
+                int yEnd = Mathf.Min(yStart + linesPerBatch, height);
+                for (int y = yStart; y < yEnd; y++)
+                {
+                    for (int x = 0; x < width; x++)
+                    {
+                        int val = dilated[x, y] ? 1 : 0;
+                        int left = x > 0 ? dilatedSat[x - 1, y] : 0;
+                        int top = y > 0 ? dilatedSat[x, y - 1] : 0;
+                        int topLeft = (x > 0 && y > 0) ? dilatedSat[x - 1, y - 1] : 0;
+                        dilatedSat[x, y] = val + left + top - topLeft;
+                    }
+                }
+                yStart = yEnd;
+                yield return null;
+            }
+
+            // 4. Erosion
+            bool[,] eroded = new bool[width, height];
+            yStart = 0;
+            while (yStart < height)
+            {
+                int yEnd = Mathf.Min(yStart + linesPerBatch, height);
+                for (int y = yStart; y < yEnd; y++)
+                {
+                    for (int x = 0; x < width; x++)
+                    {
+                        int x1 = Mathf.Max(0, x - radius);
+                        int y1 = Mathf.Max(0, y - radius);
+                        int x2 = Mathf.Min(width - 1, x + radius);
+                        int y2 = Mathf.Min(height - 1, y + radius);
+
+                        int expectedArea = (x2 - x1 + 1) * (y2 - y1 + 1);
+                        int sum = GetSum(dilatedSat, x - radius, y - radius, x + radius, y + radius);
+                        
+                        eroded[x, y] = sum == expectedArea;
+                    }
+                }
+                yStart = yEnd;
+                yield return null;
+            }
+
+            onComplete?.Invoke(eroded);
         }
     }
 }

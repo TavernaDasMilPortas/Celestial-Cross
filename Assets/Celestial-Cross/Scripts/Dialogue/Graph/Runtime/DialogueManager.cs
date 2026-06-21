@@ -15,6 +15,8 @@ namespace CelestialCross.Dialogue.Manager
         /// </summary>
         public static DialogueGraph NextGraphToLoad { get; set; }
 
+        public UnityEngine.Events.UnityEvent OnDialogueEnded;
+
         [Header("Data")]
         [SerializeField] private DialogueGraph dialogueGraph;
         
@@ -338,6 +340,7 @@ namespace CelestialCross.Dialogue.Manager
             _isGraphActive = false;
             dialogueUI.Hide();
             Debug.Log("Dialogue Ended");
+            OnDialogueEnded?.Invoke();
         }
     }
 }

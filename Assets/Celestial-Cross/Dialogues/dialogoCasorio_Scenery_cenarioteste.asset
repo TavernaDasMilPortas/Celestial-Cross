@@ -116,8 +116,8 @@ MonoBehaviour:
     anchorMin: {x: 0, y: 0}
     anchorMax: {x: 1, y: 1}
     pivot: {x: 0.5, y: 0.5}
-    anchoredPosition: {x: 6.689026, y: -332.23303}
-    sizeDelta: {x: 664.465, y: -1315.551}
+    anchoredPosition: {x: 0, y: -310}
+    sizeDelta: {x: 832.563, y: -671.855}
     rotation: 90
     scale: {x: 1.0494713, y: 1.0494713, z: 1.0494713}
     entryAnimation:

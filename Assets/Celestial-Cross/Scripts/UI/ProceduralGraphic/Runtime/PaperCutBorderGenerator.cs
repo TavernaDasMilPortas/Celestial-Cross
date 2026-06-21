@@ -16,6 +16,14 @@ namespace CelestialCross.UI.ProceduralGraphic
         [Tooltip("Atualiza a borda automaticamente se a imagem (Sprite) mudar. Útil para animações 2D quadro a quadro.")]
         public bool autoUpdateOnChange = true;
 
+        [Title("Optimization")]
+        [Tooltip("Resolução máxima para processamento do contorno. Valores menores são muito mais rápidos.")]
+        [Range(32, 4096)]
+        public int maxProcessingResolution = 2048;
+
+        [Tooltip("Linhas processadas por frame ao calcular a forma assincronamente.")]
+        public int linesPerBatch = 64;
+
         [Title("Settings")]
         [Tooltip("Expansão da borda para fora (ex: 0.15 = 15%)")]
         [Range(0f, 1f)]
@@ -44,6 +52,9 @@ namespace CelestialCross.UI.ProceduralGraphic
         private Sprite _lastProcessedSprite;
         private ShapePreset _runtimePreset;
 
+        private Dictionary<Sprite, List<Vector2>> _borderCache = new Dictionary<Sprite, List<Vector2>>();
+        private Coroutine _generationCoroutine;
+
         private void Awake()
         {
             _graphic = GetComponent<ProceduralGraphic>();
@@ -55,7 +66,16 @@ namespace CelestialCross.UI.ProceduralGraphic
             {
                 if (targetImage.sprite != _lastProcessedSprite)
                 {
-                    GenerateBorder();
+                    _lastProcessedSprite = targetImage.sprite;
+                    if (Application.isPlaying)
+                    {
+                        if (_generationCoroutine != null) StopCoroutine(_generationCoroutine);
+                        _generationCoroutine = StartCoroutine(GenerateBorderAsync());
+                    }
+                    else
+                    {
+                        GenerateBorder();
+                    }
                 }
             }
         }
@@ -82,15 +102,18 @@ namespace CelestialCross.UI.ProceduralGraphic
                 return;
             }
 
+            Color[] pixels = tex.GetPixels();
+            Color[] downsampled = ContourExtractor.DownsamplePixels(pixels, tex.width, tex.height, out int newWidth, out int newHeight, maxProcessingResolution);
+
             // 1. Extrair
-            var contour = ContourExtractor.ExtractContour(tex, alphaThreshold, closeGapsRadius);
+            var contour = ContourExtractor.ExtractContour(downsampled, newWidth, newHeight, alphaThreshold, closeGapsRadius);
             if (contour.Count == 0) return;
 
             // 2. Simplificar
             var simplified = ContourExtractor.SimplifyContour(contour, borderPointCount);
             
             // 3. Normalizar
-            var normalized = ContourExtractor.NormalizeContour(simplified, tex.width, tex.height);
+            var normalized = ContourExtractor.NormalizeContour(simplified, newWidth, newHeight);
 
             // 4. Expandir
             var expanded = ContourExtractor.ExpandContour(normalized, borderExpansion);
@@ -98,7 +121,65 @@ namespace CelestialCross.UI.ProceduralGraphic
             // 5. Jitter
             var finalPoints = ContourExtractor.ApplyJitter(expanded, jitterAmount, randomSeed);
 
-            // 6. Aplicar no Graphic local
+            ApplyPointsToPreset(finalPoints);
+            _lastProcessedSprite = targetImage.sprite;
+        }
+
+        private global::System.Collections.IEnumerator GenerateBorderAsync()
+        {
+            if (_graphic == null) _graphic = GetComponent<ProceduralGraphic>();
+
+            if (targetImage == null || targetImage.sprite == null || targetImage.sprite.texture == null)
+            {
+                if (_graphic.Preset != null && _runtimePreset != null)
+                {
+                    _runtimePreset.Points.Clear();
+                    _graphic.SetVerticesDirty();
+                }
+                yield break;
+            }
+
+            Sprite currentSprite = targetImage.sprite;
+
+            if (_borderCache.TryGetValue(currentSprite, out List<Vector2> cachedPoints))
+            {
+                ApplyPointsToPreset(cachedPoints);
+                yield break;
+            }
+
+            Texture2D tex = currentSprite.texture;
+            if (!tex.isReadable)
+            {
+                Debug.LogWarning($"[PaperCutBorder] A textura '{tex.name}' não possui 'Read/Write' ativado nas import settings.");
+                yield break;
+            }
+
+            Color[] pixels = tex.GetPixels();
+            yield return null;
+
+            Color[] downsampled = ContourExtractor.DownsamplePixels(pixels, tex.width, tex.height, out int newWidth, out int newHeight, maxProcessingResolution);
+            yield return null;
+
+            List<Vector2> contour = null;
+            var extractRoutine = ContourExtractor.ExtractContourAsync(downsampled, newWidth, newHeight, alphaThreshold, closeGapsRadius, result => contour = result, linesPerBatch);
+            while (extractRoutine.MoveNext())
+            {
+                yield return extractRoutine.Current;
+            }
+
+            if (contour == null || contour.Count == 0) yield break;
+
+            var simplified = ContourExtractor.SimplifyContour(contour, borderPointCount);
+            var normalized = ContourExtractor.NormalizeContour(simplified, newWidth, newHeight);
+            var expanded = ContourExtractor.ExpandContour(normalized, borderExpansion);
+            var finalPoints = ContourExtractor.ApplyJitter(expanded, jitterAmount, randomSeed);
+
+            _borderCache[currentSprite] = finalPoints;
+            ApplyPointsToPreset(finalPoints);
+        }
+
+        private void ApplyPointsToPreset(List<Vector2> finalPoints)
+        {
             if (_runtimePreset == null)
             {
                 _runtimePreset = ScriptableObject.CreateInstance<ShapePreset>();
@@ -115,9 +196,14 @@ namespace CelestialCross.UI.ProceduralGraphic
                 });
             }
 
-            // Força a atualização do preset
             _graphic.SetPreset(_runtimePreset);
-            _lastProcessedSprite = targetImage.sprite;
+        }
+
+        [Button("Clear Cache"), GUIColor(1f, 0.5f, 0.5f)]
+        public void ClearCache()
+        {
+            _borderCache.Clear();
+            Debug.Log("[PaperCutBorder] Cache cleared.");
         }
     }
 }
