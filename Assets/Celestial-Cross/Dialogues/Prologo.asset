@@ -1,0 +1,310 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10d30a4be252b63479f95c401df7180e, type: 3}
+  m_Name: Prologo
+  m_EditorClassIdentifier: Assembly-CSharp::CelestialCross.Dialogue.Graph.DialogueGraph
+  nodeLinks:
+  - baseNodeGuid: b3260a4d-8f41-4e59-8faa-a4e9c30572b3
+    portName: Next
+    targetNodeGuid: 9db0a7f8-0705-4542-af66-0b8a27046ae8
+  - baseNodeGuid: 9db0a7f8-0705-4542-af66-0b8a27046ae8
+    portName: Next
+    targetNodeGuid: ed4a66d8-7c7d-434c-9f2d-784eacc94d69
+  - baseNodeGuid: ed4a66d8-7c7d-434c-9f2d-784eacc94d69
+    portName: Next
+    targetNodeGuid: 858e01a3-e37f-4d3b-8e6d-8101acd76a1e
+  - baseNodeGuid: 858e01a3-e37f-4d3b-8e6d-8101acd76a1e
+    portName: Next
+    targetNodeGuid: e4e341ab-5771-4175-8a05-6c07c0d0f170
+  - baseNodeGuid: e4e341ab-5771-4175-8a05-6c07c0d0f170
+    portName: Next
+    targetNodeGuid: e8fe251d-03a3-402d-bc8f-78fdaab13948
+  - baseNodeGuid: e8fe251d-03a3-402d-bc8f-78fdaab13948
+    portName: Next
+    targetNodeGuid: 6b3ed655-7e20-4d87-92a6-741159f7ad18
+  - baseNodeGuid: 6b3ed655-7e20-4d87-92a6-741159f7ad18
+    portName: Next
+    targetNodeGuid: e12151be-df46-4500-9dcf-fc696f4888f8
+  - baseNodeGuid: e12151be-df46-4500-9dcf-fc696f4888f8
+    portName: Next
+    targetNodeGuid: e949004c-32ec-41dd-9ce4-abd3b6f2a686
+  - baseNodeGuid: e949004c-32ec-41dd-9ce4-abd3b6f2a686
+    portName: Next
+    targetNodeGuid: 793c7e79-b243-4e00-a0db-536b66928a90
+  - baseNodeGuid: b5401c5d-752d-4600-8dd0-a1c32acfbb46
+    portName: Next
+    targetNodeGuid: 72346b0c-ec8c-429a-bdf2-01475fd8a1af
+  - baseNodeGuid: 72346b0c-ec8c-429a-bdf2-01475fd8a1af
+    portName: Next
+    targetNodeGuid: 5dc2d1b7-3d43-48ef-af1e-d96aad6e7d14
+  - baseNodeGuid: 793c7e79-b243-4e00-a0db-536b66928a90
+    portName: Next
+    targetNodeGuid: b5401c5d-752d-4600-8dd0-a1c32acfbb46
+  - baseNodeGuid: 5dc2d1b7-3d43-48ef-af1e-d96aad6e7d14
+    portName: Next
+    targetNodeGuid: 05406087-1634-49a8-aee3-aba4dedad683
+  - baseNodeGuid: 05406087-1634-49a8-aee3-aba4dedad683
+    portName: Next
+    targetNodeGuid: c99d8d39-43fc-4547-a60a-6d687cd2c308
+  nodeData:
+  - guid: 9db0a7f8-0705-4542-af66-0b8a27046ae8
+    nodeType: 1
+    position: {x: 299, y: 168}
+    speakerName: Lillie
+    dialogueText: Alexander, can you tell that story again?
+    characterSprite: {fileID: 0}
+    sceneryId: 
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: ed4a66d8-7c7d-434c-9f2d-784eacc94d69
+    nodeType: 1
+    position: {x: 780, y: 165}
+    speakerName: Alexander
+    dialogueText: "You really love it, don\u2019t you? Alright here goes."
+    characterSprite: {fileID: 21300000, guid: 216b1a5d8087ae64bb513f600ffeba03, type: 3}
+    sceneryId: 
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 858e01a3-e37f-4d3b-8e6d-8101acd76a1e
+    nodeType: 1
+    position: {x: 1262, y: 161}
+    speakerName: Alexander
+    dialogueText: Once upon a time a girl just like you was going home after a long
+      day outside. The girl found a wounded squirrel and without hesitation took
+      it home to tend to its wounds.
+    characterSprite: {fileID: 21300000, guid: 216b1a5d8087ae64bb513f600ffeba03, type: 3}
+    sceneryId: 
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: e4e341ab-5771-4175-8a05-6c07c0d0f170
+    nodeType: 1
+    position: {x: 2354, y: 165}
+    speakerName: Alexander
+    dialogueText: The squirrel became eternally grateful, and used magic to bless
+      the girl. Ever so kind, the girl used her blessing to help the people of her
+      village.
+    characterSprite: {fileID: 21300000, guid: 216b1a5d8087ae64bb513f600ffeba03, type: 3}
+    sceneryId: 
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: e8fe251d-03a3-402d-bc8f-78fdaab13948
+    nodeType: 1
+    position: {x: 3328, y: 169}
+    speakerName: Alexander
+    dialogueText: "The villagers, amazed by the girl\u2019s many capabilities, hailed
+      her as a goddess and hailed her as a being beyond the stars."
+    characterSprite: {fileID: 21300000, guid: 216b1a5d8087ae64bb513f600ffeba03, type: 3}
+    sceneryId: 
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 6b3ed655-7e20-4d87-92a6-741159f7ad18
+    nodeType: 1
+    position: {x: 4315, y: 168}
+    speakerName: Alexander
+    dialogueText: "That however, angered a god, who looked upon the many people worshiping
+      something it considered \u201Cinferior\u201D. It cursed the lands below, causing
+      devilish creatures to sprang from the ground and began terrorizing the once
+      peaceful villagers."
+    characterSprite: {fileID: 21300000, guid: 1202499a100b7d047b9b6fee39a9e5b3, type: 3}
+    sceneryId: 
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: e12151be-df46-4500-9dcf-fc696f4888f8
+    nodeType: 1
+    position: {x: 5807, y: 167}
+    speakerName: Alexander
+    dialogueText: The girl jumped in front of the villains, but only her blood was
+      spilled in return. The blessings of her kindness slowly dripped out of her
+      dying body, and graced the land.
+    characterSprite: {fileID: 21300000, guid: 1202499a100b7d047b9b6fee39a9e5b3, type: 3}
+    sceneryId: 
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: e949004c-32ec-41dd-9ce4-abd3b6f2a686
+    nodeType: 1
+    position: {x: 6918, y: 161}
+    speakerName: Alexander
+    dialogueText: And from this land, creatures known as the Celestia were born,
+      and those who were chosen by the celestia became Luminary, protectors of peace.
+    characterSprite: {fileID: 21300000, guid: 216b1a5d8087ae64bb513f600ffeba03, type: 3}
+    sceneryId: 
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: b5401c5d-752d-4600-8dd0-a1c32acfbb46
+    nodeType: 1
+    position: {x: 8492, y: 157}
+    speakerName: Alexander
+    dialogueText: Of course, I'm more than sure a Celestia will take a liking to
+      you.
+    characterSprite: {fileID: 21300000, guid: 216b1a5d8087ae64bb513f600ffeba03, type: 3}
+    sceneryId: 
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 72346b0c-ec8c-429a-bdf2-01475fd8a1af
+    nodeType: 1
+    position: {x: 9115, y: 157}
+    speakerName: 'Voidborn '
+    dialogueText: ARGH!
+    characterSprite: {fileID: 0}
+    sceneryId: 
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 793c7e79-b243-4e00-a0db-536b66928a90
+    nodeType: 1
+    position: {x: 7963, y: 155}
+    speakerName: Lillie
+    dialogueText: "And one day, we\u2019ll become luminary as well?"
+    characterSprite: {fileID: 0}
+    sceneryId: 
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 5dc2d1b7-3d43-48ef-af1e-d96aad6e7d14
+    nodeType: 1
+    position: {x: 9462, y: 155}
+    speakerName: Lillie
+    dialogueText: "AH! Brother! There\u2019s a Voidborn here!"
+    characterSprite: {fileID: 0}
+    sceneryId: 
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 05406087-1634-49a8-aee3-aba4dedad683
+    nodeType: 1
+    position: {x: 9922, y: 148}
+    speakerName: Alexander
+    dialogueText: "Stand behind me, i\u2019ll protect you!"
+    characterSprite: {fileID: 21300000, guid: 1202499a100b7d047b9b6fee39a9e5b3, type: 3}
+    sceneryId: 
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: c99d8d39-43fc-4547-a60a-6d687cd2c308
+    nodeType: 5
+    position: {x: 10368, y: 158}
+    speakerName: 
+    dialogueText: 
+    characterSprite: {fileID: 0}
+    sceneryId: 
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  sceneryMappings: []
+  exposedProperties: []
