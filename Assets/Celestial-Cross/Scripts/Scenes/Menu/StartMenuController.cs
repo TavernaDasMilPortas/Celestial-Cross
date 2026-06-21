@@ -43,6 +43,6 @@ public class StartMenuController : MonoBehaviour
             return;
         }
 
-        SceneManager.LoadScene(preparationSceneName);
+        CelestialCross.System.SceneTransitionManager.LoadScene(preparationSceneName);
     }
 }

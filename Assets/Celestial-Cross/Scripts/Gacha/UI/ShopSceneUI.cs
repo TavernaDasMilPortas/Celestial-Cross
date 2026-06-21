@@ -410,7 +410,7 @@ namespace CelestialCross.Gacha.UI
         {
             if (!string.IsNullOrEmpty(hubSceneName))
             {
-                UnityEngine.SceneManagement.SceneManager.LoadScene(hubSceneName);
+                CelestialCross.System.SceneTransitionManager.LoadScene(hubSceneName);
             }
         }    }
 }

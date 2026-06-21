@@ -106,7 +106,7 @@ public class RestSceneManager : MonoBehaviour
     {
         if (!string.IsNullOrEmpty(hubSceneName))
         {
-            SceneManager.LoadScene(hubSceneName);
+            CelestialCross.System.SceneTransitionManager.LoadScene(hubSceneName);
         }
     }
 

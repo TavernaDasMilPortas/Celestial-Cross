@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using CelestialCross.Data.Pets;
 using System.Collections.Generic;
+using DG.Tweening;
 
 namespace CelestialCross.Scenes.Inventory
 {
@@ -33,8 +34,9 @@ namespace CelestialCross.Scenes.Inventory
         private Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO currentPetSkillGraph;
 
         private global::System.Collections.Generic.Dictionary<string, Image> petSlotImages = new global::System.Collections.Generic.Dictionary<string, Image>();
-        private Color defaultSlotColor = new Color(0.2f, 0.2f, 0.28f, 1f);
-        private Color selectedSlotColor = new Color(0.4f, 0.5f, 0.8f, 1f);
+        [Header("Slot Colors")]
+        public Color defaultSlotColor = new Color(0.2f, 0.2f, 0.28f, 1f);
+        public Color selectedSlotColor = new Color(0.4f, 0.5f, 0.8f, 1f);
 
         protected override void Awake()
         {
@@ -110,6 +112,7 @@ namespace CelestialCross.Scenes.Inventory
 
             RuntimePetData firstPet = null;
             PetSpeciesSO firstSpecies = null;
+            float staggerDelay = 0f;
 
             foreach (var pet in ownedPets)
             {
@@ -120,6 +123,15 @@ namespace CelestialCross.Scenes.Inventory
 
                 var slotObj = Instantiate(prefab, gridContent.transform);
                 slotObj.SetActive(true);
+                
+                // Animação de entrada
+                var rt = slotObj.GetComponent<RectTransform>();
+                if (rt != null)
+                {
+                    rt.localScale = Vector3.zero;
+                    rt.DOScale(Vector3.one, 0.3f).SetDelay(staggerDelay).SetEase(Ease.OutBack);
+                    staggerDelay += 0.05f;
+                }
 
                 var slotImg = slotObj.GetComponent<Image>();
                 if (slotImg != null)
@@ -190,9 +202,24 @@ namespace CelestialCross.Scenes.Inventory
                 }
             }
             
-            if (petSpriteImage != null) petSpriteImage.sprite = speciesSO.sprite;
+            if (petSpriteImage != null) 
+            {
+                petSpriteImage.sprite = speciesSO.sprite;
+                var rt = petSpriteImage.GetComponent<RectTransform>();
+                if (rt != null)
+                {
+                    rt.DOKill(true);
+                    rt.localScale = Vector3.zero;
+                    rt.localEulerAngles = new Vector3(0, 0, Random.Range(-10f, 10f));
+                    rt.DOScale(1f, 0.4f).SetEase(Ease.OutBack);
+                    rt.DOLocalRotate(Vector3.zero, 0.3f).SetEase(Ease.OutBack).SetDelay(0.1f);
+                }
+            }
             if (petIconImage != null) petIconImage.sprite = speciesSO.Icon;
             if (petNameText != null) petNameText.text = speciesSO.SpeciesName;
+
+            if (CelestialCross.Audio.AudioManager.Instance != null)
+                CelestialCross.Audio.AudioManager.Instance.PlayUI(CelestialCross.Audio.SoundKey.ButtonClick01);
 
             UpdateStars(petData.RarityStars);
             UpdateStats(petData);

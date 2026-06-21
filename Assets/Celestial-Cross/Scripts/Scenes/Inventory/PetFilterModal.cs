@@ -28,12 +28,13 @@ namespace CelestialCross.Scenes.Inventory
         public void Show()
         {
             gameObject.SetActive(true);
+            UIModalJuicer.AnimateModalShow(GetComponent<RectTransform>());
             PopulateGrid();
         }
 
         public void Hide()
         {
-            gameObject.SetActive(false);
+            UIModalJuicer.AnimateModalHide(GetComponent<RectTransform>(), () => gameObject.SetActive(false));
         }
 
         private void PopulateGrid()
