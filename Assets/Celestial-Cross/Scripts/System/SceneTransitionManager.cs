@@ -60,6 +60,21 @@ namespace CelestialCross.System
             rect.offsetMax = Vector2.zero;
         }
 
+        public static void LoadScene(string sceneName)
+        {
+            if (Instance != null)
+            {
+                Instance.LoadSceneWithFlash(sceneName);
+            }
+            else
+            {
+                Debug.LogWarning("[SceneTransitionManager] Instância não encontrada. Criando fallback para transição da cena: " + sceneName);
+                GameObject transitionObj = new GameObject("TempTransitionManager");
+                SceneTransitionManager tempManager = transitionObj.AddComponent<SceneTransitionManager>();
+                tempManager.LoadSceneWithFlash(sceneName);
+            }
+        }
+
         public void LoadSceneWithFlash(string sceneName)
         {
             StartCoroutine(TransitionRoutine(sceneName));
@@ -69,17 +84,21 @@ namespace CelestialCross.System
         {
             flashImage.gameObject.SetActive(true);
             
-            // 1. Flash In (Fica Branco)
-            yield return flashImage.DOFade(1f, flashInDuration).SetEase(Ease.InOutSine).WaitForCompletion();
+            // Pausa o jogo para que animações da nova cena não rodem por debaixo do painel branco
+            Time.timeScale = 0f;
+
+            // 1. Flash In (Fica Branco) - ignorando timeScale
+            yield return flashImage.DOFade(1f, flashInDuration).SetUpdate(true).SetEase(Ease.InOutSine).WaitForCompletion();
 
             // 2. Segura o Branco e carrega a cena de forma assíncrona
             AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
             asyncLoad.allowSceneActivation = false;
 
+            // Usamos unscaledDeltaTime já que timeScale é 0
             float holdTimer = 0f;
             while (!asyncLoad.isDone)
             {
-                holdTimer += Time.deltaTime;
+                holdTimer += Time.unscaledDeltaTime;
                 // Quando o progresso chegar a 0.9, a cena está pronta para ser ativada
                 if (asyncLoad.progress >= 0.9f)
                 {
@@ -98,9 +117,12 @@ namespace CelestialCross.System
             // 3. Opcional: Avisa algum gerenciador da cena nova que o flash vai sumir
             // Como o IntroModalUI que espera para começar a intro
 
-            // 4. Flash Out (Branco some)
-            yield return flashImage.DOFade(0f, flashOutDuration).SetEase(Ease.OutSine).WaitForCompletion();
+            // 4. Flash Out (Branco some) - ignorando timeScale
+            yield return flashImage.DOFade(0f, flashOutDuration).SetUpdate(true).SetEase(Ease.OutSine).WaitForCompletion();
             flashImage.gameObject.SetActive(false);
+
+            // Restaura o tempo normal, agora as animações da cena nova começam a rodar fluidamente nas telas
+            Time.timeScale = 1f;
         }
     }
 }

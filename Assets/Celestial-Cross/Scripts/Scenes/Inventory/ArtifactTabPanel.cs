@@ -24,8 +24,9 @@ namespace CelestialCross.Scenes.Inventory
         private ArtifactFilterData activeFilter = null;
 
         private global::System.Collections.Generic.Dictionary<string, Image> artifactSlotImages = new global::System.Collections.Generic.Dictionary<string, Image>();
-        private Color defaultSlotColor = new Color(0.2f, 0.2f, 0.28f, 1f);
-        private Color selectedSlotColor = new Color(0.4f, 0.5f, 0.8f, 1f);
+        [Header("Slot Colors")]
+        public Color defaultSlotColor = new Color(0.2f, 0.2f, 0.28f, 1f);
+        public Color selectedSlotColor = new Color(0.4f, 0.5f, 0.8f, 1f);
 
         protected override void Awake()
         {

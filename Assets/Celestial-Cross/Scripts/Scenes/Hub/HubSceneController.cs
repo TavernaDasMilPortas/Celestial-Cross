@@ -326,17 +326,20 @@ namespace CelestialCross.Scenes.Hub
         #region Scene Navigation
         public void GoToShopScene()
         {
-            if (!string.IsNullOrEmpty(shopSceneName)) SceneManager.LoadScene(shopSceneName);
+            if (!string.IsNullOrEmpty(shopSceneName)) 
+                System.SceneTransitionManager.LoadScene(shopSceneName);
         }
 
         public void GoToInventoryScene()
         {
-            if (!string.IsNullOrEmpty(inventorySceneName)) SceneManager.LoadScene(inventorySceneName);
+            if (!string.IsNullOrEmpty(inventorySceneName)) 
+                System.SceneTransitionManager.LoadScene(inventorySceneName);
         }
 
         public void GoToUnitScene()
         {
-            if (!string.IsNullOrEmpty(unitSceneName)) SceneManager.LoadScene(unitSceneName);
+            if (!string.IsNullOrEmpty(unitSceneName)) 
+                System.SceneTransitionManager.LoadScene(unitSceneName);
         }
         #endregion
     }

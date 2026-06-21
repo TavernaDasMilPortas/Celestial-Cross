@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 namespace CelestialCross.Scenes.Inventory
 {
@@ -28,7 +29,19 @@ namespace CelestialCross.Scenes.Inventory
         {
             if (topPanelContent != null) topPanelContent.SetActive(true);
             if (gridContent != null) gridContent.SetActive(true);
-            if (scrollView != null) scrollView.SetActive(true);
+            if (scrollView != null) 
+            {
+                scrollView.SetActive(true);
+                var rt = scrollView.GetComponent<RectTransform>();
+                if (rt != null)
+                {
+                    rt.DOKill(true);
+                    float startX = rt.anchoredPosition.x + 150f;
+                    float endX = rt.anchoredPosition.x;
+                    rt.anchoredPosition = new Vector2(startX, rt.anchoredPosition.y);
+                    rt.DOAnchorPosX(endX, 0.4f).SetEase(Ease.OutBack);
+                }
+            }
             if (tabButtonImage != null) tabButtonImage.color = activeColor;
             
             OnShow();
@@ -38,7 +51,12 @@ namespace CelestialCross.Scenes.Inventory
         {
             if (topPanelContent != null) topPanelContent.SetActive(false);
             if (gridContent != null) gridContent.SetActive(false);
-            if (scrollView != null) scrollView.SetActive(false);
+            if (scrollView != null) 
+            {
+                var rt = scrollView.GetComponent<RectTransform>();
+                if (rt != null) rt.DOKill(true);
+                scrollView.SetActive(false);
+            }
             if (tabButtonImage != null) tabButtonImage.color = inactiveColor;
             
             OnHide();

@@ -32,6 +32,7 @@ namespace CelestialCross.Scenes.Inventory
         public void Show(ArtifactInstanceData artifact, global::System.Action onCompleteCallback = null)
         {
             gameObject.SetActive(true);
+            UIModalJuicer.AnimateModalShow(GetComponent<RectTransform>());
             currentArtifact = artifact;
             currentLevel = artifact.currentLevel;
             onComplete = onCompleteCallback;
@@ -48,7 +49,7 @@ namespace CelestialCross.Scenes.Inventory
 
         public void Hide()
         {
-            gameObject.SetActive(false);
+            UIModalJuicer.AnimateModalHide(GetComponent<RectTransform>(), () => gameObject.SetActive(false));
         }
 
         private void OnSliderValueChanged(float value)
