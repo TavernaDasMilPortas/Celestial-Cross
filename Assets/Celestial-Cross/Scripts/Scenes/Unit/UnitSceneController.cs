@@ -1,5 +1,9 @@
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using DG.Tweening;
+using MoreMountains.Feedbacks;
+using System.Collections.Generic;
 
 namespace CelestialCross.Scenes.Unit
 {
@@ -30,8 +34,25 @@ namespace CelestialCross.Scenes.Unit
         public PetCatalog petCatalog;
         public ArtifactSetCatalog artifactSetCatalog;
 
+        [Header("Juice - Panel Transition")]
+        public CanvasGroup[] detailPanelCanvasGroups; 
+        public Image modalOverlay;
+        public CanvasGroup modalOverlayCanvasGroup;
+
+        [Header("Juice - FEEL Feedbacks")]
+        public MMF_Player panelTransitionFeedback;
+        public MMF_Player modalOpenFeedback;
+        public MMF_Player modalCloseFeedback;
+
+        [Header("Juice - Transition Settings")]
+        public float panelFadeDuration = 0.2f;
+        public float panelSlideDelta = 30f;
+
         private UnitData currentLoadedUnit;
         private CelestialCross.Data.RuntimeUnitData currentLoadedRuntime;
+        
+        private int activeDetailPanelIndex = -1;
+        private bool isTransitioning = false;
 
         private void Awake()
         {
@@ -71,6 +92,8 @@ namespace CelestialCross.Scenes.Unit
             }
 
             bool isFirst = true;
+            Sequence seq = DOTween.Sequence();
+            float delay = 0f;
 
             foreach (var runtimeData in account.OwnedUnits)
             {
@@ -81,6 +104,10 @@ namespace CelestialCross.Scenes.Unit
                 {
                     var btnGO = Instantiate(unitListButtonPrefab, unitListContainer);
                     btnGO.SetActive(true);
+                    
+                    btnGO.transform.localScale = Vector3.zero;
+                    seq.Insert(delay, btnGO.transform.DOScale(1f, 0.3f).SetEase(Ease.OutBack));
+                    delay += 0.05f;
 
                     var img = btnGO.GetComponent<UnityEngine.UI.Image>();
                     if (img != null) img.sprite = unitSO.icon;
@@ -153,60 +180,119 @@ namespace CelestialCross.Scenes.Unit
 
         public void ShowDetailPanel(int tabIndex, string tabName)
         {
-            if (bannerUI != null) bannerUI.SetBannerText(tabName);
+            if (isTransitioning || activeDetailPanelIndex == tabIndex) return;
             
-            // Esconder tudo
-            if (attributesDetailPanel) attributesDetailPanel.SetActive(false);
-            if (petDetailPanel) petDetailPanel.SetActive(false);
-            if (equipmentDetailPanel) equipmentDetailPanel.SetActive(false);
-            if (constellationDetailPanel) constellationDetailPanel.SetActive(false);
-            if (abilitiesDetailPanel) abilitiesDetailPanel.SetActive(false);
+            if (bannerUI != null) bannerUI.SetBannerText(tabName);
 
-            // Mostrar ativado e Forçar Refresh para consertar o bug do BetterUI limpando as imagens
-            switch (tabIndex)
+            GameObject oldPanel = GetPanelByIndex(activeDetailPanelIndex);
+            GameObject newPanel = GetPanelByIndex(tabIndex);
+
+            if (oldPanel == null && newPanel != null)
+            {
+                // First time load
+                newPanel.SetActive(true);
+                RefreshPanelData(tabIndex);
+                activeDetailPanelIndex = tabIndex;
+                return;
+            }
+
+            if (oldPanel != null && newPanel != null)
+            {
+                isTransitioning = true;
+                panelTransitionFeedback?.PlayFeedbacks();
+
+                CanvasGroup oldCg = oldPanel.GetComponent<CanvasGroup>();
+                CanvasGroup newCg = newPanel.GetComponent<CanvasGroup>();
+                RectTransform oldRt = oldPanel.GetComponent<RectTransform>();
+                RectTransform newRt = newPanel.GetComponent<RectTransform>();
+
+                Sequence seq = DOTween.Sequence();
+                
+                if (oldCg != null && oldRt != null)
+                {
+                    oldCg.DOKill();
+                    oldRt.DOKill();
+                    seq.Join(oldCg.DOFade(0f, 0.15f));
+                    seq.Join(oldRt.DOAnchorPosY(-panelSlideDelta, 0.15f).SetEase(Ease.InCubic));
+                }
+
+                seq.AppendCallback(() => {
+                    oldPanel.SetActive(false);
+                    if (oldRt != null) oldRt.anchoredPosition = new Vector2(oldRt.anchoredPosition.x, 0);
+                    
+                    newPanel.SetActive(true);
+                    RefreshPanelData(tabIndex);
+
+                    if (newCg != null && newRt != null)
+                    {
+                        newCg.DOKill();
+                        newRt.DOKill();
+                        newCg.alpha = 0f;
+                        newRt.anchoredPosition = new Vector2(newRt.anchoredPosition.x, panelSlideDelta);
+                        
+                        newCg.DOFade(1f, panelFadeDuration);
+                        newRt.DOAnchorPosY(0f, panelFadeDuration).SetEase(Ease.OutCubic);
+                    }
+                });
+
+                seq.OnComplete(() => {
+                    isTransitioning = false;
+                    activeDetailPanelIndex = tabIndex;
+                });
+            }
+        }
+
+        private GameObject GetPanelByIndex(int index)
+        {
+            switch (index)
+            {
+                case 0: return attributesDetailPanel;
+                case 1: return petDetailPanel;
+                case 2: return equipmentDetailPanel;
+                case 3: return constellationDetailPanel;
+                case 4: return abilitiesDetailPanel;
+                default: return null;
+            }
+        }
+
+        private void RefreshPanelData(int index)
+        {
+            switch (index)
             {
                 case 0: 
-                    if (attributesDetailPanel) 
-                    { 
-                        attributesDetailPanel.SetActive(true); 
-                        var attr = attributesDetailPanel.GetComponent<UnitDetailPanel_Attributes>();
-                        if (attr != null) 
-                        {
-                            attr.artifactSetCatalog = artifactSetCatalog;
-                            attr.Refresh(currentLoadedUnit, currentLoadedRuntime);
-                        }
-                    } 
+                    attributesDetailPanel.GetComponent<UnitDetailPanel_Attributes>()?.Refresh(currentLoadedUnit, currentLoadedRuntime);
                     break;
                 case 1: 
-                    if (petDetailPanel) 
-                    { 
-                        petDetailPanel.SetActive(true); 
-                        petDetailPanel.GetComponent<UnitDetailPanel_Pet>()?.Refresh(currentLoadedUnit, currentLoadedRuntime, petCatalog);
-                    } 
+                    petDetailPanel.GetComponent<UnitDetailPanel_Pet>()?.Refresh(currentLoadedUnit, currentLoadedRuntime, petCatalog);
                     break;
                 case 2: 
-                    if (equipmentDetailPanel) 
-                    { 
-                        equipmentDetailPanel.SetActive(true); 
-                        equipmentDetailPanel.GetComponent<UnitDetailPanel_Equipment>()?.Refresh(currentLoadedUnit, currentLoadedRuntime, artifactSetCatalog);
-                    } 
+                    equipmentDetailPanel.GetComponent<UnitDetailPanel_Equipment>()?.Refresh(currentLoadedUnit, currentLoadedRuntime, artifactSetCatalog);
                     break;
                 case 3: 
-                    if (constellationDetailPanel) 
-                    { 
-                        constellationDetailPanel.SetActive(true); 
-                        constellationDetailPanel.GetComponent<UnitDetailPanel_Constellation>()?.Refresh(currentLoadedUnit, currentLoadedRuntime);
-                    } 
+                    constellationDetailPanel.GetComponent<UnitDetailPanel_Constellation>()?.Refresh(currentLoadedUnit, currentLoadedRuntime);
                     break;
                 case 4: 
-                    if (abilitiesDetailPanel) 
-                    { 
-                        abilitiesDetailPanel.SetActive(true); 
-                        var ab = abilitiesDetailPanel.GetComponent<UnitDetailPanel_Abilities>();
-                        if (ab != null) { ab.unitCatalog = unitCatalog; ab.Refresh(currentLoadedUnit, currentLoadedRuntime, petCatalog); }
-                    } 
+                    abilitiesDetailPanel.GetComponent<UnitDetailPanel_Abilities>()?.Refresh(currentLoadedUnit, currentLoadedRuntime, petCatalog);
                     break;
             }
+        }
+
+        public void ShowModalOverlay(float duration = 0.2f) 
+        {
+            if (modalOverlay == null || modalOverlayCanvasGroup == null) return;
+            modalOverlay.gameObject.SetActive(true);
+            modalOverlayCanvasGroup.DOKill();
+            modalOverlayCanvasGroup.DOFade(0.7f, duration).SetUpdate(true);
+            modalOpenFeedback?.PlayFeedbacks();
+        }
+        
+        public void HideModalOverlay(float duration = 0.15f) 
+        {
+            if (modalOverlay == null || modalOverlayCanvasGroup == null) return;
+            modalOverlayCanvasGroup.DOKill();
+            modalOverlayCanvasGroup.DOFade(0f, duration).SetUpdate(true)
+                .OnComplete(() => modalOverlay.gameObject.SetActive(false));
+            modalCloseFeedback?.PlayFeedbacks();
         }
 
         public void ReturnToHub()

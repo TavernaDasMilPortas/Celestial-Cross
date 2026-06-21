@@ -7,6 +7,7 @@ using Celestial_Cross.Scripts.Abilities;
 using Celestial_Cross.Scripts.Abilities.Graph;
 using Celestial_Cross.Scripts.Abilities.SkillTree;
 using CelestialCross.UI.Skills;
+using DG.Tweening;
 
 namespace CelestialCross.Scenes.Unit
 {
@@ -30,13 +31,14 @@ namespace CelestialCross.Scenes.Unit
         public UnitCatalog unitCatalog;
 
         private string currentUnitId;
+        private DG.Tweening.Sequence currentAnimSeq;
 
         private void Start()
         {
-            if (basicSkillButton != null) basicSkillButton.onClick.AddListener(() => OnSlotClicked(SkillSlotType.Basic));
-            if (movementSkillButton != null) movementSkillButton.onClick.AddListener(() => OnSlotClicked(SkillSlotType.Movement));
-            if (slot1SkillButton != null) slot1SkillButton.onClick.AddListener(() => OnSlotClicked(SkillSlotType.Slot1));
-            if (slot2SkillButton != null) slot2SkillButton.onClick.AddListener(() => OnSlotClicked(SkillSlotType.Slot2));
+            if (basicSkillButton != null) basicSkillButton.onClick.AddListener(() => { CelestialCross.Audio.AudioManager.Instance?.PlayUI(CelestialCross.Audio.SoundKey.ButtonClick01); OnSlotClicked(SkillSlotType.Basic); });
+            if (movementSkillButton != null) movementSkillButton.onClick.AddListener(() => { CelestialCross.Audio.AudioManager.Instance?.PlayUI(CelestialCross.Audio.SoundKey.ButtonClick01); OnSlotClicked(SkillSlotType.Movement); });
+            if (slot1SkillButton != null) slot1SkillButton.onClick.AddListener(() => { CelestialCross.Audio.AudioManager.Instance?.PlayUI(CelestialCross.Audio.SoundKey.ButtonClick01); OnSlotClicked(SkillSlotType.Slot1); });
+            if (slot2SkillButton != null) slot2SkillButton.onClick.AddListener(() => { CelestialCross.Audio.AudioManager.Instance?.PlayUI(CelestialCross.Audio.SoundKey.ButtonClick01); OnSlotClicked(SkillSlotType.Slot2); });
         }
 
         public void Refresh(UnitData unitData, RuntimeUnitData runtimeData, PetCatalog petCatalog)
@@ -76,6 +78,23 @@ namespace CelestialCross.Scenes.Unit
             UpdateSlotUI(movementSkillButton, movementSkillText, "Movimentação", moveGraph);
             UpdateSlotUI(slot1SkillButton, slot1SkillText, "Slot 1", slot1Graph);
             UpdateSlotUI(slot2SkillButton, slot2SkillText, "Slot 2", slot2Graph);
+
+            Button[] buttons = { basicSkillButton, movementSkillButton, slot1SkillButton, slot2SkillButton };
+            currentAnimSeq?.Kill();
+            currentAnimSeq = DG.Tweening.DOTween.Sequence();
+            currentAnimSeq.SetUpdate(true);
+            currentAnimSeq.SetLink(gameObject);
+            float delay = 0f;
+            foreach (var btn in buttons)
+            {
+                if (btn != null && btn.gameObject.activeInHierarchy)
+                {
+                    btn.transform.DOKill();
+                    btn.transform.localScale = Vector3.zero;
+                    currentAnimSeq.Insert(delay, btn.transform.DOScale(1f, 0.3f).SetEase(DG.Tweening.Ease.OutBack).SetLink(btn.gameObject));
+                    delay += 0.1f;
+                }
+            }
         }
 
         private void UpdateSlotUI(Button button, TextMeshProUGUI textComp, string slotLabel, AbilityGraphSO graph)

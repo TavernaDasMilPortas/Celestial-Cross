@@ -5,6 +5,7 @@ using System.Linq;
 using TMPro;
 using Sirenix.OdinInspector;
 using CelestialCross.Gacha;
+using CelestialCross.Audio;
 using DG.Tweening;
 
 namespace CelestialCross.Gacha.UI
@@ -31,6 +32,19 @@ namespace CelestialCross.Gacha.UI
         [Tooltip("Material com o shader UI/Silhouette para geração automática de silhueta")]
         public Material silhouetteMaterial;
 
+        [Title("Reward Modals")]
+        public GameObject rewardDetailModal; // Fallback
+        public Image modalIcon;
+        public TextMeshProUGUI modalName;
+        public TextMeshProUGUI modalRarityText;
+        public TextMeshProUGUI modalDesc;
+        public Button modalCloseButton;
+
+        [Title("Complex Modals")]
+        public CelestialCross.Scenes.Unit.ArtifactActionModal artifactActionModal;
+        public CelestialCross.Giulia_UI.ArtifactUpgradeModal artifactUpgradeModal;
+        public GachaUnitRewardModal gachaUnitRewardModal;
+
         [Title("Prefabs")]
         public GameObject starStickerPrefab;
         public GameObject uiLinePrefab;
@@ -38,11 +52,11 @@ namespace CelestialCross.Gacha.UI
 
         [Title("Effects")]
         public ParticleSystem climaxParticles;
-        public AudioClip sfxSlap;
-        public AudioClip sfxSinoLight;
-        public AudioClip sfxCrescendo;
-        public AudioClip sfxClimax;
-        public AudioClip sfxCarimbo;
+        public SoundKey sfxSlap = SoundKey.GachaSlap;
+        public SoundKey sfxSinoLight = SoundKey.GachaBell;
+        public SoundKey sfxCrescendo = SoundKey.GachaCrescendo;
+        public SoundKey sfxClimax = SoundKey.GachaClimax;
+        public SoundKey sfxCarimbo = SoundKey.GachaStamp;
 
         [Title("Buttons")]
         public Button btnContinue;
@@ -62,16 +76,19 @@ namespace CelestialCross.Gacha.UI
         public float stampShakeIntensity = 5f;
         public float epicStampShakeIntensity = 12f;
 
-        private AudioSource audioSource;
+        // private AudioSource audioSource; // Removido: Usando AudioManager central
         private global::System.Action onSequenceFinished;
         private List<GameObject> activeStickers = new List<GameObject>();
         private List<GameObject> activeLines = new List<GameObject>();
         private List<GameObject> activeStamps = new List<GameObject>();
-        private List<GachaRewardEntry> currentResults;
+        private List<RuntimeGachaResult> currentResults;
         private CelestialCross.Data.BannerPullVisualConfigSO activeBannerConfig;
-        private GachaBannerSO activeBanner; // Added to access Silhouette
+        private GachaBannerSO activeBanner; 
         private bool isFinished = false;
         private Sequence _masterSequence;
+        private GameObject currentSelectedStamp;
+        private Tween currentStampTween;
+        private bool sequenceFinished = false;
 
         private Vector2[] constellationPositions = new Vector2[]
         {
@@ -85,8 +102,7 @@ namespace CelestialCross.Gacha.UI
         {
             DOTween.Init(recycleAllByDefault: true);
             
-            audioSource = GetComponent<AudioSource>();
-            if (audioSource == null) audioSource = gameObject.AddComponent<AudioSource>();
+            // audioSource = GetComponent<AudioSource>(); // Usando AudioManager central
 
             if (btnContinue) btnContinue.onClick.AddListener(FinishAnimation);
             if (btnSkip) btnSkip.onClick.AddListener(SkipAnimation);
@@ -97,18 +113,17 @@ namespace CelestialCross.Gacha.UI
             _masterSequence?.Kill();
         }
 
-        public void PlayGachaSequence(List<GachaRewardEntry> results, CelestialCross.Data.BannerPullVisualConfigSO bannerConfig, global::System.Action onFinished)
+        public void PlayGachaSequence(List<RuntimeGachaResult> results, CelestialCross.Data.BannerPullVisualConfigSO bannerConfig, global::System.Action onFinished)
         {
             this.currentResults = results;
             this.activeBannerConfig = bannerConfig;
             this.onSequenceFinished = onFinished;
             this.isFinished = false;
+            this.sequenceFinished = false;
             
-            // Try to find the active banner from ShopSceneUI to get the Silhouette if needed
             ShopSceneUI shopUI = FindObjectOfType<ShopSceneUI>();
             if (shopUI != null && shopUI.availableBanners != null && shopUI.availableBanners.Count > 0)
             {
-                // This is a small hack to get the banner, in a real scenario we'd pass it in
                 this.activeBanner = shopUI.availableBanners.Find(b => b.pullVisualConfig == bannerConfig);
                 if (this.activeBanner == null) this.activeBanner = shopUI.availableBanners[0];
             }
@@ -127,7 +142,7 @@ namespace CelestialCross.Gacha.UI
             
             if (whiteFlashPanel) { whiteFlashPanel.alpha = 0; whiteFlashPanel.gameObject.SetActive(false); }
             if (stickerSpawnArea) stickerSpawnArea.gameObject.SetActive(true);
-            if (stampsSpawnArea) stampsSpawnArea.gameObject.SetActive(false);
+            if (stampsSpawnArea) stampsSpawnArea.gameObject.SetActive(true); 
             if (objectToActivateAfterFlash) objectToActivateAfterFlash.SetActive(false);
             
             if (supremeRevealContainer) 
@@ -151,7 +166,7 @@ namespace CelestialCross.Gacha.UI
             BuildPhase0_BackgroundFadeIn(_masterSequence);
             BuildPhase1_Constellation(_masterSequence);
             
-            bool hasSupreme = currentResults.Any(r => r.Rarity == GachaRarity.Supreme);
+            bool hasSupreme = currentResults.Any(r => r.Entry.Rarity == GachaRarity.Supreme);
             
             if (hasSupreme)
             {
@@ -166,7 +181,10 @@ namespace CelestialCross.Gacha.UI
 
             BuildPhase5_StampSlap(_masterSequence);
             
-            _masterSequence.AppendCallback(() => FinishSequenceVisuals());
+            _masterSequence.AppendCallback(() => {
+                sequenceFinished = true;
+                FinishSequenceVisuals();
+            });
         }
 
         private void BuildPhase0_BackgroundFadeIn(Sequence seq)
@@ -192,7 +210,8 @@ namespace CelestialCross.Gacha.UI
 
             for (int i = 0; i < pullCount; i++)
             {
-                var reward = currentResults[i];
+                var result = currentResults[i];
+                var reward = result.Entry;
                 Vector2 pos = Vector2.zero;
 
                 if (pullCount > 1) 
@@ -250,7 +269,7 @@ namespace CelestialCross.Gacha.UI
 
         private void BuildPhase2_ColorTransition(Sequence seq)
         {
-            GachaRewardEntry bestReward = currentResults.OrderByDescending(r => (int)r.Rarity).First();
+            GachaRewardEntry bestReward = currentResults.OrderByDescending(r => (int)r.Entry.Rarity).First().Entry;
             Color bestColor = GetRarityColor(bestReward.Rarity);
 
             seq.AppendCallback(() => {
@@ -272,20 +291,18 @@ namespace CelestialCross.Gacha.UI
 
         private void BuildPhase3_PulseReveal(Sequence seq)
         {
-            // Pulse 1
             seq.AppendCallback(() => PlaySound(sfxSinoLight));
             seq.Append(PulseTween(1.15f, 0.2f));
             
-            // Pulse 2
             seq.AppendCallback(() => PlaySound(sfxCrescendo));
             seq.Append(PulseTween(1.25f, 0.2f));
 
-            // Final Reveal
             seq.Append(PulseTween(1.5f, 0.5f));
             seq.InsertCallback(seq.Duration() - 0.25f, () => {
                 for (int i = 0; i < activeStickers.Count; i++) {
                     var st = activeStickers[i];
-                    var reward = currentResults[i];
+                    var result = currentResults[i];
+                    var reward = result.Entry;
                     var img = st.GetComponent<Image>();
                     if(img) img.color = GetRarityColor(reward.Rarity);
                 }
@@ -301,6 +318,10 @@ namespace CelestialCross.Gacha.UI
                 seq.AppendCallback(() => {
                     if (stickerSpawnArea) stickerSpawnArea.gameObject.SetActive(false);
                     if (stampsSpawnArea) stampsSpawnArea.gameObject.SetActive(true);
+                    
+                    foreach(var st in activeStickers) if(st) st.SetActive(false);
+                    foreach(var ln in activeLines) if(ln) ln.SetActive(false);
+                    
                     if (objectToActivateAfterFlash) objectToActivateAfterFlash.SetActive(true);
                 });
                 seq.Append(whiteFlashPanel.DOFade(0f, 0.3f).SetEase(Ease.InOutQuad));
@@ -311,6 +332,10 @@ namespace CelestialCross.Gacha.UI
                 seq.AppendCallback(() => {
                     if (stickerSpawnArea) stickerSpawnArea.gameObject.SetActive(false);
                     if (stampsSpawnArea) stampsSpawnArea.gameObject.SetActive(true);
+                    
+                    foreach(var st in activeStickers) if(st) st.SetActive(false);
+                    foreach(var ln in activeLines) if(ln) ln.SetActive(false);
+                    
                     if (objectToActivateAfterFlash) objectToActivateAfterFlash.SetActive(true);
                 });
             }
@@ -320,13 +345,12 @@ namespace CelestialCross.Gacha.UI
         {
             if (!supremeRevealContainer || !supremeSilhouetteImage || !supremeSplashImage || !supremeNameText) return;
 
-            var supremeReward = currentResults.First(r => r.Rarity == GachaRarity.Supreme);
+            var supremeReward = currentResults.First(r => r.Entry.Rarity == GachaRarity.Supreme).Entry;
             Sprite revealSprite = GetSupremeRevealSprite(supremeReward);
             Sprite silhouetteSprite = GetSilhouetteSprite(activeBanner, supremeReward, revealSprite);
 
             var cg = supremeRevealContainer.GetComponent<CanvasGroup>();
 
-            // 1. Blackout
             if (backgroundPanel)
             {
                 var bgImg = backgroundPanel.GetComponent<Image>();
@@ -345,7 +369,6 @@ namespace CelestialCross.Gacha.UI
                 seq.Join(stickerCg.DOFade(0f, 0.3f));
             }
 
-            // 2. Silhueta Surge
             seq.AppendCallback(() => {
                 supremeRevealContainer.gameObject.SetActive(true);
                 cg.alpha = 0f;
@@ -355,8 +378,8 @@ namespace CelestialCross.Gacha.UI
                 supremeSilhouetteImage.sprite = silhouetteSprite;
                 
                 if (activeBanner != null && activeBanner.Silhouette != null) {
-                    supremeSilhouetteImage.material = null; // Use sprite directly
-                    supremeSilhouetteImage.color = new Color(0.05f, 0.02f, 0.08f, 1f); // Dark color
+                    supremeSilhouetteImage.material = null; 
+                    supremeSilhouetteImage.color = new Color(0.05f, 0.02f, 0.08f, 1f); 
                 } else if (silhouetteMaterial != null) {
                     supremeSilhouetteImage.material = silhouetteMaterial;
                     supremeSilhouetteImage.color = Color.white;
@@ -374,7 +397,6 @@ namespace CelestialCross.Gacha.UI
             seq.Join(supremeSilhouetteImage.rectTransform.DOScale(1.2f, 0.4f).SetEase(Ease.OutExpo));
             seq.Join(supremeSilhouetteImage.rectTransform.DORotate(new Vector3(0, 0, Random.Range(-3f, 3f)), 0.4f));
 
-            // 3. Silhueta Respira
             seq.AppendCallback(() => PlaySound(sfxCrescendo));
             seq.Append(supremeSilhouetteImage.rectTransform.DOScale(1.15f, 0.5f).SetEase(Ease.InOutSine));
             if (silhouetteMaterial != null && (activeBanner == null || activeBanner.Silhouette == null)) {
@@ -385,7 +407,6 @@ namespace CelestialCross.Gacha.UI
                 seq.Join(DOTween.To(() => silhouetteMaterial.GetFloat("_EdgeGlow"), x => silhouetteMaterial.SetFloat("_EdgeGlow", x), 0.5f, 0.5f));
             }
 
-            // 4. Glow Intensifica
             seq.AppendCallback(() => PlaySound(sfxClimax));
             seq.Append(supremeSilhouetteImage.rectTransform.DOScale(1.3f, 0.3f).SetEase(Ease.InQuad));
             if (silhouetteMaterial != null && (activeBanner == null || activeBanner.Silhouette == null)) {
@@ -393,12 +414,11 @@ namespace CelestialCross.Gacha.UI
                 seq.Join(silhouetteMaterial.DOColor(Color.white, "_EdgeGlowColor", 0.3f));
             }
 
-            // 5. Flash Dourado
             if (whiteFlashPanel)
             {
                 seq.AppendCallback(() => {
                     whiteFlashPanel.gameObject.SetActive(true);
-                    whiteFlashPanel.GetComponent<Image>().color = new Color(1f, 0.9f, 0.6f, 1f); // Dourado
+                    whiteFlashPanel.GetComponent<Image>().color = new Color(1f, 0.9f, 0.6f, 1f); 
                 });
                 seq.Append(whiteFlashPanel.DOFade(1f, 0.2f).SetEase(Ease.OutQuart));
                 
@@ -418,13 +438,12 @@ namespace CelestialCross.Gacha.UI
                 });
             }
 
-            // 6. Splash Art Reveal
             if (whiteFlashPanel)
             {
                 seq.Append(whiteFlashPanel.DOFade(0f, 0.6f).SetEase(Ease.InOutQuad));
                 seq.AppendCallback(() => {
                     whiteFlashPanel.gameObject.SetActive(false);
-                    whiteFlashPanel.GetComponent<Image>().color = Color.white; // Restore
+                    whiteFlashPanel.GetComponent<Image>().color = Color.white; 
                 });
             }
             seq.Join(supremeSplashImage.rectTransform.DOScale(1.0f, 0.6f).SetEase(Ease.OutBack));
@@ -432,10 +451,9 @@ namespace CelestialCross.Gacha.UI
             if (backgroundPanel)
             {
                 var bgImg = backgroundPanel.GetComponent<Image>();
-                if (bgImg) seq.Join(bgImg.DOColor(Color.white, 0.6f)); // Restore bg
+                if (bgImg) seq.Join(bgImg.DOColor(Color.white, 0.6f)); 
             }
 
-            // 7. Nome Aparece
             seq.AppendCallback(() => {
                 supremeNameText.gameObject.SetActive(true);
                 supremeNameText.text = GetRewardName(supremeReward);
@@ -453,7 +471,6 @@ namespace CelestialCross.Gacha.UI
             });
             seq.AppendInterval(0.4f);
 
-            // 8. Hold & Fade
             seq.AppendInterval(0.8f);
             seq.Append(cg.DOFade(0f, 0.3f));
             seq.AppendCallback(() => {
@@ -461,11 +478,14 @@ namespace CelestialCross.Gacha.UI
                 
                 if (stickerSpawnArea) stickerSpawnArea.gameObject.SetActive(false);
                 
+                foreach(var st in activeStickers) if(st) st.SetActive(false);
+                foreach(var ln in activeLines) if(ln) ln.SetActive(false);
+                
                 if (stampsSpawnArea)
                 {
                     stampsSpawnArea.gameObject.SetActive(true);
                     var stampCg = stampsSpawnArea.GetComponent<CanvasGroup>();
-                    if (stampCg) stampCg.alpha = 1f; // Restaurar visibilidade pós fade-out do passo 1
+                    if (stampCg) stampCg.alpha = 1f; 
                 }
                 
                 if (objectToActivateAfterFlash) objectToActivateAfterFlash.SetActive(true);
@@ -474,15 +494,14 @@ namespace CelestialCross.Gacha.UI
 
         private void BuildPhase5_StampSlap(Sequence seq)
         {
-            var sortedResults = currentResults.OrderBy(r => (int)r.Rarity).ToList();
+            var sortedResults = currentResults.OrderBy(r => (int)r.Entry.Rarity).ToList();
             for (int i = 0; i < sortedResults.Count; i++)
             {
                 var reward = sortedResults[i];
-                float delayAntesDeColar = (reward.Rarity >= GachaRarity.Epic) ? 0.6f : 0.1f;
                 
-                if (reward.Rarity >= GachaRarity.Epic)
+                if (reward.Entry.Rarity >= GachaRarity.Epic)
                 {
-                    seq.AppendInterval(0.4f); // Pausa dramática
+                    seq.AppendInterval(0.4f); 
                     if (stampsSpawnArea) seq.Append(((RectTransform)stampsSpawnArea).DOShakeAnchorPos(0.15f, 3f, 5));
                     seq.AppendInterval(0.2f);
                 }
@@ -496,7 +515,7 @@ namespace CelestialCross.Gacha.UI
                     stampSeq.Play();
                 });
                 
-                seq.AppendInterval(0.2f); // Tempo base do slap
+                seq.AppendInterval(0.2f); 
             }
         }
 
@@ -510,7 +529,7 @@ namespace CelestialCross.Gacha.UI
                     s.Join(st.transform.DOScale(maxScale, half).SetEase(Ease.InOutSine));
                 }
             }
-            s.AppendInterval(0f); // just to sequence correctly
+            s.AppendInterval(0f); 
             foreach (var st in activeStickers) {
                 if (st) {
                     s.Join(st.transform.DOScale(1f, half).SetEase(Ease.InOutSine));
@@ -521,7 +540,8 @@ namespace CelestialCross.Gacha.UI
 
         private Tween SpawnStickerSeq(Vector2 pos, Color initColor, float fadeDuration = 0.15f)
         {
-            var sticker = Instantiate(starStickerPrefab, stickerSpawnArea);
+            var targetArea = stickerSpawnArea;
+            var sticker = Instantiate(starStickerPrefab, targetArea);
             var rect = sticker.GetComponent<RectTransform>();
             
             rect.anchorMin = new Vector2(0.5f, 0.5f);
@@ -564,7 +584,8 @@ namespace CelestialCross.Gacha.UI
                 end = temp;
             }
 
-            GameObject line = Instantiate(uiLinePrefab, stickerSpawnArea);
+            var targetArea = stickerSpawnArea;
+            GameObject line = Instantiate(uiLinePrefab, targetArea);
             line.transform.SetAsFirstSibling();
             
             RectTransform rect = line.GetComponent<RectTransform>();
@@ -587,7 +608,7 @@ namespace CelestialCross.Gacha.UI
                 .SetRecyclable(true);
         }
 
-        private Sequence SpawnStampSeq(GachaRewardEntry reward)
+        private Sequence SpawnStampSeq(RuntimeGachaResult reward)
         {
             var stamp = Instantiate(prizeStampPrefab, stampsSpawnArea);
             var rect = stamp.GetComponent<RectTransform>();
@@ -601,8 +622,8 @@ namespace CelestialCross.Gacha.UI
             var txtName = stamp.transform.Find("NameText")?.GetComponent<TextMeshProUGUI>();
             var bgImg = stamp.GetComponent<Image>();
 
-            if (bgImg != null) bgImg.color = GetRarityColor(reward.Rarity);
-            if (txtName != null) txtName.text = GetRewardName(reward);
+            if (bgImg != null) bgImg.color = GetRarityColor(reward.Entry.Rarity);
+            if (txtName != null) txtName.text = GetRewardName(reward.Entry);
 
             if (iconImg != null)
             {
@@ -615,7 +636,7 @@ namespace CelestialCross.Gacha.UI
                 }
             }
 
-            float intensity = reward.Rarity >= GachaRarity.Epic ? epicStampShakeIntensity : stampShakeIntensity;
+            float intensity = reward.Entry.Rarity >= GachaRarity.Epic ? epicStampShakeIntensity : stampShakeIntensity;
 
             Sequence s = DOTween.Sequence().SetRecyclable(true).SetAutoKill(true);
             s.Append(stamp.transform.DOScale(1f, 0.15f).From(2.5f).SetEase(Ease.OutBack));
@@ -623,10 +644,108 @@ namespace CelestialCross.Gacha.UI
             if (stampsSpawnArea) s.Join(((RectTransform)stampsSpawnArea).DOShakeAnchorPos(0.1f, intensity, 10, 90, false, true, ShakeRandomnessMode.Harmonic));
             s.InsertCallback(0.15f, () => {
                 PlaySound(sfxCarimbo);
-                if (reward.Rarity >= GachaRarity.Epic) PlaySound(sfxSinoLight);
+                if (reward.Entry.Rarity >= GachaRarity.Epic) PlaySound(sfxSinoLight);
+            });
+            
+            var btn = stamp.GetComponent<Button>();
+            if (!btn) btn = stamp.AddComponent<Button>();
+            btn.transition = Selectable.Transition.None;
+            btn.onClick.AddListener(() => {
+                if (sequenceFinished) OpenRewardModal(reward, stamp);
             });
 
             return s;
+        }
+
+        public void OpenRewardModal(RuntimeGachaResult result, GameObject stamp)
+        {
+            if (currentStampTween != null)
+            {
+                currentStampTween.Kill();
+                if (currentSelectedStamp) currentSelectedStamp.transform.localScale = Vector3.one;
+            }
+
+            currentSelectedStamp = stamp;
+            currentStampTween = stamp.transform.DOScale(1.1f, 0.8f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InOutSine);
+
+            if (result.Entry.RewardType == GachaRewardType.Artifact && result.GeneratedInstance is CelestialCross.Artifacts.ArtifactInstanceData artifactData)
+            {
+                if (artifactActionModal != null)
+                {
+                    artifactActionModal.ShowFromGacha(artifactData, result.Entry.ArtifactSet, (wasSold) => {
+                        // Ao fechar (vendido ou não)
+                        if (wasSold && currentSelectedStamp != null)
+                        {
+                            var btn = currentSelectedStamp.GetComponent<Button>();
+                            if (btn) btn.interactable = false;
+
+                            var bgImg = currentSelectedStamp.GetComponent<Image>();
+                            if (bgImg) bgImg.color = new Color(0.2f, 0.2f, 0.2f, 0.5f);
+                            
+                            var iconImg = currentSelectedStamp.transform.Find("Icon")?.GetComponent<Image>();
+                            if (iconImg) iconImg.color = new Color(1f, 1f, 1f, 0.3f);
+                        }
+                        CloseRewardModal();
+                    });
+                    return; // Retorna para não abrir o fallback
+                }
+            }
+            else if (result.Entry.RewardType == GachaRewardType.Unit && result.GeneratedInstance is CelestialCross.Data.RuntimeUnitData unitData)
+            {
+                if (gachaUnitRewardModal != null)
+                {
+                    gachaUnitRewardModal.ShowUnit(unitData, result.Entry);
+                    return;
+                }
+            }
+            else if (result.Entry.RewardType == GachaRewardType.Pet && result.GeneratedInstance is CelestialCross.Data.Pets.RuntimePetData petData)
+            {
+                if (gachaUnitRewardModal != null)
+                {
+                    gachaUnitRewardModal.ShowPet(petData, result.Entry);
+                    return;
+                }
+            }
+
+            // Fallback (caso os complexos sejam nulos)
+            if (rewardDetailModal == null) return;
+
+            if (modalIcon) 
+            {
+                modalIcon.sprite = GetRewardIcon(result);
+                modalIcon.color = modalIcon.sprite != null ? Color.white : new Color(0,0,0,0);
+            }
+            if (modalName) modalName.text = GetRewardName(result.Entry);
+            if (modalRarityText) 
+            {
+                modalRarityText.text = result.Entry.Rarity.ToString();
+                modalRarityText.color = GetRarityColor(result.Entry.Rarity);
+            }
+            if (modalDesc) modalDesc.text = "Tipo: " + result.Entry.RewardType.ToString();
+
+            rewardDetailModal.SetActive(true);
+            
+            if (modalCloseButton)
+            {
+                modalCloseButton.onClick.RemoveAllListeners();
+                modalCloseButton.onClick.AddListener(CloseRewardModal);
+            }
+        }
+
+        public void CloseRewardModal()
+        {
+            if (currentStampTween != null)
+            {
+                currentStampTween.Kill();
+                if (currentSelectedStamp) currentSelectedStamp.transform.DOScale(1f, 0.2f);
+                currentStampTween = null;
+                currentSelectedStamp = null;
+            }
+            
+            if (rewardDetailModal) rewardDetailModal.SetActive(false);
+            if (artifactActionModal != null) artifactActionModal.Close();
+            if (artifactUpgradeModal != null) artifactUpgradeModal.Close();
+            if (gachaUnitRewardModal != null) gachaUnitRewardModal.Close();
         }
 
         private Sprite GetSupremeRevealSprite(GachaRewardEntry supremeReward)
@@ -660,12 +779,27 @@ namespace CelestialCross.Gacha.UI
 
             if (whiteFlashPanel) { whiteFlashPanel.alpha = 0f; whiteFlashPanel.gameObject.SetActive(false); }
             if (stickerSpawnArea) stickerSpawnArea.gameObject.SetActive(false);
-            if (stampsSpawnArea) stampsSpawnArea.gameObject.SetActive(true);
+            if (stampsSpawnArea) 
+            {
+                stampsSpawnArea.gameObject.SetActive(true);
+                var cg = stampsSpawnArea.GetComponent<CanvasGroup>();
+                if (cg) cg.alpha = 1f;
+            }
+            
+            if (backgroundPanel)
+            {
+                var bgImg = backgroundPanel.GetComponent<Image>();
+                if (bgImg) bgImg.color = Color.white;
+            }
+            
+            foreach(var st in activeStickers) if(st) st.SetActive(false);
+            foreach(var ln in activeLines) if(ln) ln.SetActive(false);
+            
             if (objectToActivateAfterFlash) objectToActivateAfterFlash.SetActive(true);
             
             if (supremeRevealContainer) supremeRevealContainer.gameObject.SetActive(false);
 
-            var sortedResults = currentResults.OrderBy(r => (int)r.Rarity).ToList();
+            var sortedResults = currentResults.OrderBy(r => (int)r.Entry.Rarity).ToList();
             for (int i = 0; i < sortedResults.Count; i++)
             {
                 var reward = sortedResults[i];
@@ -676,12 +810,12 @@ namespace CelestialCross.Gacha.UI
                 stamp.transform.localScale = Vector3.one;
                 
                 var img = stamp.GetComponent<Image>();
-                if(img) img.color = GetRarityColor(reward.Rarity);
+                if(img) img.color = GetRarityColor(reward.Entry.Rarity);
 
                 var iconImg = stamp.transform.Find("Icon")?.GetComponent<Image>();
                 var txtName = stamp.transform.Find("NameText")?.GetComponent<TextMeshProUGUI>();
                 
-                if (txtName != null) txtName.text = GetRewardName(reward);
+                if (txtName != null) txtName.text = GetRewardName(reward.Entry);
 
                 if (iconImg != null)
                 {
@@ -695,8 +829,19 @@ namespace CelestialCross.Gacha.UI
                 }
 
                 activeStamps.Add(stamp);
+                
+                var btn = stamp.GetComponent<Button>();
+                if (!btn) btn = stamp.AddComponent<Button>();
+                btn.transition = Selectable.Transition.None;
+                btn.onClick.RemoveAllListeners();
+                var capReward = reward;
+                var capStamp = stamp;
+                btn.onClick.AddListener(() => {
+                    if (sequenceFinished) OpenRewardModal(capReward, capStamp);
+                });
             }
 
+            sequenceFinished = true;
             FinishSequenceVisuals();
         }
 
@@ -710,33 +855,40 @@ namespace CelestialCross.Gacha.UI
         public void FinishAnimation()
         {
             _masterSequence?.Kill();
+            CloseRewardModal();
             ClearBoard();
             gameObject.SetActive(false);
             onSequenceFinished?.Invoke();
         }
 
-        private void PlaySound(AudioClip clip)
+        private void PlaySound(SoundKey key)
         {
-            if (clip != null && audioSource != null) audioSource.PlayOneShot(clip);
+            if (CelestialCross.Audio.AudioManager.Instance != null)
+                CelestialCross.Audio.AudioManager.Instance.PlaySFX(key);
         }
 
-        private Sprite GetRewardIcon(GachaRewardEntry r)
+        private Sprite GetRewardIcon(RuntimeGachaResult result)
         {
-            if (r.RewardType == GachaRewardType.Unit && r.UnitData != null) return r.UnitData.icon;
-            if (r.RewardType == GachaRewardType.Pet && r.PetSpeciesData != null) return r.PetSpeciesData.Icon;
-            if (r.RewardType == GachaRewardType.Artifact && r.ArtifactSet != null) {
-                if (r.ArtifactSet.slotIcons != null && r.ArtifactSet.slotIcons.Count > 0)
-                    return r.ArtifactSet.slotIcons[0].icon;
+            var reward = result.Entry;
+            if (reward.RewardType == GachaRewardType.Unit && reward.UnitData != null) return reward.UnitData.icon;
+            if (reward.RewardType == GachaRewardType.Pet && reward.PetSpeciesData != null) return reward.PetSpeciesData.Icon;
+            if (reward.RewardType == GachaRewardType.Artifact && reward.ArtifactSet != null) {
+                if (result.GeneratedInstance is CelestialCross.Artifacts.ArtifactInstanceData inst)
+                {
+                    return reward.ArtifactSet.GetIconForSlot(inst.slot);
+                }
+                if (reward.ArtifactSet.slotIcons != null && reward.ArtifactSet.slotIcons.Count > 0)
+                    return reward.ArtifactSet.slotIcons[0].icon;
             }
             return null;
         }
 
-        private string GetRewardName(GachaRewardEntry r)
+        private string GetRewardName(GachaRewardEntry reward)
         {
-            if (r.RewardType == GachaRewardType.Unit) return r.UnitData != null ? r.UnitData.displayName : "???";
-            if (r.RewardType == GachaRewardType.Pet) return r.PetSpeciesData != null ? r.PetSpeciesData.SpeciesName : "???";
-            if (r.RewardType == GachaRewardType.Artifact && r.ArtifactSet != null) return r.ArtifactSet.setName;
-            return r.Rarity.ToString();
+            if (reward.RewardType == GachaRewardType.Unit && reward.UnitData != null) return reward.UnitData.displayName;
+            if (reward.RewardType == GachaRewardType.Pet && reward.PetSpeciesData != null) return reward.PetSpeciesData.SpeciesName;
+            if (reward.RewardType == GachaRewardType.Artifact && reward.ArtifactSet != null) return reward.ArtifactSet.setName;
+            return "???";
         }
 
         private Color GetRarityColor(GachaRarity rarity)

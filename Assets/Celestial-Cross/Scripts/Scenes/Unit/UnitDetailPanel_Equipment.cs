@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using CelestialCross.Data;
+using DG.Tweening;
 
 namespace CelestialCross.Scenes.Unit
 {
@@ -30,15 +31,22 @@ namespace CelestialCross.Scenes.Unit
         private RuntimeUnitData currentRuntimeData;
         private ArtifactSetCatalog currentArtifactCatalog;
         private string currentUnitId;
+        private DG.Tweening.Sequence currentAnimSeq;
 
-        private void Awake()
+        private void Start()
         {
-            for (int i = 0; i < artifactSlotButtons.Length; i++)
+            if (artifactSlotButtons != null)
             {
-                int slotIndex = i;
-                if (artifactSlotButtons[i] != null)
+                for (int i = 0; i < artifactSlotButtons.Length; i++)
                 {
-                    artifactSlotButtons[i].onClick.AddListener(() => OnSlotClicked(slotIndex));
+                    int slotIndex = i; // capture index
+                    if (artifactSlotButtons[i] != null)
+                    {
+                        artifactSlotButtons[i].onClick.AddListener(() => {
+                            CelestialCross.Audio.AudioManager.Instance?.PlayUI(CelestialCross.Audio.SoundKey.ButtonClick01);
+                            OnSlotClicked(slotIndex);
+                        });
+                    }
                 }
             }
         }
@@ -120,8 +128,26 @@ namespace CelestialCross.Scenes.Unit
                 }
             }
 
+            currentAnimSeq?.Kill();
+            currentAnimSeq = DG.Tweening.DOTween.Sequence();
+            currentAnimSeq.SetUpdate(true);
+            currentAnimSeq.SetLink(gameObject);
+            float delay = 0f;
+
+            for (int i = 0; i < artifactSlotButtons.Length; i++)
+            {
+                if (artifactSlotButtons[i] != null)
+                {
+                    artifactSlotButtons[i].transform.DOKill();
+                    artifactSlotButtons[i].transform.localScale = Vector3.zero;
+                    currentAnimSeq.Insert(delay, artifactSlotButtons[i].transform.DOScale(1f, 0.3f).SetEase(DG.Tweening.Ease.OutBack).SetLink(artifactSlotButtons[i].gameObject));
+                    delay += 0.05f;
+                }
+            }
+
             if (setListContainer != null && setListItemPrefab != null && setBonusModal != null)
             {
+                float setDelay = delay;
                 foreach(var kvp in equippedSets)
                 {
                     var set = kvp.Key;
@@ -141,9 +167,15 @@ namespace CelestialCross.Scenes.Unit
                     if (btn != null)
                     {
                         btn.onClick.AddListener(() => {
+                            CelestialCross.Audio.AudioManager.Instance?.PlayUI(CelestialCross.Audio.SoundKey.ButtonClick01);
                             setBonusModal.Show(set, count);
                         });
                     }
+
+                    go.transform.DOKill();
+                    go.transform.localScale = Vector3.zero;
+                    currentAnimSeq.Insert(setDelay, go.transform.DOScale(1f, 0.3f).SetEase(DG.Tweening.Ease.OutBack).SetLink(go));
+                    setDelay += 0.05f;
                 }
             }
         }

@@ -34,8 +34,16 @@ namespace CelestialCross.Settings.UI
             saveBtn.onClick.AddListener(SaveSettings);
             backBtn.onClick.AddListener(GoBack);
 
-            // Listeners para feedback em tempo real (opcional)
-            masterSlider.onValueChanged.AddListener((v) => { /* AudioMixer logic later */ });
+            // Listeners para feedback em tempo real
+            masterSlider.onValueChanged.AddListener((v) => { if (Audio.AudioManager.Instance) MoreMountains.Tools.MMSoundManager.Instance?.SetVolumeMaster(v); });
+            musicSlider.onValueChanged.AddListener((v) => { if (Audio.AudioManager.Instance) MoreMountains.Tools.MMSoundManager.Instance?.SetVolumeMusic(v); });
+            sfxSlider.onValueChanged.AddListener((v) => { 
+                if (Audio.AudioManager.Instance) 
+                {
+                    MoreMountains.Tools.MMSoundManager.Instance?.SetVolumeSfx(v);
+                    MoreMountains.Tools.MMSoundManager.Instance?.SetVolumeUI(v);
+                }
+            });
         }
 
         private void LoadCurrentValues()
@@ -84,6 +92,12 @@ namespace CelestialCross.Settings.UI
 
             // Salva de fato (Local + Cloud)
             AccountManager.Instance.SaveAccount();
+            
+            // Re-aplica no AudioManager para garantir sincronia caso algo mude
+            if (Audio.AudioManager.Instance != null)
+            {
+                Audio.AudioManager.Instance.ApplySettings();
+            }
             
             Debug.Log("Configurações salvas!");
         }

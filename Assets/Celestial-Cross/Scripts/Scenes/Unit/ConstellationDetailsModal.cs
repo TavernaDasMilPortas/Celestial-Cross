@@ -4,6 +4,7 @@ using TMPro;
 using CelestialCross.Data;
 using CelestialCross.System;
 using CelestialCross.UI.Skills;
+using DG.Tweening;
 
 namespace CelestialCross.Scenes.Unit
 {
@@ -36,14 +37,39 @@ namespace CelestialCross.Scenes.Unit
             currentUnit = runtimeData;
             branchModal = bModal;
 
+            if (UnitSceneController.Instance != null) UnitSceneController.Instance.ShowModalOverlay();
+
+            transform.SetAsLastSibling();
             gameObject.SetActive(true);
+
+            var rect = GetComponent<RectTransform>();
+            if (rect != null)
+            {
+                rect.DOKill();
+                rect.localScale = Vector3.zero;
+                rect.DOScale(1f, 0.3f).SetEase(Ease.OutBack).SetUpdate(true);
+            }
+
             RefreshVisuals();
             PopulateList();
         }
 
         public void Close()
         {
-            gameObject.SetActive(false);
+            var rect = GetComponent<RectTransform>();
+            if (rect != null && gameObject.activeSelf)
+            {
+                rect.DOKill();
+                rect.DOScale(0f, 0.2f).SetEase(Ease.InBack).SetUpdate(true).OnComplete(() => {
+                    gameObject.SetActive(false);
+                    if (UnitSceneController.Instance != null) UnitSceneController.Instance.HideModalOverlay();
+                });
+            }
+            else
+            {
+                gameObject.SetActive(false);
+                if (UnitSceneController.Instance != null) UnitSceneController.Instance.HideModalOverlay();
+            }
         }
 
         private void RefreshVisuals()
@@ -55,6 +81,10 @@ namespace CelestialCross.Scenes.Unit
 
             // Escala para fazer a constelação maior no modal
             float scaleMultiplier = 2.0f;
+
+            Sequence seq = DOTween.Sequence();
+            seq.SetUpdate(true);
+            float delay = 0.2f;
 
             for (int i = 0; i < starIcons.Length && i < stars.Count; i++)
             {
@@ -68,6 +98,11 @@ namespace CelestialCross.Scenes.Unit
                 if (btn == null) btn = starIcons[i].gameObject.AddComponent<Button>();
                 btn.onClick.RemoveAllListeners();
                 btn.onClick.AddListener(() => OnAbilityClicked(idx));
+
+                starIcons[i].transform.DOKill();
+                starIcons[i].transform.localScale = Vector3.zero;
+                seq.Insert(delay, starIcons[i].transform.DOScale(1f, 0.3f).SetEase(Ease.OutElastic));
+                delay += 0.08f;
             }
 
             int[] indices = currentSO.constellationConfig.connectionIndices;

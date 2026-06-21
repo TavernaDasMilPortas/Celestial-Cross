@@ -58,7 +58,7 @@ namespace CelestialCross.Gacha
             if (RewardType == GachaRewardType.Unit && UnitData != null) return UnitData.UnitID;
             if (RewardType == GachaRewardType.Pet && PetSpeciesData != null) return PetSpeciesData.id;
             if (RewardType == GachaRewardType.Artifact && ArtifactSet != null) return ArtifactSet.id;
-            return "";
+            return "unknown";
         }
 
 #if UNITY_EDITOR
@@ -74,6 +74,20 @@ namespace CelestialCross.Gacha
             return $"[{labelString}] {subLabel}";
         }
 #endif
+    }
+
+    public class RuntimeGachaResult
+    {
+        public GachaRewardEntry Entry { get; set; }
+        public object GeneratedInstance { get; set; }
+        public bool IsDuplicateUnit { get; set; }
+        
+        public RuntimeGachaResult(GachaRewardEntry entry, object generatedInstance, bool isDuplicateUnit = false)
+        {
+            Entry = entry;
+            GeneratedInstance = generatedInstance;
+            IsDuplicateUnit = isDuplicateUnit;
+        }
     }
 
     [global::System.Serializable]

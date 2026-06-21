@@ -29,7 +29,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _AlphaThreshold: 0.05
+    - _AlphaThreshold: 0.538
     - _ColorMask: 15
     - _EdgeGlow: 3
     - _RevealProgress: 0
@@ -42,6 +42,6 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EdgeGlowColor: {r: 1, g: 1, b: 1, a: 1}
-    - _SilhouetteColor: {r: 0.049999982, g: 0.02, b: 0.079999976, a: 1}
+    - _SilhouetteColor: {r: 0.76470596, g: 0.7254902, b: 0.41176474, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

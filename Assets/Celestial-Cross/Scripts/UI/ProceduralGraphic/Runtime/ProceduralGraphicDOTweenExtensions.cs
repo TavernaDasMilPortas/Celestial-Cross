@@ -62,17 +62,17 @@ namespace CelestialCross.UI.ProceduralGraphic
             ).SetTarget(graphic);
         }
 
-        public static Tweener DOBlendTimeline(this ProceduralGraphic graphic, float endT, float duration)
+        public static Tweener DOBlendTimeline(this ProceduralGraphic graphic, float startT, float endT, float duration, bool stepped = false)
         {
             if (graphic.Preset == null || graphic.Preset.Keyframes == null || graphic.Preset.Keyframes.Count == 0) return null;
 
-            float currentTime = 0f;
+            float currentTime = startT;
             return DOTween.To(
                 () => currentTime,
                 t => 
                 {
                     currentTime = t;
-                    Vector2[] evaluated = graphic.Preset.EvaluateAtTime(t);
+                    Vector2[] evaluated = graphic.Preset.EvaluateAtTime(t, stepped);
                     for(int i=0; i<graphic.PointCount; i++)
                     {
                         if(i < evaluated.Length)

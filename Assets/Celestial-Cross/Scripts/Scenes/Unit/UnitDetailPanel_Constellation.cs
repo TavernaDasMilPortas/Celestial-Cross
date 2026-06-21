@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using CelestialCross.Data;
 using CelestialCross.System;
+using DG.Tweening;
 
 namespace CelestialCross.Scenes.Unit
 {
@@ -28,11 +29,12 @@ namespace CelestialCross.Scenes.Unit
 
         private RuntimeUnitData currentUnit;
         private UnitData currentSO;
+        private DG.Tweening.Sequence currentAnimSeq;
 
         private void Awake()
         {
-            if (upgradeButton != null) upgradeButton.onClick.AddListener(OnUpgradeClicked);
-            if (detailsButton != null) detailsButton.onClick.AddListener(OnDetailsClicked);
+            if (upgradeButton != null) upgradeButton.onClick.AddListener(() => { CelestialCross.Audio.AudioManager.Instance?.PlayUI(CelestialCross.Audio.SoundKey.ButtonClick01); OnUpgradeClicked(); });
+            if (detailsButton != null) detailsButton.onClick.AddListener(() => { CelestialCross.Audio.AudioManager.Instance?.PlayUI(CelestialCross.Audio.SoundKey.ButtonClick01); OnDetailsClicked(); });
         }
 
         public void Refresh(UnitData unitData, RuntimeUnitData runtimeData)
@@ -63,7 +65,7 @@ namespace CelestialCross.Scenes.Unit
                 var btn = starIcons[i].GetComponent<Button>();
                 if (btn == null) btn = starIcons[i].gameObject.AddComponent<Button>();
                 btn.onClick.RemoveAllListeners();
-                btn.onClick.AddListener(() => ShowSkillInfo(idx));
+                btn.onClick.AddListener(() => { CelestialCross.Audio.AudioManager.Instance?.PlayUI(CelestialCross.Audio.SoundKey.ButtonClick01); ShowSkillInfo(idx); });
             }
 
             // Posicionar e Rotacionar Linhas
@@ -124,6 +126,38 @@ namespace CelestialCross.Scenes.Unit
             if (upgradeButton != null) upgradeButton.interactable = (count > 0 && level < 6);
 
             PopulateAcquiredSkillsList(level);
+
+            currentAnimSeq?.Kill();
+            currentAnimSeq = DG.Tweening.DOTween.Sequence();
+            currentAnimSeq.SetUpdate(true);
+            currentAnimSeq.SetLink(gameObject);
+            float delay = 0f;
+
+            for (int i = 0; i < starIcons.Length; i++)
+            {
+                if (starIcons[i] != null && starIcons[i].gameObject.activeInHierarchy)
+                {
+                    starIcons[i].transform.DOKill();
+                    starIcons[i].transform.localScale = Vector3.zero;
+                    currentAnimSeq.Insert(delay, starIcons[i].transform.DOScale(1f, 0.3f).SetEase(DG.Tweening.Ease.OutBack).SetLink(starIcons[i].gameObject));
+                    delay += 0.05f;
+                }
+            }
+
+            if (skillListContainer != null)
+            {
+                float listDelay = delay;
+                foreach (Transform child in skillListContainer)
+                {
+                    if (child.gameObject.activeInHierarchy)
+                    {
+                        child.DOKill();
+                        child.localScale = Vector3.zero;
+                        currentAnimSeq.Insert(listDelay, child.DOScale(1f, 0.3f).SetEase(DG.Tweening.Ease.OutBack).SetLink(child.gameObject));
+                        listDelay += 0.05f;
+                    }
+                }
+            }
         }
 
         private void PopulateAcquiredSkillsList(int currentLevel)
@@ -159,7 +193,7 @@ namespace CelestialCross.Scenes.Unit
 
                 int idx = i;
                 var btn = go.GetComponent<Button>();
-                if (btn != null) btn.onClick.AddListener(() => ShowSkillInfo(idx));
+                if (btn != null) btn.onClick.AddListener(() => { CelestialCross.Audio.AudioManager.Instance?.PlayUI(CelestialCross.Audio.SoundKey.ButtonClick01); ShowSkillInfo(idx); });
 
                 var img = go.transform.Find("Icon")?.GetComponent<Image>();
                 if (img != null && star.passiveGraph != null && star.passiveGraph.abilityIcon != null)

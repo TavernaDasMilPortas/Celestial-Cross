@@ -46,15 +46,15 @@ namespace CelestialCross.Gacha
             return true;
         }
 
-        public async Task<List<GachaRewardEntry>> PerformPullsAsync(Account account, GachaBannerSO banner, int times)
+        public async Task<List<RuntimeGachaResult>> PerformPullsAsync(Account account, GachaBannerSO banner, int times)
         {
             if (_provider == null) Initialize();
             return await _provider.PullAsync(account, banner, times);
         }
 
-        public List<GachaRewardEntry> ExecutePullsInternal(Account account, GachaBannerSO banner, int times)
+        public List<RuntimeGachaResult> ExecutePullsInternal(Account account, GachaBannerSO banner, int times)
         {
-            List<GachaRewardEntry> results = new List<GachaRewardEntry>();
+            List<RuntimeGachaResult> results = new List<RuntimeGachaResult>();
             int totalCost = banner.CostPerPull * times;
 
             if (account.StarMaps < totalCost)
@@ -103,8 +103,8 @@ namespace CelestialCross.Gacha
                     pityState.PullsSinceLastSupreme = 0;
                 }
 
-                DispatchReward(account, rolledReward);
-                results.Add(rolledReward);
+                var result = DispatchReward(account, rolledReward);
+                results.Add(result);
             }
 
             // Salva a conta
@@ -240,7 +240,7 @@ namespace CelestialCross.Gacha
             return validPool[0]; // fallback
         }
 
-        private void DispatchReward(Account account, GachaRewardEntry entry)
+        private RuntimeGachaResult DispatchReward(Account account, GachaRewardEntry entry)
         {
             if (entry.RewardType == GachaRewardType.Unit)
             {
@@ -252,12 +252,15 @@ namespace CelestialCross.Gacha
                     string insigniaID = CelestialCross.System.ConstellationService.GetInsigniaItemID(unitID);
                     account.AddItem(insigniaID, 1);
                     Debug.Log($"[GachaService] Duplicata de {unitID} recebida na pool. Adicionada 1 Insígnia Estelar e 20 fragmentos.");
+                    return new RuntimeGachaResult(entry, existingUnit, true);
                 }
                 else
                 {
-                    account.OwnedUnits.Add(new RuntimeUnitData(unitID, entry.ItemStars));
+                    var newUnit = new RuntimeUnitData(unitID, entry.ItemStars);
+                    account.OwnedUnits.Add(newUnit);
                     if (!account.OwnedUnitIDs.Contains(unitID))
                         account.OwnedUnitIDs.Add(unitID); // Legacy keep
+                    return new RuntimeGachaResult(entry, newUnit, false);
                 }
             }
             else if (entry.RewardType == GachaRewardType.Pet)
@@ -266,6 +269,7 @@ namespace CelestialCross.Gacha
                 // Instancia o Pet Data RNG com base na espécie (simplificado aqui. Depois podemos gerar os stats randomicos de HP/ATK baseados em ranges min/max)
                 var newPet = new CelestialCross.Data.Pets.RuntimePetData(petID, "", entry.ItemStars, 100, 10, 10, 10, 5, 50, 0, 0);
                 account.OwnedRuntimePets.Add(newPet);
+                return new RuntimeGachaResult(entry, newPet, false);
             }
             else if (entry.RewardType == GachaRewardType.Artifact)
             {
@@ -301,8 +305,11 @@ namespace CelestialCross.Gacha
                     }
 
                     account.OwnedArtifacts.Add(newArtifact);
+                    return new RuntimeGachaResult(entry, newArtifact, false);
                  }
             }
+            
+            return new RuntimeGachaResult(entry, null, false);
         }
     }
 }

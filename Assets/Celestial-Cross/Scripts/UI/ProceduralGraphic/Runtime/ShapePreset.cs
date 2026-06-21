@@ -70,7 +70,7 @@ namespace CelestialCross.UI.ProceduralGraphic
             return _cachedSplineList;
         }
 
-        public Vector2[] EvaluateAtTime(float t)
+        public Vector2[] EvaluateAtTime(float t, bool stepped = false)
         {
             if (_keyframes == null || _keyframes.Count == 0)
             {
@@ -100,6 +100,12 @@ namespace CelestialCross.UI.ProceduralGraphic
             }
 
             float segmentT = Mathf.InverseLerp(prev.time, next.time, t);
+            
+            if (stepped)
+            {
+                return PadPositions(segmentT < 0.5f ? prev.positions : next.positions);
+            }
+
             Vector2[] result = new Vector2[_points.Count];
             for (int i = 0; i < _points.Count; i++)
             {
