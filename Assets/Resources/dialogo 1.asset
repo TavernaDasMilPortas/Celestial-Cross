@@ -49,7 +49,7 @@ MonoBehaviour:
   nodeData:
   - guid: 7b2e84af-cff6-4b51-8b9c-76ccf48b3cf8
     nodeType: 5
-    position: {x: 1987, y: 1086}
+    position: {x: 0, y: 0}
     speakerName: 
     dialogueText: 
     characterSprite: {fileID: 0}
@@ -66,11 +66,11 @@ MonoBehaviour:
     compareValue: 
   - guid: 6d99e714-785f-4156-9e3b-a68a1d5faf7d
     nodeType: 1
-    position: {x: 1678, y: 997}
+    position: {x: 0, y: 0}
     speakerName: "Voc\xEA"
     dialogueText: Do que eu sou capaz?
     characterSprite: {fileID: 0}
-    sceneryId: cenario teste
+    sceneryId: Campo
     choices: []
     conditionVariable: 
     conditionValue: 
@@ -83,11 +83,11 @@ MonoBehaviour:
     compareValue: 
   - guid: e33bbf3e-0f8b-4f39-8038-f8b002e87c92
     nodeType: 1
-    position: {x: 1217, y: 948}
+    position: {x: 0, y: 0}
     speakerName: Liedel
     dialogueText: "Vamos ver do que voc\xEA \xE9 capaz, novata"
     characterSprite: {fileID: 21300000, guid: 28b9d359da3612e468ec877807cc2ad6, type: 3}
-    sceneryId: cenario teste
+    sceneryId: Campo
     choices: []
     conditionVariable: 
     conditionValue: 
@@ -100,11 +100,11 @@ MonoBehaviour:
     compareValue: 
   - guid: 5b81b22e-bd07-42d2-afcb-a9e69819c41d
     nodeType: 1
-    position: {x: 851, y: 908}
+    position: {x: 0, y: 0}
     speakerName: Liedell
     dialogueText: "Voc\xEA n\xE3o tem gra\xE7a Shany"
     characterSprite: {fileID: 21300000, guid: b44c5c5edaa689d49a6f694ca0c37242, type: 3}
-    sceneryId: "Novo Cen\xE1rio"
+    sceneryId: Entrada
     choices: []
     conditionVariable: 
     conditionValue: 
@@ -117,11 +117,11 @@ MonoBehaviour:
     compareValue: 
   - guid: a28b0772-87d0-44f4-91f3-68bad208993b
     nodeType: 1
-    position: {x: 413, y: 770}
+    position: {x: 0, y: 0}
     speakerName: Shany
     dialogueText: "Pareque que algu\xE9m ta de mau humor hoje!"
     characterSprite: {fileID: 21300000, guid: ee921dc68a881744cb05711a1af879e8, type: 3}
-    sceneryId: "Novo Cen\xE1rio"
+    sceneryId: Entrada
     choices: []
     conditionVariable: 
     conditionValue: 
@@ -134,11 +134,11 @@ MonoBehaviour:
     compareValue: 
   - guid: ab5cd2fd-2e1e-482d-b7ef-ae0cc4f55460
     nodeType: 1
-    position: {x: 870, y: 378}
+    position: {x: 0, y: 0}
     speakerName: Shany
     dialogueText: Claro que sim bobinha!
     characterSprite: {fileID: 21300000, guid: 330b798898580d8458defcbc05a162ac, type: 3}
-    sceneryId: cenario teste
+    sceneryId: Floresta
     choices: []
     conditionVariable: 
     conditionValue: 
@@ -151,11 +151,11 @@ MonoBehaviour:
     compareValue: 
   - guid: 445ac909-1f40-400c-842c-a5858f35b03e
     nodeType: 1
-    position: {x: 1823, y: 707}
+    position: {x: 0, y: 0}
     speakerName: "Voc\xEA"
     dialogueText: 'O-oi '
     characterSprite: {fileID: 0}
-    sceneryId: cenario teste
+    sceneryId: Floresta
     choices: []
     conditionVariable: 
     conditionValue: 
@@ -168,11 +168,11 @@ MonoBehaviour:
     compareValue: 
   - guid: 6bf7e5bb-b683-41d2-8566-1300591b7313
     nodeType: 1
-    position: {x: 1481, y: 592}
+    position: {x: 0, y: 0}
     speakerName: Liedell
     dialogueText: "J\xE1 ta importunando a novata?"
     characterSprite: {fileID: 21300000, guid: 566d18f891d0f1a48a89c8ef7af99aad, type: 3}
-    sceneryId: cenario teste
+    sceneryId: interior
     choices: []
     conditionVariable: 
     conditionValue: 
@@ -185,11 +185,11 @@ MonoBehaviour:
     compareValue: 
   - guid: 2fe232fa-982f-4c8c-8646-eda7ffa15233
     nodeType: 1
-    position: {x: 560, y: 334}
+    position: {x: 0, y: 0}
     speakerName: "Voc\xEA"
     dialogueText: Ta falando comigo?
     characterSprite: {fileID: 0}
-    sceneryId: cenario teste
+    sceneryId: interior
     choices: []
     conditionVariable: 
     conditionValue: 
@@ -202,11 +202,11 @@ MonoBehaviour:
     compareValue: 
   - guid: 3f15daf8-d7d9-4ae8-9437-80214ca12245
     nodeType: 1
-    position: {x: 222, y: 245}
+    position: {x: 0, y: 0}
     speakerName: Shany
     dialogueText: "Voc\xEA \xE9 a nova aluna?"
     characterSprite: {fileID: 21300000, guid: a3454447ccee5234587a8ae729470f97, type: 3}
-    sceneryId: "Novo Cen\xE1rio"
+    sceneryId: Campo
     choices: []
     conditionVariable: 
     conditionValue: 
@@ -219,11 +219,11 @@ MonoBehaviour:
     compareValue: 
   - guid: 323cc58c-6709-4c98-a4c9-66a61649491f
     nodeType: 1
-    position: {x: 1123, y: 556}
+    position: {x: 0, y: 0}
     speakerName: Shany
     dialogueText: "Meu nome \xE9 Shany. Muito prazer!"
     characterSprite: {fileID: 21300000, guid: 330b798898580d8458defcbc05a162ac, type: 3}
-    sceneryId: cenario teste
+    sceneryId: Floresta
     choices: []
     conditionVariable: 
     conditionValue: 
@@ -237,8 +237,14 @@ MonoBehaviour:
   sceneryMappings:
   - sceneryId: cenario teste
     scenery: {fileID: 11400000, guid: 8dba67d536fe0eb4a99060d05e7adfa1, type: 2}
-  - sceneryId: "Novo Cen\xE1rio"
+  - sceneryId: Campo
     scenery: {fileID: 11400000, guid: 72b5881842cc38649a22b64c3c073a3e, type: 2}
+  - sceneryId: Entrada
+    scenery: {fileID: 11400000, guid: 1b032fe112993b240b08c5e137f824ee, type: 2}
+  - sceneryId: Floresta
+    scenery: {fileID: 11400000, guid: 5a88b4f4260c0524c82431f82cd0d2b2, type: 2}
+  - sceneryId: interior
+    scenery: {fileID: 11400000, guid: 7523d0e36b33a0a41b1069719fda993c, type: 2}
   exposedProperties:
   - propertyName: New Variable
     propertyValue: 

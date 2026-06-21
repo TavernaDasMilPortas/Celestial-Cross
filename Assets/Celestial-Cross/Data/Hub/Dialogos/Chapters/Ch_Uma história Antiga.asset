@@ -22,6 +22,8 @@ MonoBehaviour:
   - rid: 2503027714264399952
   - rid: 4322151008986202192
   - rid: 4322151008986202193
+  - rid: 4322151008986202195
+  - rid: 4322151008986202196
   references:
     version: 2
     RefIds:
@@ -89,7 +91,7 @@ MonoBehaviour:
       type: {class: DialogueStoryNode, ns: CelestialCross.Progression, asm: Assembly-CSharp}
       data:
         NodeID: 48661e97-25b8-40eb-9db7-e56248cb637f
-        Title: 
+        Title: dialogo 1
         IsAutoPlay: 0
         EntryCost:
           EnergyCost: 0
@@ -114,4 +116,64 @@ MonoBehaviour:
           RequiresPreviousNode: 1
           PreviousNodeID: 
           InviteCostOptions: []
-        DialogueGraph: {fileID: 0}
+        DialogueGraph: {fileID: 11400000, guid: 795304716f04b424293260ca5cdbc629, type: 2}
+    - rid: 4322151008986202195
+      type: {class: DialogueStoryNode, ns: CelestialCross.Progression, asm: Assembly-CSharp}
+      data:
+        NodeID: e5e2fc17-11d1-44c3-87c6-476c6fb23d55
+        Title: dialogo
+        IsAutoPlay: 0
+        EntryCost:
+          EnergyCost: 0
+          ItemCosts: []
+        Rewards:
+          FirstClearRewards: []
+          RepeatRewards: []
+          LootTables: []
+          MilestoneRewards: []
+        MaxCompletions: -1
+        ResetPolicy:
+          ResetType: 0
+          ResetHourUTC: 3
+          ResetDayOfWeek: 1
+          WeeklyResetHourUTC: 3
+          ResetDayOfMonth: 1
+          MonthlyResetHourUTC: 3
+          CustomResetIntervalHours: 24
+        NodeIcon: {fileID: 0}
+        Requirement:
+          RequiresInvite: 0
+          RequiresPreviousNode: 0
+          PreviousNodeID: 
+          InviteCostOptions: []
+        DialogueGraph: {fileID: 11400000, guid: 99d5ce75e4c58154e8bdf88758ab9cef, type: 2}
+    - rid: 4322151008986202196
+      type: {class: DialogueStoryNode, ns: CelestialCross.Progression, asm: Assembly-CSharp}
+      data:
+        NodeID: bf95a18a-3177-4661-8454-718c804582ee
+        Title: 'dialogo 3 '
+        IsAutoPlay: 0
+        EntryCost:
+          EnergyCost: 0
+          ItemCosts: []
+        Rewards:
+          FirstClearRewards: []
+          RepeatRewards: []
+          LootTables: []
+          MilestoneRewards: []
+        MaxCompletions: -1
+        ResetPolicy:
+          ResetType: 0
+          ResetHourUTC: 3
+          ResetDayOfWeek: 1
+          WeeklyResetHourUTC: 3
+          ResetDayOfMonth: 1
+          MonthlyResetHourUTC: 3
+          CustomResetIntervalHours: 24
+        NodeIcon: {fileID: 0}
+        Requirement:
+          RequiresInvite: 0
+          RequiresPreviousNode: 0
+          PreviousNodeID: 
+          InviteCostOptions: []
+        DialogueGraph: {fileID: 11400000, guid: f63c776ad77a9b846a703a3d9a6cbf04, type: 2}

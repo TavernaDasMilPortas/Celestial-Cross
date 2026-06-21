@@ -28,24 +28,18 @@ MonoBehaviour:
   - baseNodeGuid: 720bb620-0e60-4d66-ae67-fdfeb3c28bbf
     portName: Next
     targetNodeGuid: acbe2623-094c-47f2-832b-eab4a7110ad5
+  - baseNodeGuid: c6c05c5d-0820-40b2-ba05-bc8d969c345a
+    portName: Next
+    targetNodeGuid: 8d106a22-7679-4012-a207-2e7c2e15d752
   - baseNodeGuid: acbe2623-094c-47f2-832b-eab4a7110ad5
     portName: Don't be mean, Voyage.
     targetNodeGuid: c6c05c5d-0820-40b2-ba05-bc8d969c345a
   - baseNodeGuid: acbe2623-094c-47f2-832b-eab4a7110ad5
     portName: Coming!
     targetNodeGuid: dfdf13fe-4da2-48bb-8f72-ead4ad6d40a2
-  - baseNodeGuid: c6c05c5d-0820-40b2-ba05-bc8d969c345a
-    portName: Next
-    targetNodeGuid: 8d106a22-7679-4012-a207-2e7c2e15d752
   - baseNodeGuid: dfdf13fe-4da2-48bb-8f72-ead4ad6d40a2
     portName: Next
     targetNodeGuid: 8d106a22-7679-4012-a207-2e7c2e15d752
-  - baseNodeGuid: 8d106a22-7679-4012-a207-2e7c2e15d752
-    portName: True
-    targetNodeGuid: a503d7da-b512-4e33-ab57-47a154b07b3a
-  - baseNodeGuid: 8d106a22-7679-4012-a207-2e7c2e15d752
-    portName: False
-    targetNodeGuid: 920babed-a1af-4a50-9af5-226225fe87c9
   - baseNodeGuid: a503d7da-b512-4e33-ab57-47a154b07b3a
     portName: Next
     targetNodeGuid: 2385d80f-f40c-49c4-a260-8be7e2794b98
@@ -61,6 +55,9 @@ MonoBehaviour:
   - baseNodeGuid: 1c6be971-a5b7-404a-90e9-4b432c0d2dd4
     portName: Next
     targetNodeGuid: 2cb976cc-6b78-439d-ac45-efa3e2281007
+  - baseNodeGuid: 3367e715-e5fe-4826-8859-640078793f7e
+    portName: Next
+    targetNodeGuid: d161772a-3b74-432d-b73a-c6df14fbdfe7
   - baseNodeGuid: 2cb976cc-6b78-439d-ac45-efa3e2281007
     portName: 'It''s okay. '
     targetNodeGuid: 3367e715-e5fe-4826-8859-640078793f7e
@@ -68,9 +65,6 @@ MonoBehaviour:
     portName: Are you alright?
     targetNodeGuid: be8f859c-7fe3-49bb-b3c5-dcfc98ccf5c6
   - baseNodeGuid: be8f859c-7fe3-49bb-b3c5-dcfc98ccf5c6
-    portName: Next
-    targetNodeGuid: d161772a-3b74-432d-b73a-c6df14fbdfe7
-  - baseNodeGuid: 3367e715-e5fe-4826-8859-640078793f7e
     portName: Next
     targetNodeGuid: d161772a-3b74-432d-b73a-c6df14fbdfe7
   - baseNodeGuid: d161772a-3b74-432d-b73a-c6df14fbdfe7
@@ -124,6 +118,12 @@ MonoBehaviour:
   - baseNodeGuid: d5dff0c2-1504-47b3-bbc3-3c4fd8163ad8
     portName: Next
     targetNodeGuid: a085b0e6-5fd5-4449-b5ba-ca2bc49a9cce
+  - baseNodeGuid: 8d106a22-7679-4012-a207-2e7c2e15d752
+    portName: True
+    targetNodeGuid: a503d7da-b512-4e33-ab57-47a154b07b3a
+  - baseNodeGuid: 8d106a22-7679-4012-a207-2e7c2e15d752
+    portName: False
+    targetNodeGuid: 920babed-a1af-4a50-9af5-226225fe87c9
   nodeData:
   - guid: 428ca6b5-fafc-4855-a9a5-d8c5b8d2c18d
     nodeType: 1
@@ -273,16 +273,16 @@ MonoBehaviour:
     characterSprite: {fileID: 0}
     sceneryId: 
     choices: []
-    conditionVariable: 
+    conditionVariable: Malvada
     conditionValue: 
     conditionType: 0
     conditionPorts:
     - True
     - False
-    actionVariable: 
+    actionVariable: Malvada
     actionValue: 
     actionType: 0
-    variableName: 
+    variableName: Malvada
     compareValue: 
   - guid: 920babed-a1af-4a50-9af5-226225fe87c9
     nodeType: 1
@@ -700,7 +700,7 @@ MonoBehaviour:
   sceneryMappings: []
   exposedProperties:
   - propertyName: Malvada
-    propertyValue: True
+    propertyValue: False
     type: 2
   - propertyName: New Variable
     propertyValue: 

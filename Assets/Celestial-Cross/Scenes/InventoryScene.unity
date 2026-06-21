@@ -5084,8 +5084,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "HP: \u2014\nATK: \u2014\nDEF: \u2014\nSPD: \u2014"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 542a60c5f97f28f42b709c63df7e5531, type: 2}
-  m_sharedMaterial: {fileID: 6897726554489136382, guid: 542a60c5f97f28f42b709c63df7e5531, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

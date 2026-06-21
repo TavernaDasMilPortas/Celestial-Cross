@@ -1,0 +1,112 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac0f2447f4fe60b44be8d32114a60d71, type: 3}
+  m_Name: dialogoCasorio_Scenery_interior
+  m_EditorClassIdentifier: Assembly-CSharp::CelestialCross.Dialogue.Graph.DialogueScenery
+  sceneryName: interior
+  layers:
+  - layerName: New Layer
+    sprite: {fileID: 21300000, guid: d9c7d0d2418cfd940919cf092a9fa014, type: 3}
+    sortingOrder: 0
+    anchorMin: {x: 0, y: 0}
+    anchorMax: {x: 1, y: 1}
+    pivot: {x: 0.5, y: 0.5}
+    anchoredPosition: {x: 0, y: 0}
+    sizeDelta: {x: 0, y: 0}
+    rotation: 0
+    scale: {x: 1, y: 1, z: 1}
+    entryAnimation:
+      type: 3
+      duration: 1
+      ease: 6
+      moveFrom: {x: -1080, y: 0}
+      fadeFrom: 0
+      scaleFrom: {x: 0, y: 0, z: 0}
+      floatAmplitude: 10
+      floatSpeed: 1
+      swayAngle: 5
+      pulseScale: 1.05
+    idleAnimation:
+      type: 7
+      duration: 1
+      ease: 6
+      moveFrom: {x: 0, y: 0}
+      fadeFrom: 0
+      scaleFrom: {x: 0, y: 0, z: 0}
+      floatAmplitude: 15
+      floatSpeed: 2
+      swayAngle: 5
+      pulseScale: 1.05
+  - layerName: New Layer
+    sprite: {fileID: 21300000, guid: 32fa4fb1ef1b03c4bac406c678779608, type: 3}
+    sortingOrder: 0
+    anchorMin: {x: 0, y: 0}
+    anchorMax: {x: 1, y: 1}
+    pivot: {x: 0.5, y: 0.5}
+    anchoredPosition: {x: 0, y: 0}
+    sizeDelta: {x: 0, y: 0}
+    rotation: 0
+    scale: {x: 1, y: 1, z: 1}
+    entryAnimation:
+      type: 1
+      duration: 1
+      ease: 6
+      moveFrom: {x: -1080, y: 0}
+      fadeFrom: 0
+      scaleFrom: {x: 0, y: 0, z: 0}
+      floatAmplitude: 10
+      floatSpeed: 1
+      swayAngle: 5
+      pulseScale: 1.05
+    idleAnimation:
+      type: 8
+      duration: 1
+      ease: 6
+      moveFrom: {x: 0, y: 0}
+      fadeFrom: 0
+      scaleFrom: {x: 0, y: 0, z: 0}
+      floatAmplitude: 10
+      floatSpeed: 2
+      swayAngle: 5
+      pulseScale: 1.05
+  - layerName: New Layer
+    sprite: {fileID: 21300000, guid: 8bd6bbab09737cf499716d93606652f2, type: 3}
+    sortingOrder: 0
+    anchorMin: {x: 0, y: 0}
+    anchorMax: {x: 1, y: 1}
+    pivot: {x: 0.5, y: 0.5}
+    anchoredPosition: {x: 0, y: 0}
+    sizeDelta: {x: 0, y: 0}
+    rotation: 0
+    scale: {x: 1, y: 1, z: 1}
+    entryAnimation:
+      type: 2
+      duration: 1
+      ease: 6
+      moveFrom: {x: 1080, y: 0}
+      fadeFrom: 0
+      scaleFrom: {x: 0, y: 0, z: 0}
+      floatAmplitude: 10
+      floatSpeed: 1
+      swayAngle: 5
+      pulseScale: 1.05
+    idleAnimation:
+      type: 9
+      duration: 1
+      ease: 6
+      moveFrom: {x: 0, y: 0}
+      fadeFrom: 0
+      scaleFrom: {x: 0, y: 0, z: 0}
+      floatAmplitude: 10
+      floatSpeed: 3
+      swayAngle: 3
+      pulseScale: 1.05

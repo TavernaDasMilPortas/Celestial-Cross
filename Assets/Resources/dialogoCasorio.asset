@@ -25,15 +25,6 @@ MonoBehaviour:
   - baseNodeGuid: e860889d-fae5-4924-9db6-089057c82dfd
     portName: "N\xE3o"
     targetNodeGuid: 720c5e11-327b-4836-a064-0296aa4a2d3e
-  - baseNodeGuid: 17d7610e-6b28-4e92-b4b2-9d3015e51bb1
-    portName: Next
-    targetNodeGuid: bf09a275-7f7a-4e6b-9555-28eee56dd8f1
-  - baseNodeGuid: 81c555ec-6354-4ce4-86c5-a8ad5a44ee95
-    portName: Next
-    targetNodeGuid: bf09a275-7f7a-4e6b-9555-28eee56dd8f1
-  - baseNodeGuid: 68b91453-0697-4b8b-85db-4af588dbcf1e
-    portName: Next
-    targetNodeGuid: 2d9a1060-a7d0-481f-9d26-69f50c751365
   - baseNodeGuid: 720c5e11-327b-4836-a064-0296aa4a2d3e
     portName: Next
     targetNodeGuid: 2d9a1060-a7d0-481f-9d26-69f50c751365
@@ -43,14 +34,23 @@ MonoBehaviour:
   - baseNodeGuid: 2d9a1060-a7d0-481f-9d26-69f50c751365
     portName: False
     targetNodeGuid: 17d7610e-6b28-4e92-b4b2-9d3015e51bb1
+  - baseNodeGuid: 81c555ec-6354-4ce4-86c5-a8ad5a44ee95
+    portName: Next
+    targetNodeGuid: bf09a275-7f7a-4e6b-9555-28eee56dd8f1
+  - baseNodeGuid: 17d7610e-6b28-4e92-b4b2-9d3015e51bb1
+    portName: Next
+    targetNodeGuid: bf09a275-7f7a-4e6b-9555-28eee56dd8f1
+  - baseNodeGuid: 68b91453-0697-4b8b-85db-4af588dbcf1e
+    portName: Next
+    targetNodeGuid: 2d9a1060-a7d0-481f-9d26-69f50c751365
   nodeData:
   - guid: 0f73dd2e-aa0c-44e4-b29e-d5f73bca0a70
     nodeType: 1
-    position: {x: 424, y: -357}
+    position: {x: 0, y: 0}
     speakerName: Pessoa 1
     dialogueText: "oi voc\xEA me ama?"
     characterSprite: {fileID: 0}
-    sceneryId: dialogoCasorio_Scenery_cenarioteste
+    sceneryId: Campo
     choices: []
     conditionVariable: 
     conditionValue: 
@@ -63,7 +63,7 @@ MonoBehaviour:
     compareValue: 
   - guid: e860889d-fae5-4924-9db6-089057c82dfd
     nodeType: 2
-    position: {x: 860, y: -343}
+    position: {x: 0, y: 0}
     speakerName: 
     dialogueText: 
     characterSprite: {fileID: 0}
@@ -80,7 +80,7 @@ MonoBehaviour:
     compareValue: 
   - guid: 720c5e11-327b-4836-a064-0296aa4a2d3e
     nodeType: 4
-    position: {x: 1359, y: -138}
+    position: {x: 0, y: 0}
     speakerName: 
     dialogueText: 
     characterSprite: {fileID: 0}
@@ -97,7 +97,7 @@ MonoBehaviour:
     compareValue: False
   - guid: 2d9a1060-a7d0-481f-9d26-69f50c751365
     nodeType: 3
-    position: {x: 1631, y: -242}
+    position: {x: 0, y: 0}
     speakerName: 
     dialogueText: 
     characterSprite: {fileID: 0}
@@ -116,7 +116,7 @@ MonoBehaviour:
     compareValue: 
   - guid: bf09a275-7f7a-4e6b-9555-28eee56dd8f1
     nodeType: 5
-    position: {x: 2738, y: -343}
+    position: {x: 0, y: 0}
     speakerName: 
     dialogueText: 
     characterSprite: {fileID: 0}
@@ -133,11 +133,11 @@ MonoBehaviour:
     compareValue: 
   - guid: 81c555ec-6354-4ce4-86c5-a8ad5a44ee95
     nodeType: 1
-    position: {x: 2107, y: -444}
+    position: {x: 0, y: 0}
     speakerName: Pessoa 1
     dialogueText: "Ent\xE3o casa comigo"
     characterSprite: {fileID: 0}
-    sceneryId: dialogoCasorio_Scenery_cenarioteste
+    sceneryId: Entrada
     choices: []
     conditionVariable: 
     conditionValue: 
@@ -150,11 +150,11 @@ MonoBehaviour:
     compareValue: 
   - guid: 17d7610e-6b28-4e92-b4b2-9d3015e51bb1
     nodeType: 1
-    position: {x: 2129, y: -122}
+    position: {x: 0, y: 0}
     speakerName: Pessoa 2
     dialogueText: Aff otario
     characterSprite: {fileID: 0}
-    sceneryId: dialogoCasorio_Scenery_cenarioteste
+    sceneryId: interior
     choices: []
     conditionVariable: 
     conditionValue: 
@@ -167,7 +167,7 @@ MonoBehaviour:
     compareValue: 
   - guid: 68b91453-0697-4b8b-85db-4af588dbcf1e
     nodeType: 4
-    position: {x: 1211, y: -544}
+    position: {x: 0, y: 0}
     speakerName: 
     dialogueText: 
     characterSprite: {fileID: 0}
@@ -183,11 +183,17 @@ MonoBehaviour:
     variableName: Casamento
     compareValue: True
   sceneryMappings:
-  - sceneryId: dialogoCasorio_Scenery_cenarioteste
+  - sceneryId: cenario teste
     scenery: {fileID: 11400000, guid: 8dba67d536fe0eb4a99060d05e7adfa1, type: 2}
-  - sceneryId: "dialogoCasorio_Scenery_NovoCen\xE1rio"
+  - sceneryId: Campo
     scenery: {fileID: 11400000, guid: 72b5881842cc38649a22b64c3c073a3e, type: 2}
+  - sceneryId: Entrada
+    scenery: {fileID: 11400000, guid: 1b032fe112993b240b08c5e137f824ee, type: 2}
+  - sceneryId: interior
+    scenery: {fileID: 11400000, guid: 7523d0e36b33a0a41b1069719fda993c, type: 2}
+  - sceneryId: Floresta
+    scenery: {fileID: 11400000, guid: 5a88b4f4260c0524c82431f82cd0d2b2, type: 2}
   exposedProperties:
   - propertyName: Casamento
-    propertyValue: False
+    propertyValue: True
     type: 2

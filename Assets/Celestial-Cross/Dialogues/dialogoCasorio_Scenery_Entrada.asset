@@ -1,0 +1,144 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac0f2447f4fe60b44be8d32114a60d71, type: 3}
+  m_Name: dialogoCasorio_Scenery_Entrada
+  m_EditorClassIdentifier: Assembly-CSharp::CelestialCross.Dialogue.Graph.DialogueScenery
+  sceneryName: Entrada
+  layers:
+  - layerName: New Layer
+    sprite: {fileID: 21300000, guid: fe14a2c6b07c37048842c8cd64644437, type: 3}
+    sortingOrder: 0
+    anchorMin: {x: 0, y: 0}
+    anchorMax: {x: 1, y: 1}
+    pivot: {x: 0.5, y: 0.5}
+    anchoredPosition: {x: 0, y: 0}
+    sizeDelta: {x: 0, y: 0}
+    rotation: 0
+    scale: {x: 1, y: 1, z: 1}
+    entryAnimation:
+      type: 1
+      duration: 1
+      ease: 6
+      moveFrom: {x: 0, y: 0}
+      fadeFrom: 0
+      scaleFrom: {x: 0, y: 0, z: 0}
+      floatAmplitude: 10
+      floatSpeed: 1
+      swayAngle: 5
+      pulseScale: 1.05
+    idleAnimation:
+      type: 8
+      duration: 1
+      ease: 6
+      moveFrom: {x: 0, y: 0}
+      fadeFrom: 0
+      scaleFrom: {x: 0, y: 0, z: 0}
+      floatAmplitude: 10
+      floatSpeed: 2
+      swayAngle: 5
+      pulseScale: 1.05
+  - layerName: New Layer
+    sprite: {fileID: 21300000, guid: afad65015e923e645b889d9beee5d53d, type: 3}
+    sortingOrder: 0
+    anchorMin: {x: 0, y: 0}
+    anchorMax: {x: 1, y: 1}
+    pivot: {x: 0.5, y: 0.5}
+    anchoredPosition: {x: 0, y: 0}
+    sizeDelta: {x: 0, y: 0}
+    rotation: 0
+    scale: {x: 1, y: 1, z: 1}
+    entryAnimation:
+      type: 5
+      duration: 1
+      ease: 6
+      moveFrom: {x: 0, y: 1920}
+      fadeFrom: 0
+      scaleFrom: {x: 0, y: 0, z: 0}
+      floatAmplitude: 10
+      floatSpeed: 1
+      swayAngle: 5
+      pulseScale: 1.05
+    idleAnimation:
+      type: 7
+      duration: 1
+      ease: 6
+      moveFrom: {x: 0, y: 0}
+      fadeFrom: 0
+      scaleFrom: {x: 0, y: 0, z: 0}
+      floatAmplitude: 15
+      floatSpeed: 2
+      swayAngle: 3
+      pulseScale: 1.05
+  - layerName: New Layer
+    sprite: {fileID: 21300000, guid: 9ecf3de532ab4bd42989dfdc2c5ea3b9, type: 3}
+    sortingOrder: 0
+    anchorMin: {x: 0, y: 0}
+    anchorMax: {x: 1, y: 1}
+    pivot: {x: 0.5, y: 0.5}
+    anchoredPosition: {x: 0, y: 0}
+    sizeDelta: {x: 0, y: 0}
+    rotation: 0
+    scale: {x: 1, y: 1, z: 1}
+    entryAnimation:
+      type: 4
+      duration: 1
+      ease: 6
+      moveFrom: {x: 0, y: -1920}
+      fadeFrom: 0
+      scaleFrom: {x: 0, y: 0, z: 0}
+      floatAmplitude: 10
+      floatSpeed: 1
+      swayAngle: 5
+      pulseScale: 1.05
+    idleAnimation:
+      type: 7
+      duration: 1
+      ease: 6
+      moveFrom: {x: 0, y: 0}
+      fadeFrom: 0
+      scaleFrom: {x: 0, y: 0, z: 0}
+      floatAmplitude: 15
+      floatSpeed: 2
+      swayAngle: 5
+      pulseScale: 1.05
+  - layerName: New Layer
+    sprite: {fileID: 21300000, guid: ac57c01d2b080b548926cf46d7c0e6b3, type: 3}
+    sortingOrder: 0
+    anchorMin: {x: 0, y: 0}
+    anchorMax: {x: 1, y: 1}
+    pivot: {x: 0.5, y: 0.5}
+    anchoredPosition: {x: 0, y: 0}
+    sizeDelta: {x: 0, y: 0}
+    rotation: 0
+    scale: {x: 1, y: 1, z: 1}
+    entryAnimation:
+      type: 6
+      duration: 1
+      ease: 6
+      moveFrom: {x: 0, y: 0}
+      fadeFrom: 0
+      scaleFrom: {x: 0, y: 0, z: 0}
+      floatAmplitude: 10
+      floatSpeed: 1
+      swayAngle: 5
+      pulseScale: 1.05
+    idleAnimation:
+      type: 7
+      duration: 1
+      ease: 6
+      moveFrom: {x: 0, y: 0}
+      fadeFrom: 0
+      scaleFrom: {x: 0, y: 0, z: 0}
+      floatAmplitude: 15
+      floatSpeed: 2
+      swayAngle: 5
+      pulseScale: 1.05
