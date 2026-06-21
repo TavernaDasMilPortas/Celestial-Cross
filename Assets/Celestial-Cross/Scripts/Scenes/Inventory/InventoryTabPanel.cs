@@ -6,6 +6,8 @@ namespace CelestialCross.Scenes.Inventory
 {
     public abstract class InventoryTabPanel : MonoBehaviour
     {
+        [Header("Tab Identity")]
+        public bool isComingSoon;
         [Header("Tab Visual")]
         public Button tabButton;
         public Image tabButtonImage;

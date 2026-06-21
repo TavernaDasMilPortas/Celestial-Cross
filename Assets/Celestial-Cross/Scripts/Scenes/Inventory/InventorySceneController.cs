@@ -28,9 +28,10 @@ namespace CelestialCross.Scenes.Inventory
         public RectTransform modalContainer;
         public PetFilterModal petFilterModal;
         public ArtifactFilterModal artifactFilterModal;
-        public ArtifactUpgradeSliderModal upgradeSliderModal;
+        public CelestialCross.Giulia_UI.ArtifactUpgradeModal upgradeArtifactModal;
 
         [Header("Tabs Config")]
+        public GameObject comingSoonBubblePrefab;
         public RectTransform activeTabContainer;
         public List<TabVisualHierarchy> tabVisualHierarchies = new List<TabVisualHierarchy>();
 
@@ -117,6 +118,18 @@ namespace CelestialCross.Scenes.Inventory
                 // Animação de pop-in inicial EXCLUSIVA para os botões
                 if (tabInfo.tabButtonRect != null)
                 {
+                    bool isComingSoon = tabInfo.tabPanel.isComingSoon;
+
+                    if (isComingSoon)
+                    {
+                        var canvasGroup = tabInfo.tabButtonRect.gameObject.GetComponent<CanvasGroup>();
+                        if (canvasGroup == null) canvasGroup = tabInfo.tabButtonRect.gameObject.AddComponent<CanvasGroup>();
+                        canvasGroup.alpha = 0.5f;
+
+                        tabInfo.tabPanel.tabButton.onClick.RemoveAllListeners();
+                        tabInfo.tabPanel.tabButton.onClick.AddListener(() => ShowComingSoonBubble(tabInfo.tabButtonRect));
+                    }
+
                     tabInfo.tabButtonRect.localScale = Vector3.zero;
                     tabInfo.tabButtonRect.DOScale(Vector3.one, 0.4f)
                         .SetEase(Ease.OutBack)
@@ -128,20 +141,56 @@ namespace CelestialCross.Scenes.Inventory
 
             if (tabVisualHierarchies.Count > 0)
             {
-                if (tabVisualHierarchies[0] != null && tabVisualHierarchies[0].tabPanel != null)
+                var firstValidTab = tabVisualHierarchies.Find(t => t.tabPanel != null && !t.tabPanel.isComingSoon);
+                if (firstValidTab != null && firstValidTab.tabPanel != null)
                 {
-                    Debug.Log($"[InventorySceneController] Selecionando aba inicial: {tabVisualHierarchies[0].tabPanel.name}");
-                    SelectTab(tabVisualHierarchies[0].tabPanel);
+                    Debug.Log($"[InventorySceneController] Selecionando aba inicial: {firstValidTab.tabPanel.name}");
+                    SelectTab(firstValidTab.tabPanel);
                 }
                 else
                 {
-                    Debug.LogError("[InventorySceneController] A aba inicial (índice 0) é nula!");
+                    Debug.LogError("[InventorySceneController] Nenhuma aba válida disponível para iniciar!");
                 }
             }
             else
             {
                 Debug.LogWarning("[InventorySceneController] Lista tabVisualHierarchies vazia! Nenhuma aba foi selecionada.");
             }
+        }
+
+        private void ShowComingSoonBubble(RectTransform targetButton)
+        {
+            if (CelestialCross.Audio.AudioManager.Instance != null)
+                CelestialCross.Audio.AudioManager.Instance.PlayUI(CelestialCross.Audio.SoundKey.ButtonClick01);
+
+            if (comingSoonBubblePrefab == null)
+            {
+                Debug.LogWarning("[InventorySceneController] Bubble de Em Breve não configurado!");
+                return;
+            }
+
+            var bubble = Instantiate(comingSoonBubblePrefab, tabBarContainer);
+            
+            var textComp = bubble.GetComponentInChildren<TMPro.TextMeshProUGUI>();
+            if (textComp != null)
+            {
+                textComp.text = "Em Breve";
+            }
+            
+            var rect = bubble.GetComponent<RectTransform>();
+            
+            rect.position = targetButton.position;
+            rect.anchoredPosition += new Vector2(0, 60f);
+
+            bubble.SetActive(true);
+            
+            rect.localScale = Vector3.zero;
+            rect.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack);
+            rect.DOAnchorPosY(rect.anchoredPosition.y + 30f, 1.5f).SetEase(Ease.OutQuad);
+            
+            var canvasGroup = bubble.GetComponent<CanvasGroup>();
+            if (canvasGroup == null) canvasGroup = bubble.AddComponent<CanvasGroup>();
+            canvasGroup.DOFade(0, 0.5f).SetDelay(1f).OnComplete(() => Destroy(bubble));
         }
 
         public void SelectTab(InventoryTabPanel tabToSelect)
