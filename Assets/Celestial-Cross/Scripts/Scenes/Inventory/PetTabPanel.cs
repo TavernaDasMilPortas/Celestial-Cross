@@ -18,6 +18,7 @@ namespace CelestialCross.Scenes.Inventory
         public TextMeshProUGUI statsText; // Mostra vida, ataque, etc.
         
         [Header("Skill UI")]
+        public Button skillIconButton;
         public Image skillIconImage;
         public TextMeshProUGUI skillDescriptionText;
         public Button upgradeSkillButton; // O botão "em breve"
@@ -57,14 +58,23 @@ namespace CelestialCross.Scenes.Inventory
                 filterButton.onClick.AddListener(OnFilterClicked);
             }
 
-            if (skillIconImage != null)
+            Button targetSkillBtn = skillIconButton;
+            if (targetSkillBtn == null && skillIconImage != null)
             {
                 skillIconImage.raycastTarget = true;
-                var btn = skillIconImage.gameObject.GetComponent<Button>();
-                if (btn == null) btn = skillIconImage.gameObject.AddComponent<Button>();
-                btn.onClick.RemoveAllListeners();
-                btn.onClick.AddListener(OnSkillIconClicked);
-                Debug.Log("[PetTabPanel] skillIconImage configurado com Button para cliques.");
+                targetSkillBtn = skillIconImage.gameObject.GetComponent<Button>();
+                if (targetSkillBtn == null) targetSkillBtn = skillIconImage.gameObject.AddComponent<Button>();
+            }
+
+            if (targetSkillBtn != null)
+            {
+                targetSkillBtn.onClick.RemoveAllListeners();
+                targetSkillBtn.onClick.AddListener(OnSkillIconClicked);
+                Debug.Log("[PetTabPanel] Botão da habilidade configurado.");
+            }
+            else
+            {
+                Debug.LogWarning("[PetTabPanel] Nenhum botão ou imagem de habilidade configurados.");
             }
         }
 
@@ -183,7 +193,7 @@ namespace CelestialCross.Scenes.Inventory
                 if (petIconImage != null) petIconImage.sprite = null;
                 if (petNameText != null) petNameText.text = "Selecione um Pet";
                 UpdateStars(0);
-                if (statsText != null) statsText.text = "HP: —\nATK: —\nDEF: —\nSPD: —";
+                if (statsText != null) statsText.text = "HP: —\nATK: —\nDEF: —\nSPD: —\nCRIT: —\nC.DMG: —\nACC: —\nRES: —";
                 if (skillIconImage != null) skillIconImage.gameObject.SetActive(false);
                 if (skillDescriptionText != null) skillDescriptionText.text = "Sem Habilidade";
             }
@@ -244,7 +254,7 @@ namespace CelestialCross.Scenes.Inventory
         private void UpdateStats(RuntimePetData data)
         {
             if (statsText == null) return;
-            statsText.text = $"HP: {data.Health}\nATK: {data.Attack}\nDEF: {data.Defense}\nSPD: {data.Speed}";
+            statsText.text = $"HP: {data.Health}\nATK: {data.Attack}\nDEF: {data.Defense}\nSPD: {data.Speed}\nCRIT: {data.CriticalChance}%\nC.DMG: {data.CriticalDamage}%\nACC: {data.EffectAccuracy}%\nRES: {data.EffectResistance}%";
         }
 
         private void UpdateSkill(PetSpeciesSO speciesSO)

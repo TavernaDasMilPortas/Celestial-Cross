@@ -11,6 +11,8 @@ namespace CelestialCross.Scenes.Inventory
         public Image artifactIconImage;
         public TextMeshProUGUI artifactNameText;
         public TextMeshProUGUI artifactLevelText;
+        public Transform starsContainer;
+        public GameObject starPrefab;
         public TextMeshProUGUI mainStatText;
         public TextMeshProUGUI subStatsText;
         public TextMeshProUGUI setBonusText;
@@ -19,6 +21,9 @@ namespace CelestialCross.Scenes.Inventory
         public Button upgradeButton;
         public Button sellButton;
         public Button filterButton;
+
+        [Header("Modals")]
+        public CelestialCross.Giulia_UI.ArtifactUpgradeModal upgradeArtifactModal;
 
         private ArtifactInstanceData currentSelectedArtifact;
         private ArtifactFilterData activeFilter = null;
@@ -152,6 +157,7 @@ namespace CelestialCross.Scenes.Inventory
                 if (artifactIconImage != null) artifactIconImage.sprite = null;
                 if (artifactNameText != null) artifactNameText.text = "Selecione um Artefato";
                 if (artifactLevelText != null) artifactLevelText.text = "Lv. —";
+                UpdateStars(0);
                 if (mainStatText != null) mainStatText.text = "Stat Principal: —";
                 if (subStatsText != null) subStatsText.text = "";
                 if (setBonusText != null) setBonusText.text = "";
@@ -175,6 +181,8 @@ namespace CelestialCross.Scenes.Inventory
             if (artifactNameText != null) artifactNameText.text = $"{setSO.setName} ({artifactData.slot})";
             if (artifactLevelText != null) artifactLevelText.text = $"Lv. {artifactData.currentLevel}";
             
+            UpdateStars(artifactData.GetStarsAsIntClamped());
+            
             if (mainStatText != null) mainStatText.text = $"{artifactData.mainStat.statType}: +{artifactData.mainStat.value}";
             
             if (subStatsText != null)
@@ -192,12 +200,37 @@ namespace CelestialCross.Scenes.Inventory
             }
         }
 
+        private void UpdateStars(int stars)
+        {
+            if (starsContainer == null || starPrefab == null) return;
+            
+            foreach (Transform child in starsContainer)
+            {
+                Destroy(child.gameObject);
+            }
+
+            for (int i = 0; i < stars; i++)
+            {
+                Instantiate(starPrefab, starsContainer);
+            }
+        }
+
         private void OnUpgradeClicked()
         {
             if (currentSelectedArtifact == null) return;
-            if (InventorySceneController.Instance != null && InventorySceneController.Instance.upgradeSliderModal != null)
+            if (upgradeArtifactModal != null)
             {
-                InventorySceneController.Instance.upgradeSliderModal.Show(currentSelectedArtifact, () => {
+                upgradeArtifactModal.Show(currentSelectedArtifact, () => {
+                    if (InventorySceneController.Instance != null && InventorySceneController.Instance.artifactSetCatalog != null)
+                    {
+                        SelectArtifact(currentSelectedArtifact, InventorySceneController.Instance.artifactSetCatalog.GetSetById(currentSelectedArtifact.artifactSetId));
+                        Refresh();
+                    }
+                });
+            }
+            else if (InventorySceneController.Instance != null && InventorySceneController.Instance.upgradeArtifactModal != null)
+            {
+                InventorySceneController.Instance.upgradeArtifactModal.Show(currentSelectedArtifact, () => {
                     SelectArtifact(currentSelectedArtifact, InventorySceneController.Instance.artifactSetCatalog.GetSetById(currentSelectedArtifact.artifactSetId));
                     Refresh();
                 });

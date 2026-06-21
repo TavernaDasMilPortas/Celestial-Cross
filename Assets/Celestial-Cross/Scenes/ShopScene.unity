@@ -1828,11 +1828,11 @@ MonoBehaviour:
   uiLinePrefab: {fileID: 2916936651362617718, guid: 2c228b1549132194d918f2bac6e4c0d9, type: 3}
   prizeStampPrefab: {fileID: 1858052568911274286, guid: aa35c308897aa0e4f994debf7374ea9d, type: 3}
   climaxParticles: {fileID: 0}
-  sfxSlap: {fileID: 0}
-  sfxSinoLight: {fileID: 0}
-  sfxCrescendo: {fileID: 0}
-  sfxClimax: {fileID: 0}
-  sfxCarimbo: {fileID: 0}
+  sfxSlap: 1
+  sfxSinoLight: 2
+  sfxCrescendo: 3
+  sfxClimax: 4
+  sfxCarimbo: 5
   btnContinue: {fileID: 370850583}
   btnSkip: {fileID: 1588668033}
   lineDirection: 0
@@ -2940,8 +2940,8 @@ MonoBehaviour:
   m_ChildAlignment: 1
   m_StartCorner: 0
   m_StartAxis: 1
-  m_CellSize: {x: 350, y: 350}
-  m_Spacing: {x: 40, y: 40}
+  m_CellSize: {x: 275, y: 275}
+  m_Spacing: {x: 50, y: 50}
   m_Constraint: 1
   m_ConstraintCount: 2
 --- !u!1 &745892756

@@ -50,7 +50,7 @@ namespace CelestialCross.Dialogue.Graph.Editor
             evt.menu.AppendAction("Create Node/Speech Node", action => CreateNode("Speech Node", mousePosition));
             evt.menu.AppendAction("Create Node/Choice Node", action => CreateChoiceNode(mousePosition));
             evt.menu.AppendAction("Create Node/Condition Node", action => CreateConditionNode(mousePosition));
-            evt.menu.AppendAction("Create Node/Action Node", action => CreateActionNode(mousePosition));
+            evt.menu.AppendAction("Create Node/Set Variable", action => CreateActionNode(mousePosition));
             evt.menu.AppendAction("Create Node/End Node", action => CreateEndNode(mousePosition));
         }
 

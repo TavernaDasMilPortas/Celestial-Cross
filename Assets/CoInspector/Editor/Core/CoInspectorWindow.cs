@@ -723,7 +723,7 @@ EditorUtils.GetObjectId(c.containingInstanceGameObject) ==
                 while (currentIndex < componentCount)
                 {
                     Editor editor = runtimeEditors[currentIndex];
-                    if (editor == null && components[currentIndex] == null)
+                    if (editor == null && (currentIndex >= components.Length || components[currentIndex] == null))
                     {
                         ComponentMap emptyMap = new ComponentMap();
                         emptyMap.index = currentIndex;
@@ -746,11 +746,11 @@ EditorUtils.GetObjectId(c.containingInstanceGameObject) ==
                         if (componentBox != null)
                         {
                             EditorUtils.SetStaticElement(componentBox);
-                            if (!oneVisible && AreWeFilteringComponents())
+                            if (!oneVisible && AreWeFilteringComponents() && currentIndex < components.Length)
                             {
                                 oneVisible = IsComponentFilteredInTab(GetActiveTab().GetFoldoutMapForComponent(components[currentIndex], editor));
                             }
-                            if (EditorUtils.IsInvisibleComponent(components[currentIndex], ActiveTabInDebugMode()))
+                            if (currentIndex < components.Length && EditorUtils.IsInvisibleComponent(components[currentIndex], ActiveTabInDebugMode()))
                             {
                                 componentBox.style.display = DisplayStyle.None;
                             }
@@ -1237,7 +1237,7 @@ EditorUtils.GetObjectId(c.containingInstanceGameObject) ==
 
             if (editor.serializedObject == null || !editor.serializedObject.targetObject)
             {
-                Debug.LogError("SerializedObject is null or invalid");
+                return null;
             }
             IMGUIContainer componentBar = new IMGUIContainer(() =>
             {
