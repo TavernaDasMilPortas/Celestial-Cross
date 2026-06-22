@@ -12,7 +12,414 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10d30a4be252b63479f95c401df7180e, type: 3}
   m_Name: NewDialogue
   m_EditorClassIdentifier: Assembly-CSharp::CelestialCross.Dialogue.Graph.DialogueGraph
-  nodeLinks: []
-  nodeData: []
+  nodeLinks:
+  - baseNodeGuid: f4647a6d-9602-47f2-9f36-5065453112ad
+    portName: Next
+    targetNodeGuid: 287e6155-9ca9-478b-84c1-6693421bf206
+  - baseNodeGuid: 287e6155-9ca9-478b-84c1-6693421bf206
+    portName: Next
+    targetNodeGuid: 1a3dd88b-92cb-438b-8306-91028066a5e0
+  - baseNodeGuid: 1a3dd88b-92cb-438b-8306-91028066a5e0
+    portName: Next
+    targetNodeGuid: 5049f373-12d3-4aac-a941-5674b2274e75
+  - baseNodeGuid: 5049f373-12d3-4aac-a941-5674b2274e75
+    portName: Next
+    targetNodeGuid: 541aaef1-7044-4e6e-8586-fca2f4dbe01b
+  - baseNodeGuid: 541aaef1-7044-4e6e-8586-fca2f4dbe01b
+    portName: Next
+    targetNodeGuid: 4c096d8f-7207-48ee-a735-6b79e9a7612c
+  - baseNodeGuid: 4c096d8f-7207-48ee-a735-6b79e9a7612c
+    portName: Next
+    targetNodeGuid: e62168df-fc80-4537-ac33-31fb3dbc4a46
+  - baseNodeGuid: e62168df-fc80-4537-ac33-31fb3dbc4a46
+    portName: Next
+    targetNodeGuid: b7bb6687-dcf1-4b2c-b7bb-60be717cfc44
+  - baseNodeGuid: b7bb6687-dcf1-4b2c-b7bb-60be717cfc44
+    portName: Next
+    targetNodeGuid: 4197c3ba-af5b-4799-9516-dcbb3d235240
+  - baseNodeGuid: 4197c3ba-af5b-4799-9516-dcbb3d235240
+    portName: Next
+    targetNodeGuid: 7dd3836d-5c5c-462e-8279-e7185d93956d
+  - baseNodeGuid: 7dd3836d-5c5c-462e-8279-e7185d93956d
+    portName: Next
+    targetNodeGuid: 0f13324c-ae30-43c8-896b-3097ded15c5b
+  - baseNodeGuid: 0f13324c-ae30-43c8-896b-3097ded15c5b
+    portName: Next
+    targetNodeGuid: 65d2ab03-f2fe-462b-a53c-bea0afe185c6
+  - baseNodeGuid: 65d2ab03-f2fe-462b-a53c-bea0afe185c6
+    portName: Next
+    targetNodeGuid: 8522db9e-8750-45c2-83ea-79b79514de81
+  - baseNodeGuid: 8522db9e-8750-45c2-83ea-79b79514de81
+    portName: Next
+    targetNodeGuid: d4643ada-8e30-446a-a2b6-7295e79dacc1
+  - baseNodeGuid: d4643ada-8e30-446a-a2b6-7295e79dacc1
+    portName: Next
+    targetNodeGuid: 9b2de66b-d3c0-4a52-8260-6aa14ce4da2c
+  - baseNodeGuid: 9b2de66b-d3c0-4a52-8260-6aa14ce4da2c
+    portName: Next
+    targetNodeGuid: 9a516400-bf3c-4ff5-b77d-34ca648b283d
+  - baseNodeGuid: 9a516400-bf3c-4ff5-b77d-34ca648b283d
+    portName: Next
+    targetNodeGuid: 4d318a8d-5bb2-4758-a53b-972c93b49bd5
+  - baseNodeGuid: 4d318a8d-5bb2-4758-a53b-972c93b49bd5
+    portName: Next
+    targetNodeGuid: 1af9d409-5e81-47ff-bee0-a634f7c32cb3
+  - baseNodeGuid: 1af9d409-5e81-47ff-bee0-a634f7c32cb3
+    portName: Next
+    targetNodeGuid: e20457fd-4c20-4971-821e-f42efdf7eaa6
+  - baseNodeGuid: e20457fd-4c20-4971-821e-f42efdf7eaa6
+    portName: Next
+    targetNodeGuid: b5091f99-ad16-4ea4-b05c-1a032cea1ac7
+  - baseNodeGuid: b5091f99-ad16-4ea4-b05c-1a032cea1ac7
+    portName: Next
+    targetNodeGuid: 73d22550-261d-4958-af51-d299c5a6d542
+  nodeData:
+  - guid: 287e6155-9ca9-478b-84c1-6693421bf206
+    nodeType: 1
+    position: {x: 423, y: 202}
+    speakerName: 
+    dialogueText: Meow, home economics class is pretty neat.
+    characterSprite: {fileID: 0}
+    sceneryId: 
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 1a3dd88b-92cb-438b-8306-91028066a5e0
+    nodeType: 1
+    position: {x: 883, y: 201}
+    speakerName: 'Marie '
+    dialogueText: Meow, home economics class is pretty neat.
+    characterSprite: {fileID: 21300000, guid: f8a9c0a6315d95342852cf81c20b97df, type: 3}
+    sceneryId: 
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 5049f373-12d3-4aac-a941-5674b2274e75
+    nodeType: 1
+    position: {x: 1418, y: 202}
+    speakerName: 'Marie '
+    dialogueText: "I got a big haul of cookies today, now I need a great spot for
+      a nap\u2026"
+    characterSprite: {fileID: 21300000, guid: f8a9c0a6315d95342852cf81c20b97df, type: 3}
+    sceneryId: 
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 541aaef1-7044-4e6e-8586-fca2f4dbe01b
+    nodeType: 1
+    position: {x: 2087, y: 203}
+    speakerName: Lidell
+    dialogueText: "Hello Marie, I assume you\u2019re heading out for the day. "
+    characterSprite: {fileID: 21300000, guid: 566d18f891d0f1a48a89c8ef7af99aad, type: 3}
+    sceneryId: 
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 4c096d8f-7207-48ee-a735-6b79e9a7612c
+    nodeType: 1
+    position: {x: 2797, y: 202}
+    speakerName: Marie
+    dialogueText: Oh hello there, fun police.
+    characterSprite: {fileID: 21300000, guid: f8a9c0a6315d95342852cf81c20b97df, type: 3}
+    sceneryId: 
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: e62168df-fc80-4537-ac33-31fb3dbc4a46
+    nodeType: 1
+    position: {x: 3367, y: 200}
+    speakerName: Marie
+    dialogueText: Came to push some extra homework into poor old me?
+    characterSprite: {fileID: 21300000, guid: 1f9fd67bd5623d148b1005296b27b855, type: 3}
+    sceneryId: 
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: b7bb6687-dcf1-4b2c-b7bb-60be717cfc44
+    nodeType: 1
+    position: {x: 4034, y: 199}
+    speakerName: Lidell
+    dialogueText: Not this time, I actually came here to ask you about some recent
+      findings.
+    characterSprite: {fileID: 21300000, guid: 566d18f891d0f1a48a89c8ef7af99aad, type: 3}
+    sceneryId: 
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 4197c3ba-af5b-4799-9516-dcbb3d235240
+    nodeType: 1
+    position: {x: 4775, y: 200}
+    speakerName: Lidell
+    dialogueText: You see, we found one of the couches on the student council run
+      was covered in scratches earlier today.
+    characterSprite: {fileID: 21300000, guid: 28b9d359da3612e468ec877807cc2ad6, type: 3}
+    sceneryId: 
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 7dd3836d-5c5c-462e-8279-e7185d93956d
+    nodeType: 1
+    position: {x: 5622, y: 195}
+    speakerName: Lidell
+    dialogueText: You wouldn't happen to know anything about that, would you?
+    characterSprite: {fileID: 21300000, guid: 566d18f891d0f1a48a89c8ef7af99aad, type: 3}
+    sceneryId: 
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 0f13324c-ae30-43c8-896b-3097ded15c5b
+    nodeType: 1
+    position: {x: 6283, y: 193}
+    speakerName: Marie
+    dialogueText: Why exactly would I know anything about that? It's not like I keep
+      track of all of the cats around Astra Alis.
+    characterSprite: {fileID: 21300000, guid: 1f9fd67bd5623d148b1005296b27b855, type: 3}
+    sceneryId: 
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 65d2ab03-f2fe-462b-a53c-bea0afe185c6
+    nodeType: 1
+    position: {x: 7138, y: 191}
+    speakerName: Marie
+    dialogueText: "Besides, if you\u2019re looking to accuse me, I can assure you
+      I have a solid alibi."
+    characterSprite: {fileID: 21300000, guid: 3534347e118f1f74e8b5511cb3a3b179, type: 3}
+    sceneryId: 
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 8522db9e-8750-45c2-83ea-79b79514de81
+    nodeType: 1
+    position: {x: 7943, y: 192}
+    speakerName: Lidell
+    dialogueText: "I\u2019m not looking to accuse anyone, I'd just like to know if
+      you have any type of knowledge about it."
+    characterSprite: {fileID: 21300000, guid: 566d18f891d0f1a48a89c8ef7af99aad, type: 3}
+    sceneryId: 
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: d4643ada-8e30-446a-a2b6-7295e79dacc1
+    nodeType: 1
+    position: {x: 8842, y: 193}
+    speakerName: Lidell
+    dialogueText: "You\u2019re the authority when it comes to cats."
+    characterSprite: {fileID: 21300000, guid: d77c02701f7b9ac4cad3af9eb1fa1c23, type: 3}
+    sceneryId: 
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 9b2de66b-d3c0-4a52-8260-6aa14ce4da2c
+    nodeType: 1
+    position: {x: 9394, y: 192}
+    speakerName: 'Marie '
+    dialogueText: "Oh? So now you\u2019re listening to me about ANYTHING?"
+    characterSprite: {fileID: 21300000, guid: 1f9fd67bd5623d148b1005296b27b855, type: 3}
+    sceneryId: 
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 9a516400-bf3c-4ff5-b77d-34ca648b283d
+    nodeType: 1
+    position: {x: 10029, y: 193}
+    speakerName: 'Marie '
+    dialogueText: This must be a first.
+    characterSprite: {fileID: 21300000, guid: 3534347e118f1f74e8b5511cb3a3b179, type: 3}
+    sceneryId: 
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 4d318a8d-5bb2-4758-a53b-972c93b49bd5
+    nodeType: 1
+    position: {x: 10453, y: 195}
+    speakerName: Lidell
+    dialogueText: "You know that\u2019s not-"
+    characterSprite: {fileID: 21300000, guid: 566d18f891d0f1a48a89c8ef7af99aad, type: 3}
+    sceneryId: 
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 1af9d409-5e81-47ff-bee0-a634f7c32cb3
+    nodeType: 1
+    position: {x: 10911, y: 196}
+    speakerName: Marie
+    dialogueText: Speaking of which; i hear one of the cats calling me.
+    characterSprite: {fileID: 21300000, guid: 3534347e118f1f74e8b5511cb3a3b179, type: 3}
+    sceneryId: 
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: e20457fd-4c20-4971-821e-f42efdf7eaa6
+    nodeType: 1
+    position: {x: 11566, y: 197}
+    speakerName: Marie
+    dialogueText: Bye bye!
+    characterSprite: {fileID: 21300000, guid: f8a9c0a6315d95342852cf81c20b97df, type: 3}
+    sceneryId: 
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: b5091f99-ad16-4ea4-b05c-1a032cea1ac7
+    nodeType: 1
+    position: {x: 12014, y: 200}
+    speakerName: Lidell
+    dialogueText: "That girl\u2026 will she ever be able to look me in the eyes ever
+      again?"
+    characterSprite: {fileID: 21300000, guid: b44c5c5edaa689d49a6f694ca0c37242, type: 3}
+    sceneryId: 
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 73d22550-261d-4958-af51-d299c5a6d542
+    nodeType: 5
+    position: {x: 12595, y: 200}
+    speakerName: 
+    dialogueText: 
+    characterSprite: {fileID: 0}
+    sceneryId: 
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
   sceneryMappings: []
   exposedProperties: []
