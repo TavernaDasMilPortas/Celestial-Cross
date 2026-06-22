@@ -1,0 +1,491 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10d30a4be252b63479f95c401df7180e, type: 3}
+  m_Name: Chap2
+  m_EditorClassIdentifier: Assembly-CSharp::CelestialCross.Dialogue.Graph.DialogueGraph
+  nodeLinks:
+  - baseNodeGuid: 7d9a00ff-ed44-44d8-b0a1-8e0cdbd1eb13
+    portName: Next
+    targetNodeGuid: 9f5cba32-4994-4c4c-b677-5106bd7b0726
+  - baseNodeGuid: 9f5cba32-4994-4c4c-b677-5106bd7b0726
+    portName: Next
+    targetNodeGuid: 08b4be6c-6a6e-4f8d-bbbf-a5fcffd38af2
+  - baseNodeGuid: 08b4be6c-6a6e-4f8d-bbbf-a5fcffd38af2
+    portName: Next
+    targetNodeGuid: 1e667400-d4f7-46fa-b6de-8360e20578ad
+  - baseNodeGuid: 1e667400-d4f7-46fa-b6de-8360e20578ad
+    portName: Next
+    targetNodeGuid: fba624c4-9007-4a1f-bed0-5c6b6208f40f
+  - baseNodeGuid: fba624c4-9007-4a1f-bed0-5c6b6208f40f
+    portName: Next
+    targetNodeGuid: 4e32dded-aa5f-48f8-97af-965235479f73
+  - baseNodeGuid: b293adaa-53e5-400b-8467-53f33a71e4f7
+    portName: Next
+    targetNodeGuid: 77dcd11d-9439-4e42-bae8-6b7d20598cc8
+  - baseNodeGuid: 4e32dded-aa5f-48f8-97af-965235479f73
+    portName: Next
+    targetNodeGuid: b293adaa-53e5-400b-8467-53f33a71e4f7
+  - baseNodeGuid: 77dcd11d-9439-4e42-bae8-6b7d20598cc8
+    portName: Next
+    targetNodeGuid: a279dace-d058-41da-a5ff-42ca7151005c
+  - baseNodeGuid: a279dace-d058-41da-a5ff-42ca7151005c
+    portName: Next
+    targetNodeGuid: 48dac502-95e3-49fa-8d74-20b6755e2180
+  - baseNodeGuid: e5b0d9fe-8810-4079-a980-522bcbd6e3ac
+    portName: Next
+    targetNodeGuid: 200f29e0-93a4-4c38-9b22-6a5a7d886ed8
+  - baseNodeGuid: 48dac502-95e3-49fa-8d74-20b6755e2180
+    portName: Next
+    targetNodeGuid: e5b0d9fe-8810-4079-a980-522bcbd6e3ac
+  - baseNodeGuid: 200f29e0-93a4-4c38-9b22-6a5a7d886ed8
+    portName: Next
+    targetNodeGuid: 894b84c4-cfdc-450d-a6c4-a801dc6941d1
+  - baseNodeGuid: 894b84c4-cfdc-450d-a6c4-a801dc6941d1
+    portName: Next
+    targetNodeGuid: 97f76a98-9d8c-43c4-9bb3-c59b8eb76ec4
+  - baseNodeGuid: 97f76a98-9d8c-43c4-9bb3-c59b8eb76ec4
+    portName: Next
+    targetNodeGuid: 2e297b20-e508-4a7c-8302-2a16d3367d63
+  - baseNodeGuid: 2e297b20-e508-4a7c-8302-2a16d3367d63
+    portName: Next
+    targetNodeGuid: 17f00744-46d4-4146-852d-32abb5bd5743
+  - baseNodeGuid: 17f00744-46d4-4146-852d-32abb5bd5743
+    portName: Next
+    targetNodeGuid: 6746b7e6-cbf9-49cd-86bb-7a2f69812346
+  - baseNodeGuid: 6746b7e6-cbf9-49cd-86bb-7a2f69812346
+    portName: Next
+    targetNodeGuid: 65cb152d-4eac-4379-8583-9bcffaf2b487
+  - baseNodeGuid: 65cb152d-4eac-4379-8583-9bcffaf2b487
+    portName: Next
+    targetNodeGuid: 8bd22dba-692c-4515-a55d-862bc5c4b04e
+  - baseNodeGuid: 8bd22dba-692c-4515-a55d-862bc5c4b04e
+    portName: Next
+    targetNodeGuid: 04f90cdf-a49e-4fa6-85b2-da8c366818f5
+  - baseNodeGuid: 04f90cdf-a49e-4fa6-85b2-da8c366818f5
+    portName: Next
+    targetNodeGuid: 48531e25-7f3e-4e8c-bd98-2ae29aeb0566
+  - baseNodeGuid: 48531e25-7f3e-4e8c-bd98-2ae29aeb0566
+    portName: Next
+    targetNodeGuid: 5dcddbbb-da01-45fc-8e6a-f49bfdf5d0b4
+  - baseNodeGuid: 5dcddbbb-da01-45fc-8e6a-f49bfdf5d0b4
+    portName: Next
+    targetNodeGuid: fec0e900-056a-418b-865b-7a409f7bc309
+  - baseNodeGuid: fec0e900-056a-418b-865b-7a409f7bc309
+    portName: Next
+    targetNodeGuid: 32fff63c-33fe-4ee8-aecd-7f041dc22d2e
+  nodeData:
+  - guid: 9f5cba32-4994-4c4c-b677-5106bd7b0726
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: 
+    dialogueText: A few minutes after arriving into the entrance hall Magnolia the
+      principal is giving a speech about the attendance and the new arrival.
+    characterSprite: {fileID: 0}
+    sceneryId: interior
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 08b4be6c-6a6e-4f8d-bbbf-a5fcffd38af2
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: 'Magnolia '
+    dialogueText: Well dearest students, it is an honor to have you all here today.
+    characterSprite: {fileID: 21300000, guid: b7d12cd161dca5a4ca2c791e691c0a13, type: 3}
+    sceneryId: interior
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 1e667400-d4f7-46fa-b6de-8360e20578ad
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: 'Magnolia '
+    dialogueText: "From the new arrivals to the old faces, i\u2019d like to thank
+      everyone for coming to our prestigious school."
+    characterSprite: {fileID: 21300000, guid: b7d12cd161dca5a4ca2c791e691c0a13, type: 3}
+    sceneryId: interior
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: fba624c4-9007-4a1f-bed0-5c6b6208f40f
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: Magnolia
+    dialogueText: "Each one of us is here because you\u2019ve been chosen by a celestia,
+      that itself is considered a great achievement across the various planets that
+      form the celestial cross."
+    characterSprite: {fileID: 0}
+    sceneryId: interior
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: b293adaa-53e5-400b-8467-53f33a71e4f7
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: Magnolia
+    dialogueText: "In the forest, your upperclassman Morgan Novalin has hidden a
+      great bunch of his little \u201CInvaders\u201D for you to catch."
+    characterSprite: {fileID: 21300000, guid: b7d12cd161dca5a4ca2c791e691c0a13, type: 3}
+    sceneryId: interior
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 4e32dded-aa5f-48f8-97af-965235479f73
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: Magnolia
+    dialogueText: "To better access each of you, i\u2019d like to propose a small
+      little challenge."
+    characterSprite: {fileID: 21300000, guid: b7d12cd161dca5a4ca2c791e691c0a13, type: 3}
+    sceneryId: interior
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 77dcd11d-9439-4e42-bae8-6b7d20598cc8
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: Magnolia
+    dialogueText: "So why don\u2019t you all stretch those legs and get to work."
+    characterSprite: {fileID: 21300000, guid: b7d12cd161dca5a4ca2c791e691c0a13, type: 3}
+    sceneryId: interior
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: a279dace-d058-41da-a5ff-42ca7151005c
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: 
+    dialogueText: Lillie and a very paralyzed Shanny head into the forest
+    characterSprite: {fileID: 0}
+    sceneryId: interior
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: e5b0d9fe-8810-4079-a980-522bcbd6e3ac
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: Lillie
+    dialogueText: Might be my mistake but I can't see those little invaders here.
+    characterSprite: {fileID: 0}
+    sceneryId: interior
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 48dac502-95e3-49fa-8d74-20b6755e2180
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: Lillie
+    dialogueText: "The outskirts of the school are bigger than I thought\u2026"
+    characterSprite: {fileID: 0}
+    sceneryId: interior
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 200f29e0-93a4-4c38-9b22-6a5a7d886ed8
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: 'Voyage '
+    dialogueText: Have you considered looking bellow you?
+    characterSprite: {fileID: 0}
+    sceneryId: interior
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 894b84c4-cfdc-450d-a6c4-a801dc6941d1
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: 
+    dialogueText: Lillie looks at her feet, and sees a small green creature waddling
+      around.
+    characterSprite: {fileID: 0}
+    sceneryId: interior
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 97f76a98-9d8c-43c4-9bb3-c59b8eb76ec4
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: Invader?
+    dialogueText: Webbi Wabbo? Wabababa.
+    characterSprite: {fileID: 21300000, guid: 38fc53000b582344f9da4292837b3cac, type: 3}
+    sceneryId: interior
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 2e297b20-e508-4a7c-8302-2a16d3367d63
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: 
+    dialogueText: Lillie jumps back, looking at more approaching invaders.
+    characterSprite: {fileID: 0}
+    sceneryId: interior
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 17f00744-46d4-4146-852d-32abb5bd5743
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: 'Invader '
+    dialogueText: Mled WEH!
+    characterSprite: {fileID: 21300000, guid: 38fc53000b582344f9da4292837b3cac, type: 3}
+    sceneryId: interior
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 6746b7e6-cbf9-49cd-86bb-7a2f69812346
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: 
+    dialogueText: The invaders start to slowly approach.
+    characterSprite: {fileID: 0}
+    sceneryId: interior
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 65cb152d-4eac-4379-8583-9bcffaf2b487
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: Lillie
+    dialogueText: Ah! Voyage, i think we must fight those guys!
+    characterSprite: {fileID: 0}
+    sceneryId: interior
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 8bd22dba-692c-4515-a55d-862bc5c4b04e
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: 
+    dialogueText: Suddenly, a small bug looking celestia approaches and Shanny seems
+      to immediately recover after seeing it.
+    characterSprite: {fileID: 0}
+    sceneryId: interior
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 04f90cdf-a49e-4fa6-85b2-da8c366818f5
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: Shanny
+    dialogueText: "Fleur! W-where have you been\u2026!?"
+    characterSprite: {fileID: 21300000, guid: 4b4b90c36ec61cc4abcdfc94335195c0, type: 3}
+    sceneryId: interior
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 48531e25-7f3e-4e8c-bd98-2ae29aeb0566
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: Fleur
+    dialogueText: "Shanny dearest, i\u2019ve been looking for you ever since we stopped
+      to eat this morning!"
+    characterSprite: {fileID: 0}
+    sceneryId: interior
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 5dcddbbb-da01-45fc-8e6a-f49bfdf5d0b4
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: Shanny
+    dialogueText: "O-oh! I got so desperate about being late that I didn't even look
+      back! I-i\u2019m so sorry!"
+    characterSprite: {fileID: 21300000, guid: a3454447ccee5234587a8ae729470f97, type: 3}
+    sceneryId: interior
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: fec0e900-056a-418b-865b-7a409f7bc309
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: 'Fleur '
+    dialogueText: Please do not fret over that, we have to take care of those little
+      invaders first, no?
+    characterSprite: {fileID: 0}
+    sceneryId: interior
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 32fff63c-33fe-4ee8-aecd-7f041dc22d2e
+    nodeType: 5
+    position: {x: 0, y: 0}
+    speakerName: 
+    dialogueText: 
+    characterSprite: {fileID: 0}
+    sceneryId: 
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  sceneryMappings:
+  - sceneryId: interior
+    scenery: {fileID: 11400000, guid: 7523d0e36b33a0a41b1069719fda993c, type: 2}
+  exposedProperties: []

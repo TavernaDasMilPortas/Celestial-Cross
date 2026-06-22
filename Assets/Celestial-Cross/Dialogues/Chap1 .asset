@@ -1,0 +1,712 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10d30a4be252b63479f95c401df7180e, type: 3}
+  m_Name: 'Chap1 '
+  m_EditorClassIdentifier: Assembly-CSharp::CelestialCross.Dialogue.Graph.DialogueGraph
+  nodeLinks:
+  - baseNodeGuid: a4eab9df-2d2f-47b6-8368-c8654b134e51
+    portName: Next
+    targetNodeGuid: 428ca6b5-fafc-4855-a9a5-d8c5b8d2c18d
+  - baseNodeGuid: 428ca6b5-fafc-4855-a9a5-d8c5b8d2c18d
+    portName: Next
+    targetNodeGuid: 75b21abb-e047-4010-b586-a3a00a4ca3ce
+  - baseNodeGuid: 75b21abb-e047-4010-b586-a3a00a4ca3ce
+    portName: Next
+    targetNodeGuid: daa74572-e72e-4446-885f-36dcac8a81e1
+  - baseNodeGuid: daa74572-e72e-4446-885f-36dcac8a81e1
+    portName: Next
+    targetNodeGuid: 720bb620-0e60-4d66-ae67-fdfeb3c28bbf
+  - baseNodeGuid: 720bb620-0e60-4d66-ae67-fdfeb3c28bbf
+    portName: Next
+    targetNodeGuid: acbe2623-094c-47f2-832b-eab4a7110ad5
+  - baseNodeGuid: c6c05c5d-0820-40b2-ba05-bc8d969c345a
+    portName: Next
+    targetNodeGuid: 8d106a22-7679-4012-a207-2e7c2e15d752
+  - baseNodeGuid: acbe2623-094c-47f2-832b-eab4a7110ad5
+    portName: Don't be mean, Voyage.
+    targetNodeGuid: c6c05c5d-0820-40b2-ba05-bc8d969c345a
+  - baseNodeGuid: acbe2623-094c-47f2-832b-eab4a7110ad5
+    portName: Coming!
+    targetNodeGuid: dfdf13fe-4da2-48bb-8f72-ead4ad6d40a2
+  - baseNodeGuid: dfdf13fe-4da2-48bb-8f72-ead4ad6d40a2
+    portName: Next
+    targetNodeGuid: 8d106a22-7679-4012-a207-2e7c2e15d752
+  - baseNodeGuid: a503d7da-b512-4e33-ab57-47a154b07b3a
+    portName: Next
+    targetNodeGuid: 2385d80f-f40c-49c4-a260-8be7e2794b98
+  - baseNodeGuid: 8d106a22-7679-4012-a207-2e7c2e15d752
+    portName: True
+    targetNodeGuid: a503d7da-b512-4e33-ab57-47a154b07b3a
+  - baseNodeGuid: 8d106a22-7679-4012-a207-2e7c2e15d752
+    portName: False
+    targetNodeGuid: 920babed-a1af-4a50-9af5-226225fe87c9
+  - baseNodeGuid: 920babed-a1af-4a50-9af5-226225fe87c9
+    portName: Next
+    targetNodeGuid: 2385d80f-f40c-49c4-a260-8be7e2794b98
+  - baseNodeGuid: 2385d80f-f40c-49c4-a260-8be7e2794b98
+    portName: Next
+    targetNodeGuid: ff1dec6d-f8a2-48d0-90ad-8ff7810faef9
+  - baseNodeGuid: ff1dec6d-f8a2-48d0-90ad-8ff7810faef9
+    portName: Next
+    targetNodeGuid: 1c6be971-a5b7-404a-90e9-4b432c0d2dd4
+  - baseNodeGuid: 1c6be971-a5b7-404a-90e9-4b432c0d2dd4
+    portName: Next
+    targetNodeGuid: 2cb976cc-6b78-439d-ac45-efa3e2281007
+  - baseNodeGuid: 3367e715-e5fe-4826-8859-640078793f7e
+    portName: Next
+    targetNodeGuid: d161772a-3b74-432d-b73a-c6df14fbdfe7
+  - baseNodeGuid: 2cb976cc-6b78-439d-ac45-efa3e2281007
+    portName: 'It''s okay. '
+    targetNodeGuid: 3367e715-e5fe-4826-8859-640078793f7e
+  - baseNodeGuid: 2cb976cc-6b78-439d-ac45-efa3e2281007
+    portName: Are you alright?
+    targetNodeGuid: be8f859c-7fe3-49bb-b3c5-dcfc98ccf5c6
+  - baseNodeGuid: be8f859c-7fe3-49bb-b3c5-dcfc98ccf5c6
+    portName: Next
+    targetNodeGuid: d161772a-3b74-432d-b73a-c6df14fbdfe7
+  - baseNodeGuid: d161772a-3b74-432d-b73a-c6df14fbdfe7
+    portName: True
+    targetNodeGuid: 79101d14-8298-407d-9d2e-ad60d21151c9
+  - baseNodeGuid: d161772a-3b74-432d-b73a-c6df14fbdfe7
+    portName: False
+    targetNodeGuid: f4379825-b483-4229-9eb6-7a48bdc65761
+  - baseNodeGuid: 79101d14-8298-407d-9d2e-ad60d21151c9
+    portName: Next
+    targetNodeGuid: 8420ac0d-21e8-4bec-ad42-2cf53f27a977
+  - baseNodeGuid: f4379825-b483-4229-9eb6-7a48bdc65761
+    portName: Next
+    targetNodeGuid: 8420ac0d-21e8-4bec-ad42-2cf53f27a977
+  - baseNodeGuid: 8420ac0d-21e8-4bec-ad42-2cf53f27a977
+    portName: Next
+    targetNodeGuid: 050ddad6-5c04-4648-95bb-a4b6259833ab
+  - baseNodeGuid: 050ddad6-5c04-4648-95bb-a4b6259833ab
+    portName: Next
+    targetNodeGuid: 9a3657a5-5258-42b9-80bd-423e74b2d70b
+  - baseNodeGuid: 9a3657a5-5258-42b9-80bd-423e74b2d70b
+    portName: Next
+    targetNodeGuid: 6d0f2499-19f8-483a-ae02-800de435b7d7
+  - baseNodeGuid: 6d0f2499-19f8-483a-ae02-800de435b7d7
+    portName: Next
+    targetNodeGuid: da4cb77c-de29-4668-8102-8037280b3e8d
+  - baseNodeGuid: da4cb77c-de29-4668-8102-8037280b3e8d
+    portName: Next
+    targetNodeGuid: 10393c06-403d-4610-bb6c-445f3fd12342
+  - baseNodeGuid: 10393c06-403d-4610-bb6c-445f3fd12342
+    portName: Next
+    targetNodeGuid: b9d5e215-8653-4d49-8fc7-3c5af743ffc8
+  - baseNodeGuid: b9d5e215-8653-4d49-8fc7-3c5af743ffc8
+    portName: Next
+    targetNodeGuid: 91bc0e35-8b93-41cc-8151-3e2169869f1b
+  - baseNodeGuid: 91bc0e35-8b93-41cc-8151-3e2169869f1b
+    portName: Next
+    targetNodeGuid: f7218ac8-5a76-4444-aec2-4d5808d65d23
+  - baseNodeGuid: f7218ac8-5a76-4444-aec2-4d5808d65d23
+    portName: Next
+    targetNodeGuid: f33e06a7-981f-4d5f-8969-6c2b06f32ef2
+  - baseNodeGuid: f33e06a7-981f-4d5f-8969-6c2b06f32ef2
+    portName: Next
+    targetNodeGuid: 6ccb7168-45c2-4476-bb5f-f0266ad622a7
+  - baseNodeGuid: 6ccb7168-45c2-4476-bb5f-f0266ad622a7
+    portName: Next
+    targetNodeGuid: 1560f0ff-54ba-4dcc-b6d7-7a4ca3a1914b
+  - baseNodeGuid: 1560f0ff-54ba-4dcc-b6d7-7a4ca3a1914b
+    portName: Next
+    targetNodeGuid: d5dff0c2-1504-47b3-bbc3-3c4fd8163ad8
+  - baseNodeGuid: d5dff0c2-1504-47b3-bbc3-3c4fd8163ad8
+    portName: Next
+    targetNodeGuid: a085b0e6-5fd5-4449-b5ba-ca2bc49a9cce
+  nodeData:
+  - guid: 428ca6b5-fafc-4855-a9a5-d8c5b8d2c18d
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: 
+    dialogueText: Lillie arrives at Astra Alis school for Luminary.
+    characterSprite: {fileID: 0}
+    sceneryId: Entrada
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 75b21abb-e047-4010-b586-a3a00a4ca3ce
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: Lillie
+    dialogueText: "Astra Alis\u2026 It\u2019s the place Alexander studied, and to
+      think I've been invited as well."
+    characterSprite: {fileID: 0}
+    sceneryId: Entrada
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: daa74572-e72e-4446-885f-36dcac8a81e1
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: Lillie
+    dialogueText: Today should be the entrance ceremony for new students, iguess
+      that's why there's so many people here.
+    characterSprite: {fileID: 0}
+    sceneryId: Entrada
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 720bb620-0e60-4d66-ae67-fdfeb3c28bbf
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: Voyage
+    dialogueText: "Is your plan to stand around all day? Come on, you\u2019re gonna
+      be late!"
+    characterSprite: {fileID: 0}
+    sceneryId: Entrada
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: c6c05c5d-0820-40b2-ba05-bc8d969c345a
+    nodeType: 4
+    position: {x: 0, y: 0}
+    speakerName: 
+    dialogueText: 
+    characterSprite: {fileID: 0}
+    sceneryId: 
+    choices: []
+    conditionVariable: Malvada
+    conditionValue: True
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: Malvada
+    actionValue: True
+    actionType: 0
+    variableName: Malvada
+    compareValue: True
+  - guid: acbe2623-094c-47f2-832b-eab4a7110ad5
+    nodeType: 2
+    position: {x: 0, y: 0}
+    speakerName: 
+    dialogueText: 
+    characterSprite: {fileID: 0}
+    sceneryId: 
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: dfdf13fe-4da2-48bb-8f72-ead4ad6d40a2
+    nodeType: 4
+    position: {x: 0, y: 0}
+    speakerName: 
+    dialogueText: 
+    characterSprite: {fileID: 0}
+    sceneryId: 
+    choices: []
+    conditionVariable: Malvada
+    conditionValue: False
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: Malvada
+    actionValue: False
+    actionType: 0
+    variableName: Malvada
+    compareValue: False
+  - guid: a503d7da-b512-4e33-ab57-47a154b07b3a
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: Voyage
+    dialogueText: "Oh come on, i\u2019m the traversal Celestia, loafing around ain\u2019t
+      my job."
+    characterSprite: {fileID: 0}
+    sceneryId: Entrada
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 8d106a22-7679-4012-a207-2e7c2e15d752
+    nodeType: 3
+    position: {x: 0, y: 0}
+    speakerName: 
+    dialogueText: 
+    characterSprite: {fileID: 0}
+    sceneryId: 
+    choices: []
+    conditionVariable: Malvada
+    conditionValue: 
+    conditionType: 0
+    conditionPorts:
+    - True
+    - False
+    actionVariable: Malvada
+    actionValue: 
+    actionType: 0
+    variableName: Malvada
+    compareValue: 
+  - guid: 920babed-a1af-4a50-9af5-226225fe87c9
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: Voyage
+    dialogueText: Come on!
+    characterSprite: {fileID: 0}
+    sceneryId: Entrada
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 2385d80f-f40c-49c4-a260-8be7e2794b98
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: Lillie
+    dialogueText: "Either way you\u2019re right, I should probably start moving already."
+    characterSprite: {fileID: 0}
+    sceneryId: Entrada
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: ff1dec6d-f8a2-48d0-90ad-8ff7810faef9
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: 
+    dialogueText: Lillie bumps into a girl.
+    characterSprite: {fileID: 0}
+    sceneryId: Entrada
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 1c6be971-a5b7-404a-90e9-4b432c0d2dd4
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: Shanny
+    dialogueText: "Oh! I\u2019m sorry! I wasn\u2019t looking!"
+    characterSprite: {fileID: 21300000, guid: 241021b4c74f8364f953bdbe78f65d05, type: 3}
+    sceneryId: Entrada
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 3367e715-e5fe-4826-8859-640078793f7e
+    nodeType: 4
+    position: {x: 0, y: 0}
+    speakerName: 
+    dialogueText: 
+    characterSprite: {fileID: 0}
+    sceneryId: 
+    choices: []
+    conditionVariable: boazinha
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: boazinha
+    actionValue: 
+    actionType: 0
+    variableName: boazinha
+    compareValue: 
+  - guid: 2cb976cc-6b78-439d-ac45-efa3e2281007
+    nodeType: 2
+    position: {x: 0, y: 0}
+    speakerName: 
+    dialogueText: 
+    characterSprite: {fileID: 0}
+    sceneryId: 
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: be8f859c-7fe3-49bb-b3c5-dcfc98ccf5c6
+    nodeType: 4
+    position: {x: 0, y: 0}
+    speakerName: 
+    dialogueText: 
+    characterSprite: {fileID: 0}
+    sceneryId: 
+    choices: []
+    conditionVariable: boazinha
+    conditionValue: True
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: boazinha
+    actionValue: True
+    actionType: 0
+    variableName: boazinha
+    compareValue: True
+  - guid: d161772a-3b74-432d-b73a-c6df14fbdfe7
+    nodeType: 3
+    position: {x: 0, y: 0}
+    speakerName: 
+    dialogueText: 
+    characterSprite: {fileID: 0}
+    sceneryId: 
+    choices: []
+    conditionVariable: boazinha
+    conditionValue: 
+    conditionType: 0
+    conditionPorts:
+    - True
+    - False
+    actionVariable: boazinha
+    actionValue: 
+    actionType: 0
+    variableName: boazinha
+    compareValue: 
+  - guid: 79101d14-8298-407d-9d2e-ad60d21151c9
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: Shanny
+    dialogueText: "I\u2019m truly, TRULY sorry!"
+    characterSprite: {fileID: 21300000, guid: 4b4b90c36ec61cc4abcdfc94335195c0, type: 3}
+    sceneryId: Entrada
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: f4379825-b483-4229-9eb6-7a48bdc65761
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: Shanny
+    dialogueText: "I- i\u2019m fine! I\u2019m sorry for making you worry about me!"
+    characterSprite: {fileID: 21300000, guid: 241021b4c74f8364f953bdbe78f65d05, type: 3}
+    sceneryId: Entrada
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 8420ac0d-21e8-4bec-ad42-2cf53f27a977
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: 'Lillie '
+    dialogueText: She definitely apologizes a lot.
+    characterSprite: {fileID: 0}
+    sceneryId: Entrada
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 050ddad6-5c04-4648-95bb-a4b6259833ab
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: 'Lillie '
+    dialogueText: "It was my fault too, there\u2019s no need for all this. Why don't
+      you tell me your name?"
+    characterSprite: {fileID: 0}
+    sceneryId: Entrada
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 9a3657a5-5258-42b9-80bd-423e74b2d70b
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: Shanny
+    dialogueText: "Oh! I\u2019m Shanny, it\u2019s nice to meet you!"
+    characterSprite: {fileID: 21300000, guid: 330b798898580d8458defcbc05a162ac, type: 3}
+    sceneryId: Entrada
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 6d0f2499-19f8-483a-ae02-800de435b7d7
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: Lillie
+    dialogueText: "I\u2019m Lillie, and this is my Celestia partner Voyage."
+    characterSprite: {fileID: 0}
+    sceneryId: Entrada
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: da4cb77c-de29-4668-8102-8037280b3e8d
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: 'Voyage '
+    dialogueText: "Much of a pleasure, young lass. If you\u2019re here i must imagine
+      you have a Celestia as well?"
+    characterSprite: {fileID: 0}
+    sceneryId: Entrada
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 10393c06-403d-4610-bb6c-445f3fd12342
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: Shanny
+    dialogueText: Ah yes! This is Fleur, my partner as well.
+    characterSprite: {fileID: 21300000, guid: 330b798898580d8458defcbc05a162ac, type: 3}
+    sceneryId: Entrada
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: b9d5e215-8653-4d49-8fc7-3c5af743ffc8
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: Shanny
+    dialogueText: Fleur?
+    characterSprite: {fileID: 21300000, guid: 330b798898580d8458defcbc05a162ac, type: 3}
+    sceneryId: Entrada
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 91bc0e35-8b93-41cc-8151-3e2169869f1b
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: 
+    dialogueText: Shanny notices her Celestia is gone.
+    characterSprite: {fileID: 0}
+    sceneryId: Entrada
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: f7218ac8-5a76-4444-aec2-4d5808d65d23
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: 'Shanny '
+    dialogueText: Fleur! Fleur! Oh my god where are you, girl?!
+    characterSprite: {fileID: 0}
+    sceneryId: Entrada
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: f33e06a7-981f-4d5f-8969-6c2b06f32ef2
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: 'Shanny '
+    dialogueText: D-did i lose my Celestia on the first day? This is a disaster,
+      i knew i was doomed to failure!
+    characterSprite: {fileID: 0}
+    sceneryId: Entrada
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 6ccb7168-45c2-4476-bb5f-f0266ad622a7
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: 'Lillie '
+    dialogueText: "C-calm down, i\u2019m sure your friend will appear in time."
+    characterSprite: {fileID: 0}
+    sceneryId: Entrada
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 1560f0ff-54ba-4dcc-b6d7-7a4ca3a1914b
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: Lillie
+    dialogueText: "Why don\u2019t we just head to the ceremony?"
+    characterSprite: {fileID: 0}
+    sceneryId: Entrada
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: d5dff0c2-1504-47b3-bbc3-3c4fd8163ad8
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: Voyage
+    dialogueText: She's frozen... Good luck dragging her.
+    characterSprite: {fileID: 0}
+    sceneryId: Entrada
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: a085b0e6-5fd5-4449-b5ba-ca2bc49a9cce
+    nodeType: 5
+    position: {x: 0, y: 0}
+    speakerName: 
+    dialogueText: 
+    characterSprite: {fileID: 0}
+    sceneryId: 
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  sceneryMappings:
+  - sceneryId: Entrada
+    scenery: {fileID: 11400000, guid: 1b032fe112993b240b08c5e137f824ee, type: 2}
+  exposedProperties:
+  - propertyName: Malvada
+    propertyValue: False
+    type: 2
+  - propertyName: New Variable
+    propertyValue: 
+    type: 0
+  - propertyName: boazinha
+    propertyValue: False
+    type: 2

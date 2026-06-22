@@ -877,7 +877,7 @@ namespace CelestialCross.UIBuilders
             bg.color = new Color(0, 0, 0, 0.75f);
 
             ArtifactUpgradeSliderModal upgSlider = modalGO.AddComponent<ArtifactUpgradeSliderModal>();
-            ctrl.upgradeSliderModal = upgSlider;
+            // ctrl.upgradeSliderModal = upgSlider; // LEGACY
 
             // Centered panel (50% x 40%)
             GameObject panelGO = CreateUIObject("Panel", modalGO.transform);

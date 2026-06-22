@@ -1,0 +1,121 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10d30a4be252b63479f95c401df7180e, type: 3}
+  m_Name: "Prologo p\xF3s batalha"
+  m_EditorClassIdentifier: Assembly-CSharp::CelestialCross.Dialogue.Graph.DialogueGraph
+  nodeLinks:
+  - baseNodeGuid: c36b21ab-5012-4e39-b589-47f014c9fddb
+    portName: Next
+    targetNodeGuid: bcac30a3-5104-42c8-9913-9ae376b1ef96
+  - baseNodeGuid: bcac30a3-5104-42c8-9913-9ae376b1ef96
+    portName: Next
+    targetNodeGuid: 0975b44f-32d7-491d-b2db-8fb48551c9e4
+  - baseNodeGuid: 602ca4b2-90d9-48b9-968a-faf7aae67f4f
+    portName: Next
+    targetNodeGuid: a36794b6-62bb-47da-8ec3-6669dc6a2fe2
+  - baseNodeGuid: 0975b44f-32d7-491d-b2db-8fb48551c9e4
+    portName: Next
+    targetNodeGuid: 0763152b-5ed5-417e-ad96-2651a96e85f4
+  - baseNodeGuid: 0763152b-5ed5-417e-ad96-2651a96e85f4
+    portName: Next
+    targetNodeGuid: 602ca4b2-90d9-48b9-968a-faf7aae67f4f
+  nodeData:
+  - guid: bcac30a3-5104-42c8-9913-9ae376b1ef96
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: Lillie
+    dialogueText: That was 5 years ago
+    characterSprite: {fileID: 0}
+    sceneryId: Floresta
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: a36794b6-62bb-47da-8ec3-6669dc6a2fe2
+    nodeType: 5
+    position: {x: 0, y: 0}
+    speakerName: 
+    dialogueText: 
+    characterSprite: {fileID: 0}
+    sceneryId: 
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 602ca4b2-90d9-48b9-968a-faf7aae67f4f
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: Lillie
+    dialogueText: I will find Alexander and we will cross the sea of space together.
+    characterSprite: {fileID: 0}
+    sceneryId: Floresta
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 0975b44f-32d7-491d-b2db-8fb48551c9e4
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: Lillie
+    dialogueText: And 2 years ago, my brother Vanished completely after finishing
+      his studies.
+    characterSprite: {fileID: 0}
+    sceneryId: Floresta
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 0763152b-5ed5-417e-ad96-2651a96e85f4
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: Lillie
+    dialogueText: "But it doesn\u2019t mean i gave up on our promise. "
+    characterSprite: {fileID: 0}
+    sceneryId: Floresta
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  sceneryMappings:
+  - sceneryId: Floresta
+    scenery: {fileID: 11400000, guid: 5a88b4f4260c0524c82431f82cd0d2b2, type: 2}
+  exposedProperties: []

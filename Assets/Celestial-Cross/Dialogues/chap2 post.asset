@@ -1,0 +1,203 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10d30a4be252b63479f95c401df7180e, type: 3}
+  m_Name: chap2 post
+  m_EditorClassIdentifier: Assembly-CSharp::CelestialCross.Dialogue.Graph.DialogueGraph
+  nodeLinks:
+  - baseNodeGuid: ac3e2634-fc0c-4dee-9350-430a33da52f3
+    portName: Next
+    targetNodeGuid: f88237f6-d3af-427d-be60-8215b1da4210
+  - baseNodeGuid: f88237f6-d3af-427d-be60-8215b1da4210
+    portName: Next
+    targetNodeGuid: 9182bcf3-67dd-44e4-9743-0d0ee91336d4
+  - baseNodeGuid: 9182bcf3-67dd-44e4-9743-0d0ee91336d4
+    portName: Next
+    targetNodeGuid: cc68a854-9c54-4dba-845d-810f54dfda82
+  - baseNodeGuid: cc68a854-9c54-4dba-845d-810f54dfda82
+    portName: Next
+    targetNodeGuid: 79a2587e-1f19-4953-ba82-b032448747c4
+  - baseNodeGuid: 79a2587e-1f19-4953-ba82-b032448747c4
+    portName: Next
+    targetNodeGuid: c087af1a-49ce-4da5-809a-ae9331c3154a
+  - baseNodeGuid: c087af1a-49ce-4da5-809a-ae9331c3154a
+    portName: Next
+    targetNodeGuid: 37a95fb3-bea4-4212-a655-e0462a7634e4
+  - baseNodeGuid: 37a95fb3-bea4-4212-a655-e0462a7634e4
+    portName: Next
+    targetNodeGuid: d049b0c6-e654-479f-ae9e-e76f8e795526
+  - baseNodeGuid: d049b0c6-e654-479f-ae9e-e76f8e795526
+    portName: Next
+    targetNodeGuid: 49cd4860-35a2-42a4-893b-c4c39f215814
+  - baseNodeGuid: 49cd4860-35a2-42a4-893b-c4c39f215814
+    portName: Next
+    targetNodeGuid: 7424f3b1-b988-4ebd-aa6a-64cc4bb49aaf
+  nodeData:
+  - guid: f88237f6-d3af-427d-be60-8215b1da4210
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: Lillie
+    dialogueText: I think we managed to capture a few of them.
+    characterSprite: {fileID: 0}
+    sceneryId: Campo
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 9182bcf3-67dd-44e4-9743-0d0ee91336d4
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: Shanny
+    dialogueText: "Quite so, thanks to our collective effort we\u2019ve beaten them
+      in no time!"
+    characterSprite: {fileID: 21300000, guid: 330b798898580d8458defcbc05a162ac, type: 3}
+    sceneryId: Campo
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: cc68a854-9c54-4dba-845d-810f54dfda82
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: Fleur
+    dialogueText: Lady Lillie was it? Thank you for taking care of my Shanny, I know
+      she can be quite a handful.
+    characterSprite: {fileID: 0}
+    sceneryId: Campo
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 79a2587e-1f19-4953-ba82-b032448747c4
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: Shanny
+    dialogueText: "F-fleur!? Don\u2019t say that!"
+    characterSprite: {fileID: 21300000, guid: 241021b4c74f8364f953bdbe78f65d05, type: 3}
+    sceneryId: Campo
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: c087af1a-49ce-4da5-809a-ae9331c3154a
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: Lillie
+    dialogueText: "Ah\u2026 Don\u2019t worry about that."
+    characterSprite: {fileID: 0}
+    sceneryId: Campo
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 37a95fb3-bea4-4212-a655-e0462a7634e4
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: 
+    dialogueText: The bell rings, meaning the activity is over.
+    characterSprite: {fileID: 0}
+    sceneryId: Campo
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: d049b0c6-e654-479f-ae9e-e76f8e795526
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: 'Lillie '
+    dialogueText: "Seems like it\u2019s time to return already\u2026"
+    characterSprite: {fileID: 0}
+    sceneryId: Campo
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 49cd4860-35a2-42a4-893b-c4c39f215814
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: Voyage
+    dialogueText: "Oh, thank the heavens\u2026 i don\u2019t wanna see an alien for
+      the next 70 miles."
+    characterSprite: {fileID: 0}
+    sceneryId: Campo
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 7424f3b1-b988-4ebd-aa6a-64cc4bb49aaf
+    nodeType: 5
+    position: {x: 0, y: 0}
+    speakerName: 
+    dialogueText: 
+    characterSprite: {fileID: 0}
+    sceneryId: 
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  sceneryMappings:
+  - sceneryId: Campo
+    scenery: {fileID: 11400000, guid: 72b5881842cc38649a22b64c3c073a3e, type: 2}
+  exposedProperties: []
