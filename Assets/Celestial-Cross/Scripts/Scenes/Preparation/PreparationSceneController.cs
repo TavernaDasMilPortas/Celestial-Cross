@@ -5,6 +5,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using CelestialCross.System;
+using CelestialCross.Audio;
+using CelestialCross.Preparation;
+using System.Collections;
 
 public class PreparationSceneController : MonoBehaviour
 {
@@ -13,11 +16,11 @@ public class PreparationSceneController : MonoBehaviour
 
     [Header("UI - Owned Units")]
     [SerializeField] private Transform ownedUnitsContainer;
-    [SerializeField] private Button ownedUnitButtonPrefab;
+    [SerializeField] private PreparationUnitButtonUI ownedUnitButtonPrefab;
 
     [Header("UI - Selection")]
     [SerializeField] private Transform selectedUnitsContainer;
-    [SerializeField] private Button selectedUnitButtonPrefab;
+    [SerializeField] private PreparationUnitButtonUI selectedUnitButtonPrefab;
     [SerializeField] private TextMeshProUGUI selectedCountText;
     [SerializeField] private Button startBattleButton;
 
@@ -25,8 +28,8 @@ public class PreparationSceneController : MonoBehaviour
     [SerializeField] private int maxUnitsToBring = 3;
 
     private readonly HashSet<string> selectedUnitIds = new HashSet<string>();
-    private readonly Dictionary<string, Button> ownedButtonsMap = new Dictionary<string, Button>();
-    private readonly Dictionary<string, GameObject> selectedInstancesMap = new Dictionary<string, GameObject>();
+    private readonly Dictionary<string, PreparationUnitButtonUI> ownedButtonsMap = new Dictionary<string, PreparationUnitButtonUI>();
+    private readonly Dictionary<string, PreparationUnitButtonUI> selectedInstancesMap = new Dictionary<string, PreparationUnitButtonUI>();
 
     void Start()
     {
@@ -49,7 +52,9 @@ public class PreparationSceneController : MonoBehaviour
         }
 
         if (startBattleButton != null)
+        {
             startBattleButton.onClick.AddListener(StartBattle);
+        }
 
         RefreshSelectedCount();
     }
@@ -86,6 +91,9 @@ public class PreparationSceneController : MonoBehaviour
                 Destroy(child.gameObject);
         }
 
+        float delayStep = 0.05f;
+        float currentDelay = 0f;
+
         foreach (var unitId in AccountManager.Instance.PlayerAccount.OwnedUnitIDs)
         {
             if (string.IsNullOrWhiteSpace(unitId))
@@ -93,37 +101,14 @@ public class PreparationSceneController : MonoBehaviour
 
             var data = unitCatalog.GetUnitData(unitId);
 
-            Button btn = Instantiate(ownedUnitButtonPrefab, ownedUnitsContainer);
-            SetupButtonVisuals(btn, data, unitId);
-
-            btn.onClick.AddListener(() => ToggleSelectUnit(unitId));
+            PreparationUnitButtonUI btn = Instantiate(ownedUnitButtonPrefab, ownedUnitsContainer);
+            btn.gameObject.SetActive(true);
+            btn.Setup(data, unitId, false);
+            btn.OnUnitClicked = ToggleSelectUnit;
+            btn.PlayPopInAnimation(currentDelay);
+            
             ownedButtonsMap[unitId] = btn;
-        }
-    }
-
-    void SetupButtonVisuals(Button btn, UnitData data, string unitId)
-    {
-        // Define o texto (suporta tanto Text do Unity UI básico quanto TMPro se existir no projeto no futuro)
-        var textLabels = btn.GetComponentsInChildren<Text>(true);
-        foreach (var label in textLabels)
-            label.text = data != null && !string.IsNullOrWhiteSpace(data.displayName) ? data.displayName : unitId;
-
-        var tmproLabels = btn.GetComponentsInChildren<TextMeshProUGUI>(true);
-        foreach (var tmp in tmproLabels)
-            tmp.text = data != null && !string.IsNullOrWhiteSpace(data.displayName) ? data.displayName : unitId;
-
-        // Define a imagem da unidade (procura imgs que sejam filhas, mas que não estejam no próprio gameObject do Button - para não sobrescrever o background do botão em si)
-        if (data != null && data.icon != null)
-        {
-            var images = btn.GetComponentsInChildren<Image>(true);
-            foreach (var img in images)
-            {
-                if (img.gameObject != btn.gameObject)
-                {
-                    img.sprite = data.icon;
-                    img.color = Color.white; // Reseta transparente
-                }
-            }
+            currentDelay += delayStep;
         }
     }
 
@@ -134,6 +119,7 @@ public class PreparationSceneController : MonoBehaviour
             if (GameFlowManager.Instance.FixedSlots.Exists(s => s.UnitRef != null && s.UnitRef.UnitID == unitId && s.IsLocked))
             {
                 Debug.Log($"[PreparationScene] Unidade {unitId} é obrigatória e não pode ser removida.");
+                if (AudioManager.Instance != null) AudioManager.Instance.PlayUI(SoundKey.ButtonClickRejection01);
                 return;
             }
         }
@@ -141,34 +127,39 @@ public class PreparationSceneController : MonoBehaviour
         if (selectedUnitIds.Contains(unitId))
         {
             DeselectUnit(unitId);
+            if (AudioManager.Instance != null) AudioManager.Instance.PlayUI(SoundKey.ButtonClick02);
             return;
         }
 
         if (selectedUnitIds.Count >= maxUnitsToBring)
         {
             Debug.Log($"[PreparationScene] Limite de units atingido ({maxUnitsToBring}).");
+            if (AudioManager.Instance != null) AudioManager.Instance.PlayUI(SoundKey.ButtonClickRejection01);
             return;
         }
 
         SelectUnit(unitId);
+        if (AudioManager.Instance != null) AudioManager.Instance.PlayUI(SoundKey.Selection01);
     }
 
     void SelectUnit(string unitId)
     {
         selectedUnitIds.Add(unitId);
         
-        if (ownedButtonsMap.TryGetValue(unitId, out Button ownedBtn))
-            SetButtonSelectedVisual(ownedBtn, true);
+        if (ownedButtonsMap.TryGetValue(unitId, out PreparationUnitButtonUI ownedBtn))
+            ownedBtn.SetSelected(true);
 
         // Adiciona à UI de Selecionados
         if (selectedUnitsContainer != null && selectedUnitButtonPrefab != null)
         {
             var data = unitCatalog.GetUnitData(unitId);
-            Button selBtn = Instantiate(selectedUnitButtonPrefab, selectedUnitsContainer);
-            SetupButtonVisuals(selBtn, data, unitId);
-
-            selBtn.onClick.AddListener(() => ToggleSelectUnit(unitId)); // Clicar na selecionada desseleciona
-            selectedInstancesMap[unitId] = selBtn.gameObject;
+            PreparationUnitButtonUI selBtn = Instantiate(selectedUnitButtonPrefab, selectedUnitsContainer);
+            selBtn.gameObject.SetActive(true);
+            selBtn.Setup(data, unitId, true);
+            selBtn.OnUnitClicked = ToggleSelectUnit; // Clicar na selecionada desseleciona
+            selBtn.PlayPopInAnimation(0f);
+            
+            selectedInstancesMap[unitId] = selBtn;
         }
 
         RefreshSelectedCount();
@@ -178,26 +169,16 @@ public class PreparationSceneController : MonoBehaviour
     {
         selectedUnitIds.Remove(unitId);
 
-        if (ownedButtonsMap.TryGetValue(unitId, out Button ownedBtn))
-            SetButtonSelectedVisual(ownedBtn, false);
+        if (ownedButtonsMap.TryGetValue(unitId, out PreparationUnitButtonUI ownedBtn))
+            ownedBtn.SetSelected(false);
 
-        if (selectedInstancesMap.TryGetValue(unitId, out GameObject selObj))
+        if (selectedInstancesMap.TryGetValue(unitId, out PreparationUnitButtonUI selObj))
         {
-            if (selObj != null) Destroy(selObj);
+            if (selObj != null) Destroy(selObj.gameObject);
             selectedInstancesMap.Remove(unitId);
         }
 
         RefreshSelectedCount();
-    }
-
-    void SetButtonSelectedVisual(Button btn, bool selected)
-    {
-        if (btn == null) return;
-
-        // Minimal visual feedback: change button alpha.
-        var colors = btn.colors;
-        colors.normalColor = new Color(colors.normalColor.r, colors.normalColor.g, colors.normalColor.b, selected ? 0.6f : 1f);
-        btn.colors = colors;
     }
 
     void RefreshSelectedCount()
@@ -216,6 +197,8 @@ public class PreparationSceneController : MonoBehaviour
             Debug.LogError("[PreparationScene] GameFlowManager/SelectedLevel não configurado.");
             return;
         }
+
+        if (AudioManager.Instance != null) AudioManager.Instance.PlayUI(SoundKey.GameStateChange01);
 
         var level = GameFlowManager.Instance.SelectedLevel;
         if (level != null && !string.IsNullOrEmpty(level.SceneName))
