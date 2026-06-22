@@ -13,6 +13,11 @@ namespace CelestialCross.UI.ProceduralGraphic
         [Tooltip("A imagem que servirá de molde para o recorte")]
         public Image targetImage;
 
+        [Tooltip("Opcional: O SpriteRenderer que servirá de molde para o recorte")]
+        public SpriteRenderer targetSpriteRenderer;
+
+        public Sprite TargetSprite => targetImage != null ? targetImage.sprite : (targetSpriteRenderer != null ? targetSpriteRenderer.sprite : null);
+
         [Tooltip("Atualiza a borda automaticamente se a imagem (Sprite) mudar. Útil para animações 2D quadro a quadro.")]
         public bool autoUpdateOnChange = true;
 
@@ -62,11 +67,11 @@ namespace CelestialCross.UI.ProceduralGraphic
 
         private void Update()
         {
-            if (autoUpdateOnChange && targetImage != null)
+            if (autoUpdateOnChange && TargetSprite != null)
             {
-                if (targetImage.sprite != _lastProcessedSprite)
+                if (TargetSprite != _lastProcessedSprite)
                 {
-                    _lastProcessedSprite = targetImage.sprite;
+                    _lastProcessedSprite = TargetSprite;
                     if (Application.isPlaying)
                     {
                         if (_generationCoroutine != null) StopCoroutine(_generationCoroutine);
@@ -85,7 +90,9 @@ namespace CelestialCross.UI.ProceduralGraphic
         {
             if (_graphic == null) _graphic = GetComponent<ProceduralGraphic>();
 
-            if (targetImage == null || targetImage.sprite == null || targetImage.sprite.texture == null)
+            Sprite sprite = TargetSprite;
+
+            if (sprite == null || sprite.texture == null)
             {
                 if (_graphic.Preset != null && _runtimePreset != null)
                 {
@@ -95,7 +102,7 @@ namespace CelestialCross.UI.ProceduralGraphic
                 return;
             }
 
-            Texture2D tex = targetImage.sprite.texture;
+            Texture2D tex = sprite.texture;
             if (!tex.isReadable)
             {
                 Debug.LogWarning($"[PaperCutBorder] A textura '{tex.name}' não possui 'Read/Write' ativado nas import settings.");
@@ -122,14 +129,16 @@ namespace CelestialCross.UI.ProceduralGraphic
             var finalPoints = ContourExtractor.ApplyJitter(expanded, jitterAmount, randomSeed);
 
             ApplyPointsToPreset(finalPoints);
-            _lastProcessedSprite = targetImage.sprite;
+            _lastProcessedSprite = sprite;
         }
 
         private global::System.Collections.IEnumerator GenerateBorderAsync()
         {
             if (_graphic == null) _graphic = GetComponent<ProceduralGraphic>();
 
-            if (targetImage == null || targetImage.sprite == null || targetImage.sprite.texture == null)
+            Sprite currentSprite = TargetSprite;
+
+            if (currentSprite == null || currentSprite.texture == null)
             {
                 if (_graphic.Preset != null && _runtimePreset != null)
                 {
@@ -138,8 +147,6 @@ namespace CelestialCross.UI.ProceduralGraphic
                 }
                 yield break;
             }
-
-            Sprite currentSprite = targetImage.sprite;
 
             if (_borderCache.TryGetValue(currentSprite, out List<Vector2> cachedPoints))
             {

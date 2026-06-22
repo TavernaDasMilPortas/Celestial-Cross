@@ -7,6 +7,9 @@ using CelestialCross.Data.Pets;
 using System.Collections.Generic;
 using CelestialCross.System;
 using System.Collections;
+using CelestialCross.Gacha.UI;
+using CelestialCross.Scenes.Unit;
+using CelestialCross.Gacha;
 
 namespace CelestialCross.Giulia_UI
 {
@@ -32,22 +35,15 @@ namespace CelestialCross.Giulia_UI
         [SerializeField] private Button continueButton;
 
         [Header("Prefabs")]
-        [SerializeField] private GameObject artifactItemPrefab;
+        [SerializeField] private GameObject prizeStampPrefab; // Será o "Stamp" do Gacha
+
+        [Header("Complex Modals")]
+        public GachaUnitRewardModal unitPetRewardModal;
+        public ArtifactActionModal artifactActionModal;
+        public ArtifactUpgradeModal artifactUpgradeModal;
 
         private global::System.Action onCloseCallback;
         private List<GameObject> spawnedItems = new List<GameObject>();
-
-        // === Modal Fsico (Inspector) ===
-        [Header("Reward Details Modal")]
-        [SerializeField] private GameObject detailsModal;
-        [SerializeField] private TextMeshProUGUI modalTitle;
-        [SerializeField] private TextMeshProUGUI modalDesc;
-        [SerializeField] private Button modalSellBtn;
-        [SerializeField] private TextMeshProUGUI modalSellTxt;
-        [SerializeField] private Button modalCloseBtn;
-        
-        private ArtifactInstanceData currentSelectedArtifact;
-        private RuntimePetData currentSelectedPet;
 
         [Header("XP Panel (Phase 1)")]
         [SerializeField] private Transform xpSlotsPanel;
@@ -67,197 +63,72 @@ namespace CelestialCross.Giulia_UI
 
             if (continueButton != null)
                 continueButton.onClick.AddListener(OnContinueClicked);
-
-            if (detailsModal != null)
-            {
-                AutoLinkModalComponents();
-
-                if (modalSellBtn != null) 
-                    modalSellBtn.onClick.AddListener(OnSellClicked);
-
-                if (modalCloseBtn != null) 
-                    modalCloseBtn.onClick.AddListener(() => { if (detailsModal != null) detailsModal.SetActive(false); });
-
-                detailsModal.SetActive(false);
-            }
-        }
-
-        private void AutoLinkModalComponents()
-        {
-            if (modalTitle == null) {
-                var t = detailsModal.transform.Find("ModalTitle");
-                if (t != null) modalTitle = t.GetComponent<TextMeshProUGUI>();
-            }
-            if (modalDesc == null) {
-                var t = detailsModal.transform.Find("ModalDesc");
-                if (t != null) modalDesc = t.GetComponent<TextMeshProUGUI>();
-            }
-
-            if (modalSellBtn == null) {
-                var btnTr = detailsModal.transform.Find("Generated_Btn_Sell");
-                if (btnTr == null) btnTr = detailsModal.transform.Find("Btn_Sell");
-                if (btnTr != null) {
-                    modalSellBtn = btnTr.GetComponent<Button>();
-                    var txtTr = btnTr.Find("Text");
-                    if (txtTr != null) modalSellTxt = txtTr.GetComponent<TextMeshProUGUI>();
-                }
-            }
-
-            if (modalCloseBtn == null) {
-                var btnTr = detailsModal.transform.Find("Generated_Btn_Close");
-                if (btnTr == null) btnTr = detailsModal.transform.Find("Btn_Close");
-                if (btnTr != null) modalCloseBtn = btnTr.GetComponent<Button>();
-            }
-
-            // Gerar botões dinamicamente se não existem
-            if (modalSellBtn == null || modalCloseBtn == null)
-            {
-                // Vender Btn
-                GameObject sBtnGo = new GameObject("Generated_Btn_Sell", typeof(RectTransform), typeof(Image), typeof(Button));
-                sBtnGo.transform.SetParent(detailsModal.transform, false);
-                RectTransform sRt = sBtnGo.GetComponent<RectTransform>();
-                sRt.anchorMin = new Vector2(0.1f, 0.05f); sRt.anchorMax = new Vector2(0.45f, 0.15f);
-                sRt.offsetMin = Vector2.zero; sRt.offsetMax = Vector2.zero;
-                sBtnGo.GetComponent<Image>().color = new Color(0.8f, 0.2f, 0.2f, 1f);
-                
-                modalSellBtn = sBtnGo.GetComponent<Button>();
-                
-                GameObject sTxtGo = new GameObject("Text", typeof(RectTransform), typeof(TextMeshProUGUI));
-                sTxtGo.transform.SetParent(sBtnGo.transform, false);
-                RectTransform stRt = sTxtGo.GetComponent<RectTransform>();
-                stRt.anchorMin = Vector2.zero; stRt.anchorMax = Vector2.one;
-                stRt.offsetMin = Vector2.zero; stRt.offsetMax = Vector2.zero;
-                modalSellTxt = sTxtGo.GetComponent<TextMeshProUGUI>();
-                modalSellTxt.alignment = TextAlignmentOptions.Center;
-                modalSellTxt.color = Color.white;
-                modalSellTxt.fontSize = 20;
-
-                // Fechar Btn
-                GameObject cBtnGo = new GameObject("Generated_Btn_Close", typeof(RectTransform), typeof(Image), typeof(Button));
-                cBtnGo.transform.SetParent(detailsModal.transform, false);
-                RectTransform cRt = cBtnGo.GetComponent<RectTransform>();
-                cRt.anchorMin = new Vector2(0.55f, 0.05f); cRt.anchorMax = new Vector2(0.9f, 0.15f);
-                cRt.offsetMin = Vector2.zero; cRt.offsetMax = Vector2.zero;
-                cBtnGo.GetComponent<Image>().color = new Color(0.4f, 0.4f, 0.4f, 1f);
-
-                modalCloseBtn = cBtnGo.GetComponent<Button>();
-                
-                GameObject cTxtGo = new GameObject("Text", typeof(RectTransform), typeof(TextMeshProUGUI));
-                cTxtGo.transform.SetParent(cBtnGo.transform, false);
-                RectTransform ctRt = cTxtGo.GetComponent<RectTransform>();
-                ctRt.anchorMin = Vector2.zero; ctRt.anchorMax = Vector2.one;
-                ctRt.offsetMin = Vector2.zero; ctRt.offsetMax = Vector2.zero;
-                var cTxt = cTxtGo.GetComponent<TextMeshProUGUI>();
-                cTxt.text = "Fechar";
-                cTxt.alignment = TextAlignmentOptions.Center;
-                cTxt.color = Color.white;
-                cTxt.fontSize = 20;
-            }
         }
 
         private void OpenArtifactModal(ArtifactInstanceData arti, GameObject cardGo)
         {
-            currentSelectedArtifact = arti;
-            currentSelectedPet = null;
-            
-            string setString = string.IsNullOrWhiteSpace(arti.artifactSetId) ? "" : $" ({arti.artifactSetId})";
-            if (modalTitle != null) modalTitle.text = $"{arti.slot}{setString}";
-            
-            string mStat = arti.mainStat != null ? $"+{arti.mainStat.value:F0} {arti.mainStat.statType}" : "none";
-            if (modalDesc != null) modalDesc.text = $"Raridade: {arti.rarity}\nLevel: {arti.currentLevel}\nEstrelas: {arti.stars}*\n\nMain Stat: {mStat}";
-            
-            int sellValue = ArtifactEconomyService.GetSellValue(arti);
-            if (modalSellTxt != null) modalSellTxt.text = $"VENDER\n(+{sellValue} Moedas)";
-            
-            Sprite iconSprite = null;
-            if (cardGo != null) {
-                Transform iTr = cardGo.transform.Find("Icon");
-                if (iTr != null) {
-                    Image img = iTr.GetComponent<Image>();
-                    if (img != null) iconSprite = img.sprite;
-                }
-            }
-            Transform mIconTr = detailsModal.transform.Find("ModalIcon");
-            if (mIconTr != null)
+            if (artifactActionModal != null)
             {
-                if (iconSprite != null) {
-                    mIconTr.gameObject.SetActive(true);
-                    var img = mIconTr.GetComponent<Image>();
-                    if (img != null) img.sprite = iconSprite;
-                } else {
-                    mIconTr.gameObject.SetActive(false);
-                }
-            }
+                ArtifactSet set = null;
+                if (artifactSetCatalog != null) set = artifactSetCatalog.GetSetById(arti.artifactSetId);
+                
+                artifactActionModal.ShowFromGacha(arti, set, (wasSold) => {
+                    if (wasSold && cardGo != null)
+                    {
+                        var btn = cardGo.GetComponent<Button>();
+                        if (btn) btn.interactable = false;
 
-            detailsModal.SetActive(true);
-            detailsModal.transform.SetAsLastSibling(); // Puxa pra frente
+                        var bgImg = cardGo.GetComponent<Image>();
+                        if (bgImg) bgImg.color = new Color(0.2f, 0.2f, 0.2f, 0.5f);
+                        
+                        var iconImg = cardGo.transform.Find("Icon")?.GetComponent<Image>();
+                        if (iconImg) iconImg.color = new Color(1f, 1f, 1f, 0.3f);
+                    }
+                });
+            }
+            else
+            {
+                Debug.LogError("[VictoryRewardUI] artifactActionModal está NULO. Atribua o prefab no Inspector!");
+            }
         }
         
         private void OpenPetModal(RuntimePetData pet, GameObject cardGo)
         {
-            currentSelectedArtifact = null;
-            currentSelectedPet = pet;
-            
-            if (modalTitle != null) modalTitle.text = pet.DisplayName;
-            if (modalDesc != null) modalDesc.text = $"Estrelas: {pet.RarityStars}*\nNível: {pet.CurrentLevel}\nHP: {pet.Health} | ATK: {pet.Attack} | DEF: {pet.Defense}\nSPD: {pet.Speed} | CRIT: {pet.CriticalChance}% | ACC: {pet.EffectAccuracy}%";
-            
-            if (modalSellTxt != null) modalSellTxt.text = "SOLTAR\n(+ Pet Souls)";
-            
-            Sprite iconSprite = null;
-            if (cardGo != null) {
-                Transform iTr = cardGo.transform.Find("Icon");
-                if (iTr != null) {
-                    Image img = iTr.GetComponent<Image>();
-                    if (img != null) iconSprite = img.sprite;
-                }
-            }
-            Transform mIconTr = detailsModal.transform.Find("ModalIcon");
-            if (mIconTr != null)
+            if (unitPetRewardModal != null)
             {
-                if (iconSprite != null) {
-                    mIconTr.gameObject.SetActive(true);
-                    var img = mIconTr.GetComponent<Image>();
-                    if (img != null) img.sprite = iconSprite;
-                } else {
-                    mIconTr.gameObject.SetActive(false);
-                }
-            }
-
-            detailsModal.SetActive(true);
-            detailsModal.transform.SetAsLastSibling();
-        }
-
-        private void OnSellClicked()
-        {
-            var acc = AccountManager.Instance.PlayerAccount;
-            if (currentSelectedArtifact != null)
-            {
-                // Refund money via TrySellArtifact which removes artifact and gives money
-                if (ArtifactEconomyService.TrySellArtifact(acc, currentSelectedArtifact))
+                var entry = new GachaRewardEntry
                 {
-                    AccountManager.Instance.SaveAccount();
-                    // Remove from visually spawned list (reload UI?) Wait, Victory UI is static, so just hide the button
-                    foreach(var go in spawnedItems.ToArray()) {
-                        if (go.name.Contains(currentSelectedArtifact.idGUID)) {
-                            go.SetActive(false); // Hide the card
-                        }
-                    }
-                    detailsModal.SetActive(false);
-                }
+                    RewardType = GachaRewardType.Pet,
+                    Rarity = (GachaRarity)(Mathf.Clamp(pet.RarityStars - 1, 0, 5)), // Aproximação de raridade
+                    PetSpeciesData = petCatalog != null ? petCatalog.GetPetSpecies(pet.SpeciesID) : null,
+                    ItemStars = pet.RarityStars
+                };
+                unitPetRewardModal.ShowPet(pet, entry);
             }
-            else if (currentSelectedPet != null)
+            else
             {
-                // Release Pet
-                System.PetReleaseManager.Instance.ReleasePet(currentSelectedPet.UUID);
-                foreach(var go in spawnedItems.ToArray()) {
-                    if (go.name.Contains(currentSelectedPet.UUID)) {
-                        go.SetActive(false); // Hide the card
-                    }
-                }
-                detailsModal.SetActive(false);
+                Debug.LogError("[VictoryRewardUI] unitPetRewardModal está NULO. Atribua o prefab no Inspector!");
             }
         }
 
+        private void OpenUnitModal(UnitData unitData, GameObject cardGo)
+        {
+            if (unitPetRewardModal != null)
+            {
+                var entry = new GachaRewardEntry
+                {
+                    RewardType = GachaRewardType.Unit,
+                    Rarity = GachaRarity.Epic, // Assumindo base por enquanto
+                    UnitData = unitData,
+                    ItemStars = 3
+                };
+                unitPetRewardModal.ShowUnit(null, entry);
+            }
+            else
+            {
+                Debug.LogError("[VictoryRewardUI] unitPetRewardModal está NULO. Atribua o prefab no Inspector!");
+            }
+        }
 
         private void OnContinueClicked()
         {
@@ -344,18 +215,19 @@ namespace CelestialCross.Giulia_UI
 
             bool hasLoot = false;
 
-            if (reward != null && itemsContent != null && artifactItemPrefab != null)
+            if (reward != null && itemsContent != null && prizeStampPrefab != null)
             {
                 if (reward.GeneratedArtifacts != null)
                 {
                     foreach (var arti in reward.GeneratedArtifacts)
                     {
                         hasLoot = true;
-                        var go = Instantiate(artifactItemPrefab, itemsContent);
+                        var go = Instantiate(prizeStampPrefab, itemsContent);
                         go.name = "Art_" + arti.idGUID;
                         go.SetActive(true);
                         spawnedItems.Add(go);
-                        TMP_Text[] texts = go.GetComponentsInChildren<TMP_Text>();
+                        
+                        var nameText = go.transform.Find("NameText")?.GetComponent<TextMeshProUGUI>();
 
                         if (artifactSetCatalog != null)
                         {
@@ -370,10 +242,11 @@ namespace CelestialCross.Giulia_UI
                                         Image img = iconTransform.GetComponent<Image>();
                                         if (img != null) {
                                             img.sprite = iconSprite;
+                                            img.color = Color.white;
                                         }
                                         iconTransform.gameObject.SetActive(true);
-                                        }
                                     }
+                                }
                             }
                         }
 
@@ -387,23 +260,34 @@ namespace CelestialCross.Giulia_UI
                             case ArtifactRarity.Legendary: rarityColor = new Color(1f, 0.6f, 0f); break;
                         }
 
-                        if (texts.Length > 0)
+                        if (nameText != null)
                         {
-                            texts[0].text = "<color=#" + ColorUtility.ToHtmlStringRGB(rarityColor) + "><b>" + arti.slot + "</b></color>";
-                            texts[0].alignment = TextAlignmentOptions.Bottom;
-                            texts[0].enableWordWrapping = false;
+                            nameText.text = "<color=#" + ColorUtility.ToHtmlStringRGB(rarityColor) + "><b>" + arti.slot + "</b></color>";
                         }
-                        if (texts.Length > 1)
-                        {
-                            texts[1].gameObject.SetActive(false);
-                        }
+                        
                         Image bg = go.GetComponent<Image>();
-                        if (bg != null) bg.color = new Color(rarityColor.r * 0.3f, rarityColor.g * 0.3f, rarityColor.b * 0.3f, 1f);
+                        if (bg != null)
+                        {
+                            bg.color = new Color(rarityColor.r * 0.3f, rarityColor.g * 0.3f, rarityColor.b * 0.3f, 1f);
+                            bg.raycastTarget = true; // Força para poder clicar
+                        }
 
                         // Attach Button
                         Button btn = go.GetComponent<Button>();
                         if (btn == null) btn = go.AddComponent<Button>();
-                        btn.onClick.AddListener(() => OpenArtifactModal(arti, go));
+                        btn.interactable = true; // Garante que o botão tá clicável
+                        
+                        CanvasGroup cg = go.GetComponent<CanvasGroup>();
+                        if (cg != null) cg.blocksRaycasts = true;
+
+                        btn.onClick.RemoveAllListeners();
+                        
+                        var capArti = arti;
+                        var capGo = go;
+                        btn.onClick.AddListener(() => {
+                            Debug.Log($"[VictoryRewardUI] Clicou no artefato: {capArti.slot}");
+                            OpenArtifactModal(capArti, capGo);
+                        });
                     }
                 }
 
@@ -412,11 +296,12 @@ namespace CelestialCross.Giulia_UI
                     foreach (var p in reward.GeneratedPets)
                     {
                         hasLoot = true;
-                        var go = Instantiate(artifactItemPrefab, itemsContent);
+                        var go = Instantiate(prizeStampPrefab, itemsContent);
                         go.name = "Pet_" + p.UUID;
                         go.SetActive(true);
                         spawnedItems.Add(go);
-                        TMP_Text[] texts = go.GetComponentsInChildren<TMP_Text>();
+                        
+                        var nameText = go.transform.Find("NameText")?.GetComponent<TextMeshProUGUI>();
 
                         Sprite petIcon = null;
                         if (petCatalog != null) {
@@ -430,28 +315,40 @@ namespace CelestialCross.Giulia_UI
                                 Image img = iconTransform.GetComponent<Image>();
                                 if (img != null) {
                                     img.sprite = petIcon;
+                                    img.color = Color.white;
                                 }
                                 iconTransform.gameObject.SetActive(true);
                             }
                         }
 
-                        if (texts.Length > 0)
+                        if (nameText != null)
                         {
-                            texts[0].text = "<color=#FF8800><b>" + p.DisplayName + "</b></color>";
-                            texts[0].alignment = TextAlignmentOptions.Bottom;
-                            texts[0].enableWordWrapping = false;
+                            nameText.text = "<color=#FF8800><b>" + p.DisplayName + "</b></color>";
                         }
-                        if (texts.Length > 1)
-                        {
-                            texts[1].gameObject.SetActive(false);
-                        }
+                        
                         Image bg = go.GetComponent<Image>();
-                        if (bg != null) bg.color = new Color(0.8f, 0.3f, 0.1f, 1f);
+                        if (bg != null)
+                        {
+                            bg.color = new Color(0.8f, 0.3f, 0.1f, 1f);
+                            bg.raycastTarget = true;
+                        }
 
                         // Attach Button
                         Button btn = go.GetComponent<Button>();
                         if (btn == null) btn = go.AddComponent<Button>();
-                        btn.onClick.AddListener(() => OpenPetModal(p, go));
+                        btn.interactable = true;
+                        
+                        CanvasGroup cg = go.GetComponent<CanvasGroup>();
+                        if (cg != null) cg.blocksRaycasts = true;
+
+                        btn.onClick.RemoveAllListeners();
+                        
+                        var capPet = p;
+                        var capGo = go;
+                        btn.onClick.AddListener(() => {
+                            Debug.Log($"[VictoryRewardUI] Clicou no pet: {capPet.DisplayName}");
+                            OpenPetModal(capPet, capGo);
+                        });
                     }
                 }
 
@@ -462,11 +359,12 @@ namespace CelestialCross.Giulia_UI
                         if (def.Type == CelestialCross.Data.Rewards.RewardType.Unit && def.UnitRef != null)
                         {
                             hasLoot = true;
-                            var go = Instantiate(artifactItemPrefab, itemsContent);
+                            var go = Instantiate(prizeStampPrefab, itemsContent);
                             go.name = "Unit_" + def.UnitRef.UnitID;
                             go.SetActive(true);
                             spawnedItems.Add(go);
-                            TMP_Text[] texts = go.GetComponentsInChildren<TMP_Text>();
+                            
+                            var nameText = go.transform.Find("NameText")?.GetComponent<TextMeshProUGUI>();
 
                             Sprite uIcon = def.UnitRef.icon;
                             if (uIcon != null) {
@@ -475,32 +373,49 @@ namespace CelestialCross.Giulia_UI
                                     Image img = iconTransform.GetComponent<Image>();
                                     if (img != null) {
                                         img.sprite = uIcon;
+                                        img.color = Color.white;
                                     }
                                     iconTransform.gameObject.SetActive(true);
                                 }
                             }
 
-                            if (texts.Length > 0)
+                            if (nameText != null)
                             {
-                                texts[0].text = "<color=#AA00FF><b>" + def.UnitRef.displayName + "</b></color>";
-                                texts[0].alignment = TextAlignmentOptions.Bottom;
-                                texts[0].enableWordWrapping = false;
+                                nameText.text = "<color=#AA00FF><b>" + def.UnitRef.displayName + "</b></color>";
                             }
-                            if (texts.Length > 1)
-                            {
-                                texts[1].gameObject.SetActive(false);
-                            }
+                            
                             Image bg = go.GetComponent<Image>();
-                            if (bg != null) bg.color = new Color(0.3f, 0.1f, 0.5f, 1f); // Roxo para units
+                            if (bg != null)
+                            {
+                                bg.color = new Color(0.3f, 0.1f, 0.5f, 1f); // Roxo para units
+                                bg.raycastTarget = true;
+                            }
+
+                            Button btn = go.GetComponent<Button>();
+                            if (btn == null) btn = go.AddComponent<Button>();
+                            btn.interactable = true;
+                            
+                            CanvasGroup cg = go.GetComponent<CanvasGroup>();
+                            if (cg != null) cg.blocksRaycasts = true;
+
+                            btn.onClick.RemoveAllListeners();
+                            
+                            var capDef = def;
+                            var capGo = go;
+                            btn.onClick.AddListener(() => {
+                                Debug.Log($"[VictoryRewardUI] Clicou na Unit: {capDef.UnitRef.displayName}");
+                                OpenUnitModal(capDef.UnitRef, capGo);
+                            });
                         }
                         else if (def.Type == CelestialCross.Data.Rewards.RewardType.Item)
                         {
                             hasLoot = true;
-                            var go = Instantiate(artifactItemPrefab, itemsContent);
+                            var go = Instantiate(prizeStampPrefab, itemsContent);
                             go.name = "Item_" + def.ReferenceID;
                             go.SetActive(true);
                             spawnedItems.Add(go);
-                            TMP_Text[] texts = go.GetComponentsInChildren<TMP_Text>();
+                            
+                            var nameText = go.transform.Find("NameText")?.GetComponent<TextMeshProUGUI>();
 
                             // Oculta ícone, já que mostramos só texto
                             Transform iconTransform = go.transform.Find("Icon");
@@ -508,16 +423,11 @@ namespace CelestialCross.Giulia_UI
                                 iconTransform.gameObject.SetActive(false);
                             }
 
-                            if (texts.Length > 0)
+                            if (nameText != null)
                             {
-                                texts[0].text = $"<color=#00FFFF><b>+{def.Amount}\n{def.ReferenceID}</b></color>";
-                                texts[0].alignment = TextAlignmentOptions.Center;
-                                texts[0].enableWordWrapping = true;
+                                nameText.text = $"<color=#00FFFF><b>+{def.Amount}\n{def.ReferenceID}</b></color>";
                             }
-                            if (texts.Length > 1)
-                            {
-                                texts[1].gameObject.SetActive(false);
-                            }
+                            
                             Image bg = go.GetComponent<Image>();
                             if (bg != null) bg.color = new Color(0.1f, 0.3f, 0.4f, 1f); // Azul/Teal para itens
                         }

@@ -12,11 +12,11 @@ namespace CelestialCross.UI.ProceduralGraphic.Editor
         {
             PaperCutBorderGenerator generator = (PaperCutBorderGenerator)target;
 
-            Image img = generator.targetImage;
+            Sprite sprite = generator.TargetSprite;
             
-            if (img != null && img.sprite != null && img.sprite.texture != null)
+            if (sprite != null && sprite.texture != null)
             {
-                Texture2D tex = img.sprite.texture;
+                Texture2D tex = sprite.texture;
                 if (!tex.isReadable)
                 {
                     EditorGUILayout.HelpBox("A textura do Sprite alvo não possui 'Read/Write' ativado. A borda não será gerada.", MessageType.Warning);
@@ -36,7 +36,7 @@ namespace CelestialCross.UI.ProceduralGraphic.Editor
             }
             else
             {
-                EditorGUILayout.HelpBox("Atribua uma Target Image com um Sprite válido para que a borda possa ser extraída e desenhada neste componente.", MessageType.Info);
+                EditorGUILayout.HelpBox("Atribua uma Target Image ou SpriteRenderer com um Sprite válido para que a borda possa ser extraída e desenhada.", MessageType.Info);
                 EditorGUILayout.Space();
             }
 

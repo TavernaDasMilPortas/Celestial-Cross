@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using CelestialCross.UnitVisuals;
+using CelestialCross.UI.ProceduralGraphic;
 
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(SpriteRenderer))]
@@ -9,6 +10,8 @@ public class UnitVisualController : MonoBehaviour
     private Animator animator;
     private SpriteRenderer spriteRenderer;
     private Unit parentUnit;
+    
+    private PaperCutBorderGenerator paperCutBorder;
 
     private static readonly int CombatTrig = Animator.StringToHash("Combat");
     private static readonly int IdleTrig = Animator.StringToHash("Idle");
@@ -25,6 +28,13 @@ public class UnitVisualController : MonoBehaviour
         }
 
         CharacterVFXManager.Instance.RegisterRenderer(unit, spriteRenderer);
+
+        // Busca o componente de borda (pode estar neste GameObject ou num filho)
+        paperCutBorder = GetComponentInChildren<PaperCutBorderGenerator>(true);
+        if (paperCutBorder != null)
+        {
+            SetPaperCutActive(false);
+        }
     }
 
     private void OnDestroy()
@@ -73,6 +83,29 @@ public class UnitVisualController : MonoBehaviour
             animator.SetTrigger(CombatTrig);
         else
             animator.SetTrigger(IdleTrig);
+
+        if (paperCutBorder != null)
+        {
+            SetPaperCutActive(isActiveTurn);
+        }
+    }
+
+    private void SetPaperCutActive(bool active)
+    {
+        if (paperCutBorder == null) return;
+        
+        // Se a borda estiver em um GameObject separado, desativamos o objeto inteiro.
+        // Se estiver no mesmo objeto (improvável, pois usa CanvasRenderer), desativamos apenas o componente.
+        if (paperCutBorder.gameObject != this.gameObject)
+        {
+            paperCutBorder.gameObject.SetActive(active);
+        }
+        else
+        {
+            paperCutBorder.enabled = active;
+            var graphic = paperCutBorder.GetComponent<UnityEngine.UI.Graphic>();
+            if (graphic != null) graphic.enabled = active;
+        }
     }
 
     /// <summary>

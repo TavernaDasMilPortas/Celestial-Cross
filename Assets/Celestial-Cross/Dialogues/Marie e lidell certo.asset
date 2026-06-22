@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 10d30a4be252b63479f95c401df7180e, type: 3}
-  m_Name: NewDialogue
+  m_Name: Marie e lidell certo
   m_EditorClassIdentifier: Assembly-CSharp::CelestialCross.Dialogue.Graph.DialogueGraph
   nodeLinks:
   - baseNodeGuid: f4647a6d-9602-47f2-9f36-5065453112ad
