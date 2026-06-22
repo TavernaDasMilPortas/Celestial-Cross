@@ -10,9 +10,16 @@ namespace CelestialCross.System
     {
         public static SceneTransitionManager Instance { get; private set; }
 
+        [Header("UI References")]
         [SerializeField] private Canvas transitionCanvas;
         [SerializeField] private Image flashImage;
 
+        [Header("Visual Config")]
+        [SerializeField] private Color transitionColor = Color.white;
+        [SerializeField] private Sprite transitionSprite;
+        [SerializeField] private Material transitionMaterial;
+
+        [Header("Timing Config")]
         public float flashInDuration = 0.5f;
         public float flashHoldMinDuration = 0.1f; // Tempo mínimo que o branco dura, mesmo que a cena carregue instantaneamente
         public float flashOutDuration = 0.5f;
@@ -32,8 +39,25 @@ namespace CelestialCross.System
                 CreateCanvas();
             }
 
-            flashImage.color = new Color(1, 1, 1, 0);
-            flashImage.gameObject.SetActive(false);
+            if (flashImage != null)
+            {
+                if (transitionSprite != null) flashImage.sprite = transitionSprite;
+                if (transitionMaterial != null) flashImage.material = transitionMaterial;
+                
+                flashImage.color = new Color(transitionColor.r, transitionColor.g, transitionColor.b, 0);
+                flashImage.gameObject.SetActive(false);
+            }
+        }
+
+        private void Update()
+        {
+            // Envia o tempo real (ignora Time.timeScale) para qualquer shader que tiver a propriedade _UnscaledTime
+            Shader.SetGlobalFloat("_UnscaledTime", Time.unscaledTime);
+            
+            if (transitionMaterial != null)
+            {
+                transitionMaterial.SetFloat("_UnscaledTime", Time.unscaledTime);
+            }
         }
 
         private void CreateCanvas()
@@ -51,7 +75,9 @@ namespace CelestialCross.System
             GameObject imageObj = new GameObject("FlashImage");
             imageObj.transform.SetParent(canvasObj.transform, false);
             flashImage = imageObj.AddComponent<Image>();
-            flashImage.color = Color.white;
+            flashImage.color = transitionColor;
+            if (transitionSprite != null) flashImage.sprite = transitionSprite;
+            if (transitionMaterial != null) flashImage.material = transitionMaterial;
 
             RectTransform rect = flashImage.rectTransform;
             rect.anchorMin = Vector2.zero;
@@ -88,7 +114,7 @@ namespace CelestialCross.System
             Time.timeScale = 0f;
 
             // 1. Flash In (Fica Branco) - ignorando timeScale
-            yield return flashImage.DOFade(1f, flashInDuration).SetUpdate(true).SetEase(Ease.InOutSine).WaitForCompletion();
+            yield return flashImage.DOFade(transitionColor.a, flashInDuration).SetUpdate(true).SetEase(Ease.InOutSine).WaitForCompletion();
 
             // 2. Segura o Branco e carrega a cena de forma assíncrona
             AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);

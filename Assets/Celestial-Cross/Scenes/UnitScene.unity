@@ -4720,14 +4720,14 @@ MonoBehaviour:
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 0.20135097
+  m_ScrollSensitivity: 0.19657443
   m_Viewport: {fileID: 1048945898}
   m_HorizontalScrollbar: {fileID: 0}
   m_VerticalScrollbar: {fileID: 0}
   m_HorizontalScrollbarVisibility: 0
   m_VerticalScrollbarVisibility: 0
-  m_HorizontalScrollbarSpacing: -0.85625
-  m_VerticalScrollbarSpacing: -0.85625
+  m_HorizontalScrollbarSpacing: -0.8359376
+  m_VerticalScrollbarSpacing: -0.8359376
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -11129,6 +11129,50 @@ MonoBehaviour:
     screenConfigName: 
   customSpriteSettings:
     items: []
+--- !u!1 &601668748
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 601668750}
+  - component: {fileID: 601668749}
+  m_Layer: 0
+  m_Name: UnitSelectionFlowHelper
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &601668749
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 601668748}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41e36ba7b5e364c439dc90aebb0871e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CelestialCross.Scenes.Unit.UnitSelectionFlowHelper
+--- !u!4 &601668750
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 601668748}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &605808128
 GameObject:
   m_ObjectHideFlags: 0
@@ -14671,13 +14715,12 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1401543671}
+  m_Children: []
   m_Father: {fileID: 1776631089}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.02, y: 0.9}
-  m_AnchorMax: {x: 0.15, y: 0.98}
-  m_AnchoredPosition: {x: 15, y: 0}
+  m_AnchorMin: {x: 0.033888888, y: 0.91903234}
+  m_AnchorMax: {x: 0.20210005, y: 0.9800001}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &871175819
@@ -14737,15 +14780,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a132ebb16d23354b841b6618f4fa0e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheraBytes.BetterUi.BetterImage
-  m_Material: {fileID: 0}
-  m_Color: {r: 0.8, g: 0.2, b: 0.2, a: 1}
+  m_Material: {fileID: 2100000, guid: b1fd88dbb4af2374b9eabe74f0992a89, type: 2}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: e8cc27c1a01040444b351a808b0bf55e, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -14801,7 +14844,7 @@ MonoBehaviour:
   flippingMode: 0
   materialProperties:
     FloatProperties: []
-  materialType: Default
+  materialType: Custom
   materialEffect: 0
   materialProperty1: 0
   materialProperty2: 0
@@ -14827,9 +14870,9 @@ MonoBehaviour:
   customBorderScales:
     items: []
   fallbackSpriteSettings:
-    Sprite: {fileID: 0}
+    Sprite: {fileID: 21300000, guid: e8cc27c1a01040444b351a808b0bf55e, type: 3}
     ColorMode: 0
-    PrimaryColor: {r: 0.8, g: 0.2, b: 0.2, a: 1}
+    PrimaryColor: {r: 1, g: 1, b: 1, a: 1}
     SecondaryColor: {r: 1, g: 1, b: 1, a: 1}
     FlippingMode: 0
     screenConfigName: 
@@ -19521,7 +19564,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1154471466}
   - component: {fileID: 1154471468}
-  - component: {fileID: 1154471469}
   - component: {fileID: 1154471465}
   m_Layer: 0
   m_Name: UnitBanner
@@ -19542,7 +19584,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a090a76239557d9479422c432c315f8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CelestialCross.Scenes.Unit.UnitBannerUI
-  backgroundImage: {fileID: 1154471469}
+  backgroundImage: {fileID: 0}
   bannerText: {fileID: 1756311022}
 --- !u!224 &1154471466
 RectTransform:
@@ -19551,7 +19593,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1154471464}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -19572,116 +19614,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1154471464}
   m_CullTransparentMesh: 1
---- !u!114 &1154471469
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1154471464}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a132ebb16d23354b841b6618f4fa0e5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TheraBytes.BetterUi.BetterImage
-  m_Material: {fileID: 0}
-  m_Color: {r: 0.12, g: 0.1, b: 0.15, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
-  raycastPaddingFallback:
-    screenConfigName: 
-    OptimizedSize:
-      left: 0
-      right: 0
-      top: 0
-      bottom: 0
-    MinSize:
-      left: -1000
-      right: -1000
-      top: -1000
-      bottom: -1000
-    MaxSize:
-      left: 1000
-      right: 1000
-      top: 1000
-      bottom: 1000
-    UseMinSize: 0
-    UseMaxSize: 0
-    ModLeft:
-      ExponentialScale: 1
-      SizeModifiers:
-      - Mode: 1
-        Impact: 1
-    ModRight:
-      ExponentialScale: 1
-      SizeModifiers:
-      - Mode: 1
-        Impact: 1
-    ModTop:
-      ExponentialScale: 1
-      SizeModifiers:
-      - Mode: 1
-        Impact: 1
-    ModBottom:
-      ExponentialScale: 1
-      SizeModifiers:
-      - Mode: 1
-        Impact: 1
-  raycastPaddingSizers:
-    items: []
-  colorMode: 0
-  secondColor: {r: 1, g: 1, b: 1, a: 1}
-  flippingMode: 0
-  materialProperties:
-    FloatProperties: []
-  materialType: Default
-  materialEffect: 0
-  materialProperty1: 0
-  materialProperty2: 0
-  materialProperty3: 0
-  keepBorderAspectRatio: 0
-  spriteBorderScaleFallback:
-    screenConfigName: 
-    OptimizedSize: {x: 1, y: 1}
-    MinSize: {x: 0, y: 0}
-    MaxSize: {x: 3, y: 3}
-    UseMinSize: 0
-    UseMaxSize: 0
-    ModX:
-      ExponentialScale: 1
-      SizeModifiers:
-      - Mode: 0
-        Impact: 1
-    ModY:
-      ExponentialScale: 1
-      SizeModifiers:
-      - Mode: 0
-        Impact: 1
-  customBorderScales:
-    items: []
-  fallbackSpriteSettings:
-    Sprite: {fileID: 0}
-    ColorMode: 0
-    PrimaryColor: {r: 0.12, g: 0.1, b: 0.15, a: 1}
-    SecondaryColor: {r: 1, g: 1, b: 1, a: 1}
-    FlippingMode: 0
-    screenConfigName: 
-  customSpriteSettings:
-    items: []
 --- !u!1 &1157188505
 GameObject:
   m_ObjectHideFlags: 0
@@ -22786,143 +22718,6 @@ RectTransform:
   m_AnchoredPosition: {x: 455, y: -297.5784}
   m_SizeDelta: {x: 800, y: 55}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &1401543670
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1401543671}
-  - component: {fileID: 1401543673}
-  - component: {fileID: 1401543672}
-  m_Layer: 0
-  m_Name: Text
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1401543671
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1401543670}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 871175818}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1401543672
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1401543670}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_text: Voltar
-  m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_fontSharedMaterials: []
-  m_fontMaterial: {fileID: 0}
-  m_fontMaterials: []
-  m_fontColor32:
-    serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
-  m_enableVertexGradient: 0
-  m_colorMode: 3
-  m_fontColorGradient:
-    topLeft: {r: 1, g: 1, b: 1, a: 1}
-    topRight: {r: 1, g: 1, b: 1, a: 1}
-    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
-    bottomRight: {r: 1, g: 1, b: 1, a: 1}
-  m_fontColorGradientPreset: {fileID: 0}
-  m_spriteAsset: {fileID: 0}
-  m_tintAllSprites: 0
-  m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
-  m_overrideHtmlColors: 0
-  m_faceColor:
-    serializedVersion: 2
-    rgba: 4294967295
-  m_fontSize: 24
-  m_fontSizeBase: 24
-  m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
-  m_fontStyle: 0
-  m_HorizontalAlignment: 2
-  m_VerticalAlignment: 512
-  m_textAlignment: 65535
-  m_characterSpacing: 0
-  m_characterHorizontalScale: 1
-  m_wordSpacing: 0
-  m_lineSpacing: 0
-  m_lineSpacingMax: 0
-  m_paragraphSpacing: 0
-  m_charWidthMaxAdj: 0
-  m_TextWrappingMode: 1
-  m_wordWrappingRatios: 0.4
-  m_overflowMode: 0
-  m_linkedTextComponent: {fileID: 0}
-  parentLinkedComponent: {fileID: 0}
-  m_enableKerning: 0
-  m_ActiveFontFeatures: 6e72656b
-  m_enableExtraPadding: 0
-  checkPaddingRequired: 0
-  m_isRichText: 1
-  m_EmojiFallbackSupport: 1
-  m_parseCtrlCharacters: 1
-  m_isOrthographic: 1
-  m_isCullingEnabled: 0
-  m_horizontalMapping: 0
-  m_verticalMapping: 0
-  m_uvLineOffset: 0
-  m_geometrySortingOrder: 0
-  m_IsTextObjectScaleStatic: 0
-  m_VertexBufferAutoSizeReduction: 0
-  m_useMaxVisibleDescender: 1
-  m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
-  m_isUsingLegacyAnimationComponent: 0
-  m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
-  m_baseMaterial: {fileID: 0}
-  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!222 &1401543673
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1401543670}
-  m_CullTransparentMesh: 1
 --- !u!1 &1402992933
 GameObject:
   m_ObjectHideFlags: 0
@@ -25403,14 +25198,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheraBytes.BetterUi.BetterImage
   m_Material: {fileID: 2100000, guid: 4d539f01f5aa919419c747ff0d1b9b07, type: 2}
-  m_Color: {r: 0.4860885, g: 0.1367248, b: 0.6528301, a: 1}
+  m_Color: {r: 0.36862746, g: 0.20000002, b: 0.45882356, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 9b10a1dceb139d24eaf68cb12b5b8bb3, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b5f43db578e39e14f9ca31ea748aace6, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -25492,9 +25287,9 @@ MonoBehaviour:
   customBorderScales:
     items: []
   fallbackSpriteSettings:
-    Sprite: {fileID: 21300000, guid: 9b10a1dceb139d24eaf68cb12b5b8bb3, type: 3}
+    Sprite: {fileID: 21300000, guid: b5f43db578e39e14f9ca31ea748aace6, type: 3}
     ColorMode: 0
-    PrimaryColor: {r: 0.4860885, g: 0.1367248, b: 0.6528301, a: 1}
+    PrimaryColor: {r: 0.36862746, g: 0.20000002, b: 0.45882356, a: 1}
     SecondaryColor: {r: 1, g: 1, b: 1, a: 1}
     FlippingMode: 0
     screenConfigName: 
@@ -27322,10 +27117,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1154471466}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -51}
-  m_SizeDelta: {x: -315.135, y: 0}
+  m_AnchorMin: {x: 0.14589585, y: 0}
+  m_AnchorMax: {x: 0.85410416, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1756945661
 GameObject:
@@ -27383,14 +27178,14 @@ MonoBehaviour:
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 0.20135097
+  m_ScrollSensitivity: 0.19657443
   m_Viewport: {fileID: 378540388}
   m_HorizontalScrollbar: {fileID: 0}
   m_VerticalScrollbar: {fileID: 0}
   m_HorizontalScrollbarVisibility: 0
   m_VerticalScrollbarVisibility: 0
-  m_HorizontalScrollbarSpacing: -0.85625
-  m_VerticalScrollbarSpacing: -0.85625
+  m_HorizontalScrollbarSpacing: -0.8359376
+  m_VerticalScrollbarSpacing: -0.8359376
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -28275,14 +28070,14 @@ MonoBehaviour:
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 0.20135097
+  m_ScrollSensitivity: 0.19657443
   m_Viewport: {fileID: 1902686111}
   m_HorizontalScrollbar: {fileID: 0}
   m_VerticalScrollbar: {fileID: 0}
   m_HorizontalScrollbarVisibility: 0
   m_VerticalScrollbarVisibility: 0
-  m_HorizontalScrollbarSpacing: -0.85625
-  m_VerticalScrollbarSpacing: -0.85625
+  m_HorizontalScrollbarSpacing: -0.8359376
+  m_VerticalScrollbarSpacing: -0.8359376
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -29680,7 +29475,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 35.1
+  m_fontSize: 35.6
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -31696,7 +31491,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.02}
   m_AnchorMax: {x: 1, y: 0.14}
-  m_AnchoredPosition: {x: 0, y: -29.00061}
+  m_AnchoredPosition: {x: 0, y: -29.00055}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2015147229
@@ -31836,14 +31631,14 @@ MonoBehaviour:
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 0.28541663
+  m_ScrollSensitivity: 0.27864584
   m_Viewport: {fileID: 0}
   m_HorizontalScrollbar: {fileID: 0}
   m_VerticalScrollbar: {fileID: 0}
   m_HorizontalScrollbarVisibility: 0
   m_VerticalScrollbarVisibility: 0
-  m_HorizontalScrollbarSpacing: -0.85625
-  m_VerticalScrollbarSpacing: -0.85625
+  m_HorizontalScrollbarSpacing: -0.8359376
+  m_VerticalScrollbarSpacing: -0.8359376
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -32433,14 +32228,14 @@ MonoBehaviour:
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 0.20135097
+  m_ScrollSensitivity: 0.19657443
   m_Viewport: {fileID: 300940868}
   m_HorizontalScrollbar: {fileID: 0}
   m_VerticalScrollbar: {fileID: 0}
   m_HorizontalScrollbarVisibility: 0
   m_VerticalScrollbarVisibility: 0
-  m_HorizontalScrollbarSpacing: -0.85625
-  m_VerticalScrollbarSpacing: -0.85625
+  m_HorizontalScrollbarSpacing: -0.8359376
+  m_VerticalScrollbarSpacing: -0.8359376
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -33958,6 +33753,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 449206851}
     m_Modifications:
+    - target: {fileID: 502351885330886143, guid: dfd447767cf2f9d4fa91ea9dcb4f00c6, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0.11932373
+      objectReference: {fileID: 0}
     - target: {fileID: 2697248721170536986, guid: dfd447767cf2f9d4fa91ea9dcb4f00c6, type: 3}
       propertyPath: m_Name
       value: Panel_PetSkillModal
@@ -34333,3 +34132,4 @@ SceneRoots:
   - {fileID: 2091039134}
   - {fileID: 2036020710}
   - {fileID: 1776631089}
+  - {fileID: 601668750}

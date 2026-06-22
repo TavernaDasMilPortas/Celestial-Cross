@@ -233,15 +233,17 @@ namespace CelestialCross.Scenes.Unit
 
         private void OnSelectPetClicked()
         {
-            if (petSelectModal != null && !string.IsNullOrEmpty(currentUnitId))
-                petSelectModal.Show(currentUnitId, () => {
-                    Refresh(currentUnitData, currentRuntimeData, currentPetCatalog);
-                    if (UnitSceneController.Instance != null && UnitSceneController.Instance.attributesDetailPanel != null)
-                    {
-                        var attr = UnitSceneController.Instance.attributesDetailPanel.GetComponent<UnitDetailPanel_Attributes>();
-                        if (attr != null) attr.Refresh(currentUnitData, currentRuntimeData);
-                    }
-                });
+            if (!string.IsNullOrEmpty(currentUnitId))
+            {
+                if (UnitSelectionFlowHelper.Instance != null)
+                {
+                    UnitSelectionFlowHelper.Instance.GoToInventoryForPet(currentUnitId);
+                }
+                else
+                {
+                    Debug.LogWarning("[UnitDetailPanel_Pet] UnitSelectionFlowHelper ausente na cena.");
+                }
+            }
         }
 
         private void OnSkillIconClicked()

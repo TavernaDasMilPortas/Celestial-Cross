@@ -202,34 +202,16 @@ namespace CelestialCross.Scenes.Unit
                 }
             }
 
-            if (!string.IsNullOrEmpty(equippedGuid) && actionModal != null)
+            if (!string.IsNullOrEmpty(currentUnitId))
             {
-                var artifact = acc.GetArtifactByGuid(equippedGuid);
-                if (artifact != null && currentArtifactCatalog != null)
+                if (UnitSelectionFlowHelper.Instance != null)
                 {
-                    var set = currentArtifactCatalog.GetSetById(artifact.artifactSetId);
-                    actionModal.Show(artifact, set, currentUnitId, () => {
-                        Refresh(currentUnitData, currentRuntimeData, currentArtifactCatalog);
-                        if (UnitSceneController.Instance != null && UnitSceneController.Instance.attributesDetailPanel != null)
-                        {
-                            var attr = UnitSceneController.Instance.attributesDetailPanel.GetComponent<UnitDetailPanel_Attributes>();
-                            if (attr != null) attr.Refresh(currentUnitData, currentRuntimeData);
-                        }
-                    });
-                    return;
+                    UnitSelectionFlowHelper.Instance.GoToInventoryForArtifact(currentUnitId, slotTypes[index]);
                 }
-            }
-
-            if (artifactSelectModal != null && !string.IsNullOrEmpty(currentUnitId))
-            {
-                artifactSelectModal.Show(currentUnitId, slotTypes[index], () => {
-                    Refresh(currentUnitData, currentRuntimeData, currentArtifactCatalog);
-                    if (UnitSceneController.Instance != null && UnitSceneController.Instance.attributesDetailPanel != null)
-                    {
-                        var attr = UnitSceneController.Instance.attributesDetailPanel.GetComponent<UnitDetailPanel_Attributes>();
-                        if (attr != null) attr.Refresh(currentUnitData, currentRuntimeData);
-                    }
-                });
+                else
+                {
+                    Debug.LogWarning("[UnitDetailPanel_Equipment] UnitSelectionFlowHelper ausente na cena.");
+                }
             }
         }
     }

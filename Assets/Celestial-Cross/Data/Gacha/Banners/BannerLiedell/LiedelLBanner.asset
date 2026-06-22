@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: LiedelLBanner
   m_EditorClassIdentifier: Assembly-CSharp::CelestialCross.Gacha.GachaBannerSO
   BannerID: 1
-  BannerName: Liedel
-  BannerSplashArt: {fileID: 21300000, guid: d77c02701f7b9ac4cad3af9eb1fa1c23, type: 3}
+  BannerName: Desejo da Donzela
+  BannerSplashArt: {fileID: 407033799, guid: 54255f8d387e90e4a939aff035aa5720, type: 3}
   CostPerPull: 1
   pullVisualConfig: {fileID: 11400000, guid: db3860f4120b12c4fb3da57cffbe7cbd, type: 2}
+  Silhouette: {fileID: 407033799, guid: 93fd619aae295a44aadd29117ed1a560, type: 3}
   SoftPityThreshold: 70
   HardPityThreshold: 90
   GuaranteedAboveBaseEvery: 10

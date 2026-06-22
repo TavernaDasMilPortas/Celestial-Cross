@@ -379,7 +379,7 @@ namespace CelestialCross.Gacha.UI
                 
                 if (activeBanner != null && activeBanner.Silhouette != null) {
                     supremeSilhouetteImage.material = null; 
-                    supremeSilhouetteImage.color = new Color(0.05f, 0.02f, 0.08f, 1f); 
+                    // A cor da imagem agora usa exatamente o que você configurou no Inspector da Unity!
                 } else if (silhouetteMaterial != null) {
                     supremeSilhouetteImage.material = silhouetteMaterial;
                     supremeSilhouetteImage.color = Color.white;
