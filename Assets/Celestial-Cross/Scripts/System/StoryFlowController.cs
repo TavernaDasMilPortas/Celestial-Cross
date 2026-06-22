@@ -38,7 +38,7 @@ namespace CelestialCross.System
             GameFlowManager.Instance.SelectedUnitIDs.Clear();
             GameFlowManager.Instance.PlayerFormation.Clear();
 
-            SceneManager.LoadScene("PreparationScene");
+            SceneTransitionManager.LoadScene("PreparationScene");
         }
 
         public void StartDialogueNode(DialogueStoryNode node)
@@ -50,7 +50,7 @@ namespace CelestialCross.System
             }
             Debug.Log($"[StoryFlowController] Starting Dialogue Node: {node.Title}. Loading DialogueScene...");
             CelestialCross.Dialogue.Manager.DialogueManager.NextGraphToLoad = node.DialogueGraph;
-            SceneManager.LoadScene("DialogueScene"); // Nome padrão da cena
+            SceneTransitionManager.LoadScene("DialogueScene"); // Nome padrão da cena
         }
     }
 }

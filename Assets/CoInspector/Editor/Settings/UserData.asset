@@ -67,6 +67,14 @@ MonoBehaviour:
       mostClicked:
       - paths:
         - 
+        count: 2
+        gameObjects: []
+      - paths:
+        - 
+        count: 1
+        gameObjects: []
+      - paths:
+        - 
         count: 1
         gameObjects: []
       recentlyClicked:
@@ -74,10 +82,12 @@ MonoBehaviour:
         - 
         count: 1
         gameObjects: []
-      - paths: []
+      - paths:
+        - 
         count: 1
         gameObjects: []
-      - paths: []
+      - paths:
+        - 
         count: 1
         gameObjects: []
       - paths: []
@@ -105,9 +115,9 @@ MonoBehaviour:
       recentlyClickedContents: []
     sceneGUID: 03d58314661be71469defb5607568be7
     sceneName: InventoryScene
-    lastSaveTimePrint: 06:44 PM (June 21, 2026)
+    lastSaveTimePrint: 12:11 AM (June 22, 2026)
     gracePeriod: 3
-    activeIndex: 40
+    activeIndex: 44
     checkingToLoad: 0
     assetsCollapsed: 0
     lockedAsset: 0
@@ -117,9 +127,9 @@ MonoBehaviour:
     userAssetViewSize: -1
     previewHeight: 0
     scrollPosition: {x: 0, y: 0}
-    toolbarScrollPosition: {x: 1903, y: 0}
+    toolbarScrollPosition: {x: 2191, y: 0}
     rawUserHeight: 0
-    lastValidTabWidth: 2429
+    lastValidTabWidth: 2671
     alreadyCalculatedHeight: 0
     lastKnownHeight: 0
     tabs:
@@ -4192,12 +4202,12 @@ MonoBehaviour:
         - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/ModalsContainer[0]/ArtifactUpgradeModal[0]"}'
         prefab: 0
       owner: {fileID: 0}
-    - path: '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/ModalsContainer[0]/ArtifactUpgradeModal[0]"}'
+    - path: '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/SelectionModeButtons[0]/EquipButton[0]"}'
       paths: []
-      tabWidth: 55
-      name: ArtifactUpgradeModal
-      icon: {fileID: 7853449062886713960, guid: 0000000000000000d000000000000000, type: 0}
-      shortName: "Arti\u2026"
+      tabWidth: 58
+      name: EquipButton
+      icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Equi\u2026"
       filterString: 
       newTab: 0
       scrollPosition: 0
@@ -4206,14 +4216,14 @@ MonoBehaviour:
       runtimeFoldouts: 
       runtimeMultiComponents: []
       tabTextContent:
-        m_Text: "Arti\u2026"
+        m_Text: "Equi\u2026"
         m_Image: {fileID: 0}
         m_Tooltip: 
-        m_TextWithWhitespace: "Arti\u2026\u200B"
+        m_TextWithWhitespace: "Equi\u2026\u200B"
       multiEditMode: 0
       locked: 0
-      hasPreview: 0
-      previewHeight: 150
+      hasPreview: 1
+      previewHeight: 13
       debug: 0
       filtering: 0
       prefab: 0
@@ -4274,275 +4284,565 @@ MonoBehaviour:
         focusAfter: 0
         awaitingScroll: 0
         hidden: 0
-        componentName: artifactupgrademodal
-        niceComponentName: artifact upgrade modal
+        componentName: image
+        niceComponentName: image
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: button
+        niceComponentName: button
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 0
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: 
+        niceComponentName: 
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 0
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: 
+        niceComponentName: 
       historyPaths:
       - paths:
+        - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/SelectionModeButtons[0]/EquipButton[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/PaperCutBorder[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/SelectionModeButtons[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/Panel
+          Border[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/ModalsContainer[0]"}'
+        prefab: 0
+      - paths:
         - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/ModalsContainer[0]/ArtifactUpgradeModal[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/SelectionModeButtons[0]/EquipButton[0]"}'
+      paths: []
+      tabWidth: 58
+      name: EquipButton
+      icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Equi\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Equi\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Equi\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 1
+      previewHeight: 13
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 41
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasrenderer
+        niceComponentName: canvas renderer
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: image
+        niceComponentName: image
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: button
+        niceComponentName: button
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 0
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: 
+        niceComponentName: 
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 0
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: 
+        niceComponentName: 
+      historyPaths: []
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/SelectionModeButtons[0]/UnequipButton[0]"}'
+      paths: []
+      tabWidth: 64
+      name: UnequipButton
+      icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Uneq\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Uneq\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Uneq\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 1
+      previewHeight: 13
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 42
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasrenderer
+        niceComponentName: canvas renderer
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: image
+        niceComponentName: image
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: button
+        niceComponentName: button
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: shadow
+        niceComponentName: shadow
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 0
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: 
+        niceComponentName: 
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/SelectionModeButtons[0]/UnequipButton[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/SelectionModeButtons[0]/UnequipButton[0]/Image[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/SelectionModeButtons[0]/UnequipButton[0]/Image[0]"}'
+        - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/SelectionModeButtons[0]/UnequipButton[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/SelectionModeButtons[0]/EquipButton[0]"}'
+        - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/SelectionModeButtons[0]/EquipButton[0]/Image[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/SelectionModeButtons[0]/EquipButton[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/Background[0]/Image[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/SelectionModeButtons[0]/UnequipButton[0]/Text[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/SelectionModeButtons[0]/EquipButton[0]/Image[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/SelectionModeButtons[0]/EquipButton[0]/Text[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/SelectionModeButtons[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/SelectionModeButtons[0]/EquipButton[0]"}'
+      paths: []
+      tabWidth: 58
+      name: EquipButton
+      icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Equi\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Equi\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Equi\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 1
+      previewHeight: 13
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 43
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasrenderer
+        niceComponentName: canvas renderer
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: image
+        niceComponentName: image
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: button
+        niceComponentName: button
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: shadow
+        niceComponentName: shadow
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 0
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: 
+        niceComponentName: 
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/SelectionModeButtons[0]/EquipButton[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/Background[0]/Image[0]"}'
+      paths: []
+      tabWidth: 59
+      name: Image
+      icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: Image
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: Image
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Image\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 1
+      previewHeight: 13
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 44
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasrenderer
+        niceComponentName: canvas renderer
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: image
+        niceComponentName: image
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/Background[0]/Image[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/Background[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"03d58314661be71469defb5607568be7","path":"Canvas_Inventory[0]/SelectionModeButtons[0]/UnequipButton[0]"}'
         prefab: 0
       owner: {fileID: 0}
     closedTabs: []
     playModeTransforms: []
     historyAssets:
     - assetGUIDs:
-      - aae55989abe44784197dd80958fdd0f5
+      - e625a3e42d710e542b4c986f567fb23b
     - assetGUIDs:
-      - be4566c6900149d4982ce75dada90aeb
-      - c37fcf36c70f2be4ebfe1ae3defe868b
-      - 0662e7b98abb2b049aeba588f17cae4b
-      - b5db6ee7e81b53f4ba4a85aaa250221b
-      - 5b318bcef30939b42b3f9d02054b6cd2
-      - 164f264db539dba438e306e4e294c377
-      - 359b789f5716cb040ab6a4cf1a004762
-      - 2df3d7e8b4534ad41bbfcf0212e84b75
-      - 56b5816a27c9ca146937bbda60af0acf
-      - b10897efc863e7542b85642b5abc82bf
-      - f956b5509bb9d244f8a6aafce9bbf1cf
-      - ca6d8cba39ce53845a09805ab2d3df81
-      - 561aa5ff42a56964990ecffb481a096e
-      - 1ef4ad8d70daee5418b5029f309a8e74
-      - fd36baa442c71314d846b057c60baeb8
-      - 53134494686e97147a0688d950c4d66e
-      - 620cdd7c272a9924a9a69992ecbcea4e
-      - 238be2703fe1e0546b89de0e97df38bb
-      - d84105f6dc3312b4caed38d4fb4798b7
-      - 9a0b5a0884ec81646b2f36a2272a411f
-      - c2bc6f47c5e7d9e4e85e0b9e2e991e00
-      - 90af4c45d7db6d84da74eb0544b17151
-      - f37da208cf4e90143ae800256ea1ac23
+      - 03d58314661be71469defb5607568be7
     - assetGUIDs:
-      - be4566c6900149d4982ce75dada90aeb
-      - c37fcf36c70f2be4ebfe1ae3defe868b
-      - 0662e7b98abb2b049aeba588f17cae4b
-      - b5db6ee7e81b53f4ba4a85aaa250221b
-      - 5b318bcef30939b42b3f9d02054b6cd2
-      - 164f264db539dba438e306e4e294c377
-      - 359b789f5716cb040ab6a4cf1a004762
-      - 2df3d7e8b4534ad41bbfcf0212e84b75
-      - 56b5816a27c9ca146937bbda60af0acf
-      - b10897efc863e7542b85642b5abc82bf
-      - f956b5509bb9d244f8a6aafce9bbf1cf
-      - ca6d8cba39ce53845a09805ab2d3df81
-      - 561aa5ff42a56964990ecffb481a096e
-      - 1ef4ad8d70daee5418b5029f309a8e74
-      - fd36baa442c71314d846b057c60baeb8
-      - 53134494686e97147a0688d950c4d66e
-      - 620cdd7c272a9924a9a69992ecbcea4e
-      - 238be2703fe1e0546b89de0e97df38bb
-      - d84105f6dc3312b4caed38d4fb4798b7
-      - 9a0b5a0884ec81646b2f36a2272a411f
-      - c2bc6f47c5e7d9e4e85e0b9e2e991e00
-      - 90af4c45d7db6d84da74eb0544b17151
-      - f37da208cf4e90143ae800256ea1ac23
-      - 592f5302715d42542809761d8ef0f8cf
+      - b5f43db578e39e14f9ca31ea748aace6
     - assetGUIDs:
-      - be4566c6900149d4982ce75dada90aeb
-      - c37fcf36c70f2be4ebfe1ae3defe868b
-      - 0662e7b98abb2b049aeba588f17cae4b
-      - b5db6ee7e81b53f4ba4a85aaa250221b
-      - 5b318bcef30939b42b3f9d02054b6cd2
-      - 164f264db539dba438e306e4e294c377
-      - 359b789f5716cb040ab6a4cf1a004762
-      - 2df3d7e8b4534ad41bbfcf0212e84b75
-      - 56b5816a27c9ca146937bbda60af0acf
-      - b10897efc863e7542b85642b5abc82bf
-      - f956b5509bb9d244f8a6aafce9bbf1cf
-      - ca6d8cba39ce53845a09805ab2d3df81
-      - 561aa5ff42a56964990ecffb481a096e
-      - 1ef4ad8d70daee5418b5029f309a8e74
-      - fd36baa442c71314d846b057c60baeb8
-      - 53134494686e97147a0688d950c4d66e
-      - 620cdd7c272a9924a9a69992ecbcea4e
-      - 238be2703fe1e0546b89de0e97df38bb
-      - d84105f6dc3312b4caed38d4fb4798b7
-      - 9a0b5a0884ec81646b2f36a2272a411f
-      - c2bc6f47c5e7d9e4e85e0b9e2e991e00
-      - 90af4c45d7db6d84da74eb0544b17151
-      - f37da208cf4e90143ae800256ea1ac23
-      - dfd87512434ae5a45b67bf65fa579612
-      - 592f5302715d42542809761d8ef0f8cf
+      - 540044e78b3547e4597d8a8de0427347
     - assetGUIDs:
-      - be4566c6900149d4982ce75dada90aeb
-      - c37fcf36c70f2be4ebfe1ae3defe868b
-      - 0662e7b98abb2b049aeba588f17cae4b
-      - b5db6ee7e81b53f4ba4a85aaa250221b
-      - 5b318bcef30939b42b3f9d02054b6cd2
-      - 164f264db539dba438e306e4e294c377
-      - 359b789f5716cb040ab6a4cf1a004762
-      - 2df3d7e8b4534ad41bbfcf0212e84b75
-      - 56b5816a27c9ca146937bbda60af0acf
-      - b10897efc863e7542b85642b5abc82bf
-      - f956b5509bb9d244f8a6aafce9bbf1cf
-      - ca6d8cba39ce53845a09805ab2d3df81
-      - 561aa5ff42a56964990ecffb481a096e
-      - 1ef4ad8d70daee5418b5029f309a8e74
-      - fd36baa442c71314d846b057c60baeb8
-      - 53134494686e97147a0688d950c4d66e
-      - 620cdd7c272a9924a9a69992ecbcea4e
-      - 238be2703fe1e0546b89de0e97df38bb
-      - d84105f6dc3312b4caed38d4fb4798b7
-      - 9a0b5a0884ec81646b2f36a2272a411f
-      - c2bc6f47c5e7d9e4e85e0b9e2e991e00
-      - 90af4c45d7db6d84da74eb0544b17151
-      - f37da208cf4e90143ae800256ea1ac23
-      - 283ea0137c4145e4698edbecc46bfae2
-      - dfd87512434ae5a45b67bf65fa579612
-      - 592f5302715d42542809761d8ef0f8cf
+      - b518a627fa0d1b54093b89f801b6fbf6
+      - 540044e78b3547e4597d8a8de0427347
+      - 63eeb3b074ea25d40b26eee422cf04a5
     - assetGUIDs:
-      - be4566c6900149d4982ce75dada90aeb
-      - c37fcf36c70f2be4ebfe1ae3defe868b
-      - 0662e7b98abb2b049aeba588f17cae4b
-      - b5db6ee7e81b53f4ba4a85aaa250221b
-      - 5b318bcef30939b42b3f9d02054b6cd2
-      - 164f264db539dba438e306e4e294c377
-      - 359b789f5716cb040ab6a4cf1a004762
-      - 2df3d7e8b4534ad41bbfcf0212e84b75
-      - 56b5816a27c9ca146937bbda60af0acf
-      - b10897efc863e7542b85642b5abc82bf
-      - f956b5509bb9d244f8a6aafce9bbf1cf
-      - ca6d8cba39ce53845a09805ab2d3df81
-      - 561aa5ff42a56964990ecffb481a096e
-      - 1ef4ad8d70daee5418b5029f309a8e74
-      - fd36baa442c71314d846b057c60baeb8
-      - 53134494686e97147a0688d950c4d66e
-      - 620cdd7c272a9924a9a69992ecbcea4e
-      - 238be2703fe1e0546b89de0e97df38bb
-      - d84105f6dc3312b4caed38d4fb4798b7
-      - 9a0b5a0884ec81646b2f36a2272a411f
-      - c2bc6f47c5e7d9e4e85e0b9e2e991e00
-      - 90af4c45d7db6d84da74eb0544b17151
-      - f37da208cf4e90143ae800256ea1ac23
-      - 283ea0137c4145e4698edbecc46bfae2
-      - dfd87512434ae5a45b67bf65fa579612
+      - b518a627fa0d1b54093b89f801b6fbf6
+      - 540044e78b3547e4597d8a8de0427347
     - assetGUIDs:
-      - be4566c6900149d4982ce75dada90aeb
-      - c37fcf36c70f2be4ebfe1ae3defe868b
-      - 0662e7b98abb2b049aeba588f17cae4b
-      - b5db6ee7e81b53f4ba4a85aaa250221b
-      - 5b318bcef30939b42b3f9d02054b6cd2
-      - 164f264db539dba438e306e4e294c377
-      - 359b789f5716cb040ab6a4cf1a004762
-      - 2df3d7e8b4534ad41bbfcf0212e84b75
-      - 56b5816a27c9ca146937bbda60af0acf
-      - b10897efc863e7542b85642b5abc82bf
-      - f956b5509bb9d244f8a6aafce9bbf1cf
-      - ca6d8cba39ce53845a09805ab2d3df81
-      - 561aa5ff42a56964990ecffb481a096e
-      - 1ef4ad8d70daee5418b5029f309a8e74
-      - fd36baa442c71314d846b057c60baeb8
-      - 53134494686e97147a0688d950c4d66e
-      - 620cdd7c272a9924a9a69992ecbcea4e
-      - 238be2703fe1e0546b89de0e97df38bb
-      - d84105f6dc3312b4caed38d4fb4798b7
-      - 9a0b5a0884ec81646b2f36a2272a411f
-      - c2bc6f47c5e7d9e4e85e0b9e2e991e00
-      - 90af4c45d7db6d84da74eb0544b17151
-      - f37da208cf4e90143ae800256ea1ac23
-      - 283ea0137c4145e4698edbecc46bfae2
+      - b518a627fa0d1b54093b89f801b6fbf6
     - assetGUIDs:
-      - be4566c6900149d4982ce75dada90aeb
-      - c37fcf36c70f2be4ebfe1ae3defe868b
-      - 0662e7b98abb2b049aeba588f17cae4b
-      - b5db6ee7e81b53f4ba4a85aaa250221b
-      - 5b318bcef30939b42b3f9d02054b6cd2
-      - 164f264db539dba438e306e4e294c377
-      - 359b789f5716cb040ab6a4cf1a004762
-      - 2df3d7e8b4534ad41bbfcf0212e84b75
-      - 56b5816a27c9ca146937bbda60af0acf
-      - b10897efc863e7542b85642b5abc82bf
-      - f956b5509bb9d244f8a6aafce9bbf1cf
-      - ca6d8cba39ce53845a09805ab2d3df81
-      - 561aa5ff42a56964990ecffb481a096e
-      - 1ef4ad8d70daee5418b5029f309a8e74
-      - fd36baa442c71314d846b057c60baeb8
-      - 53134494686e97147a0688d950c4d66e
-      - 620cdd7c272a9924a9a69992ecbcea4e
-      - 238be2703fe1e0546b89de0e97df38bb
-      - d84105f6dc3312b4caed38d4fb4798b7
-      - 9a0b5a0884ec81646b2f36a2272a411f
-      - c2bc6f47c5e7d9e4e85e0b9e2e991e00
-      - 90af4c45d7db6d84da74eb0544b17151
+      - abb4e574452a6dd48b8e0366884e6d2e
     - assetGUIDs:
-      - be4566c6900149d4982ce75dada90aeb
-      - c37fcf36c70f2be4ebfe1ae3defe868b
-      - 0662e7b98abb2b049aeba588f17cae4b
-      - b5db6ee7e81b53f4ba4a85aaa250221b
-      - 5b318bcef30939b42b3f9d02054b6cd2
-      - 164f264db539dba438e306e4e294c377
-      - 359b789f5716cb040ab6a4cf1a004762
-      - 2df3d7e8b4534ad41bbfcf0212e84b75
-      - 56b5816a27c9ca146937bbda60af0acf
-      - b10897efc863e7542b85642b5abc82bf
-      - f956b5509bb9d244f8a6aafce9bbf1cf
-      - ca6d8cba39ce53845a09805ab2d3df81
-      - 561aa5ff42a56964990ecffb481a096e
-      - 1ef4ad8d70daee5418b5029f309a8e74
-      - fd36baa442c71314d846b057c60baeb8
-      - 53134494686e97147a0688d950c4d66e
-      - 620cdd7c272a9924a9a69992ecbcea4e
-      - 238be2703fe1e0546b89de0e97df38bb
-      - d84105f6dc3312b4caed38d4fb4798b7
-      - 9a0b5a0884ec81646b2f36a2272a411f
-      - c2bc6f47c5e7d9e4e85e0b9e2e991e00
+      - b35438eb7f1099b4db54a948af911546
+      - abb4e574452a6dd48b8e0366884e6d2e
     - assetGUIDs:
-      - be4566c6900149d4982ce75dada90aeb
-      - c37fcf36c70f2be4ebfe1ae3defe868b
-      - 0662e7b98abb2b049aeba588f17cae4b
-      - b5db6ee7e81b53f4ba4a85aaa250221b
-      - 5b318bcef30939b42b3f9d02054b6cd2
-      - 164f264db539dba438e306e4e294c377
-      - 359b789f5716cb040ab6a4cf1a004762
-      - 2df3d7e8b4534ad41bbfcf0212e84b75
-      - 56b5816a27c9ca146937bbda60af0acf
-      - b10897efc863e7542b85642b5abc82bf
-      - f956b5509bb9d244f8a6aafce9bbf1cf
-      - ca6d8cba39ce53845a09805ab2d3df81
-      - 561aa5ff42a56964990ecffb481a096e
-      - 1ef4ad8d70daee5418b5029f309a8e74
-      - fd36baa442c71314d846b057c60baeb8
-      - 53134494686e97147a0688d950c4d66e
-      - 620cdd7c272a9924a9a69992ecbcea4e
-      - 238be2703fe1e0546b89de0e97df38bb
-      - d84105f6dc3312b4caed38d4fb4798b7
-      - 9a0b5a0884ec81646b2f36a2272a411f
+      - b35438eb7f1099b4db54a948af911546
     - assetGUIDs:
-      - be4566c6900149d4982ce75dada90aeb
-      - c37fcf36c70f2be4ebfe1ae3defe868b
-      - 0662e7b98abb2b049aeba588f17cae4b
-      - b5db6ee7e81b53f4ba4a85aaa250221b
-      - 5b318bcef30939b42b3f9d02054b6cd2
-      - 164f264db539dba438e306e4e294c377
-      - 359b789f5716cb040ab6a4cf1a004762
-      - 2df3d7e8b4534ad41bbfcf0212e84b75
-      - 56b5816a27c9ca146937bbda60af0acf
-      - b10897efc863e7542b85642b5abc82bf
-      - f956b5509bb9d244f8a6aafce9bbf1cf
-      - ca6d8cba39ce53845a09805ab2d3df81
-      - 561aa5ff42a56964990ecffb481a096e
-      - 1ef4ad8d70daee5418b5029f309a8e74
-      - fd36baa442c71314d846b057c60baeb8
-      - 53134494686e97147a0688d950c4d66e
-      - 620cdd7c272a9924a9a69992ecbcea4e
-      - 238be2703fe1e0546b89de0e97df38bb
-      - d84105f6dc3312b4caed38d4fb4798b7
-    targetObject: {fileID: 102900000, guid: aae55989abe44784197dd80958fdd0f5, type: 3}
+      - ec1160a9fed055944844fa78493301a1
+    targetObject: {fileID: 102900000, guid: e625a3e42d710e542b4c986f567fb23b, type: 3}
     targetObjects: []
-    lastSelectedAsset: Assets/Celestial-Cross/Scenes/HubScene.unity
+    lastSelectedAsset: Assets/Celestial-Cross/Scenes/UnitScene.unity
     lastClickedTab: -1
-    previousTab: 0
+    previousTab: 27
   - tracker:
-      mostClicked:
-      - paths:
-        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"_HubSceneManager[0]"}'
-        count: 1
-        gameObjects:
-        - {fileID: 0}
+      mostClicked: []
       recentlyClicked:
-      - paths:
-        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"_HubSceneManager[0]"}'
+      - paths: []
         count: 1
-        gameObjects:
-        - {fileID: 0}
+        gameObjects: []
       - paths: []
         count: 1
         gameObjects: []
@@ -4574,7 +4874,7 @@ MonoBehaviour:
       recentlyClickedContents: []
     sceneGUID: aae55989abe44784197dd80958fdd0f5
     sceneName: HubScene
-    lastSaveTimePrint: 10:13 PM (June 21, 2026)
+    lastSaveTimePrint: 12:42 AM (June 22, 2026)
     gracePeriod: 3
     activeIndex: 0
     checkingToLoad: 0
@@ -4583,33 +4883,33 @@ MonoBehaviour:
     maximizedAssetView: 0
     showImportSettings: 1
     suggestedHeight: 0
-    userAssetViewSize: -1
+    userAssetViewSize: 126
     previewHeight: 0
     scrollPosition: {x: 0, y: 0}
     toolbarScrollPosition: {x: 0, y: 0}
     rawUserHeight: 0
-    lastValidTabWidth: 135
+    lastValidTabWidth: 64
     alreadyCalculatedHeight: 0
     lastKnownHeight: 0
     tabs:
-    - path: '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"_HubSceneManager[0]"}'
+    - path: 
       paths: []
-      tabWidth: 132
-      name: _HubSceneManager
-      icon: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
-      shortName: _HubSceneManager
+      tabWidth: 61
+      name: New Tab
+      icon: {fileID: 0}
+      shortName: New Tab
       filterString: 
-      newTab: 0
+      newTab: 1
       scrollPosition: 0
       isSelected: 0
       allCollapsed: 0
       runtimeFoldouts: 
       runtimeMultiComponents: []
       tabTextContent:
-        m_Text: _HubSceneManager
+        m_Text: New Tab
         m_Image: {fileID: 0}
         m_Tooltip: 
-        m_TextWithWhitespace: "_HubSceneManager\u200B"
+        m_TextWithWhitespace: "New Tab\u200B"
       multiEditMode: 0
       locked: 0
       hasPreview: 0
@@ -4648,69 +4948,41 @@ MonoBehaviour:
       savePlayModeTransform: 0
       index: 0
       historyPosition: 0
-      componentMaps:
-      - index: 0
-        component: {fileID: 0}
-        missingComponentID: -1
-        foldout: 1
-        focusAfter: 0
-        awaitingScroll: 0
-        hidden: 0
-        componentName: transform
-        niceComponentName: transform
-      - index: 0
-        component: {fileID: 0}
-        missingComponentID: -1
-        foldout: 1
-        focusAfter: 0
-        awaitingScroll: 0
-        hidden: 0
-        componentName: hubscenecontroller
-        niceComponentName: hub scene controller
-      historyPaths:
-      - paths:
-        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"_HubSceneManager[0]"}'
-        prefab: 0
-      - paths:
-        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"_Managers[0]"}'
-        prefab: 0
+      componentMaps: []
+      historyPaths: []
       owner: {fileID: 0}
     closedTabs: []
     playModeTransforms: []
     historyAssets:
     - assetGUIDs:
-      - ae3adbce63a94ee4aa9c55ca645bf77f
+      - e9cea8eb05b87414d9cc8f7fc8db4ae0
     - assetGUIDs:
-      - 1c8c6eee2f6208a49b39a265c6de68ac
+      - 54255f8d387e90e4a939aff035aa5720
     - assetGUIDs:
-      - 34813d7711e7ec548a76728b241cfe1c
+      - 93fd619aae295a44aadd29117ed1a560
+    - assetGUIDs:
+      - 3bea51b30b1a74742b70e245c7a07f9c
+    - assetGUIDs:
+      - db3860f4120b12c4fb3da57cffbe7cbd
     - assetGUIDs:
       - aae55989abe44784197dd80958fdd0f5
     - assetGUIDs:
       - e625a3e42d710e542b4c986f567fb23b
     - assetGUIDs:
-      - a09c8684934720a458ba9841b8eec04b
+      - 03d58314661be71469defb5607568be7
     - assetGUIDs:
-      - dfd447767cf2f9d4fa91ea9dcb4f00c6
+      - b5f43db578e39e14f9ca31ea748aace6
     - assetGUIDs:
-      - 34863c8ea114a97459d448d71e0d5153
-      - 6865847d7de81824eb6129caeaa96375
-      - 1a3d94ebcc798f44e9054ffa472effeb
-      - dfd447767cf2f9d4fa91ea9dcb4f00c6
+      - 540044e78b3547e4597d8a8de0427347
     - assetGUIDs:
-      - 34863c8ea114a97459d448d71e0d5153
-    - assetGUIDs:
-      - 34863c8ea114a97459d448d71e0d5153
-      - 6865847d7de81824eb6129caeaa96375
-      - 1a3d94ebcc798f44e9054ffa472effeb
-      - dfd447767cf2f9d4fa91ea9dcb4f00c6
-      - 8dedb3d8ef819e249af7c9c0732b7ba0
-    targetObject: {fileID: 11400000, guid: ae3adbce63a94ee4aa9c55ca645bf77f, type: 2}
+      - b518a627fa0d1b54093b89f801b6fbf6
+      - 540044e78b3547e4597d8a8de0427347
+      - 63eeb3b074ea25d40b26eee422cf04a5
+    targetObject: {fileID: 11400000, guid: e9cea8eb05b87414d9cc8f7fc8db4ae0, type: 2}
     targetObjects: []
-    lastSelectedAsset: "Assets/Celestial-Cross/Data/Hub/Dialogos/Chapters/Ch_Uma
-      hist\xF3ria Antiga.asset"
-    lastClickedTab: 0
-    previousTab: 79
+    lastSelectedAsset: Assets/Celestial-Cross/Data/Gacha/Banners/BannerLiedell/LiedelLBanner.asset
+    lastClickedTab: 108
+    previousTab: 0
   - tracker:
       mostClicked: []
       recentlyClicked: []
@@ -17061,15 +17333,60 @@ MonoBehaviour:
     lastClickedTab: 72
     previousTab: 79
   - tracker:
-      mostClicked: []
-      recentlyClicked: []
+      mostClicked:
+      - paths:
+        - 
+        count: 1
+        gameObjects: []
+      - paths:
+        - 
+        count: 1
+        gameObjects: []
+      - paths:
+        - 
+        count: 1
+        gameObjects: []
+      recentlyClicked:
+      - paths:
+        - 
+        count: 1
+        gameObjects: []
+      - paths:
+        - 
+        count: 1
+        gameObjects: []
+      - paths:
+        - 
+        count: 1
+        gameObjects: []
+      - paths: []
+        count: 1
+        gameObjects: []
+      - paths: []
+        count: 1
+        gameObjects: []
+      - paths: []
+        count: 1
+        gameObjects: []
+      - paths: []
+        count: 1
+        gameObjects: []
+      - paths: []
+        count: 1
+        gameObjects: []
+      - paths: []
+        count: 1
+        gameObjects: []
+      - paths: []
+        count: 1
+        gameObjects: []
       mostClickedContents: []
       recentlyClickedContents: []
     sceneGUID: e625a3e42d710e542b4c986f567fb23b
     sceneName: UnitScene
-    lastSaveTimePrint: 10:04 PM (June 21, 2026)
+    lastSaveTimePrint: 12:12 AM (June 22, 2026)
     gracePeriod: 3
-    activeIndex: 0
+    activeIndex: 2
     checkingToLoad: 0
     assetsCollapsed: 0
     lockedAsset: 0
@@ -17081,28 +17398,28 @@ MonoBehaviour:
     scrollPosition: {x: 0, y: 0}
     toolbarScrollPosition: {x: 0, y: 0}
     rawUserHeight: 0
-    lastValidTabWidth: 64
+    lastValidTabWidth: 201
     alreadyCalculatedHeight: 0
     lastKnownHeight: 0
     tabs:
-    - path: 
+    - path: '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitBanner[0]/BannerText[0]"}'
       paths: []
-      tabWidth: 61
-      name: 
-      icon: {fileID: 0}
-      shortName: New Tab
+      tabWidth: 85
+      name: BannerText
+      icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: BannerText
       filterString: 
-      newTab: 1
+      newTab: 0
       scrollPosition: 0
       isSelected: 0
       allCollapsed: 0
       runtimeFoldouts: 
       runtimeMultiComponents: []
       tabTextContent:
-        m_Text: New Tab
+        m_Text: BannerText
         m_Image: {fileID: 0}
         m_Tooltip: 
-        m_TextWithWhitespace: "New Tab\u200B"
+        m_TextWithWhitespace: "BannerText\u200B"
       multiEditMode: 0
       locked: 0
       hasPreview: 0
@@ -17141,118 +17458,391 @@ MonoBehaviour:
       savePlayModeTransform: 0
       index: 0
       historyPosition: 0
-      componentMaps: []
-      historyPaths: []
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasrenderer
+        niceComponentName: canvas renderer
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: textmeshprougui
+        niceComponentName: text mesh pro ugui
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitBanner[0]/BannerText[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/Modals_Container[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/UnitBanner[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/Btn_BackToHub[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/Image[0]"}'
+      paths: []
+      tabWidth: 59
+      name: Image
+      icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: Image
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: Image
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Image\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 1
+      previewHeight: 13
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 1
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasrenderer
+        niceComponentName: canvas renderer
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: betterimage
+        niceComponentName: better image
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/Image[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/Stars[0]"}'
+      paths: []
+      tabWidth: 54
+      name: Stars
+      icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: Stars
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: Stars
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Stars\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 1
+      previewHeight: 13
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 2
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasrenderer
+        niceComponentName: canvas renderer
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: betterimage
+        niceComponentName: better image
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/Stars[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/Background[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"UnitSelectionFlowHelper[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"e625a3e42d710e542b4c986f567fb23b","path":"Canvas_UnitScene[0]/Image[0]"}'
+        prefab: 0
       owner: {fileID: 0}
     closedTabs: []
     playModeTransforms: []
     historyAssets:
     - assetGUIDs:
-      - aae55989abe44784197dd80958fdd0f5
+      - 3bea51b30b1a74742b70e245c7a07f9c
     - assetGUIDs:
       - e625a3e42d710e542b4c986f567fb23b
     - assetGUIDs:
-      - a09c8684934720a458ba9841b8eec04b
+      - 03d58314661be71469defb5607568be7
     - assetGUIDs:
-      - dfd447767cf2f9d4fa91ea9dcb4f00c6
+      - b5f43db578e39e14f9ca31ea748aace6
     - assetGUIDs:
-      - 34863c8ea114a97459d448d71e0d5153
-      - 6865847d7de81824eb6129caeaa96375
-      - 1a3d94ebcc798f44e9054ffa472effeb
-      - dfd447767cf2f9d4fa91ea9dcb4f00c6
+      - 540044e78b3547e4597d8a8de0427347
     - assetGUIDs:
-      - 34863c8ea114a97459d448d71e0d5153
+      - b518a627fa0d1b54093b89f801b6fbf6
+      - 540044e78b3547e4597d8a8de0427347
+      - 63eeb3b074ea25d40b26eee422cf04a5
     - assetGUIDs:
-      - 34863c8ea114a97459d448d71e0d5153
-      - 6865847d7de81824eb6129caeaa96375
-      - 1a3d94ebcc798f44e9054ffa472effeb
-      - dfd447767cf2f9d4fa91ea9dcb4f00c6
-      - 8dedb3d8ef819e249af7c9c0732b7ba0
+      - b518a627fa0d1b54093b89f801b6fbf6
+      - 540044e78b3547e4597d8a8de0427347
     - assetGUIDs:
-      - 8dedb3d8ef819e249af7c9c0732b7ba0
+      - b518a627fa0d1b54093b89f801b6fbf6
     - assetGUIDs:
-      - 78e41155f1b2c7d44901a6bb3d2dda73
+      - abb4e574452a6dd48b8e0366884e6d2e
     - assetGUIDs:
-      - 8e33882f7fba925478cbd19e61365198
+      - b35438eb7f1099b4db54a948af911546
+      - abb4e574452a6dd48b8e0366884e6d2e
     - assetGUIDs:
-      - 3bea51b30b1a74742b70e245c7a07f9c
-    targetObject: {fileID: 102900000, guid: aae55989abe44784197dd80958fdd0f5, type: 3}
+      - b35438eb7f1099b4db54a948af911546
+    targetObject: {fileID: 102900000, guid: 3bea51b30b1a74742b70e245c7a07f9c, type: 3}
     targetObjects: []
-    lastSelectedAsset: Assets/Celestial-Cross/Scenes/HubScene.unity
+    lastSelectedAsset: Assets/Celestial-Cross/Scenes/ShopScene.unity
     lastClickedTab: -1
-    previousTab: 79
+    previousTab: 27
   - tracker:
       mostClicked:
       - paths:
-        - 
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
+        count: 20
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeSilhouetteImage[0]"}'
+        count: 17
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/CenterBase[0]/Content[0]/Content_WhiteBorder[0]/Content_GrayBorder[0]/BannerContent_Border[0]/BannerSplashArt[0]"}'
+        count: 10
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeSplashImage[0]"}'
+        count: 10
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]"}'
         count: 7
-        gameObjects: []
+        gameObjects:
+        - {fileID: 0}
       - paths:
-        - 
-        count: 2
-        gameObjects: []
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeNameText[0]"}'
+        count: 5
+        gameObjects:
+        - {fileID: 0}
       - paths:
-        - 
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/HoleScrollingBackground[0]"}'
+        count: 3
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]"}'
         count: 1
-        gameObjects: []
+        gameObjects:
+        - {fileID: 0}
       - paths:
-        - 
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/CenterBase[0]/Content[0]/Content_WhiteBorder[0]/Content_GrayBorder[0]/BannerContent_Border[0]"}'
         count: 1
-        gameObjects: []
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/StampsSpawnArea[0]"}'
+        count: 1
+        gameObjects:
+        - {fileID: 0}
       recentlyClicked:
       - paths:
-        - 
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeSilhouetteImage[0]"}'
         count: 1
-        gameObjects: []
-      - paths: []
-        count: 1
-        gameObjects: []
+        gameObjects:
+        - {fileID: 0}
       - paths:
-        - 
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
         count: 1
-        gameObjects: []
+        gameObjects:
+        - {fileID: 0}
       - paths:
-        - 
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeSplashImage[0]"}'
         count: 1
-        gameObjects: []
+        gameObjects:
+        - {fileID: 0}
       - paths:
-        - 
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeNameText[0]"}'
         count: 1
-        gameObjects: []
-      - paths: []
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]"}'
         count: 1
-        gameObjects: []
-      - paths: []
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/StampsSpawnArea[0]"}'
         count: 1
-        gameObjects: []
-      - paths: []
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/BackgroundPanel[0]"}'
         count: 1
-        gameObjects: []
-      - paths: []
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/CenterBase[0]/Content[0]/Content_WhiteBorder[0]/Content_GrayBorder[0]/BannerContent_Border[0]/BannerSplashArt[0]"}'
         count: 1
-        gameObjects: []
-      - paths: []
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/CenterBase[0]/Content[0]/Content_WhiteBorder[0]/Content_GrayBorder[0]/BannerContent_Border[0]/BannerSplashArt[0]/SplashSwap_Feedback[0]"}'
         count: 1
-        gameObjects: []
+        gameObjects:
+        - {fileID: 0}
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/CenterBase[0]/Content[0]/Content_WhiteBorder[0]/Content_GrayBorder[0]/BannerContent_Border[0]"}'
+        count: 1
+        gameObjects:
+        - {fileID: 0}
       mostClickedContents: []
       recentlyClickedContents: []
     sceneGUID: 3bea51b30b1a74742b70e245c7a07f9c
     sceneName: ShopScene
-    lastSaveTimePrint: 09:05 PM (June 21, 2026)
+    lastSaveTimePrint: 12:43 AM (June 22, 2026)
     gracePeriod: 3
-    activeIndex: 100
+    activeIndex: 129
     checkingToLoad: 0
     assetsCollapsed: 0
     lockedAsset: 0
     maximizedAssetView: 0
     showImportSettings: 1
     suggestedHeight: 0
-    userAssetViewSize: -1
+    userAssetViewSize: 126
     previewHeight: 0
     scrollPosition: {x: 0, y: 0}
-    toolbarScrollPosition: {x: 5839, y: 0}
+    toolbarScrollPosition: {x: 7553, y: 0}
     rawUserHeight: 0
-    lastValidTabWidth: 10600
+    lastValidTabWidth: 11996
     alreadyCalculatedHeight: 0
     lastKnownHeight: 0
     tabs:
@@ -26555,12 +27145,12 @@ MonoBehaviour:
         - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/GachaUnitRewardModal[0]"}'
         prefab: 0
       owner: {fileID: 0}
-    - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
+    - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/CenterBase[0]/Btn_StoreBase[0]"}'
       paths: []
-      tabWidth: 63
-      name: GachaAnimationCanvas
-      icon: {fileID: 6918890264710435130, guid: 0000000000000000d000000000000000, type: 0}
-      shortName: "Gach\u2026"
+      tabWidth: 59
+      name: Btn_StoreBase
+      icon: {fileID: -1575620288787673585, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Btn_\u2026"
       filterString: 
       newTab: 0
       scrollPosition: 0
@@ -26569,10 +27159,10 @@ MonoBehaviour:
       runtimeFoldouts: 
       runtimeMultiComponents: []
       tabTextContent:
-        m_Text: "Gach\u2026"
+        m_Text: "Btn_\u2026"
         m_Image: {fileID: 0}
         m_Tooltip: 
-        m_TextWithWhitespace: "Gach\u2026\u200B"
+        m_TextWithWhitespace: "Btn_\u2026\u200B"
       multiEditMode: 0
       locked: 0
       hasPreview: 0
@@ -26621,6 +27211,249 @@ MonoBehaviour:
         hidden: 0
         componentName: recttransform
         niceComponentName: rect transform
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/CenterBase[0]/Btn_StoreBase[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/CenterBase[0]/Btn_BannerBase[0]/Bnt_BannerTab_WhiteBorder[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/CenterBase[0]/Content[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/CenterBase[0]/Btn_StoreBase[0]"}'
+      paths: []
+      tabWidth: 59
+      name: Btn_StoreBase
+      icon: {fileID: -1575620288787673585, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Btn_\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Btn_\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Btn_\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 150
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 101
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/CenterBase[0]/Btn_StoreBase[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/BackgroundPanel[0]"}'
+      paths: []
+      tabWidth: 62
+      name: BackgroundPanel
+      icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Back\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Back\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Back\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 1
+      previewHeight: 13
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 102
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasrenderer
+        niceComponentName: canvas renderer
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: image
+        niceComponentName: image
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/BackgroundPanel[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/HoleScrollingBackground[0]"}'
+      paths: []
+      tabWidth: 60
+      name: HoleScrollingBackground
+      icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Hole\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Hole\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Hole\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 1
+      previewHeight: 13
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 103
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
       - index: 0
         component: {fileID: 0}
         missingComponentID: -1
@@ -26646,18 +27479,21 @@ MonoBehaviour:
         focusAfter: 0
         awaitingScroll: 0
         hidden: 0
-        componentName: shadow
-        niceComponentName: shadow
-      - index: 0
-        component: {fileID: 0}
-        missingComponentID: -1
-        foldout: 1
-        focusAfter: 0
-        awaitingScroll: 0
-        hidden: 0
-        componentName: button
-        niceComponentName: button
+        componentName: uiholeraycastfilter
+        niceComponentName: ui hole raycast filter
       historyPaths:
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/HoleScrollingBackground[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/TopBar[0]/StelarMapContainer[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/TopBar[0]/StardustContainer[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]"}'
+        prefab: 0
       - paths:
         - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
         prefab: 0
@@ -26716,7 +27552,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 101
+      index: 104
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -26784,7 +27620,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 102
+      index: 105
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -26904,231 +27740,6 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 103
-      historyPosition: 0
-      componentMaps:
-      - index: 0
-        component: {fileID: 0}
-        missingComponentID: -1
-        foldout: 1
-        focusAfter: 0
-        awaitingScroll: 0
-        hidden: 0
-        componentName: recttransform
-        niceComponentName: rect transform
-      - index: 0
-        component: {fileID: 0}
-        missingComponentID: -1
-        foldout: 1
-        focusAfter: 0
-        awaitingScroll: 0
-        hidden: 0
-        componentName: gachaunitrewardmodal
-        niceComponentName: gacha unit reward modal
-      historyPaths: []
-      owner: {fileID: 0}
-    - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/GachaUnitRewardModal[0]"}'
-      paths: []
-      tabWidth: 63
-      name: GachaUnitRewardModal
-      icon: {fileID: 7853449062886713960, guid: 0000000000000000d000000000000000, type: 0}
-      shortName: "Gach\u2026"
-      filterString: 
-      newTab: 0
-      scrollPosition: 0
-      isSelected: 0
-      allCollapsed: 0
-      runtimeFoldouts: 
-      runtimeMultiComponents: []
-      tabTextContent:
-        m_Text: "Gach\u2026"
-        m_Image: {fileID: 0}
-        m_Tooltip: 
-        m_TextWithWhitespace: "Gach\u2026\u200B"
-      multiEditMode: 0
-      locked: 0
-      hasPreview: 0
-      previewHeight: 150
-      debug: 0
-      filtering: 0
-      prefab: 0
-      multiFoldout: 1
-      target: {fileID: 0}
-      targets: []
-      linkedPrefabs: []
-      trackMultiTarget: {fileID: 0}
-      serializedTransform:
-        owner: {fileID: 0}
-        localPosition: {x: 0, y: 0, z: 0}
-        localRotation: {x: 0, y: 0, z: 0, w: 0}
-        localScale: {x: 0, y: 0, z: 0}
-        originalPosition: {x: 0, y: 0, z: 0}
-        originalRotation: {x: 0, y: 0, z: 0, w: 0}
-        originalLocalScale: {x: 0, y: 0, z: 0}
-        anchorMin: {x: 0, y: 0}
-        anchorMax: {x: 0, y: 0}
-        anchoredPosition: {x: 0, y: 0}
-        sizeDelta: {x: 0, y: 0}
-        pivot: {x: 0, y: 0}
-        originalAnchorMin: {x: 0, y: 0}
-        originalAnchorMax: {x: 0, y: 0}
-        originalAnchoredPosition: {x: 0, y: 0}
-        originalSizeDelta: {x: 0, y: 0}
-        originalPivot: {x: 0, y: 0}
-        isRectTransform: 0
-        appliedTransform: 0
-        undidTransform: 0
-        autoSave: 0
-      serializedTransforms: []
-      savePlayModeTransform: 0
-      index: 104
-      historyPosition: 0
-      componentMaps:
-      - index: 0
-        component: {fileID: 0}
-        missingComponentID: -1
-        foldout: 1
-        focusAfter: 0
-        awaitingScroll: 0
-        hidden: 0
-        componentName: recttransform
-        niceComponentName: rect transform
-      - index: 0
-        component: {fileID: 0}
-        missingComponentID: -1
-        foldout: 1
-        focusAfter: 0
-        awaitingScroll: 0
-        hidden: 0
-        componentName: gachaunitrewardmodal
-        niceComponentName: gacha unit reward modal
-      historyPaths: []
-      owner: {fileID: 0}
-    - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/RewardDetailModal[0]"}'
-      paths: []
-      tabWidth: 65
-      name: RewardDetailModal
-      icon: {fileID: -1575620288787673585, guid: 0000000000000000d000000000000000, type: 0}
-      shortName: "Rewa\u2026"
-      filterString: 
-      newTab: 0
-      scrollPosition: 0
-      isSelected: 0
-      allCollapsed: 0
-      runtimeFoldouts: 
-      runtimeMultiComponents: []
-      tabTextContent:
-        m_Text: "Rewa\u2026"
-        m_Image: {fileID: 0}
-        m_Tooltip: 
-        m_TextWithWhitespace: "Rewa\u2026\u200B"
-      multiEditMode: 0
-      locked: 0
-      hasPreview: 0
-      previewHeight: 150
-      debug: 0
-      filtering: 0
-      prefab: 0
-      multiFoldout: 1
-      target: {fileID: 0}
-      targets: []
-      linkedPrefabs: []
-      trackMultiTarget: {fileID: 0}
-      serializedTransform:
-        owner: {fileID: 0}
-        localPosition: {x: 0, y: 0, z: 0}
-        localRotation: {x: 0, y: 0, z: 0, w: 0}
-        localScale: {x: 0, y: 0, z: 0}
-        originalPosition: {x: 0, y: 0, z: 0}
-        originalRotation: {x: 0, y: 0, z: 0, w: 0}
-        originalLocalScale: {x: 0, y: 0, z: 0}
-        anchorMin: {x: 0, y: 0}
-        anchorMax: {x: 0, y: 0}
-        anchoredPosition: {x: 0, y: 0}
-        sizeDelta: {x: 0, y: 0}
-        pivot: {x: 0, y: 0}
-        originalAnchorMin: {x: 0, y: 0}
-        originalAnchorMax: {x: 0, y: 0}
-        originalAnchoredPosition: {x: 0, y: 0}
-        originalSizeDelta: {x: 0, y: 0}
-        originalPivot: {x: 0, y: 0}
-        isRectTransform: 0
-        appliedTransform: 0
-        undidTransform: 0
-        autoSave: 0
-      serializedTransforms: []
-      savePlayModeTransform: 0
-      index: 105
-      historyPosition: 0
-      componentMaps:
-      - index: 0
-        component: {fileID: 0}
-        missingComponentID: -1
-        foldout: 1
-        focusAfter: 0
-        awaitingScroll: 0
-        hidden: 0
-        componentName: recttransform
-        niceComponentName: rect transform
-      historyPaths:
-      - paths:
-        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/RewardDetailModal[0]"}'
-        prefab: 0
-      owner: {fileID: 0}
-    - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/RewardDetailModal[0]"}'
-      paths: []
-      tabWidth: 65
-      name: RewardDetailModal
-      icon: {fileID: -1575620288787673585, guid: 0000000000000000d000000000000000, type: 0}
-      shortName: "Rewa\u2026"
-      filterString: 
-      newTab: 0
-      scrollPosition: 0
-      isSelected: 0
-      allCollapsed: 0
-      runtimeFoldouts: 
-      runtimeMultiComponents: []
-      tabTextContent:
-        m_Text: "Rewa\u2026"
-        m_Image: {fileID: 0}
-        m_Tooltip: 
-        m_TextWithWhitespace: "Rewa\u2026\u200B"
-      multiEditMode: 0
-      locked: 0
-      hasPreview: 0
-      previewHeight: 150
-      debug: 0
-      filtering: 0
-      prefab: 0
-      multiFoldout: 1
-      target: {fileID: 0}
-      targets: []
-      linkedPrefabs: []
-      trackMultiTarget: {fileID: 0}
-      serializedTransform:
-        owner: {fileID: 0}
-        localPosition: {x: 0, y: 0, z: 0}
-        localRotation: {x: 0, y: 0, z: 0, w: 0}
-        localScale: {x: 0, y: 0, z: 0}
-        originalPosition: {x: 0, y: 0, z: 0}
-        originalRotation: {x: 0, y: 0, z: 0, w: 0}
-        originalLocalScale: {x: 0, y: 0, z: 0}
-        anchorMin: {x: 0, y: 0}
-        anchorMax: {x: 0, y: 0}
-        anchoredPosition: {x: 0, y: 0}
-        sizeDelta: {x: 0, y: 0}
-        pivot: {x: 0, y: 0}
-        originalAnchorMin: {x: 0, y: 0}
-        originalAnchorMax: {x: 0, y: 0}
-        originalAnchoredPosition: {x: 0, y: 0}
-        originalSizeDelta: {x: 0, y: 0}
-        originalPivot: {x: 0, y: 0}
-        isRectTransform: 0
-        appliedTransform: 0
-        undidTransform: 0
-        autoSave: 0
-      serializedTransforms: []
-      savePlayModeTransform: 0
       index: 106
       historyPosition: 0
       componentMaps:
@@ -27141,6 +27752,15 @@ MonoBehaviour:
         hidden: 0
         componentName: recttransform
         niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: gachaunitrewardmodal
+        niceComponentName: gacha unit reward modal
       historyPaths: []
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/GachaUnitRewardModal[0]"}'
@@ -27198,6 +27818,2229 @@ MonoBehaviour:
       serializedTransforms: []
       savePlayModeTransform: 0
       index: 107
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: gachaunitrewardmodal
+        niceComponentName: gacha unit reward modal
+      historyPaths: []
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/CenterBase[0]/Content[0]/Content_WhiteBorder[0]/Content_GrayBorder[0]/BannerContent_Border[0]/BannerSplashArt[0]"}'
+      paths: []
+      tabWidth: 62
+      name: BannerSplashArt
+      icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Bann\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Bann\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Bann\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 1
+      previewHeight: 13
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 108
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasrenderer
+        niceComponentName: canvas renderer
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: image
+        niceComponentName: image
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/CenterBase[0]/Content[0]/Content_WhiteBorder[0]/Content_GrayBorder[0]/BannerContent_Border[0]/BannerSplashArt[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/CenterBase[0]/Content[0]/Content_WhiteBorder[0]/Content_GrayBorder[0]/BannerContent_Border[0]/BannerSplashArt[0]/SplashSwap_Feedback[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/CenterBase[0]/Content[0]/Content_WhiteBorder[0]/Content_GrayBorder[0]/BannerContent_Border[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/HoleScrollingBackground[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/RewardDetailModal[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
+      paths: []
+      tabWidth: 63
+      name: GachaAnimationCanvas
+      icon: {fileID: 6918890264710435130, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Gach\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Gach\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Gach\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 150
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 109
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvas
+        niceComponentName: canvas
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasscaler
+        niceComponentName: canvas scaler
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: graphicraycaster
+        niceComponentName: graphic raycaster
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: gachaanimationcontroller
+        niceComponentName: gacha animation controller
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeSilhouetteImage[0]"}'
+      paths: []
+      tabWidth: 60
+      name: SupremeSilhouetteImage
+      icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Supr\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 1
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Supr\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Supr\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 1
+      previewHeight: 13
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 110
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasrenderer
+        niceComponentName: canvas renderer
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: image
+        niceComponentName: image
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeSilhouetteImage[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeNameText[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeSplashImage[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]"}'
+      paths: []
+      tabWidth: 60
+      name: SupremeRevealContainer
+      icon: {fileID: 5779557562189929939, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Supr\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Supr\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Supr\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 150
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 111
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasgroup
+        niceComponentName: canvas group
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeNameText[0]"}'
+      paths: []
+      tabWidth: 60
+      name: SupremeNameText
+      icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Supr\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Supr\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Supr\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 150
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 112
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasrenderer
+        niceComponentName: canvas renderer
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: textmeshprougui
+        niceComponentName: text mesh pro ugui
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeNameText[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
+      paths: []
+      tabWidth: 63
+      name: GachaAnimationCanvas
+      icon: {fileID: 6918890264710435130, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Gach\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Gach\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Gach\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 150
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 113
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvas
+        niceComponentName: canvas
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasscaler
+        niceComponentName: canvas scaler
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: graphicraycaster
+        niceComponentName: graphic raycaster
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: gachaanimationcontroller
+        niceComponentName: gacha animation controller
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/StampsSpawnArea[0]"}'
+      paths: []
+      tabWidth: 63
+      name: StampsSpawnArea
+      icon: {fileID: 485006632639120110, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Stam\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Stam\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Stam\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 13
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 114
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: gridlayoutgroup
+        niceComponentName: grid layout group
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/StampsSpawnArea[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/BackgroundPanel[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeSilhouetteImage[0]"}'
+      paths: []
+      tabWidth: 60
+      name: SupremeSilhouetteImage
+      icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Supr\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 1
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Supr\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Supr\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 1
+      previewHeight: 13
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 115
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasrenderer
+        niceComponentName: canvas renderer
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: image
+        niceComponentName: image
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeSilhouetteImage[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeSplashImage[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]"}'
+      paths: []
+      tabWidth: 60
+      name: SupremeRevealContainer
+      icon: {fileID: 5779557562189929939, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Supr\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Supr\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Supr\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 150
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 116
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasgroup
+        niceComponentName: canvas group
+      historyPaths: []
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeSplashImage[0]"}'
+      paths: []
+      tabWidth: 60
+      name: SupremeSplashImage
+      icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Supr\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Supr\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Supr\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 1
+      previewHeight: 13
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 117
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasrenderer
+        niceComponentName: canvas renderer
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: image
+        niceComponentName: image
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeSplashImage[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
+      paths: []
+      tabWidth: 63
+      name: GachaAnimationCanvas
+      icon: {fileID: 6918890264710435130, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Gach\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Gach\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Gach\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 150
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 118
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvas
+        niceComponentName: canvas
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasscaler
+        niceComponentName: canvas scaler
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: graphicraycaster
+        niceComponentName: graphic raycaster
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: gachaanimationcontroller
+        niceComponentName: gacha animation controller
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
+      paths: []
+      tabWidth: 63
+      name: GachaAnimationCanvas
+      icon: {fileID: 6918890264710435130, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Gach\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Gach\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Gach\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 150
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 119
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvas
+        niceComponentName: canvas
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasscaler
+        niceComponentName: canvas scaler
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: graphicraycaster
+        niceComponentName: graphic raycaster
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: gachaanimationcontroller
+        niceComponentName: gacha animation controller
+      historyPaths: []
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeSilhouetteImage[0]"}'
+      paths: []
+      tabWidth: 60
+      name: SupremeSilhouetteImage
+      icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Supr\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 1
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Supr\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Supr\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 1
+      previewHeight: 13
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 120
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasrenderer
+        niceComponentName: canvas renderer
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: image
+        niceComponentName: image
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeSilhouetteImage[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeSilhouetteImage[0]"}'
+      paths: []
+      tabWidth: 60
+      name: SupremeSilhouetteImage
+      icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Supr\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 1
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Supr\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Supr\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 1
+      previewHeight: 13
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 121
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasrenderer
+        niceComponentName: canvas renderer
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: image
+        niceComponentName: image
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeSilhouetteImage[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
+      paths: []
+      tabWidth: 63
+      name: GachaAnimationCanvas
+      icon: {fileID: 6918890264710435130, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Gach\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Gach\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Gach\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 150
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 122
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvas
+        niceComponentName: canvas
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasscaler
+        niceComponentName: canvas scaler
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: graphicraycaster
+        niceComponentName: graphic raycaster
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: gachaanimationcontroller
+        niceComponentName: gacha animation controller
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeNameText[0]"}'
+      paths: []
+      tabWidth: 60
+      name: SupremeNameText
+      icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Supr\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Supr\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Supr\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 13
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 123
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasrenderer
+        niceComponentName: canvas renderer
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: textmeshprougui
+        niceComponentName: text mesh pro ugui
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeNameText[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeSplashImage[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeSilhouetteImage[0]"}'
+      paths: []
+      tabWidth: 60
+      name: SupremeSilhouetteImage
+      icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Supr\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 1
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Supr\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Supr\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 1
+      previewHeight: 13
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 124
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasrenderer
+        niceComponentName: canvas renderer
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: image
+        niceComponentName: image
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeSilhouetteImage[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeSilhouetteImage[0]"}'
+      paths: []
+      tabWidth: 60
+      name: SupremeSilhouetteImage
+      icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Supr\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 1
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Supr\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Supr\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 1
+      previewHeight: 13
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 125
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasrenderer
+        niceComponentName: canvas renderer
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: image
+        niceComponentName: image
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeSilhouetteImage[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeSplashImage[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeSilhouetteImage[0]"}'
+      paths: []
+      tabWidth: 60
+      name: SupremeSilhouetteImage
+      icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Supr\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 1
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Supr\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Supr\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 1
+      previewHeight: 13
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 126
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasrenderer
+        niceComponentName: canvas renderer
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: image
+        niceComponentName: image
+      historyPaths: []
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeSplashImage[0]"}'
+      paths: []
+      tabWidth: 60
+      name: SupremeSplashImage
+      icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Supr\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Supr\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Supr\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 1
+      previewHeight: 13
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 127
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasrenderer
+        niceComponentName: canvas renderer
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: image
+        niceComponentName: image
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeSplashImage[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
+      paths: []
+      tabWidth: 63
+      name: GachaAnimationCanvas
+      icon: {fileID: 6918890264710435130, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Gach\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Gach\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Gach\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 150
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 128
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvas
+        niceComponentName: canvas
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasscaler
+        niceComponentName: canvas scaler
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: graphicraycaster
+        niceComponentName: graphic raycaster
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: gachaanimationcontroller
+        niceComponentName: gacha animation controller
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeSilhouetteImage[0]"}'
+      paths: []
+      tabWidth: 60
+      name: SupremeSilhouetteImage
+      icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Supr\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 1
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Supr\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Supr\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 1
+      previewHeight: 13
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 129
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: canvasrenderer
+        niceComponentName: canvas renderer
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: image
+        niceComponentName: image
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeSilhouetteImage[0]"}'
+        prefab: 0
+      - paths:
+        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
+        prefab: 0
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/RewardDetailModal[0]"}'
+      paths: []
+      tabWidth: 65
+      name: RewardDetailModal
+      icon: {fileID: -1575620288787673585, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Rewa\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Rewa\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Rewa\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 150
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 130
+      historyPosition: 0
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: recttransform
+        niceComponentName: rect transform
+      historyPaths: []
+      owner: {fileID: 0}
+    - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/GachaUnitRewardModal[0]"}'
+      paths: []
+      tabWidth: 63
+      name: GachaUnitRewardModal
+      icon: {fileID: 7853449062886713960, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Gach\u2026"
+      filterString: 
+      newTab: 0
+      scrollPosition: 0
+      isSelected: 0
+      allCollapsed: 0
+      runtimeFoldouts: 
+      runtimeMultiComponents: []
+      tabTextContent:
+        m_Text: "Gach\u2026"
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+        m_TextWithWhitespace: "Gach\u2026\u200B"
+      multiEditMode: 0
+      locked: 0
+      hasPreview: 0
+      previewHeight: 150
+      debug: 0
+      filtering: 0
+      prefab: 0
+      multiFoldout: 1
+      target: {fileID: 0}
+      targets: []
+      linkedPrefabs: []
+      trackMultiTarget: {fileID: 0}
+      serializedTransform:
+        owner: {fileID: 0}
+        localPosition: {x: 0, y: 0, z: 0}
+        localRotation: {x: 0, y: 0, z: 0, w: 0}
+        localScale: {x: 0, y: 0, z: 0}
+        originalPosition: {x: 0, y: 0, z: 0}
+        originalRotation: {x: 0, y: 0, z: 0, w: 0}
+        originalLocalScale: {x: 0, y: 0, z: 0}
+        anchorMin: {x: 0, y: 0}
+        anchorMax: {x: 0, y: 0}
+        anchoredPosition: {x: 0, y: 0}
+        sizeDelta: {x: 0, y: 0}
+        pivot: {x: 0, y: 0}
+        originalAnchorMin: {x: 0, y: 0}
+        originalAnchorMax: {x: 0, y: 0}
+        originalAnchoredPosition: {x: 0, y: 0}
+        originalSizeDelta: {x: 0, y: 0}
+        originalPivot: {x: 0, y: 0}
+        isRectTransform: 0
+        appliedTransform: 0
+        undidTransform: 0
+        autoSave: 0
+      serializedTransforms: []
+      savePlayModeTransform: 0
+      index: 131
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -27277,7 +30120,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 108
+      index: 132
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -27393,7 +30236,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 109
+      index: 133
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -27506,7 +30349,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 110
+      index: 134
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -27577,7 +30420,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 111
+      index: 135
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -27687,7 +30530,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 112
+      index: 136
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -27785,7 +30628,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 113
+      index: 137
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -27880,7 +30723,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 114
+      index: 138
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -27978,7 +30821,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 115
+      index: 139
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -28073,7 +30916,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 116
+      index: 140
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -28171,7 +31014,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 117
+      index: 141
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -28266,7 +31109,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 118
+      index: 142
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -28346,7 +31189,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 119
+      index: 143
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -28429,7 +31272,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 120
+      index: 144
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -28542,7 +31385,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 121
+      index: 145
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -28658,7 +31501,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 122
+      index: 146
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -28756,7 +31599,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 123
+      index: 147
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -28854,7 +31697,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 124
+      index: 148
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -28952,7 +31795,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 125
+      index: 149
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -29050,7 +31893,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 126
+      index: 150
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -29148,7 +31991,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 127
+      index: 151
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -29234,7 +32077,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 128
+      index: 152
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -29332,7 +32175,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 129
+      index: 153
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -29430,7 +32273,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 130
+      index: 154
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -29525,7 +32368,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 131
+      index: 155
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -29608,7 +32451,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 132
+      index: 156
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -29682,7 +32525,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 133
+      index: 157
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -29740,95 +32583,6 @@ MonoBehaviour:
         - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/BottonBar[0]/Btn_Pull10_Base[0]"}'
         prefab: 0
       owner: {fileID: 0}
-    - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/Image[0]"}'
-      paths: []
-      tabWidth: 59
-      name: Image
-      icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
-      shortName: Image
-      filterString: 
-      newTab: 0
-      scrollPosition: 0
-      isSelected: 0
-      allCollapsed: 0
-      runtimeFoldouts: 
-      runtimeMultiComponents: []
-      tabTextContent:
-        m_Text: Image
-        m_Image: {fileID: 0}
-        m_Tooltip: 
-        m_TextWithWhitespace: "Image\u200B"
-      multiEditMode: 0
-      locked: 0
-      hasPreview: 1
-      previewHeight: 13
-      debug: 0
-      filtering: 0
-      prefab: 0
-      multiFoldout: 1
-      target: {fileID: 0}
-      targets: []
-      linkedPrefabs: []
-      trackMultiTarget: {fileID: 0}
-      serializedTransform:
-        owner: {fileID: 0}
-        localPosition: {x: 0, y: 0, z: 0}
-        localRotation: {x: 0, y: 0, z: 0, w: 0}
-        localScale: {x: 0, y: 0, z: 0}
-        originalPosition: {x: 0, y: 0, z: 0}
-        originalRotation: {x: 0, y: 0, z: 0, w: 0}
-        originalLocalScale: {x: 0, y: 0, z: 0}
-        anchorMin: {x: 0, y: 0}
-        anchorMax: {x: 0, y: 0}
-        anchoredPosition: {x: 0, y: 0}
-        sizeDelta: {x: 0, y: 0}
-        pivot: {x: 0, y: 0}
-        originalAnchorMin: {x: 0, y: 0}
-        originalAnchorMax: {x: 0, y: 0}
-        originalAnchoredPosition: {x: 0, y: 0}
-        originalSizeDelta: {x: 0, y: 0}
-        originalPivot: {x: 0, y: 0}
-        isRectTransform: 0
-        appliedTransform: 0
-        undidTransform: 0
-        autoSave: 0
-      serializedTransforms: []
-      savePlayModeTransform: 0
-      index: 134
-      historyPosition: 0
-      componentMaps:
-      - index: 0
-        component: {fileID: 0}
-        missingComponentID: -1
-        foldout: 1
-        focusAfter: 0
-        awaitingScroll: 0
-        hidden: 0
-        componentName: recttransform
-        niceComponentName: rect transform
-      - index: 0
-        component: {fileID: 0}
-        missingComponentID: -1
-        foldout: 1
-        focusAfter: 0
-        awaitingScroll: 0
-        hidden: 0
-        componentName: canvasrenderer
-        niceComponentName: canvas renderer
-      - index: 0
-        component: {fileID: 0}
-        missingComponentID: -1
-        foldout: 1
-        focusAfter: 0
-        awaitingScroll: 0
-        hidden: 0
-        componentName: image
-        niceComponentName: image
-      historyPaths:
-      - paths:
-        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/Image[0]"}'
-        prefab: 0
-      owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/TopBar[0]"}'
       paths: []
       tabWidth: 63
@@ -29883,7 +32637,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 135
+      index: 158
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -29963,7 +32717,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 136
+      index: 159
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -30034,7 +32788,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 137
+      index: 160
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -30105,7 +32859,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 138
+      index: 161
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -30173,7 +32927,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 139
+      index: 162
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -30227,9 +32981,6 @@ MonoBehaviour:
         prefab: 0
       - paths:
         - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/CenterBase[0]"}'
-        prefab: 0
-      - paths:
-        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/Image[0]"}'
         prefab: 0
       - paths:
         - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/CenterBase[0]/Btn_StoreBase[0]"}'
@@ -30295,7 +33046,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 140
+      index: 163
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -30390,7 +33141,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 141
+      index: 164
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -30516,7 +33267,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 142
+      index: 165
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -30611,7 +33362,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 143
+      index: 166
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -30712,7 +33463,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 144
+      index: 167
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -30807,7 +33558,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 145
+      index: 168
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -30947,7 +33698,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 146
+      index: 169
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -31063,7 +33814,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 147
+      index: 170
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -31164,7 +33915,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 148
+      index: 171
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -31280,7 +34031,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 149
+      index: 172
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -31393,7 +34144,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 150
+      index: 173
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -31509,7 +34260,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 151
+      index: 174
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -31622,7 +34373,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 152
+      index: 175
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -31738,7 +34489,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 153
+      index: 176
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -31857,7 +34608,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 154
+      index: 177
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -31979,7 +34730,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 155
+      index: 178
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -32095,7 +34846,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 156
+      index: 179
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -32211,7 +34962,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 157
+      index: 180
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -32330,7 +35081,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 158
+      index: 181
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -32446,7 +35197,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 159
+      index: 182
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -32562,7 +35313,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 160
+      index: 183
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -32670,7 +35421,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 161
+      index: 184
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -32786,7 +35537,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 162
+      index: 185
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -32869,7 +35620,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 163
+      index: 186
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -32949,7 +35700,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 164
+      index: 187
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -33026,7 +35777,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 165
+      index: 188
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -33124,7 +35875,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 166
+      index: 189
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -33204,7 +35955,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 167
+      index: 190
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -33317,7 +36068,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 168
+      index: 191
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -33415,7 +36166,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 169
+      index: 192
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -33534,7 +36285,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 170
+      index: 193
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -33660,7 +36411,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 171
+      index: 194
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -33773,7 +36524,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 172
+      index: 195
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -33903,7 +36654,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 173
+      index: 196
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -34019,7 +36770,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 174
+      index: 197
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -34114,7 +36865,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 175
+      index: 198
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -34200,7 +36951,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 176
+      index: 199
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -34301,7 +37052,7 @@ MonoBehaviour:
         autoSave: 0
       serializedTransforms: []
       savePlayModeTransform: 0
-      index: 177
+      index: 200
       historyPosition: 0
       componentMaps:
       - index: 0
@@ -34367,32 +37118,34 @@ MonoBehaviour:
     playModeTransforms: []
     historyAssets:
     - assetGUIDs:
-      - 8e33882f7fba925478cbd19e61365198
+      - e9cea8eb05b87414d9cc8f7fc8db4ae0
+    - assetGUIDs:
+      - 54255f8d387e90e4a939aff035aa5720
+    - assetGUIDs:
+      - 93fd619aae295a44aadd29117ed1a560
     - assetGUIDs:
       - 3bea51b30b1a74742b70e245c7a07f9c
     - assetGUIDs:
-      - aa35c308897aa0e4f994debf7374ea9d
+      - db3860f4120b12c4fb3da57cffbe7cbd
     - assetGUIDs:
-      - 1a3d94ebcc798f44e9054ffa472effeb
+      - aae55989abe44784197dd80958fdd0f5
     - assetGUIDs:
-      - dfd447767cf2f9d4fa91ea9dcb4f00c6
+      - e625a3e42d710e542b4c986f567fb23b
     - assetGUIDs:
-      - 8dedb3d8ef819e249af7c9c0732b7ba0
+      - 03d58314661be71469defb5607568be7
     - assetGUIDs:
-      - 79d924f77f070c44ea6510cc7b88f1a7
+      - b5f43db578e39e14f9ca31ea748aace6
     - assetGUIDs:
-      - 93859c449fc37e447a6a688b20bfe712
+      - 540044e78b3547e4597d8a8de0427347
     - assetGUIDs:
-      - d088c2f0ae89cd44280a9fbfb5c3dc8c
-    - assetGUIDs:
-      - 4a5839c4bc709094b949a901d1f60f51
-    - assetGUIDs:
-      - 5982a2417d4055b48a42f239baaaed7f
-    targetObject: {fileID: 102900000, guid: 8e33882f7fba925478cbd19e61365198, type: 3}
+      - b518a627fa0d1b54093b89f801b6fbf6
+      - 540044e78b3547e4597d8a8de0427347
+      - 63eeb3b074ea25d40b26eee422cf04a5
+    targetObject: {fileID: 11400000, guid: e9cea8eb05b87414d9cc8f7fc8db4ae0, type: 2}
     targetObjects: []
-    lastSelectedAsset: Assets/Celestial-Cross/Scenes/Teste 1.unity
-    lastClickedTab: -1
-    previousTab: 0
+    lastSelectedAsset: Assets/Celestial-Cross/Data/Gacha/Banners/BannerLiedell/LiedelLBanner.asset
+    lastClickedTab: 108
+    previousTab: 128
   - tracker:
       mostClicked: []
       recentlyClicked: []
@@ -35473,6 +38226,6 @@ MonoBehaviour:
     lastSelectedAsset: 
     lastClickedTab: -1
     previousTab: 0
-  tipsShown: 01000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  tipsShown: 01000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   playModeStartScene: {}
   enteringPlayMode: 0

@@ -30,7 +30,12 @@ namespace CelestialCross.Scenes.Inventory
         [Header("Skill Modal")]
         public PetSkillModal skillModal;
 
+        [Header("Selection Mode Buttons")]
+        public Button equipButton;
+        public Button unequipButton;
+
         private RuntimePetData currentSelectedPet;
+        public RuntimePetData CurrentSelectedPet => currentSelectedPet;
         private List<string> activePetFilter = null;
         private Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO currentPetSkillGraph;
 

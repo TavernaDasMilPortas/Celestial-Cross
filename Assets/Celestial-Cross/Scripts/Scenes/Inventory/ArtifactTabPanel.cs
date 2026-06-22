@@ -25,7 +25,12 @@ namespace CelestialCross.Scenes.Inventory
         [Header("Modals")]
         public CelestialCross.Giulia_UI.ArtifactUpgradeModal upgradeArtifactModal;
 
+        [Header("Selection Mode Buttons")]
+        public Button equipButton;
+        public Button unequipButton;
+
         private ArtifactInstanceData currentSelectedArtifact;
+        public ArtifactInstanceData CurrentSelectedArtifact => currentSelectedArtifact;
         private ArtifactFilterData activeFilter = null;
 
         private global::System.Collections.Generic.Dictionary<string, Image> artifactSlotImages = new global::System.Collections.Generic.Dictionary<string, Image>();
@@ -50,6 +55,12 @@ namespace CelestialCross.Scenes.Inventory
         }
 
         private void HandleArtifactFilter(ArtifactFilterData filter)
+        {
+            activeFilter = filter;
+            Refresh();
+        }
+
+        public void ForceFilter(ArtifactFilterData filter)
         {
             activeFilter = filter;
             Refresh();

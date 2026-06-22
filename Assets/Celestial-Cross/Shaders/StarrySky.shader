@@ -96,6 +96,7 @@ Shader "UI/StarrySky"
             float _MaxSize;
             float _TwinkleSpeed;
             float _TwinkleIntensity;
+            float _UnscaledTime;
             
             float4 _ClipRect;
 
@@ -129,8 +130,9 @@ Shader "UI/StarrySky"
                 float timeOffset = random2(id).x * 100.0;
                 float speed = max(0.2, _TwinkleSpeed);
                 
-                // Tempo contínuo
-                float t = _Time.y * speed + timeOffset;
+                // Tempo contínuo (usamos _UnscaledTime se existir, senão fallback para _Time.y)
+                float currentTime = _UnscaledTime > 0.001 ? _UnscaledTime : _Time.y;
+                float t = currentTime * speed + timeOffset;
                 
                 // Dividimos a vida de uma estrela em "ciclos"
                 float cycle = frac(t * 0.5); 

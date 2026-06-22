@@ -80,8 +80,8 @@ namespace CelestialCross.Scenes.Hub
         public void RefreshAccountUI()
         {
             if (AccountManager.Instance == null || AccountManager.Instance.PlayerAccount == null) return;
-            if (moneyText != null) moneyText.text = $"Dinheiro: {AccountManager.Instance.PlayerAccount.Money}";
-            if (energyText != null) energyText.text = $"Energia: {AccountManager.Instance.PlayerAccount.Energy}";
+            if (moneyText != null) moneyText.text = $"{AccountManager.Instance.PlayerAccount.Money}";
+            if (energyText != null) energyText.text = $"{AccountManager.Instance.PlayerAccount.Energy}";
         }
 
         private void Update()
