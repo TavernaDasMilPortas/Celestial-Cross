@@ -266,7 +266,39 @@ public class Account
     public CelestialCross.Data.RuntimeUnitData GetOwnedUnitRuntimeData(string unitId)
     {
         EnsureInitialized();
-        return OwnedUnits.Find(u => u.UnitID == unitId);
+        var unit = OwnedUnits.Find(u => u.UnitID == unitId);
+        if (unit != null) return unit;
+
+        if (Application.isPlaying)
+        {
+            if (global::GameFlowManager.Instance != null && global::GameFlowManager.Instance.IsGuestUnit(unitId))
+            {
+                return new CelestialCross.Data.RuntimeUnitData(unitId, 4); 
+            }
+        }
+        return null;
+    }
+
+    public List<string> GetAvailableUnitIDs()
+    {
+        EnsureInitialized();
+        var ids = new HashSet<string>(OwnedUnitIDs);
+
+        if (Application.isPlaying)
+        {
+            if (global::GameFlowManager.Instance != null && global::GameFlowManager.Instance.SelectedStoryNode is CelestialCross.Progression.CombatStoryNode combatNode)
+            {
+                if (combatNode.GuestUnits != null)
+                {
+                    foreach (var g in combatNode.GuestUnits)
+                    {
+                        if (g != null && !string.IsNullOrEmpty(g.UnitID))
+                            ids.Add(g.UnitID);
+                    }
+                }
+            }
+        }
+        return new List<string>(ids);
     }
 }
 

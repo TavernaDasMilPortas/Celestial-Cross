@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62672253d0113514ba8f96fd1bca6daf, type: 3}
   m_Name: AccountBootstrapConfig
   m_EditorClassIdentifier: Assembly-CSharp::AccountBootstrapConfig
-  StartingMoney: 100
-  StartingEnergy: 50
+  StartingMoney: 0
+  StartingEnergyConfig: {fileID: 11400000, guid: c04d88380f252e2418ab759dd17d2064, type: 2}
   StartingStardust: 0
   StartingStarMaps: 90
-  GrantStartingPets: 1
+  GrantStartingPets: 0
   StartingUnits: []
   StartingPets: []

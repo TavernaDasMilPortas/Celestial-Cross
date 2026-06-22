@@ -25,6 +25,15 @@ public class GameFlowManager : MonoBehaviour
     // Filled at runtime during placement (battle scene).
     public List<Unit> PlayerFormation { get; set; } = new List<Unit>();
 
+    public bool IsGuestUnit(string unitId)
+    {
+        if (SelectedStoryNode is CelestialCross.Progression.CombatStoryNode combatNode)
+        {
+            return combatNode.GuestUnits != null && combatNode.GuestUnits.Exists(u => u != null && u.UnitID == unitId);
+        }
+        return false;
+    }
+
     private void Awake()
     {
         if (Instance != null && Instance != this)

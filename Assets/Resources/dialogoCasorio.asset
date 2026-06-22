@@ -44,13 +44,13 @@ MonoBehaviour:
     portName: Next
     targetNodeGuid: 2d9a1060-a7d0-481f-9d26-69f50c751365
   nodeData:
-  - guid: 0f73dd2e-aa0c-44e4-b29e-d5f73bca0a70
+  - guid: 81c555ec-6354-4ce4-86c5-a8ad5a44ee95
     nodeType: 1
-    position: {x: 0, y: 0}
+    position: {x: 2173, y: -123}
     speakerName: Pessoa 1
-    dialogueText: "oi voc\xEA me ama?"
+    dialogueText: "Ent\xE3o casa comigo"
     characterSprite: {fileID: 0}
-    sceneryId: Campo
+    sceneryId: Entrada
     choices: []
     conditionVariable: 
     conditionValue: 
@@ -61,9 +61,9 @@ MonoBehaviour:
     actionType: 0
     variableName: 
     compareValue: 
-  - guid: e860889d-fae5-4924-9db6-089057c82dfd
-    nodeType: 2
-    position: {x: 0, y: 0}
+  - guid: bf09a275-7f7a-4e6b-9555-28eee56dd8f1
+    nodeType: 5
+    position: {x: 2756, y: 175}
     speakerName: 
     dialogueText: 
     characterSprite: {fileID: 0}
@@ -78,26 +78,26 @@ MonoBehaviour:
     actionType: 0
     variableName: 
     compareValue: 
-  - guid: 720c5e11-327b-4836-a064-0296aa4a2d3e
-    nodeType: 4
-    position: {x: 0, y: 0}
-    speakerName: 
-    dialogueText: 
+  - guid: 17d7610e-6b28-4e92-b4b2-9d3015e51bb1
+    nodeType: 1
+    position: {x: 1726, y: 130}
+    speakerName: Pessoa 2
+    dialogueText: Aff otario
     characterSprite: {fileID: 0}
-    sceneryId: 
+    sceneryId: interior
     choices: []
-    conditionVariable: Casamento
-    conditionValue: False
+    conditionVariable: 
+    conditionValue: 
     conditionType: 0
     conditionPorts: []
-    actionVariable: Casamento
-    actionValue: False
+    actionVariable: 
+    actionValue: 
     actionType: 0
-    variableName: Casamento
-    compareValue: False
+    variableName: 
+    compareValue: 
   - guid: 2d9a1060-a7d0-481f-9d26-69f50c751365
     nodeType: 3
-    position: {x: 0, y: 0}
+    position: {x: 1483, y: -5}
     speakerName: 
     dialogueText: 
     characterSprite: {fileID: 0}
@@ -114,60 +114,26 @@ MonoBehaviour:
     actionType: 0
     variableName: Casamento
     compareValue: 
-  - guid: bf09a275-7f7a-4e6b-9555-28eee56dd8f1
-    nodeType: 5
-    position: {x: 0, y: 0}
+  - guid: 720c5e11-327b-4836-a064-0296aa4a2d3e
+    nodeType: 4
+    position: {x: 1123, y: -34}
     speakerName: 
     dialogueText: 
     characterSprite: {fileID: 0}
     sceneryId: 
     choices: []
-    conditionVariable: 
-    conditionValue: 
+    conditionVariable: Casamento
+    conditionValue: False
     conditionType: 0
     conditionPorts: []
-    actionVariable: 
-    actionValue: 
+    actionVariable: Casamento
+    actionValue: False
     actionType: 0
-    variableName: 
-    compareValue: 
-  - guid: 81c555ec-6354-4ce4-86c5-a8ad5a44ee95
-    nodeType: 1
-    position: {x: 0, y: 0}
-    speakerName: Pessoa 1
-    dialogueText: "Ent\xE3o casa comigo"
-    characterSprite: {fileID: 0}
-    sceneryId: Entrada
-    choices: []
-    conditionVariable: 
-    conditionValue: 
-    conditionType: 0
-    conditionPorts: []
-    actionVariable: 
-    actionValue: 
-    actionType: 0
-    variableName: 
-    compareValue: 
-  - guid: 17d7610e-6b28-4e92-b4b2-9d3015e51bb1
-    nodeType: 1
-    position: {x: 0, y: 0}
-    speakerName: Pessoa 2
-    dialogueText: Aff otario
-    characterSprite: {fileID: 0}
-    sceneryId: interior
-    choices: []
-    conditionVariable: 
-    conditionValue: 
-    conditionType: 0
-    conditionPorts: []
-    actionVariable: 
-    actionValue: 
-    actionType: 0
-    variableName: 
-    compareValue: 
+    variableName: Casamento
+    compareValue: False
   - guid: 68b91453-0697-4b8b-85db-4af588dbcf1e
     nodeType: 4
-    position: {x: 0, y: 0}
+    position: {x: 1123, y: 211}
     speakerName: 
     dialogueText: 
     characterSprite: {fileID: 0}
@@ -182,6 +148,40 @@ MonoBehaviour:
     actionType: 0
     variableName: Casamento
     compareValue: True
+  - guid: e860889d-fae5-4924-9db6-089057c82dfd
+    nodeType: 2
+    position: {x: 642, y: 49}
+    speakerName: 
+    dialogueText: 
+    characterSprite: {fileID: 0}
+    sceneryId: 
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
+  - guid: 0f73dd2e-aa0c-44e4-b29e-d5f73bca0a70
+    nodeType: 1
+    position: {x: 320, y: 55}
+    speakerName: Pessoa 1
+    dialogueText: "oi voc\xEA me ama?"
+    characterSprite: {fileID: 0}
+    sceneryId: Campo
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
   sceneryMappings:
   - sceneryId: cenario teste
     scenery: {fileID: 11400000, guid: 8dba67d536fe0eb4a99060d05e7adfa1, type: 2}
@@ -197,3 +197,6 @@ MonoBehaviour:
   - propertyName: Casamento
     propertyValue: True
     type: 2
+  - propertyName: New Variable
+    propertyValue: 
+    type: 0

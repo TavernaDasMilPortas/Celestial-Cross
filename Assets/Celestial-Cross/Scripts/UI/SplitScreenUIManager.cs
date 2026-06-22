@@ -118,13 +118,14 @@ namespace CelestialCross.UI
                 // Ally is on left. Right panel comes from behind.
                 rightBackground.SetAsFirstSibling();
                 
-                // Left panel shrinks from full screen
-                DOTween.To(() => leftBackground.anchorMax, x => leftBackground.anchorMax = x, new Vector2(leftOriginalAnchorMax.x, leftBackground.anchorMax.y), animDuration);
+                // Left panel volta ao normal
+                leftBackground.anchorMin = leftOriginalAnchorMin;
+                leftBackground.anchorMax = leftOriginalAnchorMax;
                 leftBackground.DOAnchorPos(leftOriginalPos, animDuration).SetEase(animEase);
 
-                // Right panel starts from the left (hidden behind LeftBackground) and slides to its place
-                rightBackground.anchorMin = new Vector2(rightOriginalAnchorMin.x, rightBackground.anchorMin.y);
-                rightBackground.anchorMax = new Vector2(rightOriginalAnchorMax.x, rightBackground.anchorMax.y);
+                // Right panel começa de trás
+                rightBackground.anchorMin = rightOriginalAnchorMin;
+                rightBackground.anchorMax = rightOriginalAnchorMax;
                 rightBackground.anchoredPosition = new Vector2(-halfWidth, rightOriginalPos.y);
                 rightBackground.DOAnchorPos(rightOriginalPos, animDuration).SetEase(animEase);
             }
@@ -133,13 +134,14 @@ namespace CelestialCross.UI
                 // Enemy is on right. Left panel comes from behind.
                 leftBackground.SetAsFirstSibling();
 
-                // Right panel shrinks from full screen
-                DOTween.To(() => rightBackground.anchorMin, x => rightBackground.anchorMin = x, new Vector2(rightOriginalAnchorMin.x, rightBackground.anchorMin.y), animDuration);
+                // Right panel volta ao normal
+                rightBackground.anchorMin = rightOriginalAnchorMin;
+                rightBackground.anchorMax = rightOriginalAnchorMax;
                 rightBackground.DOAnchorPos(rightOriginalPos, animDuration).SetEase(animEase);
 
-                // Left panel starts from the right (hidden behind RightBackground) and slides to its place
-                leftBackground.anchorMin = new Vector2(leftOriginalAnchorMin.x, leftBackground.anchorMin.y);
-                leftBackground.anchorMax = new Vector2(leftOriginalAnchorMax.x, leftBackground.anchorMax.y);
+                // Left panel começa de trás
+                leftBackground.anchorMin = leftOriginalAnchorMin;
+                leftBackground.anchorMax = leftOriginalAnchorMax;
                 leftBackground.anchoredPosition = new Vector2(halfWidth, leftOriginalPos.y);
                 leftBackground.DOAnchorPos(leftOriginalPos, animDuration).SetEase(animEase);
             }
@@ -163,11 +165,17 @@ namespace CelestialCross.UI
                 rightBackground.gameObject.SetActive(false);
                 
                 leftBackground.gameObject.SetActive(true);
+                
+                // Mantém âncoras originais (sem achatar)
+                leftBackground.anchorMin = leftOriginalAnchorMin;
+                leftBackground.anchorMax = leftOriginalAnchorMax;
+                
                 leftBackground.anchoredPosition = new Vector2(offscreenLeft.x, leftOriginalPos.y);
                 
-                // Anima anchorMax.x de 0.5 para 1 (tela cheia)
-                DOTween.To(() => leftBackground.anchorMax, x => leftBackground.anchorMax = x, new Vector2(1f, leftBackground.anchorMax.y), animDuration);
-                leftBackground.DOAnchorPos(new Vector2(0, leftOriginalPos.y), animDuration).SetEase(animEase);
+                // Sabendo que a posição original encosta a lateral do modal no centro da tela,
+                // deslocar exatamente a metade da largura do PRÓPRIO rect empurra seu centro para o meio da tela.
+                float leftShift = leftBackground.rect.width / 2f;
+                leftBackground.DOAnchorPos(new Vector2(leftOriginalPos.x + leftShift, leftOriginalPos.y), animDuration).SetEase(animEase);
             }
             else
             {
@@ -179,11 +187,16 @@ namespace CelestialCross.UI
                 leftBackground.gameObject.SetActive(false);
                 
                 rightBackground.gameObject.SetActive(true);
+                
+                // Mantém âncoras originais (sem achatar)
+                rightBackground.anchorMin = rightOriginalAnchorMin;
+                rightBackground.anchorMax = rightOriginalAnchorMax;
+                
                 rightBackground.anchoredPosition = new Vector2(offscreenRight.x, rightOriginalPos.y);
                 
-                // Anima anchorMin.x de 0.5 para 0 (tela cheia para a esquerda)
-                DOTween.To(() => rightBackground.anchorMin, x => rightBackground.anchorMin = x, new Vector2(0f, rightBackground.anchorMin.y), animDuration);
-                rightBackground.DOAnchorPos(new Vector2(0, rightOriginalPos.y), animDuration).SetEase(animEase);
+                // Desloca exatamente a metade da largura para a esquerda
+                float rightShift = rightBackground.rect.width / 2f;
+                rightBackground.DOAnchorPos(new Vector2(rightOriginalPos.x - rightShift, rightOriginalPos.y), animDuration).SetEase(animEase);
             }
         }
 

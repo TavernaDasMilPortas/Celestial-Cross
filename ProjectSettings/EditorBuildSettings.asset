@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Celestial-Cross/Scenes/InicialScene.unity
+    guid: 075238abd19a8d247a9469e90793c27a
+  - enabled: 1
     path: Assets/Celestial-Cross/Scenes/HubScene.unity
     guid: aae55989abe44784197dd80958fdd0f5
   - enabled: 1

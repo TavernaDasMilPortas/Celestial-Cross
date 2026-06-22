@@ -28,9 +28,9 @@ MonoBehaviour:
   combatIdleAnim: {fileID: 7400000, guid: 9745dc52f2b71c64b90b4740e3101456, type: 2}
   baseStats:
     health: 30
-    attack: 30
+    attack: 20
     defense: 6
-    speed: 35
+    speed: 20
     criticalChance: 7
     criticalDamage: 50
     effectAccuracy: 1
@@ -49,7 +49,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 4d060a30e9da47646ae359cf062f8bb1, type: 2}
   - {fileID: 11400000, guid: f8976fbac49946d42a1ba3e68c6118a8, type: 2}
   - {fileID: 11400000, guid: 743f84550d77079479449c7485668536, type: 2}
-  - {fileID: 11400000, guid: 2931711c8603b0a418e1dc7ac82c972f, type: 2}
   constellationConfig: {fileID: 11400000, guid: 895416b1fbffaab44ab31b2f8bbc2f06, type: 2}
   skillTreeConfig: {fileID: 11400000, guid: 83e537d4db9d8a247b1cfed94288771a, type: 2}
   nativeActions: []

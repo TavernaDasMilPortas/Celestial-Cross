@@ -53,6 +53,10 @@ namespace CelestialCross.Progression
 
         public global::System.Collections.Generic.List<FixedUnitSlot> FixedSlots = new global::System.Collections.Generic.List<FixedUnitSlot>();
 
+        [Header("Guest Units")]
+        [Tooltip("Unidades temporárias fornecidas ao jogador para este combate.")]
+        public global::System.Collections.Generic.List<global::UnitData> GuestUnits = new global::System.Collections.Generic.List<global::UnitData>();
+
         public override void Execute()
         {
             CelestialCross.System.StoryFlowController.Instance?.StartCombatNode(this);

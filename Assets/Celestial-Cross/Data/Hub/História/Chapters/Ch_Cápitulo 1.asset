@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c88dc071a74705e4891f163f1fc40faf, type: 3}
+  m_Name: "Ch_C\xE1pitulo 1"
+  m_EditorClassIdentifier: Assembly-CSharp::CelestialCross.Progression.ChapterData
+  ChapterID: 8bf1c464-0ea2-4dd9-89ae-08d697fb19e6
+  ChapterTitle: "C\xE1pitulo 1"
+  Description: 
+  RequiredChapter: {fileID: 11400000, guid: 0073f09a3bb0043458a7081d598006d9, type: 2}
+  RequiredUnitID: 
+  IsDiaryChapter: 0
+  Nodes:
+  - rid: 4322151025798021206
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 4322151025798021206
+      type: {class: DialogueStoryNode, ns: CelestialCross.Progression, asm: Assembly-CSharp}
+      data:
+        NodeID: 1adc4873-befe-4e9f-ad1e-ddc734cf059c
+        Title: Boas Vindas a Astra Alis
+        IsAutoPlay: 0
+        EntryCost:
+          EnergyCost: 0
+          ItemCosts: []
+        Rewards:
+          FirstClearRewards:
+          - Type: 5
+            Amount: 0
+            ReferenceID: 
+            UnitRef: {fileID: 11400000, guid: e9da1990325e377428f13cc1ec6ef17d, type: 2}
+            PetRef: {fileID: 0}
+            ArtifactSetRef: {fileID: 0}
+            LootTableRef:
+              rid: -2
+          RepeatRewards: []
+          LootTables: []
+          MilestoneRewards: []
+        MaxCompletions: -1
+        ResetPolicy:
+          ResetType: 0
+          ResetHourUTC: 3
+          ResetDayOfWeek: 1
+          WeeklyResetHourUTC: 3
+          ResetDayOfMonth: 1
+          MonthlyResetHourUTC: 3
+          CustomResetIntervalHours: 24
+        NodeIcon: {fileID: 0}
+        Requirement:
+          RequiresInvite: 0
+          RequiresPreviousNode: 0
+          PreviousNodeID: 
+          InviteCostOptions: []
+        DialogueGraph: {fileID: 11400000, guid: f63c776ad77a9b846a703a3d9a6cbf04, type: 2}

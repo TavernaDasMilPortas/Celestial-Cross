@@ -30,6 +30,12 @@ MonoBehaviour:
     - UnitData: {fileID: 11400000, guid: 6d7fc2a7a7b163446a4695cb3bdd963a, type: 2}
       GridPosition: {x: 4, y: 6}
       OverrideBehaviorTree: {fileID: 11400000, guid: b0faee783a4de594596afdcb3bceb014, type: 2}
+    - UnitData: {fileID: 11400000, guid: 6d7fc2a7a7b163446a4695cb3bdd963a, type: 2}
+      GridPosition: {x: 3, y: 6}
+      OverrideBehaviorTree: {fileID: 11400000, guid: b0faee783a4de594596afdcb3bceb014, type: 2}
+    - UnitData: {fileID: 11400000, guid: 6d7fc2a7a7b163446a4695cb3bdd963a, type: 2}
+      GridPosition: {x: 3, y: 3}
+      OverrideBehaviorTree: {fileID: 11400000, guid: b0faee783a4de594596afdcb3bceb014, type: 2}
   Enemies: []
   FirstClearRewards: []
   RepeatRewards: []

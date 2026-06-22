@@ -590,11 +590,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1e732caadb85a24eb7b65d018ced12f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AccountManager
-  useCloudSave: 0
-  accountKey: player_account
+  useCloudSave: 1
+  accountKey: New_account
   bootstrapConfig: {fileID: 11400000, guid: 21e5ff6e2065d3e48bf16eeaf1a1baa3, type: 2}
   debugProfile: {fileID: 11400000, guid: 2630c83ded303e24ca23dc9d17848f02, type: 2}
-  useDebugProfile: 1
+  useDebugProfile: 0
 --- !u!114 &127734721
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1161,6 +1161,7 @@ MonoBehaviour:
   unitSceneName: UnitScene
   shopSceneName: ShopScene
   categories:
+  - {fileID: 11400000, guid: d38f217d7ee85834fad0d3bd4cc946f0, type: 2}
   - {fileID: 11400000, guid: 7ae324cccbef89349a6be98a24ae0d9e, type: 2}
   - {fileID: 11400000, guid: 1c8c6eee2f6208a49b39a265c6de68ac, type: 2}
   moneyText: {fileID: 698238841}
@@ -1692,8 +1693,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.72476393, y: -0.0000012601076}
   m_AnchorMax: {x: 0.8841409, y: 1}
-  m_AnchoredPosition: {x: 140.4, y: -37}
-  m_SizeDelta: {x: 89.192, y: -45.476}
+  m_AnchoredPosition: {x: 159.34, y: -37}
+  m_SizeDelta: {x: 127.08, y: -45.476}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &495742949
 MonoBehaviour:
@@ -1742,10 +1743,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 40
+  m_fontSize: 46.5
   m_fontSizeBase: 40
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
@@ -4042,10 +4043,10 @@ MonoBehaviour:
   bigUnlockedSprite: {fileID: 21300000, guid: 753f53a7b93da1348baa6fb1c53bb91d, type: 3}
   unlockAnimationDuration: 1
   lockedStatusIcon: {fileID: 21300000, guid: 71e7540a35894554b92fd94ad45bc47d, type: 3}
-  completedStatusIcon: {fileID: 0}
+  completedStatusIcon: {fileID: 21300000, guid: d84105f6dc3312b4caed38d4fb4798b7, type: 3}
   availableStatusIcon: {fileID: 0}
-  combatNodeIcon: {fileID: 21300000, guid: 2665fbc61ee3733478ea19983d3e5590, type: 3}
-  dialogueNodeIcon: {fileID: 21300000, guid: 2665fbc61ee3733478ea19983d3e5590, type: 3}
+  combatNodeIcon: {fileID: 21300000, guid: f956b5509bb9d244f8a6aafce9bbf1cf, type: 3}
+  dialogueNodeIcon: {fileID: 21300000, guid: 53134494686e97147a0688d950c4d66e, type: 3}
   unlockStatusIcon: {fileID: 21300000, guid: 753f53a7b93da1348baa6fb1c53bb91d, type: 3}
   corruptedMaterialTemplate: {fileID: 2100000, guid: 3d83481191161ff4ab3ae60d90dd10c9, type: 2}
   corruptedOverlaySprite: {fileID: 21300000, guid: 43f9347080ce22a4c9d02aa71d729716, type: 3}

@@ -1,0 +1,121 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c88dc071a74705e4891f163f1fc40faf, type: 3}
+  m_Name: Ch_Capitulo 2
+  m_EditorClassIdentifier: Assembly-CSharp::CelestialCross.Progression.ChapterData
+  ChapterID: 58d2d08c-f380-4727-8940-790c8bdce9a1
+  ChapterTitle: Capitulo 2
+  Description: 
+  RequiredChapter: {fileID: 11400000, guid: 62e247f6053277b4da803b490bd8c323, type: 2}
+  RequiredUnitID: 
+  IsDiaryChapter: 0
+  Nodes:
+  - rid: 4322151025798021210
+  - rid: 4322151025798021208
+  - rid: 4322151025798021209
+  references:
+    version: 2
+    RefIds:
+    - rid: 4322151025798021208
+      type: {class: CombatStoryNode, ns: CelestialCross.Progression, asm: Assembly-CSharp}
+      data:
+        NodeID: c7b07844-cf08-4662-95df-d20ad30ace5e
+        Title: 
+        IsAutoPlay: 0
+        EntryCost:
+          EnergyCost: 0
+          ItemCosts: []
+        Rewards:
+          FirstClearRewards: []
+          RepeatRewards: []
+          LootTables: []
+          MilestoneRewards: []
+        MaxCompletions: -1
+        ResetPolicy:
+          ResetType: 0
+          ResetHourUTC: 3
+          ResetDayOfWeek: 1
+          WeeklyResetHourUTC: 3
+          ResetDayOfMonth: 1
+          MonthlyResetHourUTC: 3
+          CustomResetIntervalHours: 24
+        NodeIcon: {fileID: 0}
+        Requirement:
+          RequiresInvite: 0
+          RequiresPreviousNode: 1
+          PreviousNodeID: be404ecd-5003-4e36-9136-214a35a83597
+          InviteCostOptions: []
+        LevelRef: {fileID: 11400000, guid: 5b3c0b90a8bd3984bb1bc99003a34ba7, type: 2}
+        DungeonRef: {fileID: 0}
+        SpecificLootTables: []
+        FixedSlots: []
+        GuestUnits: []
+    - rid: 4322151025798021209
+      type: {class: DialogueStoryNode, ns: CelestialCross.Progression, asm: Assembly-CSharp}
+      data:
+        NodeID: a9e4e577-0080-44b7-9464-5496fba1ba12
+        Title: 
+        IsAutoPlay: 0
+        EntryCost:
+          EnergyCost: 0
+          ItemCosts: []
+        Rewards:
+          FirstClearRewards: []
+          RepeatRewards: []
+          LootTables: []
+          MilestoneRewards: []
+        MaxCompletions: -1
+        ResetPolicy:
+          ResetType: 0
+          ResetHourUTC: 3
+          ResetDayOfWeek: 1
+          WeeklyResetHourUTC: 3
+          ResetDayOfMonth: 1
+          MonthlyResetHourUTC: 3
+          CustomResetIntervalHours: 24
+        NodeIcon: {fileID: 0}
+        Requirement:
+          RequiresInvite: 0
+          RequiresPreviousNode: 1
+          PreviousNodeID: c7b07844-cf08-4662-95df-d20ad30ace5e
+          InviteCostOptions: []
+        DialogueGraph: {fileID: 11400000, guid: 3b14e6080eb990d4c8461d947791fe31, type: 2}
+    - rid: 4322151025798021210
+      type: {class: DialogueStoryNode, ns: CelestialCross.Progression, asm: Assembly-CSharp}
+      data:
+        NodeID: be404ecd-5003-4e36-9136-214a35a83597
+        Title: Cerimonia de Entrada
+        IsAutoPlay: 0
+        EntryCost:
+          EnergyCost: 0
+          ItemCosts: []
+        Rewards:
+          FirstClearRewards: []
+          RepeatRewards: []
+          LootTables: []
+          MilestoneRewards: []
+        MaxCompletions: -1
+        ResetPolicy:
+          ResetType: 0
+          ResetHourUTC: 3
+          ResetDayOfWeek: 1
+          WeeklyResetHourUTC: 3
+          ResetDayOfMonth: 1
+          MonthlyResetHourUTC: 3
+          CustomResetIntervalHours: 24
+        NodeIcon: {fileID: 0}
+        Requirement:
+          RequiresInvite: 0
+          RequiresPreviousNode: 0
+          PreviousNodeID: 
+          InviteCostOptions: []
+        DialogueGraph: {fileID: 11400000, guid: ae3f893ce0efec646ae4a3adc10d4341, type: 2}

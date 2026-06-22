@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9fdeb201f5e14474aa1f0e6e793a9d65, type: 3}
+  m_Name: "bal\xE3o_2-removebg-preview_Shape"
+  m_EditorClassIdentifier: Assembly-CSharp::CelestialCross.UI.ProceduralGraphic.ShapePreset
+  _points:
+  - position: {x: 0.15757576, y: 0}
+    isSharp: 1
+  - position: {x: 0.3939394, y: 0.033898305}
+    isSharp: 1
+  - position: {x: 0.42424244, y: 0.050847456}
+    isSharp: 1
+  - position: {x: 0.4181818, y: 0.118644066}
+    isSharp: 1
+  - position: {x: 0.44848484, y: 0.15254237}
+    isSharp: 1
+  - position: {x: 0.4909091, y: 0.15254237}
+    isSharp: 1
+  - position: {x: 0.58181816, y: 0.20338982}
+    isSharp: 1
+  - position: {x: 0.6242424, y: 0.20338982}
+    isSharp: 1
+  - position: {x: 0.6727273, y: 0.23728813}
+    isSharp: 1
+  - position: {x: 0.93333334, y: 0.3220339}
+    isSharp: 1
+  - position: {x: 0.93939394, y: 0.33898306}
+    isSharp: 1
+  - position: {x: 0.8484849, y: 0.779661}
+    isSharp: 1
+  - position: {x: 0.2969697, y: 0.3898305}
+    isSharp: 1
+  - position: {x: 0.28484848, y: 0.3559322}
+    isSharp: 1
+  - position: {x: 0.33333334, y: 0.20338982}
+    isSharp: 1
+  - position: {x: 0.16363636, y: 0}
+    isSharp: 1
+  _keyframes: []
+  _splineSubdivisions: 8
+  _loop: 1

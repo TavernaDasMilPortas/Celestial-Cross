@@ -231,7 +231,7 @@ MonoBehaviour:
     speakerName: Lillie
     dialogueText: Might be my mistake but I can't see those little invaders here.
     characterSprite: {fileID: 0}
-    sceneryId: interior
+    sceneryId: Campo
     choices: []
     conditionVariable: 
     conditionValue: 
@@ -248,7 +248,7 @@ MonoBehaviour:
     speakerName: Lillie
     dialogueText: "The outskirts of the school are bigger than I thought\u2026"
     characterSprite: {fileID: 0}
-    sceneryId: interior
+    sceneryId: Campo
     choices: []
     conditionVariable: 
     conditionValue: 
@@ -265,7 +265,7 @@ MonoBehaviour:
     speakerName: 'Voyage '
     dialogueText: Have you considered looking bellow you?
     characterSprite: {fileID: 0}
-    sceneryId: interior
+    sceneryId: Campo
     choices: []
     conditionVariable: 
     conditionValue: 
@@ -283,7 +283,7 @@ MonoBehaviour:
     dialogueText: Lillie looks at her feet, and sees a small green creature waddling
       around.
     characterSprite: {fileID: 0}
-    sceneryId: interior
+    sceneryId: Campo
     choices: []
     conditionVariable: 
     conditionValue: 
@@ -300,7 +300,7 @@ MonoBehaviour:
     speakerName: Invader?
     dialogueText: Webbi Wabbo? Wabababa.
     characterSprite: {fileID: 21300000, guid: 38fc53000b582344f9da4292837b3cac, type: 3}
-    sceneryId: interior
+    sceneryId: Campo
     choices: []
     conditionVariable: 
     conditionValue: 
@@ -317,7 +317,7 @@ MonoBehaviour:
     speakerName: 
     dialogueText: Lillie jumps back, looking at more approaching invaders.
     characterSprite: {fileID: 0}
-    sceneryId: interior
+    sceneryId: Campo
     choices: []
     conditionVariable: 
     conditionValue: 
@@ -334,7 +334,7 @@ MonoBehaviour:
     speakerName: 'Invader '
     dialogueText: Mled WEH!
     characterSprite: {fileID: 21300000, guid: 38fc53000b582344f9da4292837b3cac, type: 3}
-    sceneryId: interior
+    sceneryId: Campo
     choices: []
     conditionVariable: 
     conditionValue: 
@@ -351,7 +351,7 @@ MonoBehaviour:
     speakerName: 
     dialogueText: The invaders start to slowly approach.
     characterSprite: {fileID: 0}
-    sceneryId: interior
+    sceneryId: Campo
     choices: []
     conditionVariable: 
     conditionValue: 
@@ -368,7 +368,7 @@ MonoBehaviour:
     speakerName: Lillie
     dialogueText: Ah! Voyage, i think we must fight those guys!
     characterSprite: {fileID: 0}
-    sceneryId: interior
+    sceneryId: Campo
     choices: []
     conditionVariable: 
     conditionValue: 
@@ -386,7 +386,7 @@ MonoBehaviour:
     dialogueText: Suddenly, a small bug looking celestia approaches and Shanny seems
       to immediately recover after seeing it.
     characterSprite: {fileID: 0}
-    sceneryId: interior
+    sceneryId: Campo
     choices: []
     conditionVariable: 
     conditionValue: 
@@ -403,7 +403,7 @@ MonoBehaviour:
     speakerName: Shanny
     dialogueText: "Fleur! W-where have you been\u2026!?"
     characterSprite: {fileID: 21300000, guid: 4b4b90c36ec61cc4abcdfc94335195c0, type: 3}
-    sceneryId: interior
+    sceneryId: Campo
     choices: []
     conditionVariable: 
     conditionValue: 
@@ -421,7 +421,7 @@ MonoBehaviour:
     dialogueText: "Shanny dearest, i\u2019ve been looking for you ever since we stopped
       to eat this morning!"
     characterSprite: {fileID: 0}
-    sceneryId: interior
+    sceneryId: Campo
     choices: []
     conditionVariable: 
     conditionValue: 
@@ -439,25 +439,7 @@ MonoBehaviour:
     dialogueText: "O-oh! I got so desperate about being late that I didn't even look
       back! I-i\u2019m so sorry!"
     characterSprite: {fileID: 21300000, guid: a3454447ccee5234587a8ae729470f97, type: 3}
-    sceneryId: interior
-    choices: []
-    conditionVariable: 
-    conditionValue: 
-    conditionType: 0
-    conditionPorts: []
-    actionVariable: 
-    actionValue: 
-    actionType: 0
-    variableName: 
-    compareValue: 
-  - guid: fec0e900-056a-418b-865b-7a409f7bc309
-    nodeType: 1
-    position: {x: 0, y: 0}
-    speakerName: 'Fleur '
-    dialogueText: Please do not fret over that, we have to take care of those little
-      invaders first, no?
-    characterSprite: {fileID: 0}
-    sceneryId: interior
+    sceneryId: Campo
     choices: []
     conditionVariable: 
     conditionValue: 
@@ -485,7 +467,27 @@ MonoBehaviour:
     actionType: 0
     variableName: 
     compareValue: 
+  - guid: fec0e900-056a-418b-865b-7a409f7bc309
+    nodeType: 1
+    position: {x: 0, y: 0}
+    speakerName: 'Fleur '
+    dialogueText: Please do not fret over that, we have to take care of those little
+      invaders first, no?
+    characterSprite: {fileID: 0}
+    sceneryId: Campo
+    choices: []
+    conditionVariable: 
+    conditionValue: 
+    conditionType: 0
+    conditionPorts: []
+    actionVariable: 
+    actionValue: 
+    actionType: 0
+    variableName: 
+    compareValue: 
   sceneryMappings:
   - sceneryId: interior
     scenery: {fileID: 11400000, guid: 7523d0e36b33a0a41b1069719fda993c, type: 2}
+  - sceneryId: Campo
+    scenery: {fileID: 11400000, guid: 72b5881842cc38649a22b64c3c073a3e, type: 2}
   exposedProperties: []

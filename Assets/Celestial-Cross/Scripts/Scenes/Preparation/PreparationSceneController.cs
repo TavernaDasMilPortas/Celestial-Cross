@@ -94,7 +94,7 @@ public class PreparationSceneController : MonoBehaviour
         float delayStep = 0.05f;
         float currentDelay = 0f;
 
-        foreach (var unitId in AccountManager.Instance.PlayerAccount.OwnedUnitIDs)
+        foreach (var unitId in AccountManager.Instance.PlayerAccount.GetAvailableUnitIDs())
         {
             if (string.IsNullOrWhiteSpace(unitId))
                 continue;

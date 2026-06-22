@@ -15,7 +15,7 @@ MonoBehaviour:
   CategoryName: Dialogos
   CategoryType: 2
   CustomTag: 
-  Icon: {fileID: 21300000, guid: 4b9b8e15e4da42f49a06eb51391f2068, type: 3}
+  Icon: {fileID: 21300000, guid: f4fe021674ed0e54db8fa405dbde33e7, type: 3}
   Description: "As vezes tudo o que precisamos \xE9 conversar com algu\xE9m"
   Chapters:
   - {fileID: 11400000, guid: ae3adbce63a94ee4aa9c55ca645bf77f, type: 2}

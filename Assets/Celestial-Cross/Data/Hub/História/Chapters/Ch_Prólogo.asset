@@ -1,0 +1,122 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c88dc071a74705e4891f163f1fc40faf, type: 3}
+  m_Name: "Ch_Pr\xF3logo"
+  m_EditorClassIdentifier: Assembly-CSharp::CelestialCross.Progression.ChapterData
+  ChapterID: ec0146b2-dfde-4306-bd7d-81de28d213d3
+  ChapterTitle: "Pr\xF3logo"
+  Description: 
+  RequiredChapter: {fileID: 0}
+  RequiredUnitID: 
+  IsDiaryChapter: 0
+  Nodes:
+  - rid: 4322151025798021122
+  - rid: 4322151025798021123
+  - rid: 4322151025798021125
+  references:
+    version: 2
+    RefIds:
+    - rid: 4322151025798021122
+      type: {class: DialogueStoryNode, ns: CelestialCross.Progression, asm: Assembly-CSharp}
+      data:
+        NodeID: 13743afc-20eb-432c-9db4-aa7759b7ead5
+        Title: "A hist\xF3ria"
+        IsAutoPlay: 0
+        EntryCost:
+          EnergyCost: 0
+          ItemCosts: []
+        Rewards:
+          FirstClearRewards: []
+          RepeatRewards: []
+          LootTables: []
+          MilestoneRewards: []
+        MaxCompletions: -1
+        ResetPolicy:
+          ResetType: 0
+          ResetHourUTC: 3
+          ResetDayOfWeek: 1
+          WeeklyResetHourUTC: 3
+          ResetDayOfMonth: 1
+          MonthlyResetHourUTC: 3
+          CustomResetIntervalHours: 24
+        NodeIcon: {fileID: 0}
+        Requirement:
+          RequiresInvite: 0
+          RequiresPreviousNode: 0
+          PreviousNodeID: 
+          InviteCostOptions: []
+        DialogueGraph: {fileID: 11400000, guid: 99d5ce75e4c58154e8bdf88758ab9cef, type: 2}
+    - rid: 4322151025798021123
+      type: {class: CombatStoryNode, ns: CelestialCross.Progression, asm: Assembly-CSharp}
+      data:
+        NodeID: 6d275914-a511-4a40-bcb2-f0088fbbff83
+        Title: Tutorial
+        IsAutoPlay: 0
+        EntryCost:
+          EnergyCost: 0
+          ItemCosts: []
+        Rewards:
+          FirstClearRewards: []
+          RepeatRewards: []
+          LootTables: []
+          MilestoneRewards: []
+        MaxCompletions: -1
+        ResetPolicy:
+          ResetType: 0
+          ResetHourUTC: 3
+          ResetDayOfWeek: 1
+          WeeklyResetHourUTC: 3
+          ResetDayOfMonth: 1
+          MonthlyResetHourUTC: 3
+          CustomResetIntervalHours: 24
+        NodeIcon: {fileID: 0}
+        Requirement:
+          RequiresInvite: 0
+          RequiresPreviousNode: 1
+          PreviousNodeID: 13743afc-20eb-432c-9db4-aa7759b7ead5
+          InviteCostOptions: []
+        LevelRef: {fileID: 11400000, guid: f43824ed643d2ca4482b9fe6e8538b5f, type: 2}
+        DungeonRef: {fileID: 0}
+        SpecificLootTables: []
+        FixedSlots: []
+        GuestUnits:
+        - {fileID: 11400000, guid: f70108c1193f43d41bcdd5cf43b523aa, type: 2}
+    - rid: 4322151025798021125
+      type: {class: DialogueStoryNode, ns: CelestialCross.Progression, asm: Assembly-CSharp}
+      data:
+        NodeID: 201ec42c-af22-4c26-9697-a423cebc059f
+        Title: A Promessa
+        IsAutoPlay: 0
+        EntryCost:
+          EnergyCost: 0
+          ItemCosts: []
+        Rewards:
+          FirstClearRewards: []
+          RepeatRewards: []
+          LootTables: []
+          MilestoneRewards: []
+        MaxCompletions: -1
+        ResetPolicy:
+          ResetType: 0
+          ResetHourUTC: 3
+          ResetDayOfWeek: 1
+          WeeklyResetHourUTC: 3
+          ResetDayOfMonth: 1
+          MonthlyResetHourUTC: 3
+          CustomResetIntervalHours: 24
+        NodeIcon: {fileID: 0}
+        Requirement:
+          RequiresInvite: 0
+          RequiresPreviousNode: 1
+          PreviousNodeID: 6d275914-a511-4a40-bcb2-f0088fbbff83
+          InviteCostOptions: []
+        DialogueGraph: {fileID: 11400000, guid: 795304716f04b424293260ca5cdbc629, type: 2}

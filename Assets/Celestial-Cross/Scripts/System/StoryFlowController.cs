@@ -50,6 +50,12 @@ namespace CelestialCross.System
             }
             Debug.Log($"[StoryFlowController] Starting Dialogue Node: {node.Title}. Loading DialogueScene...");
             CelestialCross.Dialogue.Manager.DialogueManager.NextGraphToLoad = node.DialogueGraph;
+            
+            if (GameFlowManager.Instance != null)
+            {
+                GameFlowManager.Instance.SelectedStoryNode = node;
+            }
+
             SceneTransitionManager.LoadScene("DialogueScene"); // Nome padrão da cena
         }
     }
