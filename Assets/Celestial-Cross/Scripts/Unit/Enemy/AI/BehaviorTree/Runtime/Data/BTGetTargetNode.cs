@@ -48,10 +48,10 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Runtime.Data
             switch (Data.strategy)
             {
                 case BTTargetStrategy.Closest:
-                    TargetResult = candidates.OrderBy(u => AIGridUtility.ChebyshevDistance(blackboard.myPosition, u.GridPosition)).FirstOrDefault();
+                    TargetResult = candidates.OrderBy(u => AIGridUtility.GridDistance(blackboard.myPosition, u.GridPosition)).FirstOrDefault();
                     break;
                 case BTTargetStrategy.Farthest:
-                    TargetResult = candidates.OrderByDescending(u => AIGridUtility.ChebyshevDistance(blackboard.myPosition, u.GridPosition)).FirstOrDefault();
+                    TargetResult = candidates.OrderByDescending(u => AIGridUtility.GridDistance(blackboard.myPosition, u.GridPosition)).FirstOrDefault();
                     break;
                 case BTTargetStrategy.LowestHealth:
                     TargetResult = candidates.OrderBy(u => u.Health.CurrentHealth).FirstOrDefault();

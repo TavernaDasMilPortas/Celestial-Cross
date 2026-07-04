@@ -43,6 +43,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph
         }
 
         public AbilityType GetAbilityType() => GetStartNodeData().type;
+        public AbilitySubtype GetAbilitySubtype() => GetStartNodeData().subtype;
         public bool IsPassive => GetAbilityType() == AbilityType.Passive;
         public bool IsCondition => GetAbilityType() == AbilityType.Condition;
         public bool IsActive => GetAbilityType() == AbilityType.Active;
@@ -59,27 +60,20 @@ namespace Celestial_Cross.Scripts.Abilities.Graph
 
         public bool GetCanStack() 
         {
-            // Procura em StatModifier ou ApplyModifier
-            var node = NodeData.FirstOrDefault(n => n.NodeType == "StatModifierEffectNode" || n.NodeType == "ApplyModifierNode");
+            var node = NodeData.FirstOrDefault(n => n.NodeType == "StatModifierEffectNode");
             if (node != null && !string.IsNullOrEmpty(node.JsonData))
             {
-                if (node.NodeType == "StatModifierEffectNode")
-                    return JsonUtility.FromJson<StatModifierNodeData>(node.JsonData).canStack;
-                else
-                    return JsonUtility.FromJson<ApplyModifierNodeData>(node.JsonData).canStack;
+                return JsonUtility.FromJson<StatModifierNodeData>(node.JsonData).canStack;
             }
             return false;
         }
 
         public int GetMaxStacks() 
         {
-            var node = NodeData.FirstOrDefault(n => n.NodeType == "StatModifierEffectNode" || n.NodeType == "ApplyModifierNode");
+            var node = NodeData.FirstOrDefault(n => n.NodeType == "StatModifierEffectNode");
             if (node != null && !string.IsNullOrEmpty(node.JsonData))
             {
-                if (node.NodeType == "StatModifierEffectNode")
-                    return JsonUtility.FromJson<StatModifierNodeData>(node.JsonData).maxStacks;
-                else
-                    return JsonUtility.FromJson<ApplyModifierNodeData>(node.JsonData).maxStacks;
+                return JsonUtility.FromJson<StatModifierNodeData>(node.JsonData).maxStacks;
             }
             return 1;
         }

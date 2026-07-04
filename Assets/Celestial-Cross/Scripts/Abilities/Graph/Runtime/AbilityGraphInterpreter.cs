@@ -273,6 +273,13 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
 
                 case "TargetNode":
                     var targetData = JsonUtility.FromJson<TargetNodeData>(node.JsonData);
+
+                    if (targetData.targetsSelf)
+                    {
+                        context.targets.Clear();
+                        if (context.source != null) context.targets.Add(context.source);
+                        break;
+                    }
                     
                     AreaPatternData pattern = graph.GetAsset<AreaPatternData>(targetData.patternReferenceId);
                     if (pattern == null) pattern = node.areaPattern;
@@ -293,7 +300,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                     // No modo síncrono para passivas, resolvemos o auto targeting imediatamente
                     var dataCopy = targetData; 
                     dataCopy.range = resolvedRange;
-                    context.targets = AutoTargetResolver.Resolve(context.source, dataCopy);
+                    context.targets = AutoTargetResolver.Resolve(context.source, dataCopy, context);
                     break;
 
                 case "DamageEffectNode":
@@ -312,7 +319,11 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                     break;
 
                 case "ConditionalFlowNode":
+                    var flowData = JsonUtility.FromJson<ConditionalFlowNodeData>(node.JsonData);
+                    if (flowData == null) flowData = new ConditionalFlowNodeData();
+                    
                     bool allTrue = true;
+                    bool anyTrue = false;
                     var condLinks = graph.NodeLinks.Where(l => l.TargetNodeGuid == node.Guid && l.TargetPortName.StartsWith("Cond")).ToList();
                     
                     if (condLinks.Count > 0)
@@ -323,14 +334,17 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                             if (sourceNode != null)
                             {
                                 string subResult = ProcessNodeSync(graph, sourceNode, context, currentHook);
-                                if (subResult != "True" && subResult != "Bool Out")
-                                {
-                                    allTrue = false;
-                                    break;
-                                }
+                                bool isSubTrue = (subResult == "True" || subResult == "Bool Out");
+                                if (!isSubTrue) allTrue = false;
+                                else anyTrue = true;
                             }
                         }
-                        resultPort = allTrue ? "True" : "False";
+                        bool finalRes = flowData.mode == ConditionalFlowNodeData.LogicMode.And ? allTrue : anyTrue;
+                        resultPort = finalRes ? "True" : "False";
+                    }
+                    else
+                    {
+                        resultPort = "True";
                     }
                     break;
 
@@ -550,6 +564,15 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
 
                 case "TargetNode":
                     var targetData = JsonUtility.FromJson<TargetNodeData>(node.JsonData);
+
+                    if (targetData.targetsSelf)
+                    {
+                        context.targets.Clear();
+                        if (context.source != null) context.targets.Add(context.source);
+                        resultPort = "Out";
+                        onResultPort?.Invoke(resultPort);
+                        yield break;
+                    }
                     
                     AreaPatternData pattern = graph.GetAsset<AreaPatternData>(targetData.patternReferenceId);
                     if (pattern == null) pattern = node.areaPattern;
@@ -581,35 +604,34 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                     break;
 
                 case "ConditionalFlowNode":
-                    // O usuário quer lógica AND: True se TODAS forem verdadeiras.
-                    // Procuramos todas as portas "Cond X" conectadas.
-                    bool allTrue = true;
-                    var condLinks = graph.NodeLinks.Where(l => l.TargetNodeGuid == node.Guid && l.TargetPortName.StartsWith("Cond")).ToList();
+                    var asyncFlowData = JsonUtility.FromJson<ConditionalFlowNodeData>(node.JsonData);
+                    if (asyncFlowData == null) asyncFlowData = new ConditionalFlowNodeData();
+
+                    bool asyncAllTrue = true;
+                    bool asyncAnyTrue = false;
+                    var asyncCondLinks = graph.NodeLinks.Where(l => l.TargetNodeGuid == node.Guid && l.TargetPortName.StartsWith("Cond")).ToList();
                     
-                    if (condLinks.Count == 0)
+                    if (asyncCondLinks.Count == 0)
                     {
-                        // Se não tem condições, vamos para True? Ou False? 
-                        // Seguindo a lógica de "cumprimento de todas as condições", 0 condições = todas cumpridas.
                         resultPort = "True";
                     }
                     else
                     {
-                        foreach (var link in condLinks)
+                        foreach (var link in asyncCondLinks)
                         {
                             var sourceNode = graph.NodeData.FirstOrDefault(n => n.Guid == link.BaseNodeGuid);
                             if (sourceNode != null)
                             {
                                 string subResult = "False";
                                 yield return StartCoroutine(ProcessNode(graph, sourceNode, context, currentHook, (res) => subResult = res));
-                                if (subResult != "True" && subResult != "Bool Out")
-                                {
-                                    allTrue = false;
-                                    break;
-                                }
+                                bool isSubTrue = (subResult == "True" || subResult == "Bool Out");
+                                if (!isSubTrue) asyncAllTrue = false;
+                                else asyncAnyTrue = true;
                             }
                         }
-                        resultPort = allTrue ? "True" : "False";
-                        CombatLogger.Log($"  <color=#ffd700>[Lógica]</color> Fluxo Condicional: <b>{resultPort}</b> (Todas as condições {(allTrue ? "cumpridas" : "não cumpridas")})", LogCategory.Condition);
+                        bool finalRes = asyncFlowData.mode == ConditionalFlowNodeData.LogicMode.And ? asyncAllTrue : asyncAnyTrue;
+                        resultPort = finalRes ? "True" : "False";
+                        CombatLogger.Log($"  <color=#ffd700>[Lógica]</color> Fluxo Condicional ({asyncFlowData.mode}): <b>{resultPort}</b>", LogCategory.Condition);
                     }
                     break;
 
@@ -960,7 +982,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                 // Auto Strategy - Passamos o range resolvido
                 var dataCopy = data; 
                 dataCopy.range = resolvedRange;
-                context.targets = AutoTargetResolver.Resolve(context.source, dataCopy);
+                context.targets = AutoTargetResolver.Resolve(context.source, dataCopy, context);
                 Debug.Log($"[Interpreter] Auto Targeting: {context.targets.Count} alvos encontrados.");
             }
         }
@@ -968,6 +990,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
         private IEnumerator PerformManualTargeting(Unit source, Unit rangeOrigin, int range, TargetingRuleData rule, CombatContext context, Action<List<Unit>, List<Vector2Int>> onTargetsConfirmed, AreaPatternData pattern = null, bool autoRotate = false, Direction preferredDir = Direction.N, IEnumerable<GridTile> whitelist = null)
         {
             TargetSelector selector = source.gameObject.AddComponent<TargetSelector>();
+            PlayerController.Instance?.RegisterTargetSelector(selector);
             selector.Begin(rangeOrigin, range, rule, pattern, preferredDir, whitelist, autoRotate);
 
             bool selectionConfirmed = false;
@@ -1364,100 +1387,11 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                 var passiveManager = target.GetComponent<PassiveManager>();
                 if (passiveManager == null) continue;
 
-                // Criar um nome estável para o Blueprint baseado no Grafo e no Nó
-                // Isso permite que o PassiveManager identifique bônus repetidos
                 string stableName = $"GraphBuff_{graph.name}_{node.Guid.Substring(0, 4)}";
                 
-                var dynamicBlueprint = ScriptableObject.CreateInstance<AbilityBlueprint>();
-                dynamicBlueprint.name = stableName;
-                dynamicBlueprint.abilityName = string.IsNullOrEmpty(graph.abilityName) ? graph.name : graph.abilityName;
-                dynamicBlueprint.abilityIcon = graph.abilityIcon;
-                dynamicBlueprint.abilityDescription = graph.abilityDescription;
-                dynamicBlueprint.isPersistentCondition = false;
-                dynamicBlueprint.durationInTurns = 1; // Default duration, maybe Graph supplies DurationPort later
-                dynamicBlueprint.canStack = data.canStack;
-                dynamicBlueprint.maxStacks = data.maxStacks;
+                int durationInTurns = 1;
+                bool isPersistentCondition = false;
                 
-                // O multiplicador global foi removido. Cada bônus agora é independente.
-                
-                // Separar modificadores Flat e Percent
-                var flatBonus = new CombatStats();
-                var percentModifiers = new System.Collections.Generic.List<Celestial_Cross.Scripts.Abilities.PassiveEffect_PercentStatBonus.PercentStatModifier>();
-
-                foreach(var stat in data.stats)
-                {
-                    // Converter nome do StatType string para enum
-                    CelestialCross.Artifacts.StatType statType = CelestialCross.Artifacts.StatType.AttackFlat;
-                    if (!string.IsNullOrEmpty(stat.statTypeName))
-                    {
-                        System.Enum.TryParse<CelestialCross.Artifacts.StatType>(stat.statTypeName, out statType);
-                    }
-
-                    float baseVal = stat.value;
-                    if (stat.valueMode == ModifierValueMode.Variable && !string.IsNullOrEmpty(stat.valueVariable))
-                    {
-                        baseVal = GetVariable(context, stat.valueVariable, stat.value);
-                    }
-
-                    float modifiedValue = baseVal; // Não há mais multiplicador global
-
-                    // Processar modificadores Flat
-                    if (statType == CelestialCross.Artifacts.StatType.AttackFlat)
-                    {
-                        flatBonus.attack = (int)modifiedValue;
-                    }
-                    else if (statType == CelestialCross.Artifacts.StatType.DefenseFlat)
-                    {
-                        flatBonus.defense = (int)modifiedValue;
-                    }
-                    else if (statType == CelestialCross.Artifacts.StatType.HealthFlat)
-                    {
-                        flatBonus.health = (int)modifiedValue;
-                    }
-                    else if (statType == CelestialCross.Artifacts.StatType.CriticalRate)
-                    {
-                        flatBonus.criticalChance = (int)modifiedValue;
-                    }
-                    // Processar modificadores Percent
-                    else if (statType == CelestialCross.Artifacts.StatType.AttackPercent 
-                        || statType == CelestialCross.Artifacts.StatType.DefensePercent
-                        || statType == CelestialCross.Artifacts.StatType.HealthPercent
-                        || statType == CelestialCross.Artifacts.StatType.CriticalDamage
-                        || statType == CelestialCross.Artifacts.StatType.EffectResistance
-                        || statType == CelestialCross.Artifacts.StatType.EffectHitRate
-                        || statType == CelestialCross.Artifacts.StatType.Speed)
-                    {
-                        percentModifiers.Add(new Celestial_Cross.Scripts.Abilities.PassiveEffect_PercentStatBonus.PercentStatModifier
-                        {
-                            statType = statType,
-                            percentBonus = modifiedValue
-                        });
-                    }
-                }
-
-                // Adicionar modificador de bônus plano se houver valores
-                if (flatBonus.attack > 0 || flatBonus.defense > 0 || flatBonus.health > 1 || flatBonus.criticalChance > 0)
-                {
-                    var flatMod = new Celestial_Cross.Scripts.Abilities.PassiveEffect_ConditionalStatBonus()
-                    {
-                        triggerHook = data.isBuff ? CombatHook.OnRoundStart : CombatHook.OnTurnStart,
-                        statBonus = flatBonus
-                    };
-                    dynamicBlueprint.modifiers.Add(flatMod);
-                }
-
-                // Adicionar modificador de bônus percentual se houver
-                if (percentModifiers.Count > 0)
-                {
-                    var percentMod = new Celestial_Cross.Scripts.Abilities.PassiveEffect_PercentStatBonus()
-                    {
-                        triggerHook = data.isBuff ? CombatHook.OnRoundStart : CombatHook.OnTurnStart,
-                        modifiers = percentModifiers
-                    };
-                    dynamicBlueprint.modifiers.Add(percentMod);
-                }
-
-                // BUSCAR DURAÇÃO DO DURATION NODE (se conectado)
                 var durationLink = graph.NodeLinks.FirstOrDefault(l => l.TargetNodeGuid == node.Guid && l.TargetPortName == "Duration");
                 if (durationLink != null)
                 {
@@ -1465,21 +1399,33 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                     if (durationNode != null)
                     {
                         var durData = JsonUtility.FromJson<DurationNodeData>(durationNode.JsonData);
-                        dynamicBlueprint.durationInTurns = (int)durData.value;
-                        dynamicBlueprint.isPersistentCondition = (durData.type == Celestial_Cross.Scripts.Abilities.Modifiers.DurationType.Infinite);
+                        durationInTurns = (int)durData.value;
+                        isPersistentCondition = (durData.type == Celestial_Cross.Scripts.Abilities.Modifiers.DurationType.Infinite);
                     }
                 }
 
-                passiveManager.ApplyCondition(dynamicBlueprint, context.source);
+                passiveManager.ApplyStatModifierCondition(
+                    conditionName: stableName,
+                    isBuff: data.isBuff,
+                    canStack: data.canStack,
+                    maxStacks: data.maxStacks,
+                    duration: durationInTurns,
+                    isPersistent: isPersistentCondition,
+                    stats: data.stats,
+                    source: context.source,
+                    context: context,
+                    icon: graph.abilityIcon,
+                    displayName: string.IsNullOrEmpty(graph.abilityName) ? graph.name : graph.abilityName
+                );
 
-                // Construir log detalhado dos bônus
                 string details = "";
-                if (flatBonus.attack != 0) details += $"ATK+{flatBonus.attack} ";
-                if (flatBonus.defense != 0) details += $"DEF+{flatBonus.defense} ";
-                if (flatBonus.health > 1) details += $"HP+{flatBonus.health} ";
-                foreach(var p in percentModifiers) details += $"{p.statType}+{p.percentBonus}% ";
+                foreach(var stat in data.stats)
+                {
+                    string suffix = stat.bonusType == ModifierBonusType.Percent ? "%" : "";
+                    details += $"{stat.statTypeName}+{stat.value}{suffix} ";
+                }
 
-                CombatLogger.Log($"  <color=#a29bfe>[Status]</color> Bônus aplicado em <b>{target.DisplayName}</b>: <color=#4dff88>{details}</color> ({dynamicBlueprint.durationInTurns} turnos)", LogCategory.Graph);
+                CombatLogger.Log($"  <color=#a29bfe>[Status]</color> Bônus aplicado em <b>{target.DisplayName}</b>: <color=#4dff88>{details}</color> ({durationInTurns} turnos)", LogCategory.Graph);
             }
         }
 
@@ -1503,7 +1449,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                 // Teste de Resistência para debuffs
                 if (!isBuff)
                 {
-                    if (!EffectResistanceCheck.ShouldApplyEffect(context.source, target, 100f))
+                    if (!EffectResistanceCheck.ShouldApplyEffect(context.source, target, data.hitChance))
                     {
                         CombatLogger.Log($"  <color=#ffd700>[Resistido]</color> <b>{target.DisplayName}</b> resistiu à condição <b>{conditionGraph.name}</b>", LogCategory.Graph);
                         continue;
@@ -1541,6 +1487,9 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                     break;
                 case AttributeCondition.AttributeType.Attack: val = unit.Stats.attack; break;
                 case AttributeCondition.AttributeType.Defense: val = unit.Stats.defense; break;
+                case AttributeCondition.AttributeType.Speed: val = unit.Stats.speed; break;
+                case AttributeCondition.AttributeType.EffectAccuracy: val = unit.Stats.effectAccuracy; break;
+                case AttributeCondition.AttributeType.CriticalChance: val = unit.Stats.criticalChance; break;
             }
 
             return data.comparison switch
@@ -1556,6 +1505,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
 
         private bool EvaluateDistanceCondition(DistanceConditionNodeData data, CombatContext context)
         {
+            if (context.source == null) return false;
             if (context.targets.Count == 0) return false;
             
             Unit target = context.targets[0];
@@ -1572,8 +1522,8 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                 if (!factionMatch) return false;
             }
 
-            int dist = Mathf.Max(Mathf.Abs(context.source.GridPosition.x - target.GridPosition.x), 
-                                Mathf.Abs(context.source.GridPosition.y - target.GridPosition.y));
+            int dist = Mathf.Abs(context.source.GridPosition.x - target.GridPosition.x) + 
+                       Mathf.Abs(context.source.GridPosition.y - target.GridPosition.y);
 
             return data.checkType switch
             {
@@ -1590,14 +1540,14 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
             Unit originUnit = (data.origin == RangeCondition.RangeOrigin.Caster) ? context.source : (context.targets.Count > 0 ? context.targets[0] : null);
             if (originUnit == null) return false;
 
-            var allUnits = UnityEngine.Object.FindObjectsByType<Unit>(FindObjectsSortMode.None);
+            var allUnits = TurnManager.Instance != null ? TurnManager.Instance.GetActiveUnits() : new List<Unit>();
             int foundCount = 0;
 
             foreach (var u in allUnits)
             {
                 if (u == null || u == originUnit) continue;
 
-                int dist = Mathf.Max(Mathf.Abs(originUnit.GridPosition.x - u.GridPosition.x), Mathf.Abs(originUnit.GridPosition.y - u.GridPosition.y));
+                int dist = Mathf.Abs(originUnit.GridPosition.x - u.GridPosition.x) + Mathf.Abs(originUnit.GridPosition.y - u.GridPosition.y);
                 if (dist > data.range) continue;
 
                 bool isAlly = u.Team == originUnit.Team;
@@ -1623,6 +1573,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
 
         private bool EvaluateFactionCondition(FactionConditionNodeData data, CombatContext context)
         {
+            if (context.source == null) return false;
             Unit unit = data.target == AttributeCondition.TargetType.Caster ? context.source : (context.targets.Count > 0 ? context.targets[0] : null);
             if (unit == null) return false;
 
@@ -1632,6 +1583,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
 
         private bool EvaluateSpeedAdvantageCondition(SpeedAdvantageConditionNodeData data, CombatContext context)
         {
+            if (context.source == null) return false;
             if (context.targets.Count == 0) return false;
             Unit target = context.targets[0];
             
@@ -1648,12 +1600,27 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
         {
             if (TurnManager.Instance == null) return false;
 
+            var roundOrder = TurnManager.Instance.GetRoundTurnOrder();
+            if (roundOrder.Count == 0) return false;
+
             if (data.type == TurnOrderCondition.OrderType.FirstInRound)
             {
-                return context.source == TurnManager.Instance.RoundStartUnit;
+                return context.source == roundOrder[0];
+            }
+            else if (data.type == TurnOrderCondition.OrderType.LastInRound)
+            {
+                return context.source == roundOrder[roundOrder.Count - 1];
+            }
+            else if (data.type == TurnOrderCondition.OrderType.SpecificIndex)
+            {
+                // Index is 1-based conceptually for designers, maybe 0-based in data? Let's assume 0-based data.
+                int idx = data.specificIndex;
+                if (idx >= 0 && idx < roundOrder.Count)
+                {
+                    return context.source == roundOrder[idx];
+                }
             }
             
-            // SpecificIndex logic would go here if TurnManager supported it easily
             return false;
         }
 
@@ -1742,13 +1709,20 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
 
     public static class AutoTargetResolver
     {
-        public static List<Unit> Resolve(Unit source, TargetNodeData data)
+        public static List<Unit> Resolve(Unit source, TargetNodeData data, CombatContext context = null)
         {
-            var allUnits = UnityEngine.Object.FindObjectsByType<Unit>(FindObjectsSortMode.None).ToList();
+            var allUnits = TurnManager.Instance != null ? TurnManager.Instance.GetActiveUnits() : new List<Unit>();
             
-            // Filtro de Facção
+            // Filtro de Facção e Alcance
             var filteredUnits = allUnits.Where(u => {
                 if (u == null || !u.gameObject.activeInHierarchy || (u.Health != null && u.Health.CurrentHealth <= 0)) return false;
+                
+                if (data.range > 0)
+                {
+                    int dist = Mathf.Abs(source.GridPosition.x - u.GridPosition.x) + Mathf.Abs(source.GridPosition.y - u.GridPosition.y);
+                    if (dist > data.range) return false;
+                }
+
                 if (data.factionType == GraphFactionType.Any) return true;
                 bool isAlly = u.Team == source.Team;
                 if (data.factionType == GraphFactionType.Ally) return isAlly;
@@ -1764,21 +1738,29 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
                     results.Add(source);
                     break;
                 case GraphAutoStrategyType.ClosestUnit:
-                    var closest = filteredUnits.Where(u => u != source).OrderBy(u => Vector2Int.Distance(source.GridPosition, u.GridPosition)).FirstOrDefault();
+                    var closest = filteredUnits.Where(u => u != source).OrderBy(u => Mathf.Abs(source.GridPosition.x - u.GridPosition.x) + Mathf.Abs(source.GridPosition.y - u.GridPosition.y)).FirstOrDefault();
                     if (closest != null) results.Add(closest);
                     break;
                 case GraphAutoStrategyType.FarthestUnit:
-                    var farthest = filteredUnits.Where(u => u != source).OrderByDescending(u => Vector2Int.Distance(source.GridPosition, u.GridPosition)).FirstOrDefault();
+                    var farthest = filteredUnits.Where(u => u != source).OrderByDescending(u => Mathf.Abs(source.GridPosition.x - u.GridPosition.x) + Mathf.Abs(source.GridPosition.y - u.GridPosition.y)).FirstOrDefault();
                     if (farthest != null) results.Add(farthest);
                     break;
                 case GraphAutoStrategyType.LowestAttribute:
-                    // Fallback para HP para manter simplificado se não passarmos o enum extra
-                    var lowest = filteredUnits.Where(u => u != source).OrderBy(u => u.Health.CurrentHealth).FirstOrDefault();
+                    var lowest = filteredUnits.Where(u => u != source).OrderBy(u => GetAttributeValue(u, data.attributeType)).FirstOrDefault();
                     if (lowest != null) results.Add(lowest);
                     break;
                 case GraphAutoStrategyType.HighestAttribute:
-                    var highest = filteredUnits.Where(u => u != source).OrderByDescending(u => u.Health.CurrentHealth).FirstOrDefault();
+                    var highest = filteredUnits.Where(u => u != source).OrderByDescending(u => GetAttributeValue(u, data.attributeType)).FirstOrDefault();
                     if (highest != null) results.Add(highest);
+                    break;
+                case GraphAutoStrategyType.MainTarget:
+                    if (context != null)
+                    {
+                        if (context.targets != null && context.targets.Count > 0 && context.targets[0] != null)
+                            results.Add(context.targets[0]);
+                        else if (context.target != null)
+                            results.Add(context.target);
+                    }
                     break;
                 case GraphAutoStrategyType.RandomTarget:
                     var valids = filteredUnits.Where(u => u != source).ToList();
@@ -1793,6 +1775,21 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
             }
 
             return results;
+        }
+
+        private static float GetAttributeValue(Unit unit, AttributeCondition.AttributeType attributeType)
+        {
+            if (unit == null) return 0f;
+            switch (attributeType)
+            {
+                case AttributeCondition.AttributeType.HP: return unit.Health != null ? unit.Health.CurrentHealth : 0f;
+                case AttributeCondition.AttributeType.Attack: return unit.Stats.attack;
+                case AttributeCondition.AttributeType.Defense: return unit.Stats.defense;
+                case AttributeCondition.AttributeType.Speed: return unit.Stats.speed;
+                case AttributeCondition.AttributeType.EffectAccuracy: return unit.Stats.effectAccuracy;
+                case AttributeCondition.AttributeType.CriticalChance: return unit.Stats.criticalChance;
+                default: return 0f;
+            }
         }
     }
 }

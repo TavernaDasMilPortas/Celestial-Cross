@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
 using Celestial_Cross.Scripts.Abilities;
-using Celestial_Cross.Scripts.Abilities.Strategies;
 
 namespace CelestialCross.Editor
 {
@@ -27,59 +26,6 @@ namespace CelestialCross.Editor
             Debug.Log("Foram gerados com sucesso 10 Units, 10 Pets e 40 Abilities de teste na pasta: " + BasePath);
         }
 
-        [MenuItem("Celestial Cross/2. Data & Assets/Config/Patch Existing generated Mock Abilities")]
-        public static void PatchAbilities()
-        {
-            string[] guids = AssetDatabase.FindAssets("t:AbilityBlueprint", new[] { AbilitiesPath });
-            int patched = 0;
-            foreach(var guid in guids)
-            {
-                string path = AssetDatabase.GUIDToAssetPath(guid);
-                AbilityBlueprint blueprint = AssetDatabase.LoadAssetAtPath<AbilityBlueprint>(path);
-                
-                if (blueprint != null && blueprint.effectSteps.Count == 0)
-                {
-                    blueprint.effectSteps = new List<EffectStep>();
-
-                    EffectStep step = new EffectStep();
-                    
-                    if (blueprint.isPassive)
-                    {
-                        step.trigger = CelestialCross.Combat.CombatHook.OnTurnStart;
-                        step.targetingStrategy = new SingleTargetingStrategy();
-                        
-                        var heal = new Celestial_Cross.Scripts.Abilities.HealEffectData();
-                        heal.multiplier = 0.05f; // 5% base
-                        step.effects.Add(heal);
-                    }
-                    else 
-                    {
-                        step.trigger = CelestialCross.Combat.CombatHook.OnManualCast;
-                        step.targetingStrategy = new SingleTargetingStrategy();
-                        
-                        if (blueprint.abilityName.Contains("Cura") || blueprint.abilityName.Contains("Divin") || blueprint.abilityName.Contains("Inspirador"))
-                        {
-                            var heal = new Celestial_Cross.Scripts.Abilities.HealEffectData();
-                            heal.multiplier = 0.3f; // 30% base
-                            step.effects.Add(heal);
-                        }
-                        else
-                        {
-                            var dmg = new Celestial_Cross.Scripts.Abilities.DamageEffectData();
-                            dmg.multiplier = blueprint.abilityName.Contains("Ultimate") ? 2.0f : 1.0f; // 200% ou 100%
-                            step.effects.Add(dmg);
-                        }
-                    }
-
-                    blueprint.effectSteps.Add(step);
-                    EditorUtility.SetDirty(blueprint);
-                    patched++;
-                }
-            }
-            AssetDatabase.SaveAssets();
-            Debug.Log($"Patch finalizado. {patched} habilidades foram preenchidas com EffectSteps e Modifiders funcionais!");
-        }
-
         private static void EnsureDirectories()
         {
             if (!AssetDatabase.IsValidFolder(BasePath)) AssetDatabase.CreateFolder("Assets/Celestial-Cross", "MockData");
@@ -90,10 +36,10 @@ namespace CelestialCross.Editor
 
         private static void GeneratePets()
         {
-            string[] petNames = { "DragÃ£o Flamejante", "Lobo de Gelo", "Golem de Terra", "FalcÃ£o dos Ventos", "Fada de Luz", "Pantera das Sombras", "EspÃ­rito da Ãgua", "PÃ¡ssaro TrovÃ£o", "Serpente Venenosa", "Coruja Arcana" };
+            string[] petNames = { "DragÃƒÂ£o Flamejante", "Lobo de Gelo", "Golem de Terra", "FalcÃƒÂ£o dos Ventos", "Fada de Luz", "Pantera das Sombras", "EspÃƒÂ­rito da ÃƒÂgua", "PÃƒÂ¡ssaro TrovÃƒÂ£o", "Serpente Venenosa", "Coruja Arcana" };
             Color[] petColors = { Color.red, Color.cyan, new Color(0.6f, 0.3f, 0.1f), Color.white, Color.yellow, Color.black, Color.blue, Color.magenta, Color.green, new Color(0.5f, 0, 0.5f) };
             
-            // Atributos BÃ´nus
+            // Atributos BÃƒÂ´nus
             CombatStats[] petStats = {
                 new CombatStats(20, 50, 10, 5, 5, 0), // Fogo (Atk)
                 new CombatStats(30, 20, 20, 15, 2, 0), // Gelo (Balanceado/Spd)
@@ -102,7 +48,7 @@ namespace CelestialCross.Editor
                 new CombatStats(80, 15, 25, 5, 0, 10), // Luz (HP/Acc)
                 new CombatStats(10, 60, 5, 10, 15, 0), // Sombra (Atk/Crit)
                 new CombatStats(60, 15, 30, 0, 0, 5),   // Agua (HP/Def)
-                new CombatStats(10, 45, 5, 25, 5, 0),   // TrovÃ£o (Atk/Spd)
+                new CombatStats(10, 45, 5, 25, 5, 0),   // TrovÃƒÂ£o (Atk/Spd)
                 new CombatStats(40, 25, 15, 5, 0, 20),  // Veneno (Acc/HP)
                 new CombatStats(20, 40, 10, 10, 5, 15)  // Arcano (Atk/Acc)
             };
@@ -110,10 +56,11 @@ namespace CelestialCross.Editor
             for (int i = 0; i < 10; i++)
             {
                 // 1. Criar Passiva
-                AbilityBlueprint passive = ScriptableObject.CreateInstance<AbilityBlueprint>();
+                Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO passive = ScriptableObject.CreateInstance<Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO>();
                 passive.abilityName = "Aura do " + petNames[i].Split(' ')[0];
-                passive.abilityDescription = "Concede bÃ´nus instintivos e poder mÃ­stico passivo da criatura ao mestre.";
-                passive.isPassive = true;
+                passive.abilityDescription = "Concede bÃƒÂ´nus instintivos e poder mÃƒÂ­stico passivo da criatura ao mestre.";
+                var pStartData = new Celestial_Cross.Scripts.Abilities.Graph.Runtime.StartNodeData { type = AbilityType.Passive, subtype = AbilitySubtype.Buff, isBuff = true };
+                passive.NodeData.Add(new Celestial_Cross.Scripts.Abilities.Graph.AbilityNodeData { NodeType = "StartNode", JsonData = JsonUtility.ToJson(pStartData) });
                 AssetDatabase.CreateAsset(passive, $"{AbilitiesPath}/Ability_Pet_{i}.asset");
 
                 // 2. Criar Pet
@@ -125,7 +72,7 @@ namespace CelestialCross.Editor
                 pet.MinBaseSpeed = petStats[i].speed; pet.MaxBaseSpeed = petStats[i].speed * 1.5f; 
                 pet.MinBaseCriticalChance = petStats[i].criticalChance; pet.MaxBaseCriticalChance = petStats[i].criticalChance * 1.5f; 
                 pet.MinBaseEffectAccuracy = petStats[i].effectAccuracy; pet.MaxBaseEffectAccuracy = petStats[i].effectAccuracy * 1.5f;
-                pet.PassiveSkills.Add(passive);
+                pet.AbilityGraphs.Add(passive);
                 pet.Icon = GenerateColoredSprite(petColors[i], $"Icon_Pet_{i}");
                 
                 AssetDatabase.CreateAsset(pet, $"{PetsPath}/Pet_{i}.asset");
@@ -134,7 +81,7 @@ namespace CelestialCross.Editor
 
         private static void GenerateUnits()
         {
-            string[] unitNames = { "Paladino GuardiÃ£o", "Assassino Furtivo", "Piromante Supremo", "ClÃ©riga Divina", "BÃ¡rbaro Sangrento", "Patrulheiro Ã‰lfico", "Cavaleiro Real", "Necromante Obscuro", "Bardo Inspirador", "Evocador Astral" };
+            string[] unitNames = { "Paladino GuardiÃƒÂ£o", "Assassino Furtivo", "Piromante Supremo", "ClÃƒÂ©riga Divina", "BÃƒÂ¡rbaro Sangrento", "Patrulheiro Ãƒâ€°lfico", "Cavaleiro Real", "Necromante Obscuro", "Bardo Inspirador", "Evocador Astral" };
             Color[] unitColors = { Color.white, Color.black, Color.red, Color.yellow, new Color(0.8f, 0.1f, 0.1f), Color.green, Color.gray, new Color(0.3f, 0, 0.4f), Color.cyan, Color.magenta };
 
             CombatStats[] unitStats = {
@@ -153,22 +100,25 @@ namespace CelestialCross.Editor
             for (int i = 0; i < 10; i++)
             {
                 // Criar Habilidades (1 Passiva, 2 Ativas)
-                AbilityBlueprint passiva = ScriptableObject.CreateInstance<AbilityBlueprint>();
-                passiva.abilityName = "TÃ©cnica de " + unitNames[i].Split(' ')[0];
+                Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO passiva = ScriptableObject.CreateInstance<Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO>();
+                passiva.abilityName = "TÃƒÂ©cnica de " + unitNames[i].Split(' ')[0];
                 passiva.abilityDescription = $"Habilidade passiva de um verdadeiro {unitNames[i].Split(' ')[0]}.";
-                passiva.isPassive = true;
+                var upStartData = new Celestial_Cross.Scripts.Abilities.Graph.Runtime.StartNodeData { type = AbilityType.Passive, subtype = AbilitySubtype.Buff, isBuff = true };
+                passiva.NodeData.Add(new Celestial_Cross.Scripts.Abilities.Graph.AbilityNodeData { NodeType = "StartNode", JsonData = JsonUtility.ToJson(upStartData) });
                 AssetDatabase.CreateAsset(passiva, $"{AbilitiesPath}/Ability_Unit_{i}_Passive.asset");
 
-                AbilityBlueprint ativa1 = ScriptableObject.CreateInstance<AbilityBlueprint>();
-                ativa1.abilityName = "Ataque BÃ¡sico";
-                ativa1.abilityDescription = "Golpe rÃ¡pido e direto em um inimigo.";
-                ativa1.isPassive = false;
+                Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO ativa1 = ScriptableObject.CreateInstance<Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO>();
+                ativa1.abilityName = "Ataque BÃƒÂ¡sico";
+                ativa1.abilityDescription = "Golpe rÃƒÂ¡pido e direto em um inimigo.";
+                var ua1StartData = new Celestial_Cross.Scripts.Abilities.Graph.Runtime.StartNodeData { type = AbilityType.Active, subtype = AbilitySubtype.Attack, isBuff = false };
+                ativa1.NodeData.Add(new Celestial_Cross.Scripts.Abilities.Graph.AbilityNodeData { NodeType = "StartNode", JsonData = JsonUtility.ToJson(ua1StartData) });
                 AssetDatabase.CreateAsset(ativa1, $"{AbilitiesPath}/Ability_Unit_{i}_Active1.asset");
 
-                AbilityBlueprint ativa2 = ScriptableObject.CreateInstance<AbilityBlueprint>();
+                Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO ativa2 = ScriptableObject.CreateInstance<Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO>();
                 ativa2.abilityName = "Poder Ultimate";
-                ativa2.abilityDescription = "Usa todo o dom do herÃ³i para um impacto destrutivo ou curativo massivo.";
-                ativa2.isPassive = false;
+                ativa2.abilityDescription = "Usa todo o dom do herÃƒÂ³i para um impacto destrutivo ou curativo massivo.";
+                var ua2StartData = new Celestial_Cross.Scripts.Abilities.Graph.Runtime.StartNodeData { type = AbilityType.Active, subtype = AbilitySubtype.Attack, isBuff = false };
+                ativa2.NodeData.Add(new Celestial_Cross.Scripts.Abilities.Graph.AbilityNodeData { NodeType = "StartNode", JsonData = JsonUtility.ToJson(ua2StartData) });
                 AssetDatabase.CreateAsset(ativa2, $"{AbilitiesPath}/Ability_Unit_{i}_Active2.asset");
 
                 // Criar Unidade
@@ -177,7 +127,7 @@ namespace CelestialCross.Editor
                 unit.baseStats = unitStats[i];
                 unit.icon = GenerateColoredSprite(unitColors[i], $"Icon_Unit_{i}");
                 
-                // unit.abilities = new List<AbilityBlueprint> { passiva, ativa1, ativa2 }; // Removido (Refatoração para Grafos)
+                unit.abilityGraphs = new List<Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO> { passiva, ativa1, ativa2 };
 
                 AssetDatabase.CreateAsset(unit, $"{UnitsPath}/Unit_{i}.asset");
             }
@@ -219,6 +169,8 @@ namespace CelestialCross.Editor
         }
     }
 }
+
+
 
 
 

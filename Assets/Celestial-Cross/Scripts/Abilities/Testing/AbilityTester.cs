@@ -1,4 +1,4 @@
-using UnityEngine;
+Ôªøusing UnityEngine;
 using Sirenix.OdinInspector;
 using Celestial_Cross.Scripts.Abilities;
 using Celestial_Cross.Scripts.Combat.Execution;
@@ -8,12 +8,12 @@ namespace Celestial_Cross.Scripts.Abilities.Testing
 {
     public class AbilityTester : MonoBehaviour
     {
-        [Tooltip("A unidade que ir· conjurar a habilidade.")]
+        [Tooltip("A unidade que ir√° conjurar a habilidade.")]
         public Unit Caster;
 
         [Tooltip("A habilidade a ser testada.")]
         [InlineEditor(InlineEditorObjectFieldModes.Boxed)]
-        public AbilityBlueprint BlueprintToTest;
+        public Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO GraphToTest;
 
         [Tooltip("Qual momento/hook disparar agora?")]
         public CombatHook testHook = CombatHook.OnManualCast;
@@ -33,7 +33,7 @@ namespace Celestial_Cross.Scripts.Abilities.Testing
                 return;
             }
 
-            if (BlueprintToTest == null)
+            if (GraphToTest == null)
             {
                 Debug.LogError("[AbilityTester] Nenhuma AbilityBlueprint definida para o teste!");
                 return;
@@ -43,14 +43,15 @@ namespace Celestial_Cross.Scripts.Abilities.Testing
             {
                 var executorObj = new GameObject("AbilityExecutor");
                 executorObj.AddComponent<AbilityExecutor>();
-                Debug.LogWarning("[AbilityTester] AbilityExecutor n„o foi encontrado na cena. Criado um tempor·rio.");
+                Debug.LogWarning("[AbilityTester] AbilityExecutor n√£o foi encontrado na cena. Criado um tempor√°rio.");
             }
 
-            Debug.Log($"[AbilityTester] Solicitando execuÁ„o de {BlueprintToTest.name} para o momento {testHook}...");
-            AbilityExecutor.Instance.ExecuteAbility(Caster, BlueprintToTest, testHook, () =>
+            Debug.Log($"[AbilityTester] Solicitando execu√ß√£o de {GraphToTest.name} para o momento {testHook}...");
+            AbilityExecutor.Instance.ExecuteGraph(Caster, GraphToTest, testHook, () =>
             {
-                Debug.Log($"[AbilityTester] Teste da habilidade {BlueprintToTest.name} completamente finalizado!");
+                Debug.Log($"[AbilityTester] Teste da habilidade {GraphToTest.name} completamente finalizado!");
             });
         }
     }
 }
+

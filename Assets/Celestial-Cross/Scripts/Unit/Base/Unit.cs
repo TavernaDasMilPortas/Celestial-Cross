@@ -37,11 +37,6 @@ public abstract class Unit : MonoBehaviour
     private List<StatModifier> cachedArtifactStatModifiers = new List<StatModifier>();
 
     [SerializeField]
-    private List<AbilityBlueprint> cachedArtifactSetPassives = new List<AbilityBlueprint>();
-
-    public IReadOnlyList<AbilityBlueprint> ArtifactSetPassives => cachedArtifactSetPassives;
-
-    [SerializeField]
     private List<Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO> cachedArtifactSetPassiveGraphs = new List<Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO>();
 
     public IReadOnlyList<Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO> ArtifactSetPassiveGraphs => cachedArtifactSetPassiveGraphs;
@@ -52,7 +47,7 @@ public abstract class Unit : MonoBehaviour
     public Vector2Int GridPosition;
 
     [Header("Runtime Stats")]
-    // Atributos de modificadores (buffs/debuffs) agora são calculados dinamicamente via PassiveManager
+    // Atributos de modificadores (buffs/debuffs) agora sÃ£o calculados dinamicamente via PassiveManager
 
     public bool hasMovedThisTurn { get; set; }
     public bool hasActedThisTurn { get; set; }
@@ -152,7 +147,7 @@ public abstract class Unit : MonoBehaviour
                 }
             }
 
-            // uBase deve ser os atributos escalados para o nível atual (sem o pet), e não o Level 1.
+            // uBase deve ser os atributos escalados para o nÃ­vel atual (sem o pet), e nÃ£o o Level 1.
             CombatStats uBase = unitData != null ? unitData.GetStatsAtLevel(level, refMaxLevel) : baseStats;
             
             // Subtrai o uBase para encontrar exatamente quanto o pet deu de atributo
@@ -160,7 +155,7 @@ public abstract class Unit : MonoBehaviour
             int petAttack = baseStats.attack - uBase.attack;
             int petDefense = baseStats.defense - uBase.defense;
 
-            // Aplica as porcentagens dos artefatos em cima do status escalado pelo nível!
+            // Aplica as porcentagens dos artefatos em cima do status escalado pelo nÃ­vel!
             int finalHealth = (int)(Mathf.Round(uBase.health * (1f + (healthPct / 100f))) + healthFlat) + petHealth;
             int finalAttack = (int)(Mathf.Round(uBase.attack * (1f + (atkPct / 100f))) + atkFlat) + petAttack;
             int finalDefense = (int)(Mathf.Round(uBase.defense * (1f + (defPct / 100f))) + defFlat) + petDefense;
@@ -172,7 +167,7 @@ public abstract class Unit : MonoBehaviour
 
             CombatStats finalArtifactStats = new CombatStats(finalHealth, finalAttack, finalDefense, finalSpeed, finalCrit, finalAcc, finalCritDmg, finalRes);
             
-            // Somar bônus de condições ativas do PassiveManager
+            // Somar bÃ´nus de condiÃ§Ãµes ativas do PassiveManager
             CombatStats conditionStats = new CombatStats(0, 0, 0, 0, 0, 0, 0, 0);
             if (PassiveManager != null)
             {
@@ -220,7 +215,7 @@ public abstract class Unit : MonoBehaviour
     protected IUnitAction currentAction;
     public IUnitAction CurrentAction => currentAction;
     
-    // Armazena o path visualizado no targeting para sincronizar perfeitamente a execução real
+    // Armazena o path visualizado no targeting para sincronizar perfeitamente a execuÃ§Ã£o real
     [HideInInspector] public System.Collections.Generic.List<UnityEngine.Vector2Int> lastCalculatedPath;
 
     public System.Action<IUnitAction> OnActionChanged;
@@ -266,7 +261,7 @@ public abstract class Unit : MonoBehaviour
         ApplyArtifactSetPassives();
         
         // Aplica passivas de habilidades inatas (Via Grafos) apenas se for inimigo. 
-        // Players usam slots, pets, artefatos e constelações.
+        // Players usam slots, pets, artefatos e constelaÃ§Ãµes.
         if (unitData != null)
         {
             MaxAP = unitData.maxAP;
@@ -288,16 +283,16 @@ public abstract class Unit : MonoBehaviour
             }
         }
 
-        // Aplica passivas da árvore de habilidades (SkillTreeConfig) e do Loadout
+        // Aplica passivas da Ã¡rvore de habilidades (SkillTreeConfig) e do Loadout
         var treeConfig = unitData != null ? unitData.skillTreeConfig : null;
         if (treeConfig != null)
         {
-            // 1. Ataque básico se for passivo
+            // 1. Ataque bÃ¡sico se for passivo
             if (treeConfig.basicAttack != null && treeConfig.basicAttack.IsPassive)
             {
                 PassiveManager?.ApplyGraphCondition(treeConfig.basicAttack, this);
             }
-            // 2. Movimentação se for passiva
+            // 2. MovimentaÃ§Ã£o se for passiva
             if (treeConfig.movementSkill != null && treeConfig.movementSkill.IsPassive)
             {
                 PassiveManager?.ApplyGraphCondition(treeConfig.movementSkill, this);
@@ -338,8 +333,6 @@ public abstract class Unit : MonoBehaviour
 
         if (petSpeciesData != null)
         {
-            // Aplica a habilidade do pet como passiva caso aplicável
-            if (petSpeciesData.PassiveSkills != null) { foreach(var pass in petSpeciesData.PassiveSkills) { if (pass != null) PassiveManager?.ApplyCondition(pass, this); } }
 
             // Aplica grafos de habilidades passivas do pet
             if (petSpeciesData.AbilityGraphs != null)
@@ -371,7 +364,7 @@ public abstract class Unit : MonoBehaviour
 
                     if (anim != null && anim.runtimeAnimatorController != null)
                     {
-                        // Injeta os clipes específicos deste Pet usando um Override Controller
+                        // Injeta os clipes especÃ­ficos deste Pet usando um Override Controller
                         AnimatorOverrideController overrideController = new AnimatorOverrideController(anim.runtimeAnimatorController);
                         
                         var clipOverrides = new List<KeyValuePair<AnimationClip, AnimationClip>>();
@@ -389,7 +382,7 @@ public abstract class Unit : MonoBehaviour
                 }
                 else
                 {
-                    Debug.LogWarning("BasePetPrefab não encontrado. Crie um prefab com esse nome dentro de uma pasta chamada 'Resources'.");
+                    Debug.LogWarning("BasePetPrefab nÃ£o encontrado. Crie um prefab com esse nome dentro de uma pasta chamada 'Resources'.");
                 }
             }
 
@@ -410,7 +403,7 @@ public abstract class Unit : MonoBehaviour
             }
         }
 
-        // Aplica passivas de constelação (Fase 2)
+        // Aplica passivas de constelaÃ§Ã£o (Fase 2)
         if (unitData != null && runtimeUnitData != null)
         {
             var constPassives = CelestialCross.System.ConstellationService.GetUnlockedPassives(unitData, runtimeUnitData.ConstellationLevel);
@@ -430,7 +423,6 @@ public abstract class Unit : MonoBehaviour
     private void RebuildArtifactCaches(ArtifactSetCatalog setCatalog)
     {
         cachedArtifactStatModifiers.Clear();
-        cachedArtifactSetPassives.Clear();
         cachedArtifactSetPassiveGraphs.Clear();
  
         if (equippedArtifactData == null)
@@ -486,8 +478,7 @@ public abstract class Unit : MonoBehaviour
                 if (bonus.statBonuses != null)
                     cachedArtifactStatModifiers.AddRange(bonus.statBonuses);
  
-                if (bonus.passiveAbility != null && !cachedArtifactSetPassives.Contains(bonus.passiveAbility))
-                    cachedArtifactSetPassives.Add(bonus.passiveAbility);
+                
 
                 if (bonus.passiveGraph != null && !cachedArtifactSetPassiveGraphs.Contains(bonus.passiveGraph))
                     cachedArtifactSetPassiveGraphs.Add(bonus.passiveGraph);
@@ -500,8 +491,8 @@ public abstract class Unit : MonoBehaviour
         if (PassiveManager == null)
             return;
             
-        // Se estivermos usando a lista de testes do Editor (equippedArtifacts) e não o cache do Save:
-        if ((cachedArtifactSetPassives == null || cachedArtifactSetPassives.Count == 0) &&
+        // Se estivermos usando a lista de testes do Editor (equippedArtifacts) e nÃ£o o cache do Save:
+        if (
             (cachedArtifactSetPassiveGraphs == null || cachedArtifactSetPassiveGraphs.Count == 0) &&
             equippedArtifacts != null && equippedArtifacts.Count > 0)
         {
@@ -521,22 +512,11 @@ public abstract class Unit : MonoBehaviour
                 {
                     if (kvp.Value >= bonus.piecesRequired)
                     {
-                        if (bonus.passiveAbility != null && !cachedArtifactSetPassives.Contains(bonus.passiveAbility))
-                            cachedArtifactSetPassives.Add(bonus.passiveAbility);
+                        
                         if (bonus.passiveGraph != null && !cachedArtifactSetPassiveGraphs.Contains(bonus.passiveGraph))
                             cachedArtifactSetPassiveGraphs.Add(bonus.passiveGraph);
                     }
                 }
-            }
-        }
- 
-        if (cachedArtifactSetPassives != null)
-        {
-            for (int i = 0; i < cachedArtifactSetPassives.Count; i++)
-            {
-                var passive = cachedArtifactSetPassives[i];
-                if (passive == null) continue;
-                PassiveManager.ApplyCondition(passive, this);
             }
         }
 
@@ -555,7 +535,7 @@ public abstract class Unit : MonoBehaviour
     {
         if (unitData == null) 
         { 
-            if (Application.isPlaying) Debug.LogError($"[Unit] {name} não possui UnitData."); 
+            if (Application.isPlaying) Debug.LogError($"[Unit] {name} nÃ£o possui UnitData."); 
             return; 
         }
         actions.Clear();
@@ -566,7 +546,7 @@ public abstract class Unit : MonoBehaviour
         
         var addedGraphs = new HashSet<AbilityGraphSO>();
 
-        // 1) Ataque Básico e Movimentação da Árvore (Apenas se não forem passivos)
+        // 1) Ataque BÃ¡sico e MovimentaÃ§Ã£o da Ãrvore (Apenas se nÃ£o forem passivos)
         var treeConfig = unitData.skillTreeConfig;
         if (treeConfig != null)
         {
@@ -626,7 +606,7 @@ public abstract class Unit : MonoBehaviour
             #pragma warning restore 612, 618
         }
 
-        // 3) Outras habilidades da própria unidade (apenas ativas)
+        // 3) Outras habilidades da prÃ³pria unidade (apenas ativas)
         bool isEnemy = this is Celestial_Cross.Scripts.Units.Enemy.EnemyUnit;
         if (isEnemy)
         {
@@ -647,16 +627,6 @@ public abstract class Unit : MonoBehaviour
         // 4) Habilidades dos Pets (apenas ativas)
         if (petSpeciesData != null)
         {
-            if (petSpeciesData.ActiveSkills != null)
-            {
-                foreach (var act in petSpeciesData.ActiveSkills)
-                {
-                    if (act != null && !act.isPassive)
-                    {
-                        actions.Add(new BlueprintActionWrapper(this, act));
-                    }
-                }
-            }
             if (petSpeciesData.AbilityGraphs != null)
             {
                 foreach (var graph in petSpeciesData.AbilityGraphs)
@@ -670,7 +640,7 @@ public abstract class Unit : MonoBehaviour
             }
         }
 
-        // 5) Executáveis nativos (se houver)
+        // 5) ExecutÃ¡veis nativos (se houver)
         foreach (var definition in unitData.GetExecutableDefinitions()) {
             var component = gameObject.AddComponent(definition.GetRuntimeActionType()) as IUnitAction;
             if (component != null)
@@ -760,7 +730,7 @@ public abstract class Unit : MonoBehaviour
 
         Debug.Log($"{DisplayName} foi derrotado(a).");
 
-        // 2. Adicionar ao cemitério
+        // 2. Adicionar ao cemitÃ©rio
         if (GraveyardManager.Instance != null)
         {
             GraveyardManager.Instance.AddDeadUnit(this);
@@ -779,7 +749,7 @@ public abstract class Unit : MonoBehaviour
         
         if (visualTransform != null)
         {
-            // Implosão
+            // ImplosÃ£o
             DG.Tweening.Sequence deathSeq = DG.Tweening.DOTween.Sequence();
             deathSeq.Join(visualTransform.DOPunchScale(Vector3.one * 0.3f, 0.2f, 10, 1f));
             deathSeq.Append(visualTransform.DOScale(0f, 0.2f).SetEase(DG.Tweening.Ease.InBack));
@@ -811,10 +781,11 @@ public abstract class Unit : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("[Unit] CometDeathVFX prefab não encontrado na pasta Resources/VFX!");
+            Debug.LogWarning("[Unit] CometDeathVFX prefab nÃ£o encontrado na pasta Resources/VFX!");
         }
     }
 }
+
 
 
 

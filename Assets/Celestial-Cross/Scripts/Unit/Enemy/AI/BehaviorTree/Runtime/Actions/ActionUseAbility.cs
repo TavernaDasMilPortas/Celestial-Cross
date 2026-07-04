@@ -53,7 +53,7 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Runtime.Actions
                 }
 
                 // Filtro de Range Real
-                candidates.RemoveAll(u => AIGridUtility.ChebyshevDistance(blackboard.myPosition, u.GridPosition) > ability.range);
+                candidates.RemoveAll(u => AIGridUtility.GridDistance(blackboard.myPosition, u.GridPosition) > ability.range);
 
                 foreach (var target in candidates)
                 {
@@ -173,8 +173,8 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Runtime.Actions
         private Unit GetBestSecondaryTarget(Vector2Int casterPos, int range, List<Unit> candidates)
         {
             return candidates
-                .Where(u => AIGridUtility.ChebyshevDistance(casterPos, u.GridPosition) <= range)
-                .OrderBy(u => AIGridUtility.ChebyshevDistance(casterPos, u.GridPosition))
+                .Where(u => AIGridUtility.GridDistance(casterPos, u.GridPosition) <= range)
+                .OrderBy(u => AIGridUtility.GridDistance(casterPos, u.GridPosition))
                 .FirstOrDefault();
         }
 
@@ -186,7 +186,7 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Runtime.Actions
 
             var candidates = new List<Unit>(
                 ability.hint.targetsFriendlies ? bb.allies : bb.enemies);
-            candidates.RemoveAll(u => AIGridUtility.ChebyshevDistance(bb.myPosition, u.GridPosition) > ability.range);
+            candidates.RemoveAll(u => AIGridUtility.GridDistance(bb.myPosition, u.GridPosition) > ability.range);
 
             if (!ability.allowSameTargetMultipleTimes)
                 candidates.Remove(primary);

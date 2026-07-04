@@ -70,28 +70,7 @@ namespace CelestialCross.Giulia_UI
             {
                 activeSkill = "<b>Habilidades:</b>\n";
                 bool hasSkills = false;
-                if (speciesData.PassiveSkills != null)
-                {
-                    foreach (var ab in speciesData.PassiveSkills)
-                    {
-                        if (ab != null)
-                        {
-                            activeSkill += $"- <color=#ffffaa>{ab.abilityName}</color> (Passiva)\n";
-                            hasSkills = true;
-                        }
-                    }
-                }
-                if (speciesData.ActiveSkills != null)
-                {
-                    foreach (var ab in speciesData.ActiveSkills)
-                    {
-                        if (ab != null)
-                        {
-                            activeSkill += $"- <color=#ffffaa>{ab.abilityName}</color> (Ativa)\n";
-                            hasSkills = true;
-                        }
-                    }
-                }
+
                 if (speciesData.AbilityGraphs != null)
                 {
                     foreach (var graph in speciesData.AbilityGraphs)

@@ -9,14 +9,14 @@ using CelestialCross.System;
 
 
 /// <summary>
-/// (Fase 2) UI de inventÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡rio modular com 3 abas (Unidades, Pets, Artefatos).
-/// Layout split-screen: Painel Superior (detalhes dinÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢micos) + Painel Inferior (grid/scroll).
+/// (Fase 2) UI de inventÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡rio modular com 3 abas (Unidades, Pets, Artefatos).
+/// Layout split-screen: Painel Superior (detalhes dinÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢micos) + Painel Inferior (grid/scroll).
 /// Suporta troca por toque nas abas ou swipe horizontal.
 /// </summary>
 public class InventoryUI : MonoBehaviour
 {
     [Header("Data Catalogs")]
-    [Tooltip("NecessÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡rio para renderizar detalhes da Unidade (ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­cone, stats, skills)")]
+    [Tooltip("NecessÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡rio para renderizar detalhes da Unidade (ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â­cone, stats, skills)")]
     public UnitCatalog unitCatalog;
     public PetCatalog petCatalog;
     public ArtifactSetCatalog artifactSetCatalog;
@@ -26,19 +26,19 @@ public class InventoryUI : MonoBehaviour
     [Tooltip("Arrastar as 3 InventoryTab (Unidades, Pets, Artefatos) na ordem")]
     public InventoryTab[] tabs;
 
-    [Header("IntegraÃƒÆ’Ã‚Â¯Ãƒâ€šÃ‚Â¿Ãƒâ€šÃ‚Â½ÃƒÆ’Ã‚Â¯Ãƒâ€šÃ‚Â¿Ãƒâ€šÃ‚Â½o Aba de Itens")]
+    [Header("IntegraÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¯ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¿ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â½ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¯ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¿ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â½o Aba de Itens")]
     public ItemsInventoryUI itemsInventoryPanel;
 
-    [Header("ConteÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âºdo Inferior (Grids)")]
+    [Header("ConteÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Âºdo Inferior (Grids)")]
     [Tooltip("Um RectTransform com GridLayoutGroup para cada aba, na mesma ordem das tabs")]
     public RectTransform[] gridContainers;
 
     [Header("Item Prefab (Opcional)")]
-    [Tooltip("Prefab de cada item do grid (Button + Image/Text). Se vazio, o UI ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â© criado via cÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³digo.")]
+    [Tooltip("Prefab de cada item do grid (Button + Image/Text). Se vazio, o UI ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â© criado via cÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â³digo.")]
     public GameObject slotPrefab;
 
     [Header("Split Layout")]
-    [Tooltip("Altura do painel superior em proporÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o (0..1). Ex: 0.45 = 45% superior.")]
+    [Tooltip("Altura do painel superior em proporÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£o (0..1). Ex: 0.45 = 45% superior.")]
     [Range(0.25f, 0.75f)]
     public float topPanelHeightNormalized = 0.45f;
 
@@ -51,7 +51,7 @@ public class InventoryUI : MonoBehaviour
     public Vector2 cellSpacing = new Vector2(10f, 10f);
 
     [Header("Swipe")]
-    [Tooltip("ReferÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âªncia ao SwipeDetector (pode estar no mesmo GameObject)")]
+    [Tooltip("ReferÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Âªncia ao SwipeDetector (pode estar no mesmo GameObject)")]
     public SwipeDetector swipeDetector;
 
     private int currentTabIndex = 0;
@@ -141,7 +141,7 @@ public class InventoryUI : MonoBehaviour
     {
         Debug.Log("[InventoryUI] Start chamado.");
         if (unitCatalog == null)
-            Debug.LogWarning("InventoryUI: UnitCatalog não atribuído! A UI de Constelação e Detalhes pode não funcionar corretamente.");
+            Debug.LogWarning("InventoryUI: UnitCatalog nÃ£o atribuÃ­do! A UI de ConstelaÃ§Ã£o e Detalhes pode nÃ£o funcionar corretamente.");
 
         InitializeTabs();
         RegisterSwipe();
@@ -158,10 +158,10 @@ public class InventoryUI : MonoBehaviour
         if (constellationButton != null)
             constellationButton.onClick.AddListener(OnConstellationUpgradeClicked);
         
-        // Auto-criação do AccountManager para testes diretos no editor
+        // Auto-criaÃ§Ã£o do AccountManager para testes diretos no editor
         if (AccountManager.Instance == null)
         {
-            Debug.Log("[InventoryUI] AccountManager não encontrado. Criando AccountManager dinâmico para depuração...");
+            Debug.Log("[InventoryUI] AccountManager nÃ£o encontrado. Criando AccountManager dinÃ¢mico para depuraÃ§Ã£o...");
             var go = new GameObject("AccountManager_AutoCreated");
             go.AddComponent<AccountManager>();
         }
@@ -170,13 +170,13 @@ public class InventoryUI : MonoBehaviour
 
         if (AccountManager.Instance != null && AccountManager.Instance.PlayerAccount != null)
         {
-            Debug.Log("[InventoryUI] Conta já disponível. Renderizando abas...");
+            Debug.Log("[InventoryUI] Conta jÃ¡ disponÃ­vel. Renderizando abas...");
             RefreshAllTabs();
             SwitchToTab(0);
         }
         else
         {
-            Debug.Log("[InventoryUI] Conta não disponível ainda. Registrando listener do OnAccountReady...");
+            Debug.Log("[InventoryUI] Conta nÃ£o disponÃ­vel ainda. Registrando listener do OnAccountReady...");
             AccountManager.OnAccountReady += HandleAccountReady;
         }
     }
@@ -191,7 +191,7 @@ public class InventoryUI : MonoBehaviour
 
     public void OnConstellationUpgradeClicked()
     {
-        Debug.Log($"[InventoryUI] Botão de Constelação clicado para unidade: {selectingForUnitId}");
+        Debug.Log($"[InventoryUI] BotÃ£o de ConstelaÃ§Ã£o clicado para unidade: {selectingForUnitId}");
         if (string.IsNullOrEmpty(selectingForUnitId))
         {
             Debug.LogWarning("[InventoryUI] Nenhuma unidade selecionada!");
@@ -204,7 +204,7 @@ public class InventoryUI : MonoBehaviour
         }
         else
         {
-            Debug.LogError("[InventoryUI] Referência do ConstellationModal está nula no Inspector!");
+            Debug.LogError("[InventoryUI] ReferÃªncia do ConstellationModal estÃ¡ nula no Inspector!");
         }
     }
 
@@ -244,7 +244,7 @@ public class InventoryUI : MonoBehaviour
         if (unitSubTabConstellationButton != null) unitSubTabConstellationButton.onClick.AddListener(() => SwitchUnitSubTab(1));
         if (unitSubTabSkillsButton != null) unitSubTabSkillsButton.onClick.AddListener(() => SwitchUnitSubTab(2));
         
-        SwitchUnitSubTab(0); // Equipamento ativo por padrão
+        SwitchUnitSubTab(0); // Equipamento ativo por padrÃ£o
     }
 
     public void SwitchUnitSubTab(int subTabIndex)
@@ -299,7 +299,7 @@ public class InventoryUI : MonoBehaviour
     }
 
     // =============================
-    // INICIALIZAÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢O
+    // INICIALIZAÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢O
     // =============================
 
     
@@ -408,7 +408,7 @@ public class InventoryUI : MonoBehaviour
 
     void OnSwipeLeft()
     {
-        // Swipe para esquerda ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ prÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³xima aba
+        // Swipe para esquerda ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ prÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â³xima aba
         int next = currentTabIndex + 1;
         if (next < tabs.Length)
             SwitchToTab(next);
@@ -416,7 +416,7 @@ public class InventoryUI : MonoBehaviour
 
     void OnSwipeRight()
     {
-        // Swipe para direita ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ aba anterior
+        // Swipe para direita ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ aba anterior
         int prev = currentTabIndex - 1;
         if (prev >= 0)
             SwitchToTab(prev);
@@ -581,7 +581,7 @@ private void PopulateTab(int tabIndex)
         if (slotPrefab != null)
         {
             go = Instantiate(slotPrefab, parent);
-            go.SetActive(true); // Forçar ativação já que o prefab modelo pode estar inativo
+            go.SetActive(true); // ForÃ§ar ativaÃ§Ã£o jÃ¡ que o prefab modelo pode estar inativo
 
             var iconImg = go.transform.Find("Icon")?.GetComponent<Image>();
             if (iconImg != null)
@@ -603,7 +603,7 @@ private void PopulateTab(int tabIndex)
                 labelTxt.text = label;
                 if (icon != null && iconImg != null)
                 {
-                    labelTxt.gameObject.SetActive(false); // Esconder texto se houver ícone
+                    labelTxt.gameObject.SetActive(false); // Esconder texto se houver Ã­cone
                 }
                 else
                 {
@@ -635,13 +635,13 @@ private void PopulateTab(int tabIndex)
         if (isSelected) 
         {
             outline.enabled = true;
-            outline.effectColor = isEquippedTarget ? new UnityEngine.Color(0.2f, 1f, 0.2f, 1f) : new UnityEngine.Color(1f, 0.9f, 0.2f, 1f); // Verde para equipado, Amarelo para seleÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o normal
+            outline.effectColor = isEquippedTarget ? new UnityEngine.Color(0.2f, 1f, 0.2f, 1f) : new UnityEngine.Color(1f, 0.9f, 0.2f, 1f); // Verde para equipado, Amarelo para seleÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£o normal
             outline.effectDistance = new UnityEngine.Vector2(3, 3);
         }
         else if (isEquippedTarget)
         {
             outline.enabled = true;
-            outline.effectColor = new UnityEngine.Color(0.2f, 1f, 0.2f, 0.5f); // Verde fraco para jÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡ equipado mas nÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o selecionado
+            outline.effectColor = new UnityEngine.Color(0.2f, 1f, 0.2f, 0.5f); // Verde fraco para jÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ equipado mas nÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£o selecionado
             outline.effectDistance = new UnityEngine.Vector2(2, 2);
         }
         else
@@ -757,7 +757,7 @@ private void PopulateTab(int tabIndex)
         }
     }
 
-    private void SpawnAbilityButton(RectTransform parent, Celestial_Cross.Scripts.Abilities.AbilityBlueprint ability, bool isPet)
+    private void SpawnAbilityButton(RectTransform parent, Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO ability, bool isPet)
     {
         var btnGO = new GameObject("AbilityBtn", typeof(RectTransform), typeof(Image), typeof(UnityEngine.EventSystems.EventTrigger));
         btnGO.transform.SetParent(parent, false);
@@ -782,7 +782,7 @@ private void PopulateTab(int tabIndex)
         // Tooltip logic
         var trigger = btnGO.GetComponent<UnityEngine.EventSystems.EventTrigger>();
         var ptrDown = new UnityEngine.EventSystems.EventTrigger.Entry { eventID = UnityEngine.EventSystems.EventTriggerType.PointerDown };
-        string desc = string.IsNullOrEmpty(ability.abilityDescription) ? "Sem descrição" : ability.abilityDescription;
+        string desc = string.IsNullOrEmpty(ability.abilityDescription) ? "Sem descriÃ§Ã£o" : ability.abilityDescription;
         ptrDown.callback.AddListener((e) => {
             if (unitStatsText != null) unitStatsText.text = $"<b>{ability.abilityName}</b>\n<size=14>{desc}</size>";
         });
@@ -854,7 +854,7 @@ private void PopulateTab(int tabIndex)
         var runtimeData = account.GetOwnedUnitRuntimeData(unitId);
         if (runtimeData == null)
         {
-            // Se não encontrar runtime data, cria um default
+            // Se nÃ£o encontrar runtime data, cria um default
             runtimeData = new CelestialCross.Data.RuntimeUnitData(unitId, 1);
         }
 
@@ -880,7 +880,7 @@ private void PopulateTab(int tabIndex)
         {
             string insigniaID = ConstellationService.GetInsigniaItemID(unitId);
             int count = account.GetItemCount(insigniaID);
-            insigniaCountText.text = $"Insígnias: {count}";
+            insigniaCountText.text = $"InsÃ­gnias: {count}";
         }
 
         if (data != null && unitStatsText != null && unitIconImage != null)
@@ -994,7 +994,7 @@ private void PopulateTab(int tabIndex)
                 // Clear old buttons
                 foreach (RectTransform child in unitAbilitiesContainer) Destroy(child.gameObject);
                 
-                // As habilidades agora são mostradas via Grafos abaixo
+                // As habilidades agora sÃ£o mostradas via Grafos abaixo
 
                 if (data.GetAbilityGraphs() != null)
                 {
@@ -1005,8 +1005,7 @@ private void PopulateTab(int tabIndex)
                 }
                 if (equippedPetSpecies != null)
                 {
-                    if (equippedPetSpecies.PassiveSkills != null) foreach(var ab in equippedPetSpecies.PassiveSkills) if (ab != null) SpawnAbilityButton(unitAbilitiesContainer, ab, true);
-                    if (equippedPetSpecies.ActiveSkills != null) foreach(var ab in equippedPetSpecies.ActiveSkills) if (ab != null) SpawnAbilityButton(unitAbilitiesContainer, ab, true);
+
                     if (equippedPetSpecies.AbilityGraphs != null) foreach(var graph in equippedPetSpecies.AbilityGraphs) if (graph != null) SpawnGraphButton(unitAbilitiesContainer, graph);
                 }
                 
@@ -1034,7 +1033,7 @@ private void PopulateTab(int tabIndex)
                         {
                             if (kvp.Value >= bonus.piecesRequired)
                             {
-                                if (bonus.passiveAbility != null) SpawnAbilityButton(unitAbilitiesContainer, bonus.passiveAbility, false);
+                                if (bonus.passiveGraph != null) SpawnAbilityButton(unitAbilitiesContainer, bonus.passiveGraph, false);
                                 if (bonus.passiveGraph != null) SpawnGraphButton(unitAbilitiesContainer, bonus.passiveGraph);
                             }
                         }
@@ -1057,7 +1056,7 @@ private void PopulateTab(int tabIndex)
         }
         else if (unitStatsText != null)
         {
-            unitStatsText.text = $"<b>Unidade Desconhecida</b>\n(UnitData não encontrado no Catálogo)";
+            unitStatsText.text = $"<b>Unidade Desconhecida</b>\n(UnitData nÃ£o encontrado no CatÃ¡logo)";
             if (unitIconImage != null) unitIconImage.sprite = null;
         }
 
@@ -1261,7 +1260,7 @@ private void PopulateTab(int tabIndex)
         SetDetails(1, $"Selecione um Pet para <b>{unitName}</b>");
 
         SwitchToTab(1); // Vai para Pets
-        PopulateTab(1); // Refaz a lista, dessa vez em modo seleÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o
+        PopulateTab(1); // Refaz a lista, dessa vez em modo seleÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£o
     }
 
     private void OnPetClicked(string petId) {
@@ -1283,14 +1282,13 @@ private void PopulateTab(int tabIndex)
             }
 
             details = $"<b>{speciesName}</b>\n" +
-                      $"Estrelas: {data.RarityStars}* | Nível: {data.CurrentLevel}\n\n" +
+                      $"Estrelas: {data.RarityStars}* | NÃ­vel: {data.CurrentLevel}\n\n" +
                       $"HP: +{data.Health}   ATK: +{data.Attack}   DEF: +{data.Defense}\n" +
                       $"SPD: +{data.Speed}   CRIT: +{data.CriticalChance}%\n" +
                       $"CR.DMG: +{data.CriticalDamage}%   ACC: +{data.EffectAccuracy}%   RES: +{data.EffectResistance}%\n\n";
             if (speciesData != null)
             {
-                if (speciesData.PassiveSkills != null) foreach (var ab in speciesData.PassiveSkills) if (ab != null) { details += $"<color=#ffffaa>{ab.abilityName}</color>\n<size=16>{ab.abilityDescription}</size>\n"; }
-                if (speciesData.ActiveSkills != null) foreach (var ab in speciesData.ActiveSkills) if (ab != null) { details += $"<color=#ffffaa>{ab.abilityName}</color>\n<size=16>{ab.abilityDescription}</size>\n"; }
+
                 if (speciesData.AbilityGraphs != null) foreach (var graph in speciesData.AbilityGraphs) if (graph != null) { details += $"<color=#aaffaa>{(string.IsNullOrEmpty(graph.abilityName) ? graph.name : graph.abilityName)}</color>\n<size=16>{graph.abilityDescription}</size>\n"; }
             }
             else
@@ -1472,7 +1470,7 @@ private void PopulateTab(int tabIndex)
 
     private string FormatArtifactDetails(CelestialCross.Artifacts.ArtifactInstanceData a)
     {
-        if (a == null) return "Artefato inválido.";
+        if (a == null) return "Artefato invÃ¡lido.";
  
         string setLabel = string.IsNullOrWhiteSpace(a.artifactSetId) ? "<sem set>" : a.artifactSetId;
         string setBonusesDescription = "";
@@ -1486,7 +1484,7 @@ private void PopulateTab(int tabIndex)
                 setBonusesDescription = $"\n\n<b>Efeitos do Conjunto ({set.setName}):</b>\n";
                 foreach (var bonus in set.setBonuses)
                 {
-                    setBonusesDescription += $"- <color=#ffb>{bonus.piecesRequired} Peças:</color> ";
+                    setBonusesDescription += $"- <color=#ffb>{bonus.piecesRequired} PeÃ§as:</color> ";
                     List<string> bonusesList = new List<string>();
                     if (bonus.statBonuses != null)
                     {
@@ -1495,9 +1493,9 @@ private void PopulateTab(int tabIndex)
                             bonusesList.Add(UIStatFormatter.FormatStat(stat));
                         }
                     }
-                    if (bonus.passiveAbility != null)
+                    if (bonus.passiveGraph != null)
                     {
-                        bonusesList.Add($"Passiva: <color=#ffffaa>{bonus.passiveAbility.abilityName}</color>");
+                        bonusesList.Add($"Passiva: <color=#ffffaa>{bonus.passiveGraph.abilityName}</color>");
                     }
                     if (bonus.passiveGraph != null)
                     {
@@ -1534,11 +1532,12 @@ private void PopulateTab(int tabIndex)
             $"Set: {setLabel}\n" +
             $"Raridade: {a.rarity}\n" +
             $"Estrelas: {a.GetStarsAsIntClamped()}*\n" +
-            $"Nível: +{a.currentLevel}\n\n" +
+            $"NÃ­vel: +{a.currentLevel}\n\n" +
             $"Main: {main}\n\n" +
             $"Substats:\n{sub}";
     }
 }
+
 
 
 

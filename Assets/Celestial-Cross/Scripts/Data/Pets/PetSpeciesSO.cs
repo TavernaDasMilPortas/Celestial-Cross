@@ -75,12 +75,6 @@ namespace CelestialCross.Data.Pets
         public float MaxBaseEffectResistance;
         
         [Header("Habilidades (Skills)")]
-        [Tooltip("Habilidades ativas gerais deste pet.")]
-        public List<AbilityBlueprint> ActiveSkills = new List<AbilityBlueprint>();
-
-        [Tooltip("Habilidades passivas intrínsecas a esta espécie.")]
-        public List<AbilityBlueprint> PassiveSkills = new List<AbilityBlueprint>();
-
         [Tooltip("Habilidades via Grafo.")]
         public List<Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO> AbilityGraphs = new List<Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO>();
 

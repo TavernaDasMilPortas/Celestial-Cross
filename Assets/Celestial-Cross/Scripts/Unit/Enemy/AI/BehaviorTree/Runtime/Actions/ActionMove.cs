@@ -54,7 +54,7 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Runtime.Actions
 
             if (targetUnit != null)
             {
-                int myDist = AIGridUtility.ChebyshevDistance(blackboard.myPosition, targetUnit.GridPosition);
+                int myDist = AIGridUtility.GridDistance(blackboard.myPosition, targetUnit.GridPosition);
                 if (Data.intent == BTMoveIntent.Approach)
                 {
                     int idealRange = 1;
@@ -83,7 +83,7 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Runtime.Actions
                 
                 if (targetUnit != null)
                 {
-                    int dist = AIGridUtility.ChebyshevDistance(tile, targetUnit.GridPosition);
+                    int dist = AIGridUtility.GridDistance(tile, targetUnit.GridPosition);
                     if (Data.intent == BTMoveIntent.Approach)
                     {
                         int idealRange = 1;

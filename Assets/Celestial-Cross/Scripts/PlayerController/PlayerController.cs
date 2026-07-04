@@ -8,11 +8,48 @@ public class PlayerController : MonoBehaviour
     public static PlayerController Instance;
 
     private Unit activeUnit;
-    private List<Vector2Int> _currentArea = new();
+    private TargetSelector targetSelector;
 
     void Awake()
     {
         Instance = this;
+    }
+
+    void Start()
+    {
+        RegisterTargetSelector(Object.FindFirstObjectByType<TargetSelector>());
+    }
+
+    public void RegisterTargetSelector(TargetSelector newSelector)
+    {
+        if (targetSelector != null)
+        {
+            targetSelector.OnTileHovered -= HandleTileHover;
+            targetSelector.OnTileHoverCleared -= HandleTileHoverCleared;
+            targetSelector.OnCanceled -= HandleCanceled;
+            targetSelector.OnTargetsConfirmed -= HandleConfirmed;
+        }
+
+        targetSelector = newSelector;
+
+        if (targetSelector != null)
+        {
+            targetSelector.OnTileHovered += HandleTileHover;
+            targetSelector.OnTileHoverCleared += HandleTileHoverCleared;
+            targetSelector.OnCanceled += HandleCanceled;
+            targetSelector.OnTargetsConfirmed += HandleConfirmed;
+        }
+    }
+
+    void OnDestroy()
+    {
+        if (targetSelector != null)
+        {
+            targetSelector.OnTileHovered -= HandleTileHover;
+            targetSelector.OnTileHoverCleared -= HandleTileHoverCleared;
+            targetSelector.OnCanceled -= HandleCanceled;
+            targetSelector.OnTargetsConfirmed -= HandleConfirmed;
+        }
     }
 
     public void StartTurn(Unit unit)
@@ -31,6 +68,7 @@ public class PlayerController : MonoBehaviour
 
     public void SelectAction(int index)
     {
+        PathVisualizer.Instance?.ClearPath();
         if (activeUnit != null)
             activeUnit.SelectAction(index);
     }
@@ -139,8 +177,69 @@ public class PlayerController : MonoBehaviour
     public void EndTurn()
     {
         activeUnit = null;
+        PathVisualizer.Instance?.ClearPath();
         FindObjectOfType<ActionBarUI>()?.ClearButtons();
         TurnManager.Instance.EndTurn();
+    }
+
+    private void HandleTileHover(GridTile tile)
+    {
+        if (activeUnit == null || activeUnit.CurrentAction == null || tile == null) return;
+        
+        if (activeUnit.CurrentAction.Subtype == AbilitySubtype.Movement)
+        {
+            if (PathVisualizer.Instance != null && GridMap.Instance != null && targetSelector != null)
+            {
+                var path = GridMap.Instance.FindPath(activeUnit.GridPosition, tile.GridPosition, targetSelector.ValidTiles);
+                if (path.Count > 0)
+                {
+                    PathVisualizer.Instance.DrawPath(path, activeUnit.GridPosition);
+                    
+                    var ghostPreview = activeUnit.GetComponent<UnitGhostPreview>();
+                    if (ghostPreview == null) ghostPreview = activeUnit.gameObject.AddComponent<UnitGhostPreview>();
+                    ghostPreview.Initialize(activeUnit);
+                    ghostPreview.ShowAt(GridMap.Instance.GridToWorld(tile.GridPosition), activeUnit.GridPosition.x > tile.GridPosition.x);
+                }
+                else
+                {
+                    PathVisualizer.Instance.ClearPath();
+                    
+                    var ghostPreview = activeUnit.GetComponent<UnitGhostPreview>();
+                    if (ghostPreview != null) ghostPreview.Hide();
+                }
+            }
+        }
+    }
+
+    private void HandleTileHoverCleared()
+    {
+        PathVisualizer.Instance?.ClearPath();
+        if (activeUnit != null)
+        {
+            var ghostPreview = activeUnit.GetComponent<UnitGhostPreview>();
+            if (ghostPreview != null) ghostPreview.Hide();
+        }
+    }
+
+    public void ClearGhost()
+    {
+        if (activeUnit != null)
+        {
+            var ghostPreview = activeUnit.GetComponent<UnitGhostPreview>();
+            if (ghostPreview != null) ghostPreview.Hide();
+        }
+    }
+
+    private void HandleCanceled()
+    {
+        PathVisualizer.Instance?.ClearPath();
+        ClearGhost();
+    }
+
+    private void HandleConfirmed(System.Collections.Generic.List<Unit> targets)
+    {
+        PathVisualizer.Instance?.ClearPath();
+        ClearGhost();
     }
 
     // ==========================================

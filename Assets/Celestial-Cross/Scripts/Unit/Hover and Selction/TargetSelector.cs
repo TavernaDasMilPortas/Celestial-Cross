@@ -9,6 +9,8 @@ public class TargetSelector : MonoBehaviour
     public event Action<List<Unit>> OnSelectedTargetsChanged;
     public event Action<Unit> OnHoverChanged;
     public event Action OnCanceled;
+    public event Action<GridTile> OnTileHovered;
+    public event Action OnTileHoverCleared;
 
     public IReadOnlyList<Vector2Int> SelectedPoints => selectedPoints;
 
@@ -243,9 +245,6 @@ public class TargetSelector : MonoBehaviour
 
     void HandleMouseInput()
     {
-        if (!Input.GetMouseButtonDown(0))
-            return;
-
         Ray ray;
         if (RenderTextureInputManager.Instance != null)
         {
@@ -256,42 +255,89 @@ public class TargetSelector : MonoBehaviour
             ray = cam.ScreenPointToRay(Input.mousePosition);
 
         if (!Physics.Raycast(ray, out RaycastHit hit))
+        {
+            ClearHoverState();
             return;
+        }
+
+        bool isClick = Input.GetMouseButtonDown(0);
 
         if (targetingRule.origin == TargetOrigin.Point)
         {
-            GridTile clickedTile = hit.collider.GetComponentInParent<GridTile>();
+            GridTile hoveredTile = hit.collider.GetComponentInParent<GridTile>();
 
-            // Fallback: se clicou em uma Unit, tentar pegar o Tile embaixo dela
-            if (clickedTile == null)
+            // Fallback: se clicou/hover em uma Unit, tentar pegar o Tile embaixo dela
+            if (hoveredTile == null)
             {
                 Unit unitHit = hit.collider.GetComponentInParent<Unit>();
                 if (unitHit != null && GridMap.Instance != null)
                 {
-                    clickedTile = GridMap.Instance.GetTile(unitHit.GridPosition);
+                    hoveredTile = GridMap.Instance.GetTile(unitHit.GridPosition);
                 }
             }
 
-            if (clickedTile == null || !validTiles.Contains(clickedTile))
+            if (hoveredTile == null || !validTiles.Contains(hoveredTile))
+            {
+                ClearHoverState();
                 return;
+            }
 
-            currentHoveredTile = clickedTile; // Define como hover para cálculo de rotação
-            ToggleTileSelection(clickedTile);
+            SetHoverTile(hoveredTile);
+
+            if (isClick)
+            {
+                ToggleTileSelection(hoveredTile);
+            }
             return;
         }
 
-        Unit clickedUnit = hit.collider.GetComponentInParent<Unit>();
-        if (clickedUnit == null)
-            return;
-
-        if (!validTargets.Contains(clickedUnit))
+        Unit hoveredUnit = hit.collider.GetComponentInParent<Unit>();
+        if (hoveredUnit == null || !validTargets.Contains(hoveredUnit))
         {
-            Debug.Log("[TargetSelector] Clique em alvo inválido");
+            ClearHoverState();
             return;
         }
 
-        currentHoveredUnit = clickedUnit; // Define como hover para cálculo de rotação
-        ToggleSelection(clickedUnit);
+        SetHoverUnit(hoveredUnit);
+
+        if (isClick)
+        {
+            ToggleSelection(hoveredUnit);
+        }
+    }
+
+    void SetHoverTile(GridTile tile)
+    {
+        if (currentHoveredTile != tile)
+        {
+            currentHoveredTile = tile;
+            RefreshAreaPreview();
+            OnTileHovered?.Invoke(tile);
+        }
+    }
+
+    void SetHoverUnit(Unit unit)
+    {
+        if (currentHoveredUnit != unit)
+        {
+            currentHoveredUnit = unit;
+            RefreshAreaPreview();
+        }
+    }
+
+    void ClearHoverState()
+    {
+        if (currentHoveredTile != null)
+        {
+            currentHoveredTile = null;
+            OnTileHoverCleared?.Invoke();
+            RefreshAreaPreview();
+        }
+        if (currentHoveredUnit != null)
+        {
+            currentHoveredUnit = null;
+            RefreshAreaPreview();
+        }
     }
 
     void ToggleSelection(Unit unit)
@@ -684,7 +730,7 @@ public class TargetSelector : MonoBehaviour
 
     int GridDistance(Vector2Int a, Vector2Int b)
     {
-        return Mathf.Max(Mathf.Abs(a.x - b.x), Mathf.Abs(a.y - b.y));
+        return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
     }
 
     Direction CalculateDirectionTowards(Vector2Int from, Vector2Int to)

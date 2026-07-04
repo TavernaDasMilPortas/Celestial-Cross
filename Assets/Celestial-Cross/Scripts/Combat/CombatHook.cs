@@ -45,7 +45,6 @@ namespace CelestialCross.Combat
         public bool hasTriggeredPetAnimation;
         public global::System.Collections.Generic.Dictionary<string, float> Variables;
         public global::System.Collections.Generic.Dictionary<string, int> loopCounters;
-        public global::System.Collections.Generic.List<Celestial_Cross.Scripts.Abilities.Conditions.AbilityConditionData> conditionPool;
 
         public CombatContext(global::Unit source, global::Unit target = null, int amount = 0, IUnitAction action = null)
         {
@@ -57,7 +56,6 @@ namespace CelestialCross.Combat
             this.action = action;
             this.Variables = new global::System.Collections.Generic.Dictionary<string, float>();
             this.loopCounters = new global::System.Collections.Generic.Dictionary<string, int>();
-            this.conditionPool = new global::System.Collections.Generic.List<Celestial_Cross.Scripts.Abilities.Conditions.AbilityConditionData>();
         }
 
         public CombatContext Clone()
@@ -71,7 +69,6 @@ namespace CelestialCross.Combat
             clone.hasTriggeredPetAnimation = hasTriggeredPetAnimation;
             clone.Variables = new global::System.Collections.Generic.Dictionary<string, float>(Variables);
             clone.loopCounters = new global::System.Collections.Generic.Dictionary<string, int>(loopCounters);
-            clone.conditionPool = new global::System.Collections.Generic.List<Celestial_Cross.Scripts.Abilities.Conditions.AbilityConditionData>(conditionPool);
             return clone;
         }
     }

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
@@ -6,14 +6,14 @@ using System.Collections.Generic;
 using CelestialCross.Giulia_UI;
 
 /// <summary>
-/// (Fase 2) UI de inventário modular com 3 abas (Unidades, Pets, Artefatos).
-/// Layout split-screen: Painel Superior (detalhes dinâmicos) + Painel Inferior (grid/scroll).
+/// (Fase 2) UI de inventÃ¡rio modular com 3 abas (Unidades, Pets, Artefatos).
+/// Layout split-screen: Painel Superior (detalhes dinÃ¢micos) + Painel Inferior (grid/scroll).
 /// Suporta troca por toque nas abas ou swipe horizontal.
 /// </summary>
 public class InventoryUI : MonoBehaviour
 {
     [Header("Data Catalogs")]
-    [Tooltip("Necessário para renderizar detalhes da Unidade (ícone, stats, skills)")]
+    [Tooltip("NecessÃ¡rio para renderizar detalhes da Unidade (Ã­cone, stats, skills)")]
     public UnitCatalog unitCatalog;
     public PetCatalog petCatalog;
 
@@ -21,16 +21,16 @@ public class InventoryUI : MonoBehaviour
     [Tooltip("Arrastar as 3 InventoryTab (Unidades, Pets, Artefatos) na ordem")]
     public InventoryTab[] tabs;
 
-    [Header("Conteúdo Inferior (Grids)")]
+    [Header("ConteÃºdo Inferior (Grids)")]
     [Tooltip("Um RectTransform com GridLayoutGroup para cada aba, na mesma ordem das tabs")]
     public RectTransform[] gridContainers;
 
     [Header("Item Prefab (Opcional)")]
-    [Tooltip("Prefab de cada item do grid (Button + Image/Text). Se vazio, o UI é criado via código.")]
+    [Tooltip("Prefab de cada item do grid (Button + Image/Text). Se vazio, o UI Ã© criado via cÃ³digo.")]
     public GameObject slotPrefab;
 
     [Header("Split Layout")]
-    [Tooltip("Altura do painel superior em proporção (0..1). Ex: 0.45 = 45% superior.")]
+    [Tooltip("Altura do painel superior em proporÃ§Ã£o (0..1). Ex: 0.45 = 45% superior.")]
     [Range(0.25f, 0.75f)]
     public float topPanelHeightNormalized = 0.45f;
 
@@ -43,7 +43,7 @@ public class InventoryUI : MonoBehaviour
     public Vector2 cellSpacing = new Vector2(10f, 10f);
 
     [Header("Swipe")]
-    [Tooltip("Referência ao SwipeDetector (pode estar no mesmo GameObject)")]
+    [Tooltip("ReferÃªncia ao SwipeDetector (pode estar no mesmo GameObject)")]
     public SwipeDetector swipeDetector;
 
     private int currentTabIndex = 0;
@@ -168,7 +168,7 @@ public class InventoryUI : MonoBehaviour
     }
 
     // =============================
-    // INICIALIZAÇÃO
+    // INICIALIZAÃ‡ÃƒO
     // =============================
 
     
@@ -270,7 +270,7 @@ void RegisterSwipe()
 
     void OnSwipeLeft()
     {
-        // Swipe para esquerda → próxima aba
+        // Swipe para esquerda â†’ prÃ³xima aba
         int next = currentTabIndex + 1;
         if (next < tabs.Length)
             SwitchToTab(next);
@@ -278,7 +278,7 @@ void RegisterSwipe()
 
     void OnSwipeRight()
     {
-        // Swipe para direita → aba anterior
+        // Swipe para direita â†’ aba anterior
         int prev = currentTabIndex - 1;
         if (prev >= 0)
             SwitchToTab(prev);
@@ -525,7 +525,7 @@ private void PopulateTab(int tabIndex)
         }
     }
 
-    private void SpawnAbilityButton(RectTransform parent, Celestial_Cross.Scripts.Abilities.AbilityBlueprint ability, bool isPet)
+    private void SpawnAbilityButton(RectTransform parent, Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO ability, bool isPet)
     {
         var btnGO = new GameObject("AbilityBtn", typeof(RectTransform), typeof(Image), typeof(UnityEngine.EventSystems.EventTrigger));
         btnGO.transform.SetParent(parent, false);
@@ -550,7 +550,7 @@ private void PopulateTab(int tabIndex)
         // Tooltip logic: press and hold overrides unitStatsText temporarly or a dedicated panel
         var trigger = btnGO.GetComponent<UnityEngine.EventSystems.EventTrigger>();
         var ptrDown = new UnityEngine.EventSystems.EventTrigger.Entry { eventID = UnityEngine.EventSystems.EventTriggerType.PointerDown };
-        string desc = string.IsNullOrEmpty(ability.abilityDescription) ? "Sem descrição" : ability.abilityDescription;
+        string desc = string.IsNullOrEmpty(ability.abilityDescription) ? "Sem descriÃ§Ã£o" : ability.abilityDescription;
         ptrDown.callback.AddListener((e) => {
             if (unitStatsText != null) unitStatsText.text = $"<b>{ability.abilityName}</b>\n<size=14>{desc}</size>";
         });
@@ -672,7 +672,7 @@ private void PopulateTab(int tabIndex)
         }
         else if (unitStatsText != null)
         {
-            unitStatsText.text = $"<b>Unidade Desconhecida</b>\n(UnitData não encontrado no Catálogo)";
+            unitStatsText.text = $"<b>Unidade Desconhecida</b>\n(UnitData nÃ£o encontrado no CatÃ¡logo)";
             if (unitIconImage != null) unitIconImage.sprite = null;
         }
 
@@ -822,7 +822,7 @@ private void PopulateTab(int tabIndex)
         SetDetails(1, $"Selecione um Pet para <b>{unitName}</b>");
 
         SwitchToTab(1); // Vai para Pets
-        PopulateTab(1); // Refaz a lista, dessa vez em modo seleção
+        PopulateTab(1); // Refaz a lista, dessa vez em modo seleÃ§Ã£o
     }
 
     private void OnPetClicked(string petId)
@@ -985,7 +985,7 @@ private void PopulateTab(int tabIndex)
 
     private static string FormatArtifactDetails(CelestialCross.Artifacts.ArtifactInstanceData a)
     {
-        if (a == null) return "Artefato inválido.";
+        if (a == null) return "Artefato invÃ¡lido.";
 
         string setLabel = string.IsNullOrWhiteSpace(a.artifactSetId) ? "<sem set>" : a.artifactSetId;
         string main = a.mainStat != null ? UIStatFormatter.FormatStat(a.mainStat) : "<mainStat null>";
@@ -1009,7 +1009,7 @@ private void PopulateTab(int tabIndex)
             $"Set: {setLabel}\n" +
             $"Raridade: {a.rarity}\n" +
             $"Estrelas: {a.GetStarsAsIntClamped()}*\n" +
-            $"Nível: +{a.currentLevel}\n\n" +
+            $"NÃ­vel: +{a.currentLevel}\n\n" +
             $"Main: {main}\n\n" +
             $"Substats:\n{sub}";
     }

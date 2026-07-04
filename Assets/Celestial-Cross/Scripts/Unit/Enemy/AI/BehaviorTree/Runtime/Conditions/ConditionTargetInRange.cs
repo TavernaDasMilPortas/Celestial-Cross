@@ -14,7 +14,7 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Runtime.Conditions
                     return BTResult.Failure;
                 }
 
-                int dist = AIGridUtility.ChebyshevDistance(blackboard.myPosition, target.GridPosition);
+                int dist = AIGridUtility.GridDistance(blackboard.myPosition, target.GridPosition);
                 bool inRange = dist <= blackboard.myBaseRange;
                 CelestialCross.Combat.CombatLogger.Log($"   Condição TargetInRange: Alvo {target.DisplayName} à distância {dist} (Alcance: {blackboard.myBaseRange}) -> {(inRange ? "Dentro" : "Fora")}", CelestialCross.Combat.LogCategory.AI);
                 return inRange ? BTResult.Success : BTResult.Failure;

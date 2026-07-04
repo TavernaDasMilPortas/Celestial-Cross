@@ -5,9 +5,9 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Runtime
 {
     public static class AIGridUtility
     {
-        public static int ChebyshevDistance(Vector2Int a, Vector2Int b)
+        public static int GridDistance(Vector2Int a, Vector2Int b)
         {
-            return Mathf.Max(Mathf.Abs(a.x - b.x), Mathf.Abs(a.y - b.y));
+            return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
         }
 
         public static HashSet<Vector2Int> GetReachableTiles(Vector2Int origin, int range, GridMap gridMap = null)

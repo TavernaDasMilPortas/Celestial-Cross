@@ -161,7 +161,7 @@ public class AIBrain : MonoBehaviour
             else
             {
                 blackboard.enemies.Add(unit);
-                float dist = AIGridUtility.ChebyshevDistance(enemy.GridPosition, unit.GridPosition);
+                float dist = AIGridUtility.GridDistance(enemy.GridPosition, unit.GridPosition);
                 if (dist < minTargetDist)
                 {
                     minTargetDist = dist;
@@ -299,7 +299,7 @@ public class AIBrain : MonoBehaviour
                         areaToHighlight = new HashSet<Vector2Int>();
                         foreach (var tile in GridMap.Instance.GetAllTiles())
                         {
-                            if (AIGridUtility.ChebyshevDistance(enemy.GridPosition, tile.GridPosition) <= range)
+                            if (AIGridUtility.GridDistance(enemy.GridPosition, tile.GridPosition) <= range)
                             {
                                 if (tile.GridPosition != enemy.GridPosition)
                                     areaToHighlight.Add(tile.GridPosition);
@@ -394,6 +394,14 @@ public class AIBrain : MonoBehaviour
                 while (AbilityExecutor.Instance != null && AbilityExecutor.Instance.IsExecuting)
                 {
                     yield return null;
+                }
+                
+                if (plan.actionToExecute is UnitActionBase unitAction)
+                {
+                    while (unitAction.IsExecuting)
+                    {
+                        yield return null;
+                    }
                 }
                 
                 // Small buffer after execution

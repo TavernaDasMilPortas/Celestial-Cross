@@ -6,6 +6,7 @@ using System.Linq;
 public class MoveAction : UnitActionBase
 {
     public override int Range { get; set; }
+    public override AbilitySubtype Subtype => AbilitySubtype.Movement;
     public override string GetDetailStats() => $"Alcance: {Range}";
 
     GridMap gridMap;
@@ -52,6 +53,16 @@ public class MoveAction : UnitActionBase
         Debug.Log($"[MoveAction] {unit.DisplayName} | Range {Range}");
 
         CalculateReachableTiles();
+
+        if (unit is Celestial_Cross.Scripts.Units.Enemy.EnemyUnit)
+        {
+            context.targetPoints = new List<Vector2Int> { Target };
+            state = ActionState.ReadyToConfirm;
+            unit.LogCanConfirm(true);
+            PerformFinalExecution();
+            return;
+        }
+
         StartTargetSelection(Range, TargetingRule);
         
         // Passa a whitelist para o seletor da base
@@ -67,10 +78,15 @@ public class MoveAction : UnitActionBase
 
     protected override void Resolve()
     {
-        if (context.targetPoints == null || context.targetPoints.Count == 0)
-            return;
+        // Now handled by ResolveRoutine
+    }
 
-        MoveUnit(context.targetPoints[0]);
+    protected override IEnumerator ResolveRoutine()
+    {
+        if (context.targetPoints == null || context.targetPoints.Count == 0)
+            yield break;
+
+        yield return StartCoroutine(MoveRoutine(context.targetPoints[0]));
     }
 
     protected override void OnCancel()

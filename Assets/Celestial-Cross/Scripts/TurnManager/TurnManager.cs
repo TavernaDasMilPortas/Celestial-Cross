@@ -74,6 +74,23 @@ public class TurnManager : MonoBehaviour
         NextTurn();
     }
 
+    public List<Unit> GetActiveUnits()
+    {
+        var all = new List<Unit>();
+        if (turnQueue != null) all.AddRange(turnQueue);
+        if (actedUnits != null) all.AddRange(actedUnits);
+        return all.Where(u => u != null && u.gameObject.activeInHierarchy).Distinct().ToList();
+    }
+
+    public List<Unit> GetRoundTurnOrder()
+    {
+        var all = new List<Unit>();
+        if (actedUnits != null) all.AddRange(actedUnits);
+        if (CurrentUnit != null && !all.Contains(CurrentUnit)) all.Add(CurrentUnit);
+        if (turnQueue != null) all.AddRange(turnQueue);
+        return all.Where(u => u != null && u.gameObject.activeInHierarchy).ToList();
+    }
+
     private void RefreshQueueOrder()
     {
         // Re-sortear apenas quem ainda não agiu nesta rodada

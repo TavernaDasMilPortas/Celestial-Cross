@@ -6,6 +6,7 @@ using Celestial_Cross.Scripts.Combat.Execution;
 public class AttackAction : UnitActionBase
 {
     public override int Range { get; set; }
+    public override AbilitySubtype Subtype => AbilitySubtype.Attack;
     public float DamageMultiplier { get; set; } = 1.0f;
     public override string GetDetailStats() => $"Dano: {DamageMultiplier * 100}%";
     public TargetingRuleData TargetingRule { get; set; } = new TargetingRuleData();
@@ -23,6 +24,17 @@ public class AttackAction : UnitActionBase
     protected override void OnEnter()
     {
         Debug.Log($"[AttackAction] {unit.DisplayName} | Range {Range} | Mult {DamageMultiplier} | Mode {TargetingRule.mode}");
+
+        if (unit is Celestial_Cross.Scripts.Units.Enemy.EnemyUnit)
+        {
+            Unit targetUnit = GridMap.Instance.GetTile(Target)?.OccupyingUnit;
+            if (targetUnit != null) context.targets = new List<Unit> { targetUnit };
+            context.targetPoints = new List<Vector2Int> { Target };
+            state = ActionState.ReadyToConfirm;
+            unit.LogCanConfirm(true);
+            PerformFinalExecution();
+            return;
+        }
 
         StartTargetSelection(Range, TargetingRule);
 

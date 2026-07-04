@@ -1,11 +1,9 @@
 using System;
 using System.Linq;
-using System.Collections.Generic;
 using UnityEngine;
+using Celestial_Cross.Scripts.Abilities;
 using Celestial_Cross.Scripts.Abilities.Graph;
 using Celestial_Cross.Scripts.Combat.Execution;
-using CelestialCross.Combat;
-using Celestial_Cross.Scripts.Units.Enemy;
 
 namespace Celestial_Cross.Scripts.Units
 {
@@ -13,145 +11,88 @@ namespace Celestial_Cross.Scripts.Units
     {
         private readonly global::Unit caster;
         public readonly AbilityGraphSO Graph;
+        public int Level { get; set; } = 1;
+        public string SlotId { get; set; } = "";
+        public Vector2Int Target { get; set; }
+        public System.Collections.Generic.List<Vector2Int> PresetTargetPositions { get; set; }
+        public event Action<ActionForecast> OnForecastUpdated;
 
         public string ActionName => string.IsNullOrEmpty(Graph.abilityName) ? Graph.name : Graph.abilityName;
         public Sprite ActionIcon => Graph.abilityIcon;
         public string ActionDescription => Graph.abilityDescription;
-        public int Range
-        {
-            get
-            {
-                if (Graph != null && Graph.NodeData != null)
-                {
-                    foreach (var node in Graph.NodeData)
-                    {
-                        if (node.NodeType == "TargetNode")
-                        {
-                            var targetData = JsonUtility.FromJson<Celestial_Cross.Scripts.Abilities.Graph.Runtime.TargetNodeData>(node.JsonData);
-                            if (targetData != null && targetData.range > 0)
-                                return targetData.range;
-                        }
-                        if (node.NodeType == "MoveEffectNode")
-                        {
-                            var moveData = JsonUtility.FromJson<Celestial_Cross.Scripts.Abilities.Graph.Runtime.MoveEffectNodeData>(node.JsonData);
-                            if (moveData != null && moveData.range > 0)
-                                return moveData.range;
-                        }
-                    }
-                }
-                return Graph != null && Graph.displayRange > 0 ? Graph.displayRange : 1;
-            }
-        }
+        public int Range => Graph.displayRange;
+        public AbilitySubtype Subtype => Graph.GetAbilitySubtype();
 
-        public int Level { get; set; } = 1;
-
-        private Vector2Int target = new Vector2Int(-999, -999);
-        public Vector2Int Target { get => target; set => target = value; }
-        public List<Vector2Int> PresetTargetPositions { get; set; }
-        public string SlotId { get; set; } = "";
-
-        public event Action<ActionForecast> OnForecastUpdated;
-
-        public AbilitySubtype Subtype
-        {
-            get
-            {
-                var startNode = Graph.NodeData.FirstOrDefault(n => n.NodeType == "StartNode");
-                if (startNode != null && !string.IsNullOrEmpty(startNode.JsonData)) {
-                    var data = JsonUtility.FromJson<Celestial_Cross.Scripts.Abilities.Graph.Runtime.StartNodeData>(startNode.JsonData);
-                    if (data != null) {
-                        return data.subtype;
-                    }
-                }
-                return AbilitySubtype.None;
-            }
-        }
-
-        public GraphActionWrapper(global::Unit caster, AbilityGraphSO graph)
+        public GraphActionWrapper(global::Unit caster, AbilityGraphSO graph, string slotId = "")
         {
             this.caster = caster;
             this.Graph = graph;
+            this.SlotId = slotId;
+            AbilityExecutor.OnTargetPreviewChanged += HandleTargetPreview;
         }
 
-        public AreaPatternData GetAreaPattern()
+        private void HandleTargetPreview(AbilityGraphSO runningGraph, System.Collections.Generic.List<global::Unit> targets)
         {
-            // O sistema de grafo pode ter múltiplos padrões ou dinâmicos.
-            // Para UI, tentamos achar o primeiro TargetNode e seu padrão.
-            foreach (var node in Graph.NodeData)
-            {
-                if (node.NodeType == "TargetNode")
-                {
-                    var targetData = JsonUtility.FromJson<Celestial_Cross.Scripts.Abilities.Graph.Runtime.TargetNodeData>(node.JsonData);
-                    AreaPatternData pattern = Graph.GetAsset<AreaPatternData>(targetData.patternReferenceId);
-                    if (pattern == null) pattern = node.areaPattern;
-                    return pattern;
-                }
-            }
-            return null;
-        }
+            if (Graph != runningGraph) return;
 
-        public int GetMaxTargets()
-        {
-            foreach (var node in Graph.NodeData)
+            if (targets == null || targets.Count == 0)
             {
-                if (node.NodeType == "TargetNode")
-                {
-                    var targetData = JsonUtility.FromJson<Celestial_Cross.Scripts.Abilities.Graph.Runtime.TargetNodeData>(node.JsonData);
-                    if (targetData != null && targetData.multipleTargets) return targetData.maxTargets;
-                }
+                OnForecastUpdated?.Invoke(default);
+                return;
             }
-            return 1;
-        }
 
-        public bool GetAllowSameTargetMultipleTimes()
-        {
-            foreach (var node in Graph.NodeData)
+            global::Unit lastTarget = targets[targets.Count - 1];
+            if (lastTarget == null) return;
+            
+            Debug.Log($"[GraphActionWrapper] Gerando forecast para: {lastTarget.name}");
+
+            // Simulação de dano simplificada (idealmente leria de nós de dano)
+            int simulatedBaseDamage = 0;
+            
+            AttackResult sample = caster.CalculateAttack(lastTarget);
+
+            ActionForecast forecast = new ActionForecast
             {
-                if (node.NodeType == "TargetNode")
-                {
-                    var targetData = JsonUtility.FromJson<Celestial_Cross.Scripts.Abilities.Graph.Runtime.TargetNodeData>(node.JsonData);
-                    if (targetData != null && targetData.multipleTargets) return targetData.allowSameTargetMultipleTimes;
-                }
-            }
-            return false;
+                Source = caster,
+                Target = lastTarget,
+                Damage = sample.damage + simulatedBaseDamage,
+                IsCritical = sample.isCritical,
+                AttackCount = caster.GetAttacksAgainst(lastTarget),
+                CriticalChance = caster.Stats.criticalChance
+            };
+
+            OnForecastUpdated?.Invoke(forecast);
         }
 
         public void EnterAction()
         {
+            PlayerController.Instance?.ClearGhost();
+            PathVisualizer.Instance?.ClearPath();
+
             if (AbilityExecutor.Instance != null)
             {
-                Vector2Int? presetTarget = (target.x != -999 && target.y != -999) ? target : (Vector2Int?)null;
-                
-                // Limpa o target para não influenciar execuções futuras da mesma ação
-                target = new Vector2Int(-999, -999);
-                AbilityExecutor.Instance.ExecuteGraph(caster, Graph, CombatHook.OnManualCast, () => {
-                    // Reset focus
+                AbilityExecutor.Instance.ExecuteGraph(caster, Graph, CelestialCross.Combat.CombatHook.OnManualCast, () => {
                     CameraController.Instance?.ResetFocus();
-
-                    var startNode = Graph.NodeData.FirstOrDefault(n => n.NodeType == "StartNode");
-                    AbilitySubtype subtype = AbilitySubtype.None;
-                    if (startNode != null && !string.IsNullOrEmpty(startNode.JsonData)) {
-                        var data = JsonUtility.FromJson<Celestial_Cross.Scripts.Abilities.Graph.Runtime.StartNodeData>(startNode.JsonData);
-                        if (data != null) {
-                            subtype = data.subtype;
+                    
+                    bool isEnemy = caster is Celestial_Cross.Scripts.Units.Enemy.EnemyUnit;
+                    if (!isEnemy && Subtype == AbilitySubtype.Movement)
+                    {
+                        if (!caster.hasMovedThisTurn)
+                        {
+                            caster.hasMovedThisTurn = true;
+                        }
+                        else
+                        {
+                            caster.CurrentAP--;
                         }
                     }
-
-                    bool isEnemy = caster is Celestial_Cross.Scripts.Units.Enemy.EnemyUnit;
-                    if (!isEnemy && subtype == AbilitySubtype.Movement && !caster.hasMovedThisTurn)
-                    {
-                        caster.hasMovedThisTurn = true;
-                        // Movimento gratuito (0 AP)
-                    }
-                    else
+                    else if (Graph.IsPassive == false)
                     {
                         caster.CurrentAP--;
                     }
 
                     AbilityExecutor.Instance.StartCoroutine(HandleTurnEnd(caster));
-                }, Level, SlotId, presetTarget, presetTargetPositions: PresetTargetPositions);
-                
-                PresetTargetPositions = null;
+                }, Level, SlotId, null, PresetTargetPositions);
             }
             else
             {
@@ -161,7 +102,6 @@ namespace Celestial_Cross.Scripts.Units
 
         private System.Collections.IEnumerator HandleTurnEnd(global::Unit caster)
         {
-            // Espera até que TODAS as execuções filhas (como passivas disparadas por hooks) terminem
             yield return new WaitUntil(() => !AbilityExecutor.Instance.IsExecuting);
 
             if (caster.CurrentAP <= 0)
@@ -177,122 +117,44 @@ namespace Celestial_Cross.Scripts.Units
             }
         }
 
-        private GridTile lastHoveredTile;
-        private UnitGhostPreview ghostPreview;
-        private List<Vector2Int> currentPath;
-
-        public void UpdateAction()
+        public AreaPatternData GetAreaPattern()
         {
-            if (Graph == null) return;
-
-            // Tentamos descobrir qual o efeito principal de movimento desse grafo
-            var previewData = Graph.GetPreviewMoveData();
-            if (previewData == null) return; // Nao é movimento, não desenha caminho
-
-            if (GridMap.Instance == null) return;
-
-            Vector2Int mousePos = GridMap.Instance.GetMouseGridPosition();
-            if (mousePos.x == -1 && mousePos.y == -1) return;
-
-            GridTile hoveredTile = GridMap.Instance.GetTile(mousePos);
-
-            if (hoveredTile != lastHoveredTile)
+            if (Graph == null || Graph.NodeData == null) return null;
+            var targetNode = Graph.NodeData.FirstOrDefault(n => n.NodeType == "TargetNode");
+            if (targetNode != null)
             {
-                lastHoveredTile = hoveredTile;
-                
-                // Se o tile não for válido na whitelist do TargetSelector, ignorar
-                var targetSelector = caster.GetComponent<TargetSelector>();
-                if (targetSelector == null || !targetSelector.ValidTiles.Contains(hoveredTile))
-                {
-                    ClearPreviews();
-                    return;
-                }
-
-                if (previewData.moveMode == Celestial_Cross.Scripts.Abilities.Graph.Runtime.MoveEffectNodeData.MoveMode.MoveCaster)
-                {
-                    // Movimento do próprio caster (Andar/Teleport)
-                    currentPath = GridMap.Instance.FindPath(caster.GridPosition, hoveredTile.GridPosition, targetSelector.ValidTiles);
-                    
-                    if (currentPath != null && currentPath.Count > 0)
-                    {
-                        if (previewData.moveType != Celestial_Cross.Scripts.Abilities.Graph.Runtime.MoveEffectNodeData.MoveType.TeleportToTarget)
-                            if (PathVisualizer.Instance != null) PathVisualizer.Instance.DrawPath(currentPath, caster.GridPosition);
-                        
-                        caster.lastCalculatedPath = currentPath; // <-- GUARDA O PATH EXATO AQUI
-                        ShowGhost(caster, GridMap.Instance.GridToWorld(hoveredTile.GridPosition), caster.GridPosition.x > hoveredTile.GridPosition.x);
-                    }
-                    else
-                    {
-                        ClearPreviews();
-                    }
-                }
-                else
-                {
-                    // Movimento do Alvo (Push / Pull)
-                    if (hoveredTile.OccupyingUnit != null)
-                    {
-                        Unit targetUnit = hoveredTile.OccupyingUnit;
-                        Vector2Int dir = (targetUnit.GridPosition - caster.GridPosition);
-                        
-                        // Normaliza a direção
-                        if (Mathf.Abs(dir.x) > Mathf.Abs(dir.y)) dir = new Vector2Int(Mathf.Sign(dir.x) > 0 ? 1 : -1, 0);
-                        else dir = new Vector2Int(0, Mathf.Sign(dir.y) > 0 ? 1 : -1);
-
-                        if (previewData.moveType == Celestial_Cross.Scripts.Abilities.Graph.Runtime.MoveEffectNodeData.MoveType.Pull)
-                            dir = -dir;
-
-                        Vector2Int pushDest = targetUnit.GridPosition + (dir * previewData.range);
-                        currentPath = GridMap.Instance.FindPath(targetUnit.GridPosition, pushDest, null);
-
-                        if (currentPath != null && currentPath.Count > 0)
-                        {
-                            if (PathVisualizer.Instance != null) PathVisualizer.Instance.DrawPath(currentPath, targetUnit.GridPosition);
-                            ShowGhost(targetUnit, GridMap.Instance.GridToWorld(pushDest), targetUnit.GridPosition.x > pushDest.x);
-                        }
-                    }
-                    else
-                    {
-                        ClearPreviews();
-                    }
-                }
+                var targetData = JsonUtility.FromJson<Celestial_Cross.Scripts.Abilities.Graph.Runtime.TargetNodeData>(targetNode.JsonData);
+                return Graph.GetAsset<AreaPatternData>(targetData.patternReferenceId);
             }
+            return null;
         }
 
-        private void ShowGhost(Unit targetUnit, Vector3 worldPos, bool flip)
+        public int GetMaxTargets()
         {
-            if (ghostPreview == null)
+            if (Graph == null || Graph.NodeData == null) return 1;
+            var targetNode = Graph.NodeData.FirstOrDefault(n => n.NodeType == "TargetNode");
+            if (targetNode != null)
             {
-                ghostPreview = caster.gameObject.GetComponent<UnitGhostPreview>();
-                if (ghostPreview == null) ghostPreview = caster.gameObject.AddComponent<UnitGhostPreview>();
+                var targetData = JsonUtility.FromJson<Celestial_Cross.Scripts.Abilities.Graph.Runtime.TargetNodeData>(targetNode.JsonData);
+                return targetData.maxTargets;
             }
-            ghostPreview.Initialize(targetUnit);
-            ghostPreview.ShowAt(worldPos, flip);
+            return 1;
         }
 
-        private void ClearPreviews()
+        public bool GetAllowSameTargetMultipleTimes()
         {
-            if (PathVisualizer.Instance != null) PathVisualizer.Instance.ClearPath();
-            if (ghostPreview != null) ghostPreview.Hide();
-            currentPath = null;
-        }
-
-        public void Confirm()
-        {
-            ClearPreviews();
-        }
-
-        public void Cancel()
-        {
-            ClearPreviews();
-            if (AbilityExecutor.Instance != null)
+            if (Graph == null || Graph.NodeData == null) return false;
+            var targetNode = Graph.NodeData.FirstOrDefault(n => n.NodeType == "TargetNode");
+            if (targetNode != null)
             {
-                AbilityExecutor.Instance.AbortCurrentAbility();
+                return JsonUtility.FromJson<Celestial_Cross.Scripts.Abilities.Graph.Runtime.TargetNodeData>(targetNode.JsonData).allowSameTargetMultipleTimes;
             }
+            return false;
         }
 
-        public string GetDetailStats()
-        {
-            return $"Range: {Range}";
-        }
+        public void Cancel() => AbilityExecutor.Instance?.AbortCurrentAbility();
+        public void UpdateAction() { }
+        public void Confirm() { }
+        public string GetDetailStats() => $"Range: {Range}";
     }
 }

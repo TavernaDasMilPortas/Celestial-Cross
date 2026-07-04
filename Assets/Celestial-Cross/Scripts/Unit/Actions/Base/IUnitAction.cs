@@ -11,6 +11,7 @@ public interface IUnitAction
     AreaPatternData GetAreaPattern();
     int GetMaxTargets();
     bool GetAllowSameTargetMultipleTimes();
+    AbilitySubtype Subtype { get; }
     event System.Action<ActionForecast> OnForecastUpdated;
     void EnterAction();
     void UpdateAction();

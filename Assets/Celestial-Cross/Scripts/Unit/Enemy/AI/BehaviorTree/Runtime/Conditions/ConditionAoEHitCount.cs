@@ -17,7 +17,7 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Runtime.Conditions
                 foreach (var unit in blackboard.enemies)
                 {
                     if (unit == null || unit.Health.CurrentHealth <= 0) continue;
-                    if (AIGridUtility.ChebyshevDistance(target.GridPosition, unit.GridPosition) <= aoeRadius)
+                    if (AIGridUtility.GridDistance(target.GridPosition, unit.GridPosition) <= aoeRadius)
                     {
                         hits++;
                     }

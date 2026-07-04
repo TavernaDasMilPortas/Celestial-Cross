@@ -130,10 +130,8 @@ public class ActionButtonUI : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
     public void SetInteractable(bool interactable)
     {
-        if (button != null)
-        {
-            button.interactable = interactable;
-        }
+        isClickable = interactable;
+        // Removido button.interactable = interactable para não escurecer visualmente
         
         // Se a ação não pode ser mais usada (já agiu), também para de chacoalhar
         if (!interactable)

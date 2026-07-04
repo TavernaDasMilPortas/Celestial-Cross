@@ -21,6 +21,8 @@ public abstract class UnitActionBase : MonoBehaviour, IUnitAction
 
     public string ActionName { get; set; }
     public UnitActionCategory ActionCategory { get; set; } = UnitActionCategory.Ability; // Categoria da ação
+    public virtual AbilitySubtype Subtype => AbilitySubtype.None;
+    public bool IsExecuting => state != ActionState.Idle && state != ActionState.Finished;
     
     [Tooltip("Se verdadeiro, esta ação pula as regras de peso padrão e tem prioridade máxima (Ex: Especial de Chefe).")]
     public bool IsAbsolutePriority { get; set; }
@@ -86,6 +88,7 @@ public abstract class UnitActionBase : MonoBehaviour, IUnitAction
         if (targetSelector != null) Destroy(targetSelector);
 
         targetSelector = gameObject.AddComponent<TargetSelector>();
+        PlayerController.Instance?.RegisterTargetSelector(targetSelector);
         targetSelector.OnTargetsConfirmed += OnTargetsConfirmed;
         targetSelector.OnCanceled += OnSelectionCanceled;
         targetSelector.Begin(unit, range, rule);
@@ -131,6 +134,11 @@ public abstract class UnitActionBase : MonoBehaviour, IUnitAction
 
         yield return new WaitForSeconds(0.5f);
 
+        PlayerController.Instance?.ClearGhost();
+        PathVisualizer.Instance?.ClearPath();
+
+        yield return StartCoroutine(ResolveRoutine());
+
         Execute();
 
         if (targetSelector != null)
@@ -141,6 +149,12 @@ public abstract class UnitActionBase : MonoBehaviour, IUnitAction
         GridMap.Instance?.ResetAllTileVisuals();
     }
 
+    protected virtual IEnumerator ResolveRoutine()
+    {
+        Resolve();
+        yield break;
+    }
+
     public void Confirm()
     {
         PerformFinalExecution();
@@ -148,7 +162,6 @@ public abstract class UnitActionBase : MonoBehaviour, IUnitAction
 
     public void Execute()
     {
-        Resolve();
         state = ActionState.Finished;
 
         // Dispara o hook OnAfterAction no PassiveManager da unidade

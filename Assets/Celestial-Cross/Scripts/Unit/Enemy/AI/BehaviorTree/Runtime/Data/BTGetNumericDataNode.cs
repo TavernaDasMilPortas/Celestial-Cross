@@ -27,7 +27,7 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Runtime.Data
                     }
                     else
                     {
-                        target = blackboard.enemies?.OrderBy(u => AIGridUtility.ChebyshevDistance(blackboard.myPosition, u.GridPosition)).FirstOrDefault();
+                        target = blackboard.enemies?.OrderBy(u => AIGridUtility.GridDistance(blackboard.myPosition, u.GridPosition)).FirstOrDefault();
                     }
 
                     if (target != null && target.Health != null)
@@ -52,11 +52,11 @@ namespace Celestial_Cross.Scripts.Units.Enemy.AI.BehaviorTree.Runtime.Data
                     }
                     else
                     {
-                        distTarget = blackboard.enemies?.OrderBy(u => AIGridUtility.ChebyshevDistance(blackboard.myPosition, u.GridPosition)).FirstOrDefault();
+                        distTarget = blackboard.enemies?.OrderBy(u => AIGridUtility.GridDistance(blackboard.myPosition, u.GridPosition)).FirstOrDefault();
                     }
 
                     if (distTarget != null)
-                        NumericResult = AIGridUtility.ChebyshevDistance(blackboard.myPosition, distTarget.GridPosition);
+                        NumericResult = AIGridUtility.GridDistance(blackboard.myPosition, distTarget.GridPosition);
                     else
                         NumericResult = 999f;
                     break;

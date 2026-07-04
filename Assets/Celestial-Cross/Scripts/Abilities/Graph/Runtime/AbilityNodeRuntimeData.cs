@@ -30,6 +30,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
     [Serializable]
     public class TargetNodeData
     {
+        public bool targetsSelf = false;
         public bool reusePrevious = false;
         public GraphTargetSourceType sourceType = GraphTargetSourceType.Manual;
         public GraphTargetMode mode = GraphTargetMode.Single;
@@ -39,7 +40,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
         public int maxTargets = 1;
         public GraphTargetOrigin origin = GraphTargetOrigin.Unit;
         public GraphAutoStrategyType strategy = GraphAutoStrategyType.ClosestUnit;
-        public int attributeType = 0; 
+        public AttributeCondition.AttributeType attributeType = AttributeCondition.AttributeType.HP; 
         public GraphFactionType factionType = GraphFactionType.Any; 
         public int targetCount = 1;
         public bool autoRotate = true;
@@ -198,6 +199,13 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
     }
 
     [Serializable]
+    public class ConditionalFlowNodeData
+    {
+        public enum LogicMode { And, Or }
+        public LogicMode mode = LogicMode.And;
+    }
+
+    [Serializable]
     public class LimitPerTurnNodeData
     {
         public int maxExecutionsPerTurn = 1;
@@ -251,8 +259,7 @@ namespace Celestial_Cross.Scripts.Abilities.Graph.Runtime
     {
         public string modifierId;
         public int stacks = 1;
-        public bool canStack = false;
-        public int maxStacks = 1;
+        public float hitChance = 100f; // Probabilidade base de aplicar o efeito (0-100)
     }
 
     [Serializable]

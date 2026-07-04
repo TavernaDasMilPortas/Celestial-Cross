@@ -19,6 +19,7 @@
   <Project Path="DrawXXL.csproj" />
   <Project Path="Unity.Services.Core.Environments.Editor.csproj" />
   <Project Path="Unity.VisualScripting.Flow.Editor.csproj" />
+  <Project Path="Cinemachine.csproj" />
   <Project Path="Unity.VisualStudio.Editor.csproj" />
   <Project Path="Unity.Services.Authentication.csproj" />
   <Project Path="Unity.Services.Authentication.Editor.csproj" />
@@ -39,6 +40,7 @@
   <Project Path="MoreMountains.Tools.Editor.csproj" />
   <Project Path="Lofelt.NiceVibrations.csproj" />
   <Project Path="UnityEditor.Purchasing.csproj" />
+  <Project Path="com.unity.cinemachine.editor.csproj" />
   <Project Path="Unity.Burst.Editor.csproj" />
   <Project Path="Unity.Mobile.AndroidLogcat.Editor.csproj" />
   <Project Path="Unity.Rider.Editor.csproj" />

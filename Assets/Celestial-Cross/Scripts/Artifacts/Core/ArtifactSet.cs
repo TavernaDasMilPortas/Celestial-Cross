@@ -38,7 +38,6 @@ namespace CelestialCross.Artifacts
         {
             public int piecesRequired; // Ex: 2, 4, ou 6 peÃ§as.
             public List<StatModifier> statBonuses;
-            public AbilityBlueprint passiveAbility; // Conecta diretamente a uma habilidade passiva.
             public Celestial_Cross.Scripts.Abilities.Graph.AbilityGraphSO passiveGraph; // Conecta diretamente a uma habilidade passiva via Grafo.
         }
 

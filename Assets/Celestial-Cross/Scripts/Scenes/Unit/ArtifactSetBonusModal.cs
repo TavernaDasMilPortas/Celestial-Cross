@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using CelestialCross.Artifacts;
@@ -68,7 +68,7 @@ namespace CelestialCross.Scenes.Unit
                         var txt = go.GetComponentInChildren<TextMeshProUGUI>();
                         if (txt != null)
                         {
-                            string desc = $"<b>[{bonus.piecesRequired} Peças]</b> ";
+                            string desc = $"<b>[{bonus.piecesRequired} PeÃ§as]</b> ";
                             
                             if (bonus.statBonuses != null && bonus.statBonuses.Count > 0)
                             {
@@ -82,9 +82,9 @@ namespace CelestialCross.Scenes.Unit
                             {
                                 desc += $"\n<i>{bonus.passiveGraph.abilityDescription}</i>";
                             }
-                            else if (bonus.passiveAbility != null)
+                            else if (bonus.passiveGraph != null)
                             {
-                                desc += $"\n<i>{bonus.passiveAbility.abilityDescription}</i>";
+                                desc += $"\n<i>{bonus.passiveGraph.abilityDescription}</i>";
                             }
 
                             txt.text = desc;
@@ -127,3 +127,4 @@ namespace CelestialCross.Scenes.Unit
         }
     }
 }
+

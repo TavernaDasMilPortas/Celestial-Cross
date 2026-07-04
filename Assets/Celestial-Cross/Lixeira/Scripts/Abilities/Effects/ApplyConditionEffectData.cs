@@ -1,4 +1,5 @@
-﻿using System;
+/*
+using System;
 using UnityEngine;
 using CelestialCross.Combat;
 using Celestial_Cross.Scripts.Abilities.Modifiers;
@@ -20,3 +21,4 @@ namespace Celestial_Cross.Scripts.Abilities
         }
     }
 }
+*/

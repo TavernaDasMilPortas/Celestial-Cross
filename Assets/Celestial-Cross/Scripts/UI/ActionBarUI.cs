@@ -33,13 +33,9 @@ public class ActionBarUI : MonoBehaviour
             var action = actions[i];
             bool isClickable = true;
 
-            if (action is Celestial_Cross.Scripts.Units.BlueprintActionWrapper wrapper)
+            if (action is Celestial_Cross.Scripts.Units.GraphActionWrapper wrapper)
             {
-                isClickable = !wrapper.Blueprint.isPassive;
-            }
-            else if (action is Celestial_Cross.Scripts.Units.GraphActionWrapper graphWrapper)
-            {
-                isClickable = graphWrapper.Graph.IsActive;
+                isClickable = !wrapper.Graph.IsPassive;
             }
 
             CreateButtonForAction(action, i, isClickable);
@@ -114,16 +110,12 @@ public class ActionBarUI : MonoBehaviour
             UnitActionCategory category = UnitActionCategory.Ability;
             if (btn.Action is UnitActionBase baseAction) category = baseAction.ActionCategory;
             // Para wrappers, precisamos inferir ou checar o subtipo.
-            else if (btn.Action is Celestial_Cross.Scripts.Units.BlueprintActionWrapper blueprintWrapper)
-            {
-                if (blueprintWrapper.Blueprint.abilitySubtype == AbilitySubtype.Movement) category = UnitActionCategory.Movement;
-            }
             else if (btn.Action is Celestial_Cross.Scripts.Units.GraphActionWrapper graphWrapper)
             {
-                var startNode = graphWrapper.Graph.NodeData.FirstOrDefault(n => n.NodeType == "StartNode");
-                if (startNode != null) {
-                    var data = JsonUtility.FromJson<Celestial_Cross.Scripts.Abilities.Graph.Runtime.StartNodeData>(startNode.JsonData);
-                    if (data.subtype == AbilitySubtype.Movement) category = UnitActionCategory.Movement;
+                if (graphWrapper.Subtype == AbilitySubtype.Movement ||
+                   (graphWrapper.Graph.abilityName != null && graphWrapper.Graph.abilityName.ToLower().Contains("mov")))
+                {
+                    category = UnitActionCategory.Movement;
                 }
             }
 
