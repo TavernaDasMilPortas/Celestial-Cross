@@ -32,8 +32,9 @@ namespace CelestialCross.Gacha.UI
             if (closeButton != null) closeButton.onClick.AddListener(Close);
         }
 
-        public void ShowUnit(RuntimeUnitData unit, GachaRewardEntry entry)
+        public void ShowUnit(RuntimeUnitData unit, RuntimeGachaResult result)
         {
+            var entry = result.Entry;
             if (nameText != null) nameText.text = entry.UnitData.displayName;
             if (spriteImage != null)
             {
@@ -52,14 +53,15 @@ namespace CelestialCross.Gacha.UI
                                  $"<b>ACC:</b> {entry.UnitData.baseStats.effectAccuracy}% | <b>RES:</b> {entry.UnitData.baseStats.effectResistance}%";
             }
 
-            SetupStars(entry.ItemStars);
+            SetupStars(result.RolledStars);
             SetupUnitSkills(entry.UnitData);
 
             DoPopIn();
         }
 
-        public void ShowPet(RuntimePetData pet, GachaRewardEntry entry)
+        public void ShowPet(RuntimePetData pet, RuntimeGachaResult result)
         {
+            var entry = result.Entry;
             if (nameText != null) nameText.text = entry.PetSpeciesData.SpeciesName;
             if (spriteImage != null)
             {
@@ -77,7 +79,7 @@ namespace CelestialCross.Gacha.UI
                                  $"<b>+ACC:</b> {pet.EffectAccuracy}% | <b>+RES:</b> {pet.EffectResistance}%";
             }
 
-            SetupStars(entry.ItemStars);
+            SetupStars(result.RolledStars);
             SetupPetSkills(entry.PetSpeciesData);
 
             DoPopIn();

@@ -1,61 +1,34 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System.Threading.Tasks;
 using CelestialCross.Artifacts;
 using CelestialCross.Data.Dungeon;
+using CelestialCross.Cloud;
 
 namespace CelestialCross.System
 {
     public static class ArtifactLootService
     {
-        // NOVO: Exposto para uso na LootTableSO Gen�rica
-        public static ArtifactInstanceData GenerateSingleFromMatrix(List<ArtifactSet> allowedSets, ArtifactDropMatrix matrix)
+        // NOVO: Exposto para uso na LootTableSO Genérica e assíncrono
+        public static async Task<ArtifactInstanceData> GenerateSingleFromMatrixAsync(List<ArtifactSet> allowedSets, ArtifactDropMatrix matrix)
         {
             if (allowedSets == null || allowedSets.Count == 0) return null;
-            return GenerateSingleArtifact(allowedSets, matrix);
+            return await GenerateCloudArtifactAsync(allowedSets, matrix);
         }
 
-        private static ArtifactInstanceData GenerateSingleArtifact(List<ArtifactSet> allowedSets, ArtifactDropMatrix matrix)
+        private static async Task<ArtifactInstanceData> GenerateCloudArtifactAsync(List<ArtifactSet> allowedSets, ArtifactDropMatrix matrix)
         {
             // 1. Sortear Set
             ArtifactSet selectedSet = allowedSets[Random.Range(0, allowedSets.Count)];
 
-            // 2. Sortear Slot (Type)
-            ArtifactType selectedSlot = (ArtifactType)Random.Range(0, 6);
-
-            // 3. RNG Raridade
+            // 2. RNG Raridade
             ArtifactRarity rarity = RollRarity(matrix);
 
-            // 4. RNG Estrelas
+            // 3. RNG Estrelas
             ArtifactStars stars = RollStars(matrix);
 
-            StatType mainStat = DetermineMainStatForSlot(selectedSlot);
-
-            // 6. Instanciar e Preencher Runtime Data
-            var artifact = new ArtifactInstanceData
-            {
-                idGUID = global::System.Guid.NewGuid().ToString(),
-                artifactSetId = selectedSet.id,
-                slot = selectedSlot,
-                rarity = rarity,
-                stars = (ArtifactStars)stars,
-                currentLevel = 0,
-                mainStat = new StatModifierData(mainStat, ArtifactGenerator.GetMainStatBaseValue(mainStat, stars)),
-                subStats = new List<StatModifierData>()
-            };
-
-            // 7. Sortear Substats
-            int substatsCount = ArtifactGenerator.GetInitialSubstatCount(rarity);
-            List<StatModifier> currentSubstats = new List<StatModifier>();
-            
-            for (int i = 0; i < substatsCount; i++)
-            {
-                StatType subType = ArtifactGenerator.GetRandomSubstatType(mainStat, currentSubstats);
-                float subValue = ArtifactGenerator.GenerateSubstatValue(subType, stars);
-                currentSubstats.Add(new StatModifier { statType = subType, value = subValue });
-                artifact.subStats.Add(new StatModifierData(subType, subValue));
-            }
-
-            return artifact;
+            // 4. Solicitar Nuvem
+            return await CloudArtifactGenerator.GenerateArtifactAsync(selectedSet.id, rarity, stars);
         }
 
         private static ArtifactRarity RollRarity(ArtifactDropMatrix matrix)
@@ -90,14 +63,6 @@ namespace CelestialCross.System
             return (ArtifactStars)5; 
         }
 
-        private static StatType DetermineMainStatForSlot(ArtifactType slot)
-        {
-            List<StatType> pool = new List<StatType>
-            {
-                StatType.HealthFlat, StatType.HealthPercent, StatType.AttackFlat, StatType.AttackPercent, 
-                StatType.DefenseFlat, StatType.DefensePercent, StatType.CriticalRate, StatType.CriticalDamage
-            };
-            return pool[Random.Range(0, pool.Count)];
-        }
+
     }
 }

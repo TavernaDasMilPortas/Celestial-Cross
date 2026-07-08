@@ -3,13 +3,15 @@ using UnityEngine;
 using CelestialCross.Data.Rewards;
 using CelestialCross.Data.Dungeon;
 using CelestialCross.Artifacts;
+using System.Threading.Tasks;
 using CelestialCross.Data.Pets;
+using CelestialCross.Cloud;
 
 namespace CelestialCross.System
 {
     public static class RewardService
     {
-        public static RuntimeReward CreateRuntimeReward(List<RewardDefinition> rewards)
+        public static async Task<RuntimeReward> CreateRuntimeRewardAsync(List<RewardDefinition> rewards)
         {
             var runtimeReward = new RuntimeReward();
             if (rewards == null || rewards.Count == 0) return runtimeReward;
@@ -40,20 +42,11 @@ namespace CelestialCross.System
                         {
                             for (int i = 0; i < Mathf.Max(1, reward.Amount); i++)
                             {
-                                var newPet = new RuntimePetData(
-                                    reward.PetRef.id, 
-                                    reward.PetRef.SpeciesName, 
-                                    3, // Default stars
-                                    (int)reward.PetRef.MaxBaseHealth, 
-                                    (int)reward.PetRef.MaxBaseAttack, 
-                                    (int)reward.PetRef.MaxBaseDefense,
-                                    (int)reward.PetRef.MaxBaseSpeed,
-                                    (int)reward.PetRef.MaxBaseCriticalChance,
-                                    (int)reward.PetRef.MaxBaseCriticalDamage,
-                                    (int)reward.PetRef.MaxBaseEffectAccuracy,
-                                    (int)reward.PetRef.MaxBaseEffectResistance
-                                );
-                                runtimeReward.GeneratedPets.Add(newPet);
+                                var newPet = await CloudPetGenerator.GeneratePetAsync(reward.PetRef, 3); // Default 3 stars
+                                if (newPet != null)
+                                {
+                                    runtimeReward.GeneratedPets.Add(newPet);
+                                }
                             }
                         }
                         break;
@@ -62,17 +55,11 @@ namespace CelestialCross.System
                         {
                             for (int i = 0; i < Mathf.Max(1, reward.Amount); i++)
                             {
-                                CelestialCross.Artifacts.ArtifactType randomSlot = (CelestialCross.Artifacts.ArtifactType)UnityEngine.Random.Range(0, global::System.Enum.GetValues(typeof(CelestialCross.Artifacts.ArtifactType)).Length);
-                                var art = new ArtifactInstanceData
+                                var art = await CloudArtifactGenerator.GenerateArtifactAsync(reward.ArtifactSetRef.id, ArtifactRarity.Legendary, ArtifactStars.Five);
+                                if (art != null)
                                 {
-                                    artifactSetId = reward.ArtifactSetRef.id,
-                                    slot = randomSlot,
-                                    rarity = ArtifactRarity.Legendary,
-                                    stars = ArtifactStars.Five,
-                                    currentLevel = 0,
-                                    mainStat = new StatModifierData(StatType.HealthFlat, 500f)
-                                };
-                                runtimeReward.GeneratedArtifacts.Add(art);
+                                    runtimeReward.GeneratedArtifacts.Add(art);
+                                }
                             }
                         }
                         break;
@@ -83,7 +70,7 @@ namespace CelestialCross.System
                             {
                                 Debug.Log($"[RewardService] Gerando LootTable {reward.LootTableRef.GetType().Name} via RewardDefinition...");
                                 int prevArtCount = runtimeReward.GeneratedArtifacts.Count;
-                                reward.LootTableRef.GenerateLoot(runtimeReward);
+                                await reward.LootTableRef.GenerateLootAsync(runtimeReward);
                                 Debug.Log($"[RewardService] LootTable gerou {runtimeReward.GeneratedArtifacts.Count - prevArtCount} artefatos.");
                             }
                         }

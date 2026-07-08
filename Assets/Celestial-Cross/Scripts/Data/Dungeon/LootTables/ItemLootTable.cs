@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using CelestialCross.Data.Dungeon;
 using CelestialCross.Data.Rewards;
+using System.Threading.Tasks;
 
 namespace CelestialCross.Data.Loot
 {
@@ -26,9 +27,9 @@ namespace CelestialCross.Data.Loot
         [Tooltip("Quantidade de vezes que a tabela vai rodar para gerar itens")]
         public int NumberOfRolls = 1;
 
-        public override void GenerateLoot(RuntimeReward rewardData)
+        public override Task GenerateLootAsync(RuntimeReward rewardData)
         {
-            if (AllowedItems == null || AllowedItems.Count == 0) return;
+            if (AllowedItems == null || AllowedItems.Count == 0) return Task.CompletedTask;
 
             if (rewardData.SourceDefinitions == null)
             {
@@ -55,6 +56,8 @@ namespace CelestialCross.Data.Loot
                     rewardData.SourceDefinitions.Add(newRewardDef);
                 }
             }
+
+            return Task.CompletedTask;
         }
 
         private ItemDropEntry GetRandomItemByWeight()

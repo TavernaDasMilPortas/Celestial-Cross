@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System.Threading.Tasks;
 using CelestialCross.Data.Pets;
+using CelestialCross.Cloud;
 
 namespace CelestialCross.Data.Dungeon
 {
@@ -19,24 +21,24 @@ namespace CelestialCross.Data.Dungeon
     public class PetDropEntry
     {
         public PetSpeciesSO Species;
-        [Tooltip("Peso de chance de drop desta espÈcie em relaÁ„o ‡s outras da mesma lista")]
+        [Tooltip("Peso de chance de drop desta esp√©cie em rela√ß√£o √†s outras da mesma lista")]
         public float Weight = 10f;
     }
 
     [global::System.Serializable]
     public class PetLootTable : CelestialCross.Data.Loot.BaseLootTable
     {
-        [Header("Global Loot Pool da Masmorra ou Regi„o (Pets PossÌveis)")]
+        [Header("Global Loot Pool da Masmorra ou Regi√£o (Pets Poss√≠veis)")]
         public List<PetDropEntry> AllowedPets = new List<PetDropEntry>();
 
         [Header("Tabela de Chance Base")]
         public PetDropMatrix DropMatrix = new PetDropMatrix();
 
-        [Header("ConfiguraÁıes Gerais")]
-        [Tooltip("Quantidade a ser gerada por padr„o")]
+        [Header("Configura√ß√µes Gerais")]
+        [Tooltip("Quantidade a ser gerada por padr√£o")]
         public int NumberOfRolls = 1;
 
-        public override void GenerateLoot(RuntimeReward rewardData)
+        public override async Task GenerateLootAsync(RuntimeReward rewardData)
         {
             if (rewardData.GeneratedPets == null)
             {
@@ -55,22 +57,12 @@ namespace CelestialCross.Data.Dungeon
                 if (selectedPetSpecies != null)
                 {
                     int stars = RollStars();
-                    float starMultiplier = 1f + (stars - 1) * 0.2f;
+                    var newPet = await CloudPetGenerator.GeneratePetAsync(selectedPetSpecies, stars);
 
-                    int finalHp = Mathf.RoundToInt(Random.Range(selectedPetSpecies.MinBaseHealth, selectedPetSpecies.MaxBaseHealth) * starMultiplier);
-                    int finalAtk = Mathf.RoundToInt(Random.Range(selectedPetSpecies.MinBaseAttack, selectedPetSpecies.MaxBaseAttack) * starMultiplier);
-                    int finalDef = Mathf.RoundToInt(Random.Range(selectedPetSpecies.MinBaseDefense, selectedPetSpecies.MaxBaseDefense) * starMultiplier);
-                    int finalSpd = Mathf.RoundToInt(Random.Range(selectedPetSpecies.MinBaseSpeed, selectedPetSpecies.MaxBaseSpeed) * starMultiplier);
-                    int finalCrit = Mathf.Clamp(Mathf.RoundToInt(Random.Range(selectedPetSpecies.MinBaseCriticalChance, selectedPetSpecies.MaxBaseCriticalChance) * starMultiplier), 0, 100);
-                    int finalAcc = Mathf.Clamp(Mathf.RoundToInt(Random.Range(selectedPetSpecies.MinBaseEffectAccuracy, selectedPetSpecies.MaxBaseEffectAccuracy) * starMultiplier), 0, 100);
-                    int finalCritDmg = Mathf.RoundToInt(Random.Range(selectedPetSpecies.MinBaseCriticalDamage, selectedPetSpecies.MaxBaseCriticalDamage) * starMultiplier);
-                    int finalEffRes = Mathf.Clamp(Mathf.RoundToInt(Random.Range(selectedPetSpecies.MinBaseEffectResistance, selectedPetSpecies.MaxBaseEffectResistance) * starMultiplier), 0, 100);
-
-                    var newPet = new RuntimePetData(selectedPetSpecies.id, selectedPetSpecies.SpeciesName, stars,
-                        finalHp, finalAtk, finalDef, finalSpd, finalCrit, finalCritDmg, finalAcc, finalEffRes
-                    );
-
-                    rewardData.GeneratedPets.Add(newPet);
+                    if (newPet != null)
+                    {
+                        rewardData.GeneratedPets.Add(newPet);
+                    }
                 }
             }
         }

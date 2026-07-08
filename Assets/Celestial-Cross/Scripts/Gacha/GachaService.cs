@@ -16,8 +16,8 @@ namespace CelestialCross.Gacha
             if (Instance == null)
             {
                 Instance = new GachaService();
-                // Por padrão inicia local, pode ser trocado pelo CloudGachaProvider no futuro
-                Instance._provider = new LocalGachaProvider();
+                // Agora inicia usando o provedor da nuvem por padrão (preparado para PlayFab)
+                Instance._provider = new CelestialCross.Cloud.CloudGachaProvider();
             }
         }
 
@@ -52,7 +52,7 @@ namespace CelestialCross.Gacha
             return await _provider.PullAsync(account, banner, times);
         }
 
-        public List<RuntimeGachaResult> ExecutePullsInternal(Account account, GachaBannerSO banner, int times)
+        public async Task<List<RuntimeGachaResult>> ExecutePullsInternalAsync(Account account, GachaBannerSO banner, int times)
         {
             List<RuntimeGachaResult> results = new List<RuntimeGachaResult>();
             int totalCost = banner.CostPerPull * times;
@@ -72,7 +72,28 @@ namespace CelestialCross.Gacha
                 pityState.PullsSinceLastSupreme++;
                 pityState.PullsSinceLastOverBase++;
                 
-                GachaRarity rolledRarity = DetermineRarity(banner, pityState);
+                GachaRarity rolledRarity;
+                GachaRewardEntry rolledReward;
+                var excludedRarities = new HashSet<GachaRarity>();
+                int maxRerollAttempts = 10;
+
+                do
+                {
+                    rolledRarity = DetermineRarity(banner, pityState, excludedRarities);
+                    rolledReward = TrySelectRewardFromPool(banner, rolledRarity, pityState);
+
+                    if (rolledReward == null)
+                    {
+                        excludedRarities.Add(rolledRarity);
+                        maxRerollAttempts--;
+                    }
+                } while (rolledReward == null && maxRerollAttempts > 0);
+
+                if (rolledReward == null)
+                {
+                    Debug.LogError($"[Gacha] Falha ao encontrar qualquer reward no banner {banner.BannerID} após re-rolls.");
+                    continue;
+                }
                 
                 // Reseta os pities se tiver a raridade certa
                 if (rolledRarity == GachaRarity.Supreme)
@@ -81,8 +102,6 @@ namespace CelestialCross.Gacha
                 if (rolledRarity != GachaRarity.Base)
                     pityState.PullsSinceLastOverBase = 0;
 
-                GachaRewardEntry rolledReward = SelectRewardFromPool(banner, rolledRarity, pityState);
-                
                 // Trata 50/50 Se era supremo foco ou nulo (Perda)
                 if (rolledRarity == GachaRarity.Supreme)
                 {
@@ -103,7 +122,7 @@ namespace CelestialCross.Gacha
                     pityState.PullsSinceLastSupreme = 0;
                 }
 
-                var result = DispatchReward(account, rolledReward);
+                var result = await DispatchRewardAsync(account, rolledReward);
                 results.Add(result);
             }
 
@@ -112,7 +131,7 @@ namespace CelestialCross.Gacha
             return results;
         }
 
-        private GachaRarity DetermineRarity(GachaBannerSO banner, GachaPityState pity)
+        private GachaRarity DetermineRarity(GachaBannerSO banner, GachaPityState pity, HashSet<GachaRarity> excludedRarities = null)
         {
             if (banner.BasicProbabilities == null || banner.BasicProbabilities.Count == 0)
             {
@@ -148,6 +167,9 @@ namespace CelestialCross.Gacha
             float totalValidChance = 0f;
             foreach (var prob in banner.BasicProbabilities)
             {
+                if (excludedRarities != null && excludedRarities.Contains(prob.Rarity))
+                    continue;
+                    
                 if (forceAboveLowest && prob.Rarity == lowestTableRarity)
                     continue; // Pula a pior raridade no tiro garantido
 
@@ -163,6 +185,9 @@ namespace CelestialCross.Gacha
                 forceAboveLowest = false;
                 foreach (var prob in banner.BasicProbabilities)
                 {
+                    if (excludedRarities != null && excludedRarities.Contains(prob.Rarity))
+                        continue;
+                        
                     float c = prob.BaseChance;
                     if (prob.Rarity == GachaRarity.Supreme) c += extraChance;
                     totalValidChance += c;
@@ -175,6 +200,9 @@ namespace CelestialCross.Gacha
             
             foreach (var prob in banner.BasicProbabilities)
             {
+                if (excludedRarities != null && excludedRarities.Contains(prob.Rarity))
+                    continue;
+                    
                 if (forceAboveLowest && prob.Rarity == lowestTableRarity)
                     continue;
 
@@ -193,7 +221,7 @@ namespace CelestialCross.Gacha
                 : lowestTableRarity;
         }
 
-        private GachaRewardEntry SelectRewardFromPool(GachaBannerSO banner, GachaRarity targetRarity, GachaPityState pity)
+        private GachaRewardEntry TrySelectRewardFromPool(GachaBannerSO banner, GachaRarity targetRarity, GachaPityState pity)
         {
             var validPool = banner.TotalPool.FindAll(x => x.Rarity == targetRarity);
             
@@ -210,7 +238,7 @@ namespace CelestialCross.Gacha
             }
 
             if (validPool.Count == 0)
-                throw new global::System.Exception($"Nao ha itens no banner {banner.BannerID} para a raridade {targetRarity}");
+                return null;
 
             // Se for Supreme + Tem Path + Perdeu 50/50 anterior
             if (targetRarity == GachaRarity.Supreme && banner.HasEpitomizedPath && pity.Lost5050 && !string.IsNullOrEmpty(pity.SelectedSupremeChoice))
@@ -240,10 +268,11 @@ namespace CelestialCross.Gacha
             return validPool[0]; // fallback
         }
 
-        private RuntimeGachaResult DispatchReward(Account account, GachaRewardEntry entry)
+        private async Task<RuntimeGachaResult> DispatchRewardAsync(Account account, GachaRewardEntry entry)
         {
             if (entry.RewardType == GachaRewardType.Unit)
             {
+                int rolledStars = entry.RollItemStars(true);
                 string unitID = entry.GetID();
                 var existingUnit = account.OwnedUnits.Find(x => x.UnitID == unitID);
                 if (existingUnit != null)
@@ -252,60 +281,38 @@ namespace CelestialCross.Gacha
                     string insigniaID = CelestialCross.System.ConstellationService.GetInsigniaItemID(unitID);
                     account.AddItem(insigniaID, 1);
                     Debug.Log($"[GachaService] Duplicata de {unitID} recebida na pool. Adicionada 1 Insígnia Estelar e 20 fragmentos.");
-                    return new RuntimeGachaResult(entry, existingUnit, true);
+                    return new RuntimeGachaResult(entry, existingUnit, true) { RolledStars = rolledStars };
                 }
                 else
                 {
-                    var newUnit = new RuntimeUnitData(unitID, entry.ItemStars);
+                    var newUnit = new RuntimeUnitData(unitID, rolledStars);
                     account.OwnedUnits.Add(newUnit);
                     if (!account.OwnedUnitIDs.Contains(unitID))
                         account.OwnedUnitIDs.Add(unitID); // Legacy keep
-                    return new RuntimeGachaResult(entry, newUnit, false);
+                    return new RuntimeGachaResult(entry, newUnit, false) { RolledStars = rolledStars };
                 }
             }
             else if (entry.RewardType == GachaRewardType.Pet)
             {
+                int rolledStars = entry.RollItemStars(false);
                 string petID = entry.GetID();
-                // Instancia o Pet Data RNG com base na espécie (simplificado aqui. Depois podemos gerar os stats randomicos de HP/ATK baseados em ranges min/max)
-                var newPet = new CelestialCross.Data.Pets.RuntimePetData(petID, "", entry.ItemStars, 100, 10, 10, 10, 5, 50, 0, 0);
+                
+                var petSpecies = CelestialCross.System.GlobalCatalogs.Instance.petCatalog.GetPetSpecies(petID);
+                var newPet = await CelestialCross.Cloud.CloudPetGenerator.GeneratePetAsync(petSpecies, rolledStars);
                 account.OwnedRuntimePets.Add(newPet);
-                return new RuntimeGachaResult(entry, newPet, false);
+                return new RuntimeGachaResult(entry, newPet, false) { RolledStars = rolledStars };
             }
             else if (entry.RewardType == GachaRewardType.Artifact)
             {
-                 // Geração do artefato com dados básicos para a pool de gacha
                  if (entry.ArtifactSet != null) {
-                    CelestialCross.Artifacts.ArtifactRarity genRarity = entry.ArtifactRarity;
-                    CelestialCross.Artifacts.ArtifactType genSlot = (CelestialCross.Artifacts.ArtifactType)UnityEngine.Random.Range(0, 6);
-                    CelestialCross.Artifacts.ArtifactStars genStars = (CelestialCross.Artifacts.ArtifactStars)entry.ItemStars;
+                    CelestialCross.Artifacts.ArtifactRarity genRarity = entry.RollArtifactRarity();
+                    int rolledStars = entry.RollItemStars(false);
+                    CelestialCross.Artifacts.ArtifactStars genStars = (CelestialCross.Artifacts.ArtifactStars)rolledStars;
 
-                    CelestialCross.Artifacts.StatType genMainStat = CelestialCross.Artifacts.StatType.HealthFlat; // Default estático ou randômico depois
-                    
-                    var newArtifact = new CelestialCross.Artifacts.ArtifactInstanceData
-                    {
-                        idGUID = global::System.Guid.NewGuid().ToString(),
-                        artifactSetId = entry.ArtifactSet.id,
-                        slot = genSlot,
-                        rarity = genRarity,
-                        stars = genStars,
-                        currentLevel = 0,
-                        mainStat = new CelestialCross.Artifacts.StatModifierData(genMainStat, CelestialCross.Artifacts.ArtifactGenerator.GetMainStatBaseValue(genMainStat, genStars)),
-                        subStats = new global::System.Collections.Generic.List<CelestialCross.Artifacts.StatModifierData>()
-                    };
-
-                    int substatsCount = CelestialCross.Artifacts.ArtifactGenerator.GetInitialSubstatCount(genRarity);
-                    var currentSubstats = new global::System.Collections.Generic.List<CelestialCross.Artifacts.StatModifier>();
-                    
-                    for (int i = 0; i < substatsCount; i++)
-                    {
-                        var subType = CelestialCross.Artifacts.ArtifactGenerator.GetRandomSubstatType(genMainStat, currentSubstats);
-                        float subValue = CelestialCross.Artifacts.ArtifactGenerator.GenerateSubstatValue(subType, genStars);
-                        currentSubstats.Add(new CelestialCross.Artifacts.StatModifier { statType = subType, value = subValue });
-                        newArtifact.subStats.Add(new CelestialCross.Artifacts.StatModifierData(subType, subValue));
-                    }
+                    var newArtifact = await CelestialCross.Cloud.CloudArtifactGenerator.GenerateArtifactAsync(entry.ArtifactSet.id, genRarity, genStars);
 
                     account.OwnedArtifacts.Add(newArtifact);
-                    return new RuntimeGachaResult(entry, newArtifact, false);
+                    return new RuntimeGachaResult(entry, newArtifact, false) { RolledStars = rolledStars, RolledArtifactRarity = genRarity };
                  }
             }
             

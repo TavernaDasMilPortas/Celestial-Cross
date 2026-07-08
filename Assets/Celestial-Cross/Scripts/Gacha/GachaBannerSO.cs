@@ -46,12 +46,34 @@ namespace CelestialCross.Gacha
         public int Weight = 1;
 
         [Title("Status do Drop")]
-        [Tooltip("Quantas estrelas este Personagem, Pet ou Artefato terá ao ser sorteado?")]
-        [Range(1, 6)] public int ItemStars = 3;
+        [Tooltip("Estrelas mínimas ao ser sorteado (Pets e Artefatos usam o range min~max; Units usam sempre o Min)")]
+        [Range(1, 6)] public int MinItemStars = 3;
 
-        [Tooltip("Qual a raridade base gerada (Apenas para Artefatos)")]
+        [Tooltip("Estrelas máximas ao ser sorteado (se igual ao Min, é fixo)")]
+        [Range(1, 6)] public int MaxItemStars = 3;
+
+        [Tooltip("Raridade mínima base gerada (Apenas para Artefatos)")]
         [ShowIf("RewardType", GachaRewardType.Artifact)]
-        public CelestialCross.Artifacts.ArtifactRarity ArtifactRarity = CelestialCross.Artifacts.ArtifactRarity.Common;
+        public CelestialCross.Artifacts.ArtifactRarity MinArtifactRarity = CelestialCross.Artifacts.ArtifactRarity.Common;
+
+        [Tooltip("Raridade máxima base gerada (Apenas para Artefatos)")]
+        [ShowIf("RewardType", GachaRewardType.Artifact)]
+        public CelestialCross.Artifacts.ArtifactRarity MaxArtifactRarity = CelestialCross.Artifacts.ArtifactRarity.Common;
+
+        public int RollItemStars(bool isUnit)
+        {
+            if (isUnit) return MinItemStars; // Unidades usam sempre o valor mínimo como fixo
+            if (MinItemStars >= MaxItemStars) return MinItemStars;
+            return UnityEngine.Random.Range(MinItemStars, MaxItemStars + 1);
+        }
+
+        public CelestialCross.Artifacts.ArtifactRarity RollArtifactRarity()
+        {
+            if (MinArtifactRarity >= MaxArtifactRarity) return MinArtifactRarity;
+            int min = (int)MinArtifactRarity;
+            int max = (int)MaxArtifactRarity;
+            return (CelestialCross.Artifacts.ArtifactRarity)UnityEngine.Random.Range(min, max + 1);
+        }
 
         public string GetID()
         {
@@ -81,6 +103,8 @@ namespace CelestialCross.Gacha
         public GachaRewardEntry Entry { get; set; }
         public object GeneratedInstance { get; set; }
         public bool IsDuplicateUnit { get; set; }
+        public int RolledStars { get; set; }
+        public CelestialCross.Artifacts.ArtifactRarity? RolledArtifactRarity { get; set; }
         
         public RuntimeGachaResult(GachaRewardEntry entry, object generatedInstance, bool isDuplicateUnit = false)
         {
@@ -135,5 +159,26 @@ namespace CelestialCross.Gacha
         
         [ListDrawerSettings(ListElementLabelName = "GetEntryLabel")]
         public List<GachaRewardEntry> TotalPool = new List<GachaRewardEntry>();
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            if (SupremeChoices != null)
+            {
+                foreach (var entry in SupremeChoices) ValidateEntry(entry);
+            }
+            if (TotalPool != null)
+            {
+                foreach (var entry in TotalPool) ValidateEntry(entry);
+            }
+        }
+
+        private void ValidateEntry(GachaRewardEntry entry)
+        {
+            if (entry == null) return;
+            if (entry.MaxItemStars < entry.MinItemStars) entry.MaxItemStars = entry.MinItemStars;
+            if ((int)entry.MaxArtifactRarity < (int)entry.MinArtifactRarity) entry.MaxArtifactRarity = entry.MinArtifactRarity;
+        }
+#endif
     }
 }

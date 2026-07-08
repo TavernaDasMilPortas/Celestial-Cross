@@ -81,14 +81,14 @@ public class AccountManager : MonoBehaviour
         Debug.Log($"[AccountManager] Start chamado. useCloudSave: {useCloudSave}, useDebugProfile: {useDebugProfile}");
         if (useCloudSave)
         {
-            if (AuthManager.Instance == null)
+            if (CelestialCross.Authentication.PlayFabAuthManager.Instance == null)
             {
-                Debug.LogError("[AccountManager] AuthManager not found in scene!");
+                Debug.LogError("[AccountManager] PlayFabAuthManager not found in scene!");
                 return;
             }
 
             Debug.Log("[AccountManager] Iniciando login na nuvem...");
-            await AuthManager.Instance.InitializeAndSignInAsync();
+            await CelestialCross.Authentication.PlayFabAuthManager.Instance.InitializeAndSignInAsync();
         }
         await LoadAndSyncAccountAsync();
     }
@@ -107,7 +107,7 @@ public class AccountManager : MonoBehaviour
         string cloudJson = null;
         Debug.Log($"[AccountManager] localJson vazio? {string.IsNullOrEmpty(localJson)}");
 
-        if (useCloudSave && AuthManager.Instance != null && AuthManager.Instance.IsSignedIn)
+        if (useCloudSave && CelestialCross.Authentication.PlayFabAuthManager.Instance != null && CelestialCross.Authentication.PlayFabAuthManager.Instance.IsSignedIn)
         {
             cloudJson = await _cloudProvider.LoadAsync(accountKey);
             Debug.Log($"[AccountManager] cloudJson vazio? {string.IsNullOrEmpty(cloudJson)}");
@@ -280,7 +280,7 @@ public class AccountManager : MonoBehaviour
         await _localProvider.SaveAsync(accountKey, json);
 
         // Salva na nuvem se habilitado
-        if (useCloudSave && AuthManager.Instance != null && AuthManager.Instance.IsSignedIn)
+        if (useCloudSave && CelestialCross.Authentication.PlayFabAuthManager.Instance != null && CelestialCross.Authentication.PlayFabAuthManager.Instance.IsSignedIn)
         {
             await _cloudProvider.SaveAsync(accountKey, json);
         }

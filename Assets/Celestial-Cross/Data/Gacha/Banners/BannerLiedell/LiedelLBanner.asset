@@ -29,31 +29,35 @@ MonoBehaviour:
     PetSpeciesData: {fileID: 0}
     ArtifactSet: {fileID: 0}
     Weight: 1
-    ItemStars: 3
-    ArtifactRarity: 0
+    MinItemStars: 3
+    MaxItemStars: 3
+    MinArtifactRarity: 0
+    MaxArtifactRarity: 0
   BasicProbabilities:
   - Rarity: 0
-    BaseChance: 80
-  - Rarity: 3
-    BaseChance: 14
-  - Rarity: 4
-    BaseChance: 5
+    BaseChance: 50
   - Rarity: 5
-    BaseChance: 1
+    BaseChance: 2
+  - Rarity: 1
+    BaseChance: 48
   TotalPool:
   - RewardType: 1
-    Rarity: 0
+    Rarity: 1
     UnitData: {fileID: 0}
     PetSpeciesData: {fileID: 11400000, guid: e7c0d4a01fadfda4ca0492984cd33e00, type: 2}
     ArtifactSet: {fileID: 0}
     Weight: 1
-    ItemStars: 4
-    ArtifactRarity: 0
-  - RewardType: 1
+    MinItemStars: 1
+    MaxItemStars: 6
+    MinArtifactRarity: 0
+    MaxArtifactRarity: 0
+  - RewardType: 2
     Rarity: 0
     UnitData: {fileID: 0}
-    PetSpeciesData: {fileID: 11400000, guid: ca3587875a7b1d64bbb5e2585641ebca, type: 2}
-    ArtifactSet: {fileID: 0}
+    PetSpeciesData: {fileID: 0}
+    ArtifactSet: {fileID: 11400000, guid: 1c4f1b892b6e20245a0e9ec4a942e09d, type: 2}
     Weight: 1
-    ItemStars: 3
-    ArtifactRarity: 0
+    MinItemStars: 1
+    MaxItemStars: 6
+    MinArtifactRarity: 0
+    MaxArtifactRarity: 4

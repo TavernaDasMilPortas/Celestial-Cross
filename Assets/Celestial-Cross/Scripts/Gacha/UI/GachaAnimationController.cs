@@ -694,7 +694,7 @@ namespace CelestialCross.Gacha.UI
             {
                 if (gachaUnitRewardModal != null)
                 {
-                    gachaUnitRewardModal.ShowUnit(unitData, result.Entry);
+                    gachaUnitRewardModal.ShowUnit(unitData, result);
                     return;
                 }
             }
@@ -702,7 +702,7 @@ namespace CelestialCross.Gacha.UI
             {
                 if (gachaUnitRewardModal != null)
                 {
-                    gachaUnitRewardModal.ShowPet(petData, result.Entry);
+                    gachaUnitRewardModal.ShowPet(petData, result);
                     return;
                 }
             }

@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
+using System.Threading.Tasks;
 using CelestialCross.Artifacts;
 using CelestialCross.Data.Dungeon;
 
@@ -17,7 +18,7 @@ namespace CelestialCross.Data.Loot
         [Tooltip("Quantidade a ser gerada por padrão")]
         public int NumberOfDrops = 1;
 
-        public override void GenerateLoot(RuntimeReward rewardData)
+        public override async Task GenerateLootAsync(RuntimeReward rewardData)
         {
             if (AllowedArtifactSets == null || AllowedArtifactSets.Count == 0) return;
             if (DropMatrix == null) DropMatrix = new ArtifactDropMatrix();
@@ -27,7 +28,7 @@ namespace CelestialCross.Data.Loot
                 float rand = Random.Range(0f, 100f);
                 if (rand > BaseDropChance) continue;
 
-                var artifact = CelestialCross.System.ArtifactLootService.GenerateSingleFromMatrix(AllowedArtifactSets, DropMatrix);
+                var artifact = await CelestialCross.System.ArtifactLootService.GenerateSingleFromMatrixAsync(AllowedArtifactSets, DropMatrix);
                 if (artifact != null)
                 {
                     if (rewardData.GeneratedArtifacts == null) rewardData.GeneratedArtifacts = new List<ArtifactInstanceData>();

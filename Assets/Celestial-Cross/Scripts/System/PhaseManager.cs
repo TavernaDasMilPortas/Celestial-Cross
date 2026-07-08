@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using CelestialCross.System;
+using System.Threading.Tasks;
 
 public class PhaseManager : MonoBehaviour
 {
@@ -97,7 +98,7 @@ public class PhaseManager : MonoBehaviour
 
     private bool isPhaseEnded = false;
 
-    private void EndPhase(Team winningTeam)
+    private async void EndPhase(Team winningTeam)
     {
         if (isPhaseEnded) return;
         isPhaseEnded = true;
@@ -106,10 +107,10 @@ public class PhaseManager : MonoBehaviour
 
         if (winningTeam == Team.Player)
         {
-            Debug.Log("Fase concluída! Vitória do Jogador!");
-            finalReward = GrantRewards();
+            Debug.Log("Fase concluÃ­da! VitÃ³ria do Jogador!");
+            finalReward = await GrantRewardsAsync();
 
-            // Gravar conclusão do StoryNode após pegar os rewards (para garantir que pegamos o FirstClear antes do +1)
+            // Gravar conclusÃ£o do StoryNode apÃ³s pegar os rewards (para garantir que pegamos o FirstClear antes do +1)
             if (GameFlowManager.Instance != null && GameFlowManager.Instance.SelectedStoryNode != null)
             {
                 CelestialCross.System.ProgressionService.Instance?.RecordNodeCompletion(GameFlowManager.Instance.SelectedStoryNode);
@@ -117,7 +118,7 @@ public class PhaseManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("Fase concluída! Derrota.");
+            Debug.Log("Fase concluÃ­da! Derrota.");
         }
 
         OnPhaseEnded?.Invoke(winningTeam);
@@ -132,7 +133,7 @@ public class PhaseManager : MonoBehaviour
 
         if (finalReward != null)
         {
-            // Mostra a UI procedimental e só volta pro Hub depois do clique
+            // Mostra a UI procedimental e sÃ³ volta pro Hub depois do clique
             CelestialCross.Giulia_UI.VictoryRewardUI.ShowVictoryUIWithXP(finalReward, xpResults, () => 
             {
                 if (!string.IsNullOrWhiteSpace(hubSceneName))
@@ -155,7 +156,7 @@ public class PhaseManager : MonoBehaviour
         SceneManager.LoadScene(hubSceneName);
     }
 
-    public CelestialCross.Data.Dungeon.RuntimeReward GrantRewards()
+    public async Task<CelestialCross.Data.Dungeon.RuntimeReward> GrantRewardsAsync()
     {
         Debug.Log("[PhaseManager] GrantRewards INICIADO!");
 
@@ -184,13 +185,13 @@ public class PhaseManager : MonoBehaviour
             }
         }
 
-        // Se a fase não retornou NENHUM reward específico (ou se quisermos garantir que o fallback atue como base),
-        // no passado, se a lista estivesse vazia, caíamos no fallback. 
+        // Se a fase nÃ£o retornou NENHUM reward especÃ­fico (ou se quisermos garantir que o fallback atue como base),
+        // no passado, se a lista estivesse vazia, caÃ­amos no fallback. 
         // Agora, como as LootTables garantem que a lista nunca seja vazia, precisamos checar se existem rewards do tipo Money/XP/etc.
         bool hasBaseEconomy = baseRewards.Exists(r => r.Type == CelestialCross.Data.Rewards.RewardType.Money || r.Type == CelestialCross.Data.Rewards.RewardType.Energy || r.Type == CelestialCross.Data.Rewards.RewardType.XP);
         if (!hasBaseEconomy && fallbackVictoryRewards != null)
         {
-            Debug.Log("[PhaseManager] Fase não possui economia base explícita. Adicionando FallbackVictoryRewards.");
+            Debug.Log("[PhaseManager] Fase nÃ£o possui economia base explÃ­cita. Adicionando FallbackVictoryRewards.");
             baseRewards.AddRange(fallbackVictoryRewards);
         }
 
@@ -206,11 +207,11 @@ public class PhaseManager : MonoBehaviour
                 Debug.Log($"[PhaseManager] Item [{i}]: NULL");
             }
         }
-        var rewardToGrant = CelestialCross.System.RewardService.CreateRuntimeReward(baseRewards);
+        var rewardToGrant = await CelestialCross.System.RewardService.CreateRuntimeRewardAsync(baseRewards);
 
-        // --- GERAÇÃO DE LOOT PROCEDURAL E DINÂMICO ---
-        // NOTA: As LootTables do StoryNode.Rewards.LootTables já são processadas via
-        // GetRewardsForNode() → RewardService.CreateRuntimeReward(), então NÃO devem ser
+        // --- GERAÃ‡ÃƒO DE LOOT PROCEDURAL E DINÃ‚MICO ---
+        // NOTA: As LootTables do StoryNode.Rewards.LootTables jÃ¡ sÃ£o processadas via
+        // GetRewardsForNode() â†’ RewardService.CreateRuntimeReward(), entÃ£o NÃƒO devem ser
         // processadas aqui novamente para evitar drops duplicados.
         if (GameFlowManager.Instance != null)
         {
@@ -222,12 +223,12 @@ public class PhaseManager : MonoBehaviour
                 {
                     foreach (var table in dungeon.GlobalLootTables)
                     {
-                        if (table != null) table.GenerateLoot(rewardToGrant);
+                        if (table != null) await table.GenerateLootAsync(rewardToGrant);
                     }
                 }
             }
 
-            // 2. Processar Drop Tables Específicos deste Andar do Dungeon
+            // 2. Processar Drop Tables EspecÃ­ficos deste Andar do Dungeon
             if (GameFlowManager.Instance.SelectedDungeonNode != null)
             {
                 var node = GameFlowManager.Instance.SelectedDungeonNode;
@@ -235,7 +236,7 @@ public class PhaseManager : MonoBehaviour
                 {
                     foreach (var table in node.SpecificLootTables)
                     {
-                        if (table != null) table.GenerateLoot(rewardToGrant);
+                        if (table != null) await table.GenerateLootAsync(rewardToGrant);
                     }
                 }
             }

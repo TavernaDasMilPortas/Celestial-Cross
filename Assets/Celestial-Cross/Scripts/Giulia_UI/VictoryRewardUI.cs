@@ -35,7 +35,7 @@ namespace CelestialCross.Giulia_UI
         [SerializeField] private Button continueButton;
 
         [Header("Prefabs")]
-        [SerializeField] private GameObject prizeStampPrefab; // Será o "Stamp" do Gacha
+        [SerializeField] private GameObject prizeStampPrefab; // SerÃ¡ o "Stamp" do Gacha
 
         [Header("Complex Modals")]
         public GachaUnitRewardModal unitPetRewardModal;
@@ -88,7 +88,7 @@ namespace CelestialCross.Giulia_UI
             }
             else
             {
-                Debug.LogError("[VictoryRewardUI] artifactActionModal está NULO. Atribua o prefab no Inspector!");
+                Debug.LogError("[VictoryRewardUI] artifactActionModal estÃ¡ NULO. Atribua o prefab no Inspector!");
             }
         }
         
@@ -99,15 +99,15 @@ namespace CelestialCross.Giulia_UI
                 var entry = new GachaRewardEntry
                 {
                     RewardType = GachaRewardType.Pet,
-                    Rarity = (GachaRarity)(Mathf.Clamp(pet.RarityStars - 1, 0, 5)), // Aproximação de raridade
-                    PetSpeciesData = petCatalog != null ? petCatalog.GetPetSpecies(pet.SpeciesID) : null,
-                    ItemStars = pet.RarityStars
+                    Rarity = (GachaRarity)(Mathf.Clamp(pet.RarityStars - 1, 0, 5)), // AproximaÃ§Ã£o de raridade
+                    PetSpeciesData = petCatalog != null ? petCatalog.GetPetSpecies(pet.SpeciesID) : null
                 };
-                unitPetRewardModal.ShowPet(pet, entry);
+                var result = new RuntimeGachaResult(entry, pet, false) { RolledStars = pet.RarityStars };
+                unitPetRewardModal.ShowPet(pet, result);
             }
             else
             {
-                Debug.LogError("[VictoryRewardUI] unitPetRewardModal está NULO. Atribua o prefab no Inspector!");
+                Debug.LogError("[VictoryRewardUI] unitPetRewardModal estÃ¡ NULO. Atribua o prefab no Inspector!");
             }
         }
 
@@ -119,14 +119,14 @@ namespace CelestialCross.Giulia_UI
                 {
                     RewardType = GachaRewardType.Unit,
                     Rarity = GachaRarity.Epic, // Assumindo base por enquanto
-                    UnitData = unitData,
-                    ItemStars = 3
+                    UnitData = unitData
                 };
-                unitPetRewardModal.ShowUnit(null, entry);
+                var result = new RuntimeGachaResult(entry, unitData, false) { RolledStars = 3 };
+                unitPetRewardModal.ShowUnit(null, result);
             }
             else
             {
-                Debug.LogError("[VictoryRewardUI] unitPetRewardModal está NULO. Atribua o prefab no Inspector!");
+                Debug.LogError("[VictoryRewardUI] unitPetRewardModal estÃ¡ NULO. Atribua o prefab no Inspector!");
             }
         }
 
@@ -182,7 +182,7 @@ namespace CelestialCross.Giulia_UI
                 {
                     nodeName = $"\n<size=50%>{GameFlowManager.Instance.SelectedDungeonNode.LevelRef.LevelName}</size>";
                 }
-                titleTxt.text = isVictory ? $"VITÓRIA!{nodeName}" : $"DERROTA...{nodeName}";
+                titleTxt.text = isVictory ? $"VITÃ“RIA!{nodeName}" : $"DERROTA...{nodeName}";
                 titleTxt.color = isVictory ? Color.yellow : Color.red;
             }
 
@@ -269,13 +269,13 @@ namespace CelestialCross.Giulia_UI
                         if (bg != null)
                         {
                             bg.color = new Color(rarityColor.r * 0.3f, rarityColor.g * 0.3f, rarityColor.b * 0.3f, 1f);
-                            bg.raycastTarget = true; // Força para poder clicar
+                            bg.raycastTarget = true; // ForÃ§a para poder clicar
                         }
 
                         // Attach Button
                         Button btn = go.GetComponent<Button>();
                         if (btn == null) btn = go.AddComponent<Button>();
-                        btn.interactable = true; // Garante que o botão tá clicável
+                        btn.interactable = true; // Garante que o botÃ£o tÃ¡ clicÃ¡vel
                         
                         CanvasGroup cg = go.GetComponent<CanvasGroup>();
                         if (cg != null) cg.blocksRaycasts = true;
@@ -417,7 +417,7 @@ namespace CelestialCross.Giulia_UI
                             
                             var nameText = go.transform.Find("NameText")?.GetComponent<TextMeshProUGUI>();
 
-                            // Oculta ícone, já que mostramos só texto
+                            // Oculta Ã­cone, jÃ¡ que mostramos sÃ³ texto
                             Transform iconTransform = go.transform.Find("Icon");
                             if (iconTransform != null) {
                                 iconTransform.gameObject.SetActive(false);

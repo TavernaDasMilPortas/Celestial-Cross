@@ -42,7 +42,7 @@ namespace CelestialCross.Dialogue.Runtime
             }
         }
 
-        private void OnReturnClicked()
+        private async void OnReturnClicked()
         {
             if (global::GameFlowManager.Instance != null && global::GameFlowManager.Instance.SelectedStoryNode != null)
             {
@@ -51,7 +51,7 @@ namespace CelestialCross.Dialogue.Runtime
                 
                 if (rewards != null && rewards.Count > 0)
                 {
-                    // Injeção solicitada: Entregar as unidades DIRETAMENTE no clique do botão
+                    // InjeÃ§Ã£o solicitada: Entregar as unidades DIRETAMENTE no clique do botÃ£o
                     for (int i = rewards.Count - 1; i >= 0; i--)
                     {
                         var def = rewards[i];
@@ -75,7 +75,7 @@ namespace CelestialCross.Dialogue.Runtime
                                     }
                                     else
                                     {
-                                        var newUnit = new CelestialCross.Data.RuntimeUnitData(unitID, 4); // 4 Estrelas padrão
+                                        var newUnit = new CelestialCross.Data.RuntimeUnitData(unitID, 4); // 4 Estrelas padrÃ£o
                                         account.OwnedUnits.Add(newUnit);
                                         if (!account.OwnedUnitIDs.Contains(unitID))
                                             account.OwnedUnitIDs.Add(unitID);
@@ -85,13 +85,13 @@ namespace CelestialCross.Dialogue.Runtime
                                     AccountManager.Instance.SaveAccount();
                                 }
                             }
-                            // Removemos da lista para não conceder 2 vezes pelo RewardService logo abaixo
+                            // Removemos da lista para nÃ£o conceder 2 vezes pelo RewardService logo abaixo
                             rewards.RemoveAt(i);
                         }
                     }
 
                     // Processa as demais recompensas (Dinheiro, energia, XP...)
-                    var runtimeReward = CelestialCross.System.RewardService.CreateRuntimeReward(rewards);
+                    var runtimeReward = await CelestialCross.System.RewardService.CreateRuntimeRewardAsync(rewards);
                     CelestialCross.System.RewardService.ApplyRuntimeRewardToAccount(runtimeReward);
                 }
 
