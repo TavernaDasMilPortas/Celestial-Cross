@@ -63,12 +63,12 @@ namespace CelestialCross.Progression
                 btn.interactable = !isLocked;
                 
                 // Configurar clique
-                btn.onClick.AddListener(() => {
+                btn.onClick.AddListener(async () => {
                     if (GameFlowManager.Instance != null)
                     {
                         GameFlowManager.Instance.CurrentChapter = chapterData;
                     }
-                    CelestialCross.System.ProgressionService.Instance.TryStartNode(node);
+                    await CelestialCross.System.ProgressionService.Instance.TryStartNodeAsync(node);
                 });
             }
         }

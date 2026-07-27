@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Unity.Services.CloudSave;
 using UnityEngine;
+using PlayFab;
+using PlayFab.ClientModels;
 
 namespace CelestialCross.Storage
 {
@@ -9,32 +10,46 @@ namespace CelestialCross.Storage
     {
         public async Task SaveAsync(string key, string data)
         {
-            var dict = new Dictionary<string, object> { { key, data } };
-            await CloudSaveService.Instance.Data.Player.SaveAsync(dict);
+            if (!PlayFabClientAPI.IsClientLoggedIn()) return;
+
+            var tcs = new TaskCompletionSource<bool>();
+            PlayFabClientAPI.UpdateUserData(new UpdateUserDataRequest {
+                Data = new Dictionary<string, string> { { key, data } }
+            }, res => tcs.SetResult(true), err => {
+                Debug.LogError($"[CloudStorage] Erro ao salvar {key}: {err.ErrorMessage}");
+                tcs.SetResult(false);
+            });
+            await tcs.Task;
         }
 
         public async Task<string> LoadAsync(string key)
         {
-            var results = await CloudSaveService.Instance.Data.Player.LoadAsync(new HashSet<string> { key });
-            if (results.TryGetValue(key, out var item))
-            {
-                return item.Value.GetAsString();
-            }
-            return null;
+            if (!PlayFabClientAPI.IsClientLoggedIn()) return null;
+
+            var tcs = new TaskCompletionSource<string>();
+            PlayFabClientAPI.GetUserData(new GetUserDataRequest {
+                Keys = new List<string> { key }
+            }, res => {
+                if (res.Data != null && res.Data.ContainsKey(key))
+                    tcs.SetResult(res.Data[key].Value);
+                else
+                    tcs.SetResult(null);
+            }, err => {
+                Debug.LogError($"[CloudStorage] Erro ao carregar {key}: {err.ErrorMessage}");
+                tcs.SetResult(null);
+            });
+            return await tcs.Task;
         }
 
         public async Task<bool> ExistsAsync(string key)
         {
-            var results = await CloudSaveService.Instance.Data.Player.LoadAsync(new HashSet<string> { key });
-            return results.ContainsKey(key);
+            string data = await LoadAsync(key);
+            return !string.IsNullOrEmpty(data);
         }
 
         public async Task DeleteAsync(string key)
         {
-            // Cloud Save não tem um "Delete" direto via chave simples da mesma forma que local, 
-            // mas podemos limpar o valor ou usar métodos específicos se necessário.
-            var dict = new Dictionary<string, object> { { key, null } };
-            await CloudSaveService.Instance.Data.Player.SaveAsync(dict);
+            await SaveAsync(key, null); // Deleta atribuindo null
         }
     }
 }

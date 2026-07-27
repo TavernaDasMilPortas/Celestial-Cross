@@ -11,15 +11,6 @@ namespace CelestialCross.Cloud
         {
             public string PetSpeciesId;
             public int Stars;
-            
-            public float MinHp, MaxHp;
-            public float MinAtk, MaxAtk;
-            public float MinDef, MaxDef;
-            public float MinSpd, MaxSpd;
-            public float MinCritRate, MaxCritRate;
-            public float MinCritDmg, MaxCritDmg;
-            public float MinEffRes, MaxEffRes;
-            public float MinEffAcc, MaxEffAcc;
         }
 
         /// <summary>
@@ -30,19 +21,11 @@ namespace CelestialCross.Cloud
         {
             var req = new PetGenerationRequest { 
                 PetSpeciesId = species.id, 
-                Stars = stars,
-                MinHp = species.MinBaseHealth, MaxHp = species.MaxBaseHealth,
-                MinAtk = species.MinBaseAttack, MaxAtk = species.MaxBaseAttack,
-                MinDef = species.MinBaseDefense, MaxDef = species.MaxBaseDefense,
-                MinSpd = species.MinBaseSpeed, MaxSpd = species.MaxBaseSpeed,
-                MinCritRate = species.MinBaseCriticalChance, MaxCritRate = species.MaxBaseCriticalChance,
-                MinCritDmg = species.MinBaseCriticalDamage, MaxCritDmg = species.MaxBaseCriticalDamage,
-                MinEffRes = species.MinBaseEffectResistance, MaxEffRes = species.MaxBaseEffectResistance,
-                MinEffAcc = species.MinBaseEffectAccuracy, MaxEffAcc = species.MaxBaseEffectAccuracy
+                Stars = stars
             };
             
             Debug.Log($"[CloudPetGenerator] Solicitando Pet na nuvem: Species={species.id}, Stars={stars}");
-            var pet = await PlayFabCloudFunctionCaller.ExecuteFunctionAsync<RuntimePetData>("GeneratePet", req);
+            var pet = await NetworkGuard.Instance.ExecuteWithGuardAsync<RuntimePetData>("GeneratePet", req);
 
             if (pet == null)
             {

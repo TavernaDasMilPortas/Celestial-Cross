@@ -42,7 +42,7 @@ namespace CelestialCross.Progression
 
                 btn.interactable = canAfford;
 
-                btn.onClick.AddListener(() => {
+                btn.onClick.AddListener(async () => {
                     if (account.RemoveItem(cost.InviteItemID, cost.Amount))
                     {
                         AccountManager.Instance.SaveAccount();
@@ -54,7 +54,7 @@ namespace CelestialCross.Progression
                         
                         modalPanel.SetActive(false);
                         
-                        CelestialCross.System.ProgressionService.Instance.TryStartNode(node);
+                        await CelestialCross.System.ProgressionService.Instance.TryStartNodeAsync(node);
                     }
                 });
             }

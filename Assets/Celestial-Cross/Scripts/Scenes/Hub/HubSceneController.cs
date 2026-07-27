@@ -306,7 +306,7 @@ namespace CelestialCross.Scenes.Hub
                     account.PendingUnlockAnimations.Add(node.NodeID); // Retroativo
                 }
 
-                card.OnNodeClicked = () => 
+                card.OnNodeClicked = async () => 
                 {
                     if (GameFlowManager.Instance != null)
                     {
@@ -316,8 +316,8 @@ namespace CelestialCross.Scenes.Hub
                     // Se requer item e o jogador tem, podemos consumir/confirmar aqui ou no progression service
                     if (bottomSheet != null)
                         bottomSheet.Show(node);
-                    else
-                        CelestialCross.System.ProgressionService.Instance?.TryStartNode(node);
+                    else if (CelestialCross.System.ProgressionService.Instance != null)
+                        await CelestialCross.System.ProgressionService.Instance.TryStartNodeAsync(node);
                 };
             }
         }

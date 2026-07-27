@@ -23,7 +23,7 @@ namespace CelestialCross.Cloud
             var req = new ArtifactGenerationRequest { ArtifactSetId = setId, Rarity = rarity, Stars = stars };
             
             Debug.Log($"[CloudArtifactGenerator] Solicitando artefato na nuvem: Set={setId}, Rarity={rarity}, Stars={stars}");
-            var artifact = await PlayFabCloudFunctionCaller.ExecuteFunctionAsync<ArtifactInstanceData>("GenerateArtifact", req);
+            var artifact = await NetworkGuard.Instance.ExecuteWithGuardAsync<ArtifactInstanceData>("GenerateArtifact", req);
 
             if (artifact == null)
             {

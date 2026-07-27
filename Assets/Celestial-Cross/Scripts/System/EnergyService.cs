@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using UnityEngine;
 using CelestialCross.Data.Energy;
+using CelestialCross.Cloud;
+using System.Threading.Tasks;
 
 namespace CelestialCross.System
 {
@@ -41,16 +43,21 @@ namespace CelestialCross.System
 
         private void Start()
         {
-            AccountManager.OnAccountReady += InitializeEnergy;
+            AccountManager.OnAccountReady += OnAccountReadyHandler;
             if (AccountManager.Instance != null && AccountManager.Instance.PlayerAccount != null)
             {
-                InitializeEnergy();
+                OnAccountReadyHandler();
             }
         }
 
         private void OnDestroy()
         {
-            AccountManager.OnAccountReady -= InitializeEnergy;
+            AccountManager.OnAccountReady -= OnAccountReadyHandler;
+        }
+
+        private async void OnAccountReadyHandler()
+        {
+            await InitializeEnergyAsync();
         }
 
         private EnergyConfig GetActiveConfig()
@@ -63,24 +70,38 @@ namespace CelestialCross.System
             return null;
         }
 
-        private void InitializeEnergy()
+        private async Task InitializeEnergyAsync()
         {
             var account = AccountManager.Instance.PlayerAccount;
             if (account == null) return;
             
             var activeConfig = GetActiveConfig();
 
+            // Pega a hora do servidor na nuvem
+            // Como é um stub, se retornar null usaremos UtcNow local como fallback.
+            DateTime serverTime = DateTime.UtcNow;
+            try
+            {
+                // Note: o servidor retorna uma string ISO 8601 ou objeto com a hora
+                var serverTimeResponse = await NetworkGuard.Instance.ExecuteWithGuardAsync<string>("GetServerTime", null, showOverlayOnWait: true);
+                if (!string.IsNullOrEmpty(serverTimeResponse) && DateTime.TryParse(serverTimeResponse, out DateTime parsedTime))
+                {
+                    serverTime = parsedTime.ToUniversalTime();
+                }
+            }
+            catch (Exception) { /* Ignora e usa fallback */ }
+
             if (account.EnergyInfo == null)
             {
                 account.EnergyInfo = new EnergyData
                 {
                     CurrentEnergy = activeConfig != null ? activeConfig.MaxEnergy : 100,
-                    LastRegenTimestampUTC = DateTime.UtcNow.ToString("O"),
-                    LastServerTimestampUTC = DateTime.UtcNow.ToString("O")
+                    LastRegenTimestampUTC = serverTime.ToString("O"),
+                    LastServerTimestampUTC = serverTime.ToString("O")
                 };
             }
 
-            ValidateTimestampsAndCalculateOfflineRegen(account.EnergyInfo);
+            ValidateTimestampsAndCalculateOfflineRegen(account.EnergyInfo, serverTime);
 
             if (!_isRegenerating)
             {
@@ -91,12 +112,10 @@ namespace CelestialCross.System
             NotifyEnergyChanged();
         }
 
-        private void ValidateTimestampsAndCalculateOfflineRegen(EnergyData energyData)
+        private void ValidateTimestampsAndCalculateOfflineRegen(EnergyData energyData, DateTime now)
         {
             var activeConfig = GetActiveConfig();
             if (activeConfig == null) return;
-
-            DateTime now = DateTime.UtcNow;
             
             if (DateTime.TryParse(energyData.LastServerTimestampUTC, out DateTime lastServerTime))
             {
@@ -194,31 +213,42 @@ namespace CelestialCross.System
             }
         }
 
-        public bool TryConsumeEnergy(int amount)
+        public async Task<bool> TryConsumeEnergyAsync(int amount)
         {
             if (amount <= 0) return true;
 
             var account = AccountManager.Instance?.PlayerAccount;
             if (account?.EnergyInfo == null) return false;
 
-            if (account.EnergyInfo.CurrentEnergy >= amount)
+            if (account.EnergyInfo.CurrentEnergy < amount)
             {
-                account.EnergyInfo.CurrentEnergy -= amount;
-                Debug.Log($"[EnergyService] Consumiu {amount} de energia. Energia atual agora é: {account.EnergyInfo.CurrentEnergy}");
-                
-                int maxE = GetMaxEnergy();
-                if (account.EnergyInfo.CurrentEnergy + amount >= maxE && account.EnergyInfo.CurrentEnergy < maxE)
-                {
-                    account.EnergyInfo.LastRegenTimestampUTC = DateTime.UtcNow.ToString("O");
-                }
-
-                AccountManager.Instance.SaveAccount();
-                NotifyEnergyChanged();
-                return true;
+                OnEnergyInsufficient?.Invoke(amount);
+                return false;
             }
 
-            OnEnergyInsufficient?.Invoke(amount);
-            return false;
+            // Tenta consumir via nuvem (Bloqueia offline)
+            var req = new { Amount = amount };
+            var response = await NetworkGuard.Instance.ExecuteWithGuardAsync<object>("ConsumeEnergy", req);
+
+            // FALLBACK LOCAL SE A NUVEM RETORNAR NULL (Stub)
+            if (response == null)
+            {
+                Debug.LogWarning("[EnergyService] Nuvem retornou nulo (Stub PlayFab). Fazendo consumo de energia local como fallback.");
+            }
+
+            // Consumo local / Atualização do estado após sucesso na nuvem
+            account.EnergyInfo.CurrentEnergy -= amount;
+            Debug.Log($"[EnergyService] Consumiu {amount} de energia. Energia atual agora é: {account.EnergyInfo.CurrentEnergy}");
+            
+            int maxE = GetMaxEnergy();
+            if (account.EnergyInfo.CurrentEnergy + amount >= maxE && account.EnergyInfo.CurrentEnergy < maxE)
+            {
+                account.EnergyInfo.LastRegenTimestampUTC = DateTime.UtcNow.ToString("O");
+            }
+
+            AccountManager.Instance.SaveAccount();
+            NotifyEnergyChanged();
+            return true;
         }
 
         public void AddEnergy(int amount)

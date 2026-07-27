@@ -1,0 +1,1459 @@
+{
+    "petSpecies": [
+        {
+            "id": "Coelho",
+            "name": "Pagem de Ouros",
+            "statRanges": {
+                "health": {
+                    "min": 10.0,
+                    "max": 20.0
+                },
+                "attack": {
+                    "min": 3.0,
+                    "max": 7.0
+                },
+                "defense": {
+                    "min": 2.0,
+                    "max": 5.0
+                },
+                "speed": {
+                    "min": 7.0,
+                    "max": 10.0
+                },
+                "criticalChance": {
+                    "min": 0.0,
+                    "max": 5.0
+                },
+                "criticalDamage": {
+                    "min": 0.0,
+                    "max": 0.0
+                },
+                "effectAccuracy": {
+                    "min": 0.0,
+                    "max": 5.0
+                },
+                "effectResistance": {
+                    "min": 0.0,
+                    "max": 0.0
+                }
+            }
+        },
+        {
+            "id": "Coelho maldito da Leidell",
+            "name": "Coelho maldito da Leidell",
+            "statRanges": {
+                "health": {
+                    "min": 10.0,
+                    "max": 50.0
+                },
+                "attack": {
+                    "min": 1.0,
+                    "max": 10.0
+                },
+                "defense": {
+                    "min": 1.0,
+                    "max": 10.0
+                },
+                "speed": {
+                    "min": 1.0,
+                    "max": 10.0
+                },
+                "criticalChance": {
+                    "min": 1.0,
+                    "max": 10.0
+                },
+                "criticalDamage": {
+                    "min": 0.0,
+                    "max": 0.0
+                },
+                "effectAccuracy": {
+                    "min": 1.0,
+                    "max": 10.0
+                },
+                "effectResistance": {
+                    "min": 0.0,
+                    "max": 0.0
+                }
+            }
+        },
+        {
+            "id": "NewPetSpecies 1",
+            "name": "Falcão ",
+            "statRanges": {
+                "health": {
+                    "min": 10.0,
+                    "max": 20.0
+                },
+                "attack": {
+                    "min": 5.0,
+                    "max": 10.0
+                },
+                "defense": {
+                    "min": 6.0,
+                    "max": 12.0
+                },
+                "speed": {
+                    "min": 0.0,
+                    "max": 0.0
+                },
+                "criticalChance": {
+                    "min": 0.0,
+                    "max": 0.0
+                },
+                "criticalDamage": {
+                    "min": 0.0,
+                    "max": 0.0
+                },
+                "effectAccuracy": {
+                    "min": 0.0,
+                    "max": 0.0
+                },
+                "effectResistance": {
+                    "min": 0.0,
+                    "max": 0.0
+                }
+            }
+        },
+        {
+            "id": "ovelha",
+            "name": "OvelhaPomPom",
+            "statRanges": {
+                "health": {
+                    "min": 10.0,
+                    "max": 20.0
+                },
+                "attack": {
+                    "min": 5.0,
+                    "max": 10.0
+                },
+                "defense": {
+                    "min": 6.0,
+                    "max": 12.0
+                },
+                "speed": {
+                    "min": 0.0,
+                    "max": 0.0
+                },
+                "criticalChance": {
+                    "min": 0.0,
+                    "max": 0.0
+                },
+                "criticalDamage": {
+                    "min": 0.0,
+                    "max": 0.0
+                },
+                "effectAccuracy": {
+                    "min": 0.0,
+                    "max": 0.0
+                },
+                "effectResistance": {
+                    "min": 0.0,
+                    "max": 0.0
+                }
+            }
+        }
+    ],
+    "starMultipliers": [
+        {
+            "key": "1",
+            "value": 1.0
+        },
+        {
+            "key": "2",
+            "value": 1.2000000476837159
+        },
+        {
+            "key": "3",
+            "value": 1.399999976158142
+        },
+        {
+            "key": "4",
+            "value": 1.600000023841858
+        },
+        {
+            "key": "5",
+            "value": 1.7999999523162842
+        },
+        {
+            "key": "6",
+            "value": 2.0
+        }
+    ],
+    "artifactTuning": {
+        "initialSubstatCounts": [
+            {
+                "key": "Common",
+                "value": {
+                    "min": 0,
+                    "max": 1
+                }
+            },
+            {
+                "key": "Uncommon",
+                "value": {
+                    "min": 1,
+                    "max": 2
+                }
+            },
+            {
+                "key": "Rare",
+                "value": {
+                    "min": 2,
+                    "max": 3
+                }
+            },
+            {
+                "key": "Epic",
+                "value": {
+                    "min": 3,
+                    "max": 3
+                }
+            },
+            {
+                "key": "Legendary",
+                "value": {
+                    "min": 4,
+                    "max": 4
+                }
+            }
+        ],
+        "allowedMainStatsPerSlot": [],
+        "statRanges": [
+            {
+                "statType": "HealthFlat",
+                "mainBaseByStars": [
+                    {
+                        "min": 20.0,
+                        "max": 150.0
+                    },
+                    {
+                        "min": 30.0,
+                        "max": 300.0
+                    },
+                    {
+                        "min": 40.0,
+                        "max": 450.0
+                    },
+                    {
+                        "min": 45.0,
+                        "max": 600.0
+                    },
+                    {
+                        "min": 55.0,
+                        "max": 750.0
+                    },
+                    {
+                        "min": 60.0,
+                        "max": 900.0
+                    }
+                ],
+                "mainUpgradeByStars": [
+                    {
+                        "min": 2.0,
+                        "max": 24.0
+                    },
+                    {
+                        "min": 3.0,
+                        "max": 48.0
+                    },
+                    {
+                        "min": 4.0,
+                        "max": 72.0
+                    },
+                    {
+                        "min": 5.0,
+                        "max": 96.0
+                    },
+                    {
+                        "min": 6.0,
+                        "max": 120.0
+                    },
+                    {
+                        "min": 7.0,
+                        "max": 144.0
+                    }
+                ],
+                "subInitialByStars": [
+                    {
+                        "min": 5.0,
+                        "max": 20.0
+                    },
+                    {
+                        "min": 10.0,
+                        "max": 40.0
+                    },
+                    {
+                        "min": 15.0,
+                        "max": 60.0
+                    },
+                    {
+                        "min": 20.0,
+                        "max": 80.0
+                    },
+                    {
+                        "min": 25.0,
+                        "max": 100.0
+                    },
+                    {
+                        "min": 30.0,
+                        "max": 120.0
+                    }
+                ],
+                "subUpgradeByStars": [
+                    {
+                        "min": 2.5,
+                        "max": 7.5
+                    },
+                    {
+                        "min": 5.0,
+                        "max": 15.0
+                    },
+                    {
+                        "min": 7.5,
+                        "max": 22.5
+                    },
+                    {
+                        "min": 10.0,
+                        "max": 30.0
+                    },
+                    {
+                        "min": 12.5,
+                        "max": 37.5
+                    },
+                    {
+                        "min": 15.0,
+                        "max": 45.0
+                    }
+                ]
+            },
+            {
+                "statType": "HealthPercent",
+                "mainBaseByStars": [
+                    {
+                        "min": 10.0,
+                        "max": 6.0
+                    },
+                    {
+                        "min": 15.0,
+                        "max": 8.0
+                    },
+                    {
+                        "min": 20.0,
+                        "max": 10.0
+                    },
+                    {
+                        "min": 25.0,
+                        "max": 11.0
+                    },
+                    {
+                        "min": 30.0,
+                        "max": 12.0
+                    },
+                    {
+                        "min": 35.0,
+                        "max": 14.0
+                    }
+                ],
+                "mainUpgradeByStars": [
+                    {
+                        "min": 1.0,
+                        "max": 1.0
+                    },
+                    {
+                        "min": 1.0,
+                        "max": 1.0
+                    },
+                    {
+                        "min": 1.0,
+                        "max": 2.0
+                    },
+                    {
+                        "min": 1.0,
+                        "max": 2.0
+                    },
+                    {
+                        "min": 1.0,
+                        "max": 3.0
+                    },
+                    {
+                        "min": 1.0,
+                        "max": 4.0
+                    }
+                ],
+                "subInitialByStars": [
+                    {
+                        "min": 0.5,
+                        "max": 1.0
+                    },
+                    {
+                        "min": 1.0,
+                        "max": 2.0
+                    },
+                    {
+                        "min": 1.5,
+                        "max": 3.0
+                    },
+                    {
+                        "min": 2.0,
+                        "max": 4.0
+                    },
+                    {
+                        "min": 2.5,
+                        "max": 5.0
+                    },
+                    {
+                        "min": 3.0,
+                        "max": 6.0
+                    }
+                ],
+                "subUpgradeByStars": [
+                    {
+                        "min": 0.25,
+                        "max": 0.75
+                    },
+                    {
+                        "min": 0.5,
+                        "max": 1.5
+                    },
+                    {
+                        "min": 0.75,
+                        "max": 2.25
+                    },
+                    {
+                        "min": 1.0,
+                        "max": 3.0
+                    },
+                    {
+                        "min": 1.25,
+                        "max": 3.75
+                    },
+                    {
+                        "min": 1.5,
+                        "max": 4.5
+                    }
+                ]
+            },
+            {
+                "statType": "AttackFlat",
+                "mainBaseByStars": [
+                    {
+                        "min": 10.0,
+                        "max": 150.0
+                    },
+                    {
+                        "min": 20.0,
+                        "max": 300.0
+                    },
+                    {
+                        "min": 30.0,
+                        "max": 450.0
+                    },
+                    {
+                        "min": 35.0,
+                        "max": 600.0
+                    },
+                    {
+                        "min": 40.0,
+                        "max": 750.0
+                    },
+                    {
+                        "min": 45.0,
+                        "max": 900.0
+                    }
+                ],
+                "mainUpgradeByStars": [
+                    {
+                        "min": 2.0,
+                        "max": 24.0
+                    },
+                    {
+                        "min": 2.0,
+                        "max": 48.0
+                    },
+                    {
+                        "min": 2.0,
+                        "max": 72.0
+                    },
+                    {
+                        "min": 3.0,
+                        "max": 96.0
+                    },
+                    {
+                        "min": 3.0,
+                        "max": 120.0
+                    },
+                    {
+                        "min": 4.0,
+                        "max": 144.0
+                    }
+                ],
+                "subInitialByStars": [
+                    {
+                        "min": 3.0,
+                        "max": 20.0
+                    },
+                    {
+                        "min": 4.0,
+                        "max": 40.0
+                    },
+                    {
+                        "min": 5.0,
+                        "max": 60.0
+                    },
+                    {
+                        "min": 6.0,
+                        "max": 80.0
+                    },
+                    {
+                        "min": 7.0,
+                        "max": 100.0
+                    },
+                    {
+                        "min": 8.0,
+                        "max": 120.0
+                    }
+                ],
+                "subUpgradeByStars": [
+                    {
+                        "min": 1.0,
+                        "max": 7.5
+                    },
+                    {
+                        "min": 2.0,
+                        "max": 15.0
+                    },
+                    {
+                        "min": 3.0,
+                        "max": 22.5
+                    },
+                    {
+                        "min": 3.0,
+                        "max": 30.0
+                    },
+                    {
+                        "min": 4.0,
+                        "max": 37.5
+                    },
+                    {
+                        "min": 4.0,
+                        "max": 45.0
+                    }
+                ]
+            },
+            {
+                "statType": "AttackPercent",
+                "mainBaseByStars": [
+                    {
+                        "min": 2.0,
+                        "max": 6.0
+                    },
+                    {
+                        "min": 3.0,
+                        "max": 8.0
+                    },
+                    {
+                        "min": 4.0,
+                        "max": 10.0
+                    },
+                    {
+                        "min": 5.0,
+                        "max": 11.0
+                    },
+                    {
+                        "min": 6.0,
+                        "max": 12.0
+                    },
+                    {
+                        "min": 7.0,
+                        "max": 14.0
+                    }
+                ],
+                "mainUpgradeByStars": [
+                    {
+                        "min": 1.0,
+                        "max": 1.0
+                    },
+                    {
+                        "min": 1.0,
+                        "max": 1.0
+                    },
+                    {
+                        "min": 2.0,
+                        "max": 2.0
+                    },
+                    {
+                        "min": 2.0,
+                        "max": 2.0
+                    },
+                    {
+                        "min": 3.0,
+                        "max": 3.0
+                    },
+                    {
+                        "min": 4.0,
+                        "max": 4.0
+                    }
+                ],
+                "subInitialByStars": [
+                    {
+                        "min": 0.5,
+                        "max": 1.0
+                    },
+                    {
+                        "min": 1.0,
+                        "max": 2.0
+                    },
+                    {
+                        "min": 1.5,
+                        "max": 3.0
+                    },
+                    {
+                        "min": 2.0,
+                        "max": 4.0
+                    },
+                    {
+                        "min": 2.5,
+                        "max": 5.0
+                    },
+                    {
+                        "min": 3.0,
+                        "max": 6.0
+                    }
+                ],
+                "subUpgradeByStars": [
+                    {
+                        "min": 1.0,
+                        "max": 0.75
+                    },
+                    {
+                        "min": 1.0,
+                        "max": 1.5
+                    },
+                    {
+                        "min": 2.0,
+                        "max": 2.25
+                    },
+                    {
+                        "min": 2.0,
+                        "max": 3.0
+                    },
+                    {
+                        "min": 3.0,
+                        "max": 3.75
+                    },
+                    {
+                        "min": 3.0,
+                        "max": 4.5
+                    }
+                ]
+            },
+            {
+                "statType": "DefenseFlat",
+                "mainBaseByStars": [
+                    {
+                        "min": 10.0,
+                        "max": 150.0
+                    },
+                    {
+                        "min": 20.0,
+                        "max": 300.0
+                    },
+                    {
+                        "min": 30.0,
+                        "max": 450.0
+                    },
+                    {
+                        "min": 35.0,
+                        "max": 600.0
+                    },
+                    {
+                        "min": 40.0,
+                        "max": 750.0
+                    },
+                    {
+                        "min": 45.0,
+                        "max": 900.0
+                    }
+                ],
+                "mainUpgradeByStars": [
+                    {
+                        "min": 2.0,
+                        "max": 24.0
+                    },
+                    {
+                        "min": 3.0,
+                        "max": 48.0
+                    },
+                    {
+                        "min": 4.0,
+                        "max": 72.0
+                    },
+                    {
+                        "min": 5.0,
+                        "max": 96.0
+                    },
+                    {
+                        "min": 6.0,
+                        "max": 120.0
+                    },
+                    {
+                        "min": 7.0,
+                        "max": 144.0
+                    }
+                ],
+                "subInitialByStars": [
+                    {
+                        "min": 3.0,
+                        "max": 20.0
+                    },
+                    {
+                        "min": 4.0,
+                        "max": 40.0
+                    },
+                    {
+                        "min": 5.0,
+                        "max": 60.0
+                    },
+                    {
+                        "min": 6.0,
+                        "max": 80.0
+                    },
+                    {
+                        "min": 7.0,
+                        "max": 100.0
+                    },
+                    {
+                        "min": 8.0,
+                        "max": 120.0
+                    }
+                ],
+                "subUpgradeByStars": [
+                    {
+                        "min": 1.0,
+                        "max": 7.5
+                    },
+                    {
+                        "min": 2.0,
+                        "max": 15.0
+                    },
+                    {
+                        "min": 3.0,
+                        "max": 22.5
+                    },
+                    {
+                        "min": 3.0,
+                        "max": 30.0
+                    },
+                    {
+                        "min": 4.0,
+                        "max": 37.5
+                    },
+                    {
+                        "min": 4.0,
+                        "max": 45.0
+                    }
+                ]
+            },
+            {
+                "statType": "DefensePercent",
+                "mainBaseByStars": [
+                    {
+                        "min": 2.0,
+                        "max": 6.0
+                    },
+                    {
+                        "min": 3.0,
+                        "max": 8.0
+                    },
+                    {
+                        "min": 4.0,
+                        "max": 10.0
+                    },
+                    {
+                        "min": 5.0,
+                        "max": 11.0
+                    },
+                    {
+                        "min": 6.0,
+                        "max": 12.0
+                    },
+                    {
+                        "min": 7.0,
+                        "max": 14.0
+                    }
+                ],
+                "mainUpgradeByStars": [
+                    {
+                        "min": 1.0,
+                        "max": 1.0
+                    },
+                    {
+                        "min": 1.0,
+                        "max": 1.0
+                    },
+                    {
+                        "min": 2.0,
+                        "max": 2.0
+                    },
+                    {
+                        "min": 2.0,
+                        "max": 2.0
+                    },
+                    {
+                        "min": 3.0,
+                        "max": 3.0
+                    },
+                    {
+                        "min": 4.0,
+                        "max": 4.0
+                    }
+                ],
+                "subInitialByStars": [
+                    {
+                        "min": 0.5,
+                        "max": 1.0
+                    },
+                    {
+                        "min": 1.0,
+                        "max": 2.0
+                    },
+                    {
+                        "min": 1.5,
+                        "max": 3.0
+                    },
+                    {
+                        "min": 2.0,
+                        "max": 4.0
+                    },
+                    {
+                        "min": 2.5,
+                        "max": 5.0
+                    },
+                    {
+                        "min": 3.0,
+                        "max": 6.0
+                    }
+                ],
+                "subUpgradeByStars": [
+                    {
+                        "min": 1.0,
+                        "max": 0.75
+                    },
+                    {
+                        "min": 1.0,
+                        "max": 1.5
+                    },
+                    {
+                        "min": 2.0,
+                        "max": 2.25
+                    },
+                    {
+                        "min": 2.0,
+                        "max": 3.0
+                    },
+                    {
+                        "min": 3.0,
+                        "max": 3.75
+                    },
+                    {
+                        "min": 3.0,
+                        "max": 4.5
+                    }
+                ]
+            },
+            {
+                "statType": "Speed",
+                "mainBaseByStars": [
+                    {
+                        "min": 2.0,
+                        "max": 2.0
+                    },
+                    {
+                        "min": 2.0,
+                        "max": 2.0
+                    },
+                    {
+                        "min": 3.0,
+                        "max": 3.0
+                    },
+                    {
+                        "min": 3.0,
+                        "max": 3.0
+                    },
+                    {
+                        "min": 4.0,
+                        "max": 4.0
+                    },
+                    {
+                        "min": 4.0,
+                        "max": 4.0
+                    }
+                ],
+                "mainUpgradeByStars": [
+                    {
+                        "min": 1.0,
+                        "max": 24.0
+                    },
+                    {
+                        "min": 1.0,
+                        "max": 48.0
+                    },
+                    {
+                        "min": 1.0,
+                        "max": 72.0
+                    },
+                    {
+                        "min": 1.0,
+                        "max": 96.0
+                    },
+                    {
+                        "min": 2.0,
+                        "max": 120.0
+                    },
+                    {
+                        "min": 2.0,
+                        "max": 144.0
+                    }
+                ],
+                "subInitialByStars": [
+                    {
+                        "min": 1.0,
+                        "max": 10.0
+                    },
+                    {
+                        "min": 1.0,
+                        "max": 20.0
+                    },
+                    {
+                        "min": 1.0,
+                        "max": 30.0
+                    },
+                    {
+                        "min": 1.0,
+                        "max": 40.0
+                    },
+                    {
+                        "min": 2.0,
+                        "max": 50.0
+                    },
+                    {
+                        "min": 2.0,
+                        "max": 60.0
+                    }
+                ],
+                "subUpgradeByStars": [
+                    {
+                        "min": 1.0,
+                        "max": 7.5
+                    },
+                    {
+                        "min": 1.0,
+                        "max": 15.0
+                    },
+                    {
+                        "min": 1.0,
+                        "max": 22.5
+                    },
+                    {
+                        "min": 1.0,
+                        "max": 30.0
+                    },
+                    {
+                        "min": 1.0,
+                        "max": 37.5
+                    },
+                    {
+                        "min": 2.0,
+                        "max": 45.0
+                    }
+                ]
+            },
+            {
+                "statType": "CriticalRate",
+                "mainBaseByStars": [
+                    {
+                        "min": 5.0,
+                        "max": 6.0
+                    },
+                    {
+                        "min": 7.0,
+                        "max": 8.0
+                    },
+                    {
+                        "min": 10.0,
+                        "max": 10.0
+                    },
+                    {
+                        "min": 13.0,
+                        "max": 11.0
+                    },
+                    {
+                        "min": 15.0,
+                        "max": 12.0
+                    },
+                    {
+                        "min": 17.0,
+                        "max": 14.0
+                    }
+                ],
+                "mainUpgradeByStars": [
+                    {
+                        "min": 1.0,
+                        "max": 1.0
+                    },
+                    {
+                        "min": 1.0,
+                        "max": 1.0
+                    },
+                    {
+                        "min": 2.0,
+                        "max": 2.0
+                    },
+                    {
+                        "min": 2.0,
+                        "max": 2.0
+                    },
+                    {
+                        "min": 3.0,
+                        "max": 3.0
+                    },
+                    {
+                        "min": 3.0,
+                        "max": 4.0
+                    }
+                ],
+                "subInitialByStars": [
+                    {
+                        "min": 3.0,
+                        "max": 1.0
+                    },
+                    {
+                        "min": 3.0,
+                        "max": 2.0
+                    },
+                    {
+                        "min": 3.0,
+                        "max": 3.0
+                    },
+                    {
+                        "min": 4.0,
+                        "max": 4.0
+                    },
+                    {
+                        "min": 4.0,
+                        "max": 5.0
+                    },
+                    {
+                        "min": 4.0,
+                        "max": 6.0
+                    }
+                ],
+                "subUpgradeByStars": [
+                    {
+                        "min": 5.0,
+                        "max": 0.75
+                    },
+                    {
+                        "min": 5.0,
+                        "max": 1.5
+                    },
+                    {
+                        "min": 5.0,
+                        "max": 2.25
+                    },
+                    {
+                        "min": 7.0,
+                        "max": 3.0
+                    },
+                    {
+                        "min": 7.0,
+                        "max": 3.75
+                    },
+                    {
+                        "min": 0.0,
+                        "max": 4.5
+                    }
+                ]
+            },
+            {
+                "statType": "CriticalDamage",
+                "mainBaseByStars": [
+                    {
+                        "min": 10.0,
+                        "max": 6.0
+                    },
+                    {
+                        "min": 15.0,
+                        "max": 8.0
+                    },
+                    {
+                        "min": 20.0,
+                        "max": 10.0
+                    },
+                    {
+                        "min": 25.0,
+                        "max": 11.0
+                    },
+                    {
+                        "min": 30.0,
+                        "max": 12.0
+                    },
+                    {
+                        "min": 35.0,
+                        "max": 14.0
+                    }
+                ],
+                "mainUpgradeByStars": [
+                    {
+                        "min": 5.0,
+                        "max": 1.0
+                    },
+                    {
+                        "min": 5.0,
+                        "max": 1.0
+                    },
+                    {
+                        "min": 5.0,
+                        "max": 2.0
+                    },
+                    {
+                        "min": 10.0,
+                        "max": 2.0
+                    },
+                    {
+                        "min": 10.0,
+                        "max": 3.0
+                    },
+                    {
+                        "min": 10.0,
+                        "max": 4.0
+                    }
+                ],
+                "subInitialByStars": [
+                    {
+                        "min": 7.0,
+                        "max": 1.0
+                    },
+                    {
+                        "min": 10.0,
+                        "max": 2.0
+                    },
+                    {
+                        "min": 13.0,
+                        "max": 3.0
+                    },
+                    {
+                        "min": 16.0,
+                        "max": 4.0
+                    },
+                    {
+                        "min": 19.0,
+                        "max": 5.0
+                    },
+                    {
+                        "min": 21.0,
+                        "max": 6.0
+                    }
+                ],
+                "subUpgradeByStars": [
+                    {
+                        "min": 5.0,
+                        "max": 0.75
+                    },
+                    {
+                        "min": 5.0,
+                        "max": 1.5
+                    },
+                    {
+                        "min": 5.0,
+                        "max": 2.25
+                    },
+                    {
+                        "min": 7.0,
+                        "max": 3.0
+                    },
+                    {
+                        "min": 7.0,
+                        "max": 3.75
+                    },
+                    {
+                        "min": 10.0,
+                        "max": 4.5
+                    }
+                ]
+            },
+            {
+                "statType": "EffectResistance",
+                "mainBaseByStars": [
+                    {
+                        "min": 6.0,
+                        "max": 6.0
+                    },
+                    {
+                        "min": 8.0,
+                        "max": 8.0
+                    },
+                    {
+                        "min": 10.0,
+                        "max": 10.0
+                    },
+                    {
+                        "min": 11.0,
+                        "max": 11.0
+                    },
+                    {
+                        "min": 12.0,
+                        "max": 12.0
+                    },
+                    {
+                        "min": 14.0,
+                        "max": 14.0
+                    }
+                ],
+                "mainUpgradeByStars": [
+                    {
+                        "min": 1.0,
+                        "max": 1.0
+                    },
+                    {
+                        "min": 1.0,
+                        "max": 1.0
+                    },
+                    {
+                        "min": 2.0,
+                        "max": 2.0
+                    },
+                    {
+                        "min": 2.0,
+                        "max": 2.0
+                    },
+                    {
+                        "min": 3.0,
+                        "max": 3.0
+                    },
+                    {
+                        "min": 4.0,
+                        "max": 4.0
+                    }
+                ],
+                "subInitialByStars": [
+                    {
+                        "min": 0.5,
+                        "max": 1.0
+                    },
+                    {
+                        "min": 1.0,
+                        "max": 2.0
+                    },
+                    {
+                        "min": 1.5,
+                        "max": 3.0
+                    },
+                    {
+                        "min": 2.0,
+                        "max": 4.0
+                    },
+                    {
+                        "min": 2.5,
+                        "max": 5.0
+                    },
+                    {
+                        "min": 3.0,
+                        "max": 6.0
+                    }
+                ],
+                "subUpgradeByStars": [
+                    {
+                        "min": 0.25,
+                        "max": 0.75
+                    },
+                    {
+                        "min": 0.5,
+                        "max": 1.5
+                    },
+                    {
+                        "min": 0.75,
+                        "max": 2.25
+                    },
+                    {
+                        "min": 1.0,
+                        "max": 3.0
+                    },
+                    {
+                        "min": 1.25,
+                        "max": 3.75
+                    },
+                    {
+                        "min": 1.5,
+                        "max": 4.5
+                    }
+                ]
+            },
+            {
+                "statType": "EffectHitRate",
+                "mainBaseByStars": [
+                    {
+                        "min": 6.0,
+                        "max": 6.0
+                    },
+                    {
+                        "min": 8.0,
+                        "max": 8.0
+                    },
+                    {
+                        "min": 10.0,
+                        "max": 10.0
+                    },
+                    {
+                        "min": 11.0,
+                        "max": 11.0
+                    },
+                    {
+                        "min": 12.0,
+                        "max": 12.0
+                    },
+                    {
+                        "min": 14.0,
+                        "max": 14.0
+                    }
+                ],
+                "mainUpgradeByStars": [
+                    {
+                        "min": 1.0,
+                        "max": 1.0
+                    },
+                    {
+                        "min": 1.0,
+                        "max": 1.0
+                    },
+                    {
+                        "min": 2.0,
+                        "max": 2.0
+                    },
+                    {
+                        "min": 2.0,
+                        "max": 2.0
+                    },
+                    {
+                        "min": 3.0,
+                        "max": 3.0
+                    },
+                    {
+                        "min": 4.0,
+                        "max": 4.0
+                    }
+                ],
+                "subInitialByStars": [
+                    {
+                        "min": 0.5,
+                        "max": 1.0
+                    },
+                    {
+                        "min": 1.0,
+                        "max": 2.0
+                    },
+                    {
+                        "min": 1.5,
+                        "max": 3.0
+                    },
+                    {
+                        "min": 2.0,
+                        "max": 4.0
+                    },
+                    {
+                        "min": 2.5,
+                        "max": 5.0
+                    },
+                    {
+                        "min": 3.0,
+                        "max": 6.0
+                    }
+                ],
+                "subUpgradeByStars": [
+                    {
+                        "min": 0.25,
+                        "max": 0.75
+                    },
+                    {
+                        "min": 0.5,
+                        "max": 1.5
+                    },
+                    {
+                        "min": 0.75,
+                        "max": 2.25
+                    },
+                    {
+                        "min": 1.0,
+                        "max": 3.0
+                    },
+                    {
+                        "min": 1.25,
+                        "max": 3.75
+                    },
+                    {
+                        "min": 1.5,
+                        "max": 4.5
+                    }
+                ]
+            }
+        ]
+    },
+    "banners": [
+        {
+            "bannerId": "1",
+            "costPerPull": 1,
+            "softPityThreshold": 70,
+            "hardPityThreshold": 90,
+            "guaranteedAboveBaseEvery": 10,
+            "hasEpitomizedPath": false,
+            "basicProbabilities": [
+                {
+                    "key": "Base",
+                    "value": 50.0
+                },
+                {
+                    "key": "Supreme",
+                    "value": 2.0
+                },
+                {
+                    "key": "Uncommon",
+                    "value": 48.0
+                }
+            ],
+            "supremeChoices": [
+                {
+                    "rewardType": "Unit",
+                    "rarity": "Supreme",
+                    "itemId": "41ab50bd04fdfce42875fe6724f71972",
+                    "weight": 1,
+                    "minItemStars": 3,
+                    "maxItemStars": 3,
+                    "minArtifactRarity": 0,
+                    "maxArtifactRarity": 0
+                }
+            ],
+            "totalPool": [
+                {
+                    "rewardType": "Pet",
+                    "rarity": "Uncommon",
+                    "itemId": "Coelho",
+                    "weight": 1,
+                    "minItemStars": 1,
+                    "maxItemStars": 6,
+                    "minArtifactRarity": 0,
+                    "maxArtifactRarity": 0
+                },
+                {
+                    "rewardType": "Artifact",
+                    "rarity": "Base",
+                    "itemId": "1",
+                    "weight": 1,
+                    "minItemStars": 1,
+                    "maxItemStars": 6,
+                    "minArtifactRarity": 0,
+                    "maxArtifactRarity": 4
+                }
+            ]
+        }
+    ]
+}

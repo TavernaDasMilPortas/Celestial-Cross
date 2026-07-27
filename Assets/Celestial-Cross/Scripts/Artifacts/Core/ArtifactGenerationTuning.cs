@@ -77,6 +77,13 @@ namespace CelestialCross.Artifacts
             public FloatRange[] subUpgradeByStars = new FloatRange[6];
         }
 
+        [Serializable]
+        public class SlotRestriction
+        {
+            public ArtifactType slot;
+            public List<StatType> allowedMainStats = new List<StatType>();
+        }
+
         [Header("Master Switch")]
         public bool useTuning = true;
 
@@ -89,6 +96,9 @@ namespace CelestialCross.Artifacts
 
         [Header("Stat Value Ranges (by stars)")]
         public List<StatRanges> statRanges = new List<StatRanges>();
+
+        [Header("Slot Restrictions")]
+        public List<SlotRestriction> slotRestrictions = new List<SlotRestriction>();
 
         private void OnValidate()
         {
@@ -248,6 +258,15 @@ namespace CelestialCross.Artifacts
         public void ResetToGeneratorDefaults()
         {
             EnsureAllStatsPresent();
+
+            // Setup default slot restrictions
+            slotRestrictions.Clear();
+            slotRestrictions.Add(new SlotRestriction { slot = ArtifactType.Helmet, allowedMainStats = new List<StatType> { StatType.HealthFlat } });
+            slotRestrictions.Add(new SlotRestriction { slot = ArtifactType.Chestplate, allowedMainStats = new List<StatType> { StatType.DefenseFlat } });
+            slotRestrictions.Add(new SlotRestriction { slot = ArtifactType.Gloves, allowedMainStats = new List<StatType> { StatType.AttackFlat } });
+            slotRestrictions.Add(new SlotRestriction { slot = ArtifactType.Boots, allowedMainStats = new List<StatType> { StatType.HealthPercent, StatType.AttackPercent, StatType.DefensePercent, StatType.Speed } });
+            slotRestrictions.Add(new SlotRestriction { slot = ArtifactType.Necklace, allowedMainStats = new List<StatType> { StatType.HealthPercent, StatType.AttackPercent, StatType.DefensePercent, StatType.CriticalRate, StatType.CriticalDamage } });
+            slotRestrictions.Add(new SlotRestriction { slot = ArtifactType.Ring, allowedMainStats = new List<StatType> { StatType.HealthPercent, StatType.AttackPercent, StatType.DefensePercent, StatType.EffectHitRate, StatType.EffectResistance } });
 
             commonInitialSubstats = new IntRange(0, 1);
             uncommonInitialSubstats = new IntRange(1, 2);

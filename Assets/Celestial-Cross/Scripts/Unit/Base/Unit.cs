@@ -85,6 +85,8 @@ public abstract class Unit : MonoBehaviour
                 baseStats.speed += runtimePetData.Speed;
                 baseStats.criticalChance = Mathf.Clamp(baseStats.criticalChance + runtimePetData.CriticalChance, 0, 100);
                 baseStats.effectAccuracy = Mathf.Clamp(baseStats.effectAccuracy + runtimePetData.EffectAccuracy, 0, 100);
+                baseStats.criticalDamage += runtimePetData.CriticalDamage;
+                baseStats.effectResistance = Mathf.Clamp(baseStats.effectResistance + runtimePetData.EffectResistance, 0, 100);
             }
             
 

@@ -4,6 +4,7 @@ using UnityEngine;
 using CelestialCross.Progression;
 using CelestialCross.Data.Dungeon;
 using CelestialCross.Data.Rewards;
+using System.Threading.Tasks;
 
 namespace CelestialCross.System
 {
@@ -249,7 +250,7 @@ namespace CelestialCross.System
             return EnergyService.Instance != null && EnergyService.Instance.GetCurrentEnergy() >= cost;
         }
 
-        public bool TryStartNode(StoryNode node)
+        public async Task<bool> TryStartNodeAsync(StoryNode node)
         {
             if (node == null) return false;
 
@@ -294,7 +295,7 @@ namespace CelestialCross.System
                 
                 if (EnergyService.Instance != null)
                 {
-                    if (!EnergyService.Instance.TryConsumeEnergy(node.EntryCost.EnergyCost))
+                    if (!await EnergyService.Instance.TryConsumeEnergyAsync(node.EntryCost.EnergyCost))
                     {
                         OnProgressionError?.Invoke("Erro ao consumir energia.");
                         return false;

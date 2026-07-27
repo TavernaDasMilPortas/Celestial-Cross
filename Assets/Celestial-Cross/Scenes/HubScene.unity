@@ -594,7 +594,7 @@ MonoBehaviour:
   accountKey: New_account
   bootstrapConfig: {fileID: 11400000, guid: 21e5ff6e2065d3e48bf16eeaf1a1baa3, type: 2}
   debugProfile: {fileID: 11400000, guid: 2630c83ded303e24ca23dc9d17848f02, type: 2}
-  useDebugProfile: 1
+  useDebugProfile: 0
 --- !u!114 &127734721
 MonoBehaviour:
   m_ObjectHideFlags: 0

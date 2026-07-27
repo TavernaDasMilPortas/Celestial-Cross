@@ -119,13 +119,13 @@ namespace CelestialCross.Scenes.Hub
             isShowing = false;
         }
 
-        private void OnStartClicked()
+        private async void OnStartClicked()
         {
             if (currentNode == null) return;
             
             if (ProgressionService.Instance != null)
             {
-                bool started = ProgressionService.Instance.TryStartNode(currentNode);
+                bool started = await ProgressionService.Instance.TryStartNodeAsync(currentNode);
                 if (started)
                 {
                     Hide();

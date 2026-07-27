@@ -44,9 +44,9 @@ namespace CelestialCross.Progression
             {
                 nextStepButton.gameObject.SetActive(success && _nextAvailableNode != null);
                 nextStepButton.onClick.RemoveAllListeners();
-                nextStepButton.onClick.AddListener(() => {
+                nextStepButton.onClick.AddListener(async () => {
                     modalPanel.SetActive(false);
-                    CelestialCross.System.ProgressionService.Instance.TryStartNode(_nextAvailableNode);
+                    await CelestialCross.System.ProgressionService.Instance.TryStartNodeAsync(_nextAvailableNode);
                 });
             }
 

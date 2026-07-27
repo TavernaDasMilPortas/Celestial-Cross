@@ -67,7 +67,7 @@ MonoBehaviour:
       mostClicked:
       - paths:
         - 
-        count: 3
+        count: 1
         gameObjects: []
       recentlyClicked:
       - paths:
@@ -105,7 +105,7 @@ MonoBehaviour:
       recentlyClickedContents: []
     sceneGUID: 03d58314661be71469defb5607568be7
     sceneName: InventoryScene
-    lastSaveTimePrint: 10:32 PM (July 7, 2026)
+    lastSaveTimePrint: 03:46 PM (July 18, 2026)
     gracePeriod: 3
     activeIndex: 70
     checkingToLoad: 0
@@ -114,7 +114,7 @@ MonoBehaviour:
     maximizedAssetView: 0
     showImportSettings: 1
     suggestedHeight: 0
-    userAssetViewSize: -1
+    userAssetViewSize: 92.80002
     previewHeight: 0
     scrollPosition: {x: 0, y: 0}
     toolbarScrollPosition: {x: 3805.4, y: 0}
@@ -7566,6 +7566,8 @@ MonoBehaviour:
     playModeTransforms: []
     historyAssets:
     - assetGUIDs:
+      - 8105016687592461f977c054a80ce2f2
+    - assetGUIDs:
       - e7c0d4a01fadfda4ca0492984cd33e00
     - assetGUIDs:
       - e9cea8eb05b87414d9cc8f7fc8db4ae0
@@ -7585,17 +7587,20 @@ MonoBehaviour:
       - db3860f4120b12c4fb3da57cffbe7cbd
     - assetGUIDs:
       - 7f0f895d20658f142a06dc4fb49dce02
-    - assetGUIDs:
-      - 8f342294dfb958a4694b67859092b749
-    targetObject: {fileID: 11400000, guid: e7c0d4a01fadfda4ca0492984cd33e00, type: 2}
+    targetObject: {fileID: 11400000, guid: 8105016687592461f977c054a80ce2f2, type: 2}
     targetObjects: []
-    lastSelectedAsset: Assets/Celestial-Cross/Data/Units/MagicalGirls/Leidell/Pet/Coelho.asset
+    lastSelectedAsset: Assets/Readme.asset
     lastClickedTab: -1
     previousTab: 0
   - tracker:
-      mostClicked: []
+      mostClicked:
+      - paths:
+        - 
+        count: 2
+        gameObjects: []
       recentlyClicked:
-      - paths: []
+      - paths:
+        - 
         count: 1
         gameObjects: []
       - paths: []
@@ -7629,7 +7634,7 @@ MonoBehaviour:
       recentlyClickedContents: []
     sceneGUID: aae55989abe44784197dd80958fdd0f5
     sceneName: HubScene
-    lastSaveTimePrint: 10:32 PM (July 7, 2026)
+    lastSaveTimePrint: 10:42 PM (July 26, 2026)
     gracePeriod: 3
     activeIndex: 0
     checkingToLoad: 0
@@ -7643,28 +7648,28 @@ MonoBehaviour:
     scrollPosition: {x: 0, y: 0}
     toolbarScrollPosition: {x: 0, y: 0}
     rawUserHeight: 0
-    lastValidTabWidth: 61
+    lastValidTabWidth: 133
     alreadyCalculatedHeight: 0
     lastKnownHeight: 0
     tabs:
-    - path: 
+    - path: '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"_HubSceneManager[0]"}'
       paths: []
-      tabWidth: 58
-      name: New Tab
-      icon: {fileID: 0}
-      shortName: New Tab
+      tabWidth: 130
+      name: _HubSceneManager
+      icon: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: _HubSceneManager
       filterString: 
-      newTab: 1
+      newTab: 0
       scrollPosition: 0
-      isSelected: 0
+      isSelected: 1
       allCollapsed: 0
       runtimeFoldouts: 
       runtimeMultiComponents: []
       tabTextContent:
-        m_Text: New Tab
+        m_Text: _HubSceneManager
         m_Image: {fileID: 0}
         m_Tooltip: 
-        m_TextWithWhitespace: "New Tab\u200B"
+        m_TextWithWhitespace: "_HubSceneManager\u200B"
       multiEditMode: 0
       locked: 0
       hasPreview: 0
@@ -7703,12 +7708,37 @@ MonoBehaviour:
       savePlayModeTransform: 0
       index: 0
       historyPosition: 0
-      componentMaps: []
-      historyPaths: []
+      componentMaps:
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: transform
+        niceComponentName: transform
+      - index: 0
+        component: {fileID: 0}
+        missingComponentID: -1
+        foldout: 1
+        focusAfter: 0
+        awaitingScroll: 0
+        hidden: 0
+        componentName: accountmanager
+        niceComponentName: account manager
+      historyPaths:
+      - paths:
+        - '{"sceneGUID":"aae55989abe44784197dd80958fdd0f5","path":"_HubSceneManager[0]"}'
+        prefab: 0
       owner: {fileID: 0}
     closedTabs: []
     playModeTransforms: []
     historyAssets:
+    - assetGUIDs:
+      - aae55989abe44784197dd80958fdd0f5
+    - assetGUIDs:
+      - 8105016687592461f977c054a80ce2f2
     - assetGUIDs:
       - e7c0d4a01fadfda4ca0492984cd33e00
     - assetGUIDs:
@@ -7724,29 +7754,27 @@ MonoBehaviour:
     - assetGUIDs:
       - 075238abd19a8d247a9469e90793c27a
     - assetGUIDs:
-      - aae55989abe44784197dd80958fdd0f5
-    - assetGUIDs:
       - db3860f4120b12c4fb3da57cffbe7cbd
     - assetGUIDs:
       - 7f0f895d20658f142a06dc4fb49dce02
-    - assetGUIDs:
-      - 8f342294dfb958a4694b67859092b749
-    targetObject: {fileID: 11400000, guid: e7c0d4a01fadfda4ca0492984cd33e00, type: 2}
+    targetObject: {fileID: 102900000, guid: aae55989abe44784197dd80958fdd0f5, type: 3}
     targetObjects: []
-    lastSelectedAsset: Assets/Celestial-Cross/Data/Units/MagicalGirls/Leidell/Pet/Coelho.asset
+    lastSelectedAsset: Assets/Celestial-Cross/Scenes/HubScene.unity
     lastClickedTab: -1
     previousTab: 0
   - tracker:
       mostClicked:
       - paths:
-        - 
-        count: 1
-        gameObjects: []
+        - '{"sceneGUID":"41797f812614b484c878b87c4d6155a1","path":"Canvas[0]/PreparationUI_Generated[0]/SelectedUnitsArea[0]"}'
+        count: 3
+        gameObjects:
+        - {fileID: 0}
       recentlyClicked:
       - paths:
-        - 
+        - '{"sceneGUID":"41797f812614b484c878b87c4d6155a1","path":"Canvas[0]/PreparationUI_Generated[0]/SelectedUnitsArea[0]"}'
         count: 1
-        gameObjects: []
+        gameObjects:
+        - {fileID: 0}
       - paths: []
         count: 1
         gameObjects: []
@@ -7778,7 +7806,7 @@ MonoBehaviour:
       recentlyClickedContents: []
     sceneGUID: 41797f812614b484c878b87c4d6155a1
     sceneName: PreparationScene
-    lastSaveTimePrint: 10:15 PM (July 7, 2026)
+    lastSaveTimePrint: 10:42 PM (July 26, 2026)
     gracePeriod: 3
     activeIndex: 0
     checkingToLoad: 0
@@ -7898,7 +7926,15 @@ MonoBehaviour:
     playModeTransforms: []
     historyAssets:
     - assetGUIDs:
+      - aae55989abe44784197dd80958fdd0f5
+    - assetGUIDs:
+      - 8105016687592461f977c054a80ce2f2
+    - assetGUIDs:
+      - e7c0d4a01fadfda4ca0492984cd33e00
+    - assetGUIDs:
       - e9cea8eb05b87414d9cc8f7fc8db4ae0
+    - assetGUIDs:
+      - 528f98efb531c2e4a96a36be5c5a5f5c
     - assetGUIDs:
       - 5ce4d2489b6654048a704997ca5ba3fc
     - assetGUIDs:
@@ -7908,20 +7944,12 @@ MonoBehaviour:
     - assetGUIDs:
       - 075238abd19a8d247a9469e90793c27a
     - assetGUIDs:
-      - aae55989abe44784197dd80958fdd0f5
-    - assetGUIDs:
       - db3860f4120b12c4fb3da57cffbe7cbd
     - assetGUIDs:
       - 7f0f895d20658f142a06dc4fb49dce02
-    - assetGUIDs:
-      - 8f342294dfb958a4694b67859092b749
-    - assetGUIDs:
-      - 8105016687592461f977c054a80ce2f2
-    - assetGUIDs:
-      - 7d18229e63a7d974fbfa170b4cb71025
-    targetObject: {fileID: 11400000, guid: e9cea8eb05b87414d9cc8f7fc8db4ae0, type: 2}
+    targetObject: {fileID: 102900000, guid: aae55989abe44784197dd80958fdd0f5, type: 3}
     targetObjects: []
-    lastSelectedAsset: Assets/Celestial-Cross/Data/Gacha/Banners/BannerLiedell/LiedelLBanner.asset
+    lastSelectedAsset: Assets/Celestial-Cross/Scenes/HubScene.unity
     lastClickedTab: -1
     previousTab: 0
   - tracker:
@@ -20885,16 +20913,14 @@ MonoBehaviour:
   - tracker:
       mostClicked:
       - paths:
-        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
-        count: 1
-        gameObjects:
-        - {fileID: 0}
+        - 
+        count: 5
+        gameObjects: []
       recentlyClicked:
       - paths:
-        - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
+        - 
         count: 1
-        gameObjects:
-        - {fileID: 0}
+        gameObjects: []
       - paths: []
         count: 1
         gameObjects: []
@@ -20926,7 +20952,7 @@ MonoBehaviour:
       recentlyClickedContents: []
     sceneGUID: 3bea51b30b1a74742b70e245c7a07f9c
     sceneName: ShopScene
-    lastSaveTimePrint: 10:34 PM (July 7, 2026)
+    lastSaveTimePrint: 03:46 PM (July 18, 2026)
     gracePeriod: 3
     activeIndex: 130
     checkingToLoad: 0
@@ -20935,18 +20961,18 @@ MonoBehaviour:
     maximizedAssetView: 0
     showImportSettings: 1
     suggestedHeight: 0
-    userAssetViewSize: -1
+    userAssetViewSize: 92.80002
     previewHeight: 0
     scrollPosition: {x: 0, y: 0}
-    toolbarScrollPosition: {x: 7824, y: 0}
+    toolbarScrollPosition: {x: 7743, y: 0}
     rawUserHeight: 0
-    lastValidTabWidth: 12310
+    lastValidTabWidth: 12138
     alreadyCalculatedHeight: 0
     lastKnownHeight: 0
     tabs:
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/Btn_ContinueAnim[0]"}'
       paths: []
-      tabWidth: 61
+      tabWidth: 59
       name: Btn_ContinueAnim
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Btn_\u2026"
@@ -21163,7 +21189,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/RewardDetailModal[0]"}'
       paths: []
-      tabWidth: 67
+      tabWidth: 65
       name: RewardDetailModal
       icon: {fileID: -1575620288787673585, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Rewa\u2026"
@@ -21234,7 +21260,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/RewardDetailModal[0]"}'
       paths: []
-      tabWidth: 67
+      tabWidth: 65
       name: RewardDetailModal
       icon: {fileID: -1575620288787673585, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Rewa\u2026"
@@ -21302,7 +21328,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/GachaUnitRewardModal[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaUnitRewardModal
       icon: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -21382,7 +21408,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/GachaUnitRewardModal[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaUnitRewardModal
       icon: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -21578,7 +21604,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/ArtifactActionModal[0]/DefaultStarPrefab[0]"}'
       paths: []
-      tabWidth: 62
+      tabWidth: 61
       name: DefaultStarPrefab
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Defa\u2026"
@@ -21667,7 +21693,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/ArtifactActionModal[0]/PopupBg[0]/StarsContainer[0]"}'
       paths: []
-      tabWidth: 59
+      tabWidth: 57
       name: StarsContainer
       icon: {fileID: 7334568976493443608, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Star\u2026"
@@ -21842,7 +21868,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/GachaUnitRewardModal[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaUnitRewardModal
       icon: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -21922,7 +21948,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/GachaUnitRewardModal[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaUnitRewardModal
       icon: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -21999,7 +22025,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/RewardDetailModal[0]"}'
       paths: []
-      tabWidth: 67
+      tabWidth: 65
       name: RewardDetailModal
       icon: {fileID: -1575620288787673585, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Rewa\u2026"
@@ -22070,7 +22096,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/RewardDetailModal[0]"}'
       paths: []
-      tabWidth: 67
+      tabWidth: 65
       name: RewardDetailModal
       icon: {fileID: -1575620288787673585, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Rewa\u2026"
@@ -22138,7 +22164,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/ArtifactActionModal[0]/DefaultStarPrefab[0]"}'
       paths: []
-      tabWidth: 62
+      tabWidth: 61
       name: DefaultStarPrefab
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Defa\u2026"
@@ -22236,7 +22262,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/ArtifactUpgradeModal[0]/CenterPanel[0]/CloseButton[0]"}'
       paths: []
-      tabWidth: 61
+      tabWidth: 60
       name: CloseButton
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Clos\u2026"
@@ -22352,7 +22378,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/ArtifactActionModal[0]/PopupBg[0]/Stats[0]"}'
       paths: []
-      tabWidth: 53
+      tabWidth: 54
       name: Stats
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: Stats
@@ -22622,7 +22648,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/GachaUnitRewardModal[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaUnitRewardModal
       icon: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -22705,7 +22731,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/GachaUnitRewardModal[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaUnitRewardModal
       icon: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -22957,7 +22983,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/GachaUnitRewardModal[0]/ContentPanel[0]/BackgroundOverlay[0]"}'
       paths: []
-      tabWidth: 63
+      tabWidth: 62
       name: BackgroundOverlay
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Back\u2026"
@@ -23515,7 +23541,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/ArtifactActionModal[0]/PopupBg[0]"}'
       paths: []
-      tabWidth: 64
+      tabWidth: 63
       name: PopupBg
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Popu\u2026"
@@ -23785,7 +23811,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/Panel_PetSkillModal[0]/Box[0]/Clips[0]"}'
       paths: []
-      tabWidth: 52
+      tabWidth: 53
       name: Clips
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: Clips
@@ -23895,7 +23921,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/ArtifactActionModal[0]/PopupBg[0]/Clips[0]"}'
       paths: []
-      tabWidth: 52
+      tabWidth: 53
       name: Clips
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: Clips
@@ -24088,7 +24114,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/ArtifactUpgradeModal[0]/CenterPanel[0]"}'
       paths: []
-      tabWidth: 62
+      tabWidth: 61
       name: CenterPanel
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Cent\u2026"
@@ -24797,7 +24823,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/ArtifactUpgradeModal[0]/CenterPanel[0]/Clips[0]"}'
       paths: []
-      tabWidth: 52
+      tabWidth: 53
       name: Clips
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: Clips
@@ -24907,7 +24933,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/HoleScrollingBackground[0]"}'
       paths: []
-      tabWidth: 61
+      tabWidth: 60
       name: HoleScrollingBackground
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Hole\u2026"
@@ -25213,7 +25239,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/WhiteFlashPanel[0]"}'
       paths: []
-      tabWidth: 61
+      tabWidth: 60
       name: WhiteFlashPanel
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Whit\u2026"
@@ -25311,7 +25337,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/ArtifactActionModal[0]/PopupBg[0]/StarsContainer[0]"}'
       paths: []
-      tabWidth: 59
+      tabWidth: 57
       name: StarsContainer
       icon: {fileID: 7334568976493443608, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Star\u2026"
@@ -25510,7 +25536,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/GachaUnitRewardModal[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaUnitRewardModal
       icon: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -25756,7 +25782,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/Panel_PetSkillModal[0]"}'
       paths: []
-      tabWidth: 64
+      tabWidth: 63
       name: Panel_PetSkillModal
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Pane\u2026"
@@ -25845,7 +25871,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/Panel_PetSkillModal[0]"}'
       paths: []
-      tabWidth: 64
+      tabWidth: 63
       name: Panel_PetSkillModal
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Pane\u2026"
@@ -26302,7 +26328,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/GachaUnitRewardModal[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaUnitRewardModal
       icon: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -26673,7 +26699,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaAnimationCanvas
       icon: {fileID: 6918890264710435130, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -26967,7 +26993,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/GachaUnitRewardModal[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaUnitRewardModal
       icon: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -27169,7 +27195,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/GachaUnitRewardModal[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaUnitRewardModal
       icon: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -27255,7 +27281,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/GachaUnitRewardModal[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaUnitRewardModal
       icon: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -27332,7 +27358,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaAnimationCanvas
       icon: {fileID: 6918890264710435130, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -27448,7 +27474,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaAnimationCanvas
       icon: {fileID: 6918890264710435130, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -27561,7 +27587,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/GachaUnitRewardModal[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaUnitRewardModal
       icon: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -27641,7 +27667,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/GachaUnitRewardModal[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaUnitRewardModal
       icon: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -27718,7 +27744,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/GachaUnitRewardModal[0]/ContentPanel[0]/SkillsContainer[0]"}'
       paths: []
-      tabWidth: 56
+      tabWidth: 55
       name: SkillsContainer
       icon: {fileID: 7334568976493443608, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Skil\u2026"
@@ -27828,7 +27854,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/GachaUnitRewardModal[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaUnitRewardModal
       icon: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -27908,7 +27934,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaAnimationCanvas
       icon: {fileID: 6918890264710435130, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -28015,7 +28041,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaAnimationCanvas
       icon: {fileID: 6918890264710435130, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -28119,7 +28145,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/GachaUnitRewardModal[0]/ContentPanel[0]/BackgroundOverlay[0]"}'
       paths: []
-      tabWidth: 63
+      tabWidth: 62
       name: BackgroundOverlay
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Back\u2026"
@@ -28238,7 +28264,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/GachaUnitRewardModal[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaUnitRewardModal
       icon: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -28318,7 +28344,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/HoleScrollingBackground[0]"}'
       paths: []
-      tabWidth: 61
+      tabWidth: 60
       name: HoleScrollingBackground
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Hole\u2026"
@@ -28446,7 +28472,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaAnimationCanvas
       icon: {fileID: 6918890264710435130, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -28553,7 +28579,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/GachaUnitRewardModal[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaUnitRewardModal
       icon: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -28633,7 +28659,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/GachaUnitRewardModal[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaUnitRewardModal
       icon: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -29060,7 +29086,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeNameText[0]"}'
       paths: []
-      tabWidth: 62
+      tabWidth: 60
       name: SupremeNameText
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Supr\u2026"
@@ -29189,7 +29215,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]"}'
       paths: []
-      tabWidth: 62
+      tabWidth: 60
       name: SupremeRevealContainer
       icon: {fileID: 5779557562189929939, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Supr\u2026"
@@ -29269,7 +29295,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/RewardDetailModal[0]"}'
       paths: []
-      tabWidth: 67
+      tabWidth: 65
       name: RewardDetailModal
       icon: {fileID: -1575620288787673585, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Rewa\u2026"
@@ -29369,7 +29395,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/Panel_PetSkillModal[0]"}'
       paths: []
-      tabWidth: 64
+      tabWidth: 63
       name: Panel_PetSkillModal
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Pane\u2026"
@@ -29835,7 +29861,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/CenterBase[0]/Btn_BannerBase[0]/Bnt_BannerTab_WhiteBorder[0]/Bnt_BannerTab_Container[0]/Btn_TabBanners[0]"}'
       paths: []
-      tabWidth: 61
+      tabWidth: 59
       name: Btn_TabBanners
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Btn_\u2026"
@@ -29969,7 +29995,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/StampsSpawnArea[0]"}'
       paths: []
-      tabWidth: 64
+      tabWidth: 63
       name: StampsSpawnArea
       icon: {fileID: 485006632639120110, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Stam\u2026"
@@ -30058,7 +30084,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/RewardDetailModal[0]"}'
       paths: []
-      tabWidth: 67
+      tabWidth: 65
       name: RewardDetailModal
       icon: {fileID: -1575620288787673585, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Rewa\u2026"
@@ -30129,7 +30155,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaAnimationCanvas
       icon: {fileID: 6918890264710435130, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -30245,7 +30271,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/CenterBase[0]/Btn_StoreBase[0]"}'
       paths: []
-      tabWidth: 61
+      tabWidth: 59
       name: Btn_StoreBase
       icon: {fileID: -1575620288787673585, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Btn_\u2026"
@@ -30325,7 +30351,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/CenterBase[0]/Btn_StoreBase[0]"}'
       paths: []
-      tabWidth: 61
+      tabWidth: 59
       name: Btn_StoreBase
       icon: {fileID: -1575620288787673585, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Btn_\u2026"
@@ -30396,7 +30422,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/BackgroundPanel[0]"}'
       paths: []
-      tabWidth: 63
+      tabWidth: 62
       name: BackgroundPanel
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Back\u2026"
@@ -30488,7 +30514,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/HoleScrollingBackground[0]"}'
       paths: []
-      tabWidth: 61
+      tabWidth: 60
       name: HoleScrollingBackground
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Hole\u2026"
@@ -30598,7 +30624,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/RewardDetailModal[0]"}'
       paths: []
-      tabWidth: 67
+      tabWidth: 65
       name: RewardDetailModal
       icon: {fileID: -1575620288787673585, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Rewa\u2026"
@@ -30666,7 +30692,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaAnimationCanvas
       icon: {fileID: 6918890264710435130, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -30786,7 +30812,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/GachaUnitRewardModal[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaUnitRewardModal
       icon: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -30863,7 +30889,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/GachaUnitRewardModal[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaUnitRewardModal
       icon: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -30940,7 +30966,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/CenterBase[0]/Content[0]/Content_WhiteBorder[0]/Content_GrayBorder[0]/BannerContent_Border[0]/BannerSplashArt[0]"}'
       paths: []
-      tabWidth: 64
+      tabWidth: 63
       name: BannerSplashArt
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Bann\u2026"
@@ -31044,7 +31070,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaAnimationCanvas
       icon: {fileID: 6918890264710435130, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -31151,7 +31177,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeSilhouetteImage[0]"}'
       paths: []
-      tabWidth: 62
+      tabWidth: 60
       name: SupremeSilhouetteImage
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Supr\u2026"
@@ -31249,7 +31275,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]"}'
       paths: []
-      tabWidth: 62
+      tabWidth: 60
       name: SupremeRevealContainer
       icon: {fileID: 5779557562189929939, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Supr\u2026"
@@ -31329,7 +31355,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeNameText[0]"}'
       paths: []
-      tabWidth: 62
+      tabWidth: 60
       name: SupremeNameText
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Supr\u2026"
@@ -31418,7 +31444,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaAnimationCanvas
       icon: {fileID: 6918890264710435130, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -31525,7 +31551,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/StampsSpawnArea[0]"}'
       paths: []
-      tabWidth: 64
+      tabWidth: 63
       name: StampsSpawnArea
       icon: {fileID: 485006632639120110, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Stam\u2026"
@@ -31611,7 +31637,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeSilhouetteImage[0]"}'
       paths: []
-      tabWidth: 62
+      tabWidth: 60
       name: SupremeSilhouetteImage
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Supr\u2026"
@@ -31706,7 +31732,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]"}'
       paths: []
-      tabWidth: 62
+      tabWidth: 60
       name: SupremeRevealContainer
       icon: {fileID: 5779557562189929939, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Supr\u2026"
@@ -31783,7 +31809,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeSplashImage[0]"}'
       paths: []
-      tabWidth: 62
+      tabWidth: 60
       name: SupremeSplashImage
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Supr\u2026"
@@ -31872,7 +31898,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaAnimationCanvas
       icon: {fileID: 6918890264710435130, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -31979,7 +32005,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaAnimationCanvas
       icon: {fileID: 6918890264710435130, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -32083,7 +32109,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeSilhouetteImage[0]"}'
       paths: []
-      tabWidth: 62
+      tabWidth: 60
       name: SupremeSilhouetteImage
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Supr\u2026"
@@ -32172,7 +32198,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeSilhouetteImage[0]"}'
       paths: []
-      tabWidth: 62
+      tabWidth: 60
       name: SupremeSilhouetteImage
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Supr\u2026"
@@ -32261,7 +32287,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaAnimationCanvas
       icon: {fileID: 6918890264710435130, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -32368,7 +32394,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeNameText[0]"}'
       paths: []
-      tabWidth: 62
+      tabWidth: 60
       name: SupremeNameText
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Supr\u2026"
@@ -32463,7 +32489,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeSilhouetteImage[0]"}'
       paths: []
-      tabWidth: 62
+      tabWidth: 60
       name: SupremeSilhouetteImage
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Supr\u2026"
@@ -32552,7 +32578,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeSilhouetteImage[0]"}'
       paths: []
-      tabWidth: 62
+      tabWidth: 60
       name: SupremeSilhouetteImage
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Supr\u2026"
@@ -32644,7 +32670,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeSilhouetteImage[0]"}'
       paths: []
-      tabWidth: 62
+      tabWidth: 60
       name: SupremeSilhouetteImage
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Supr\u2026"
@@ -32730,7 +32756,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeSplashImage[0]"}'
       paths: []
-      tabWidth: 62
+      tabWidth: 60
       name: SupremeSplashImage
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Supr\u2026"
@@ -32819,7 +32845,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaAnimationCanvas
       icon: {fileID: 6918890264710435130, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -32926,7 +32952,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeSilhouetteImage[0]"}'
       paths: []
-      tabWidth: 62
+      tabWidth: 60
       name: SupremeSilhouetteImage
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Supr\u2026"
@@ -33016,24 +33042,24 @@ MonoBehaviour:
         - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
         prefab: 0
       owner: {fileID: 0}
-    - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
+    - path: '{"sceneGUID":"","path":"NetworkGuard[0]/NetworkOverlayUI[0]"}'
       paths: []
-      tabWidth: 65
-      name: GachaAnimationCanvas
-      icon: {fileID: 6918890264710435130, guid: 0000000000000000d000000000000000, type: 0}
-      shortName: "Gach\u2026"
+      tabWidth: 64
+      name: NetworkOverlayUI
+      icon: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+      shortName: "Netw\u2026"
       filterString: 
       newTab: 0
       scrollPosition: 0
-      isSelected: 0
+      isSelected: 1
       allCollapsed: 0
       runtimeFoldouts: 
       runtimeMultiComponents: []
       tabTextContent:
-        m_Text: "Gach\u2026"
+        m_Text: "Netw\u2026"
         m_Image: {fileID: 0}
         m_Tooltip: 
-        m_TextWithWhitespace: "Gach\u2026\u200B"
+        m_TextWithWhitespace: "Netw\u2026\u200B"
       multiEditMode: 0
       locked: 0
       hasPreview: 0
@@ -33080,8 +33106,8 @@ MonoBehaviour:
         focusAfter: 0
         awaitingScroll: 0
         hidden: 0
-        componentName: recttransform
-        niceComponentName: rect transform
+        componentName: transform
+        niceComponentName: transform
       - index: 0
         component: {fileID: 0}
         missingComponentID: -1
@@ -33089,43 +33115,19 @@ MonoBehaviour:
         focusAfter: 0
         awaitingScroll: 0
         hidden: 0
-        componentName: canvas
-        niceComponentName: canvas
-      - index: 0
-        component: {fileID: 0}
-        missingComponentID: -1
-        foldout: 1
-        focusAfter: 0
-        awaitingScroll: 0
-        hidden: 0
-        componentName: canvasscaler
-        niceComponentName: canvas scaler
-      - index: 0
-        component: {fileID: 0}
-        missingComponentID: -1
-        foldout: 1
-        focusAfter: 0
-        awaitingScroll: 0
-        hidden: 0
-        componentName: graphicraycaster
-        niceComponentName: graphic raycaster
-      - index: 0
-        component: {fileID: 0}
-        missingComponentID: -1
-        foldout: 1
-        focusAfter: 0
-        awaitingScroll: 0
-        hidden: 0
-        componentName: gachaanimationcontroller
-        niceComponentName: gacha animation controller
+        componentName: networkoverlayui
+        niceComponentName: network overlay ui
       historyPaths:
+      - paths:
+        - '{"sceneGUID":"","path":"NetworkGuard[0]/NetworkOverlayUI[0]"}'
+        prefab: 0
       - paths:
         - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
         prefab: 0
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/RewardDetailModal[0]"}'
       paths: []
-      tabWidth: 67
+      tabWidth: 65
       name: RewardDetailModal
       icon: {fileID: -1575620288787673585, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Rewa\u2026"
@@ -33193,7 +33195,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/GachaUnitRewardModal[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaUnitRewardModal
       icon: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -33273,7 +33275,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaAnimationCanvas
       icon: {fileID: 6918890264710435130, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -33389,7 +33391,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaAnimationCanvas
       icon: {fileID: 6918890264710435130, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -33502,7 +33504,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/RewardDetailModal[0]"}'
       paths: []
-      tabWidth: 67
+      tabWidth: 65
       name: RewardDetailModal
       icon: {fileID: -1575620288787673585, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Rewa\u2026"
@@ -33573,7 +33575,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/Btn_SkipAnim[0]/Text[0]"}'
       paths: []
-      tabWidth: 48
+      tabWidth: 50
       name: Text
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: Text
@@ -34069,7 +34071,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/Panel_PetSkillModal[0]"}'
       paths: []
-      tabWidth: 64
+      tabWidth: 63
       name: Panel_PetSkillModal
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Pane\u2026"
@@ -34167,7 +34169,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/Panel_PetSkillModal[0]"}'
       paths: []
-      tabWidth: 64
+      tabWidth: 63
       name: Panel_PetSkillModal
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Pane\u2026"
@@ -34262,7 +34264,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/GachaUnitRewardModal[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaUnitRewardModal
       icon: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -34342,7 +34344,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/GachaUnitRewardModal[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaUnitRewardModal
       icon: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -34538,7 +34540,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaAnimationCanvas
       icon: {fileID: 6918890264710435130, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -35046,7 +35048,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/Panel_PetSkillModal[0]"}'
       paths: []
-      tabWidth: 64
+      tabWidth: 63
       name: Panel_PetSkillModal
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Pane\u2026"
@@ -35144,7 +35146,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/GachaUnitRewardModal[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaUnitRewardModal
       icon: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -35230,7 +35232,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/TopBar[0]"}'
       paths: []
-      tabWidth: 64
+      tabWidth: 63
       name: TopBar
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "TopB\u2026"
@@ -35328,7 +35330,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/HoleScrollingBackground[0]"}'
       paths: []
-      tabWidth: 61
+      tabWidth: 60
       name: HoleScrollingBackground
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Hole\u2026"
@@ -35426,7 +35428,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/HoleScrollingBackground[0]"}'
       paths: []
-      tabWidth: 61
+      tabWidth: 60
       name: HoleScrollingBackground
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Hole\u2026"
@@ -35521,7 +35523,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/BottonBar[0]/Btn_Pull1_Base[0]"}'
       paths: []
-      tabWidth: 61
+      tabWidth: 59
       name: Btn_Pull1_Base
       icon: {fileID: -1575620288787673585, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Btn_\u2026"
@@ -35604,7 +35606,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/BottonBar[0]/Btn_Pull1_Base[0]"}'
       paths: []
-      tabWidth: 61
+      tabWidth: 59
       name: Btn_Pull1_Base
       icon: {fileID: -1575620288787673585, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Btn_\u2026"
@@ -35675,7 +35677,7 @@ MonoBehaviour:
       - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/CenterBase[0]/Btn_StoreBase[0]"}'
       - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/CenterBase[0]/Content[0]"}'
       - '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/CenterBase[0]/Btn_BannerBase[0]"}'
-      tabWidth: 52
+      tabWidth: 51
       name: (3) Objects
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "(3)\u2026"
@@ -35790,7 +35792,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/TopBar[0]"}'
       paths: []
-      tabWidth: 64
+      tabWidth: 63
       name: TopBar
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "TopB\u2026"
@@ -35870,7 +35872,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/BottonBar[0]/Btn_Pull1_Base[0]"}'
       paths: []
-      tabWidth: 61
+      tabWidth: 59
       name: Btn_Pull1_Base
       icon: {fileID: -1575620288787673585, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Btn_\u2026"
@@ -35941,7 +35943,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/BottonBar[0]/Btn_Pull10_Base[0]"}'
       paths: []
-      tabWidth: 61
+      tabWidth: 59
       name: Btn_Pull10_Base
       icon: {fileID: -1575620288787673585, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Btn_\u2026"
@@ -36012,7 +36014,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/BottonBar[0]/Btn_Pull10_Base[0]"}'
       paths: []
-      tabWidth: 61
+      tabWidth: 59
       name: Btn_Pull10_Base
       icon: {fileID: -1575620288787673585, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Btn_\u2026"
@@ -36711,7 +36713,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaAnimationCanvas
       icon: {fileID: 6918890264710435130, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -36851,7 +36853,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaAnimationCanvas
       icon: {fileID: 6918890264710435130, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -36967,7 +36969,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/BackgroundPanel[0]"}'
       paths: []
-      tabWidth: 63
+      tabWidth: 62
       name: BackgroundPanel
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Back\u2026"
@@ -37068,7 +37070,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaAnimationCanvas
       icon: {fileID: 6918890264710435130, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -37184,7 +37186,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaAnimationCanvas
       icon: {fileID: 6918890264710435130, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -37297,7 +37299,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaAnimationCanvas
       icon: {fileID: 6918890264710435130, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -37413,7 +37415,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaAnimationCanvas
       icon: {fileID: 6918890264710435130, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -37526,7 +37528,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaAnimationCanvas
       icon: {fileID: 6918890264710435130, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -37642,7 +37644,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaAnimationCanvas
       icon: {fileID: 6918890264710435130, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -37761,7 +37763,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaAnimationCanvas
       icon: {fileID: 6918890264710435130, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -37883,7 +37885,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaAnimationCanvas
       icon: {fileID: 6918890264710435130, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -37999,7 +38001,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaAnimationCanvas
       icon: {fileID: 6918890264710435130, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -38115,7 +38117,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaAnimationCanvas
       icon: {fileID: 6918890264710435130, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -38234,7 +38236,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaAnimationCanvas
       icon: {fileID: 6918890264710435130, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -38350,7 +38352,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaAnimationCanvas
       icon: {fileID: 6918890264710435130, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -38466,7 +38468,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/BackgroundPanel[0]"}'
       paths: []
-      tabWidth: 63
+      tabWidth: 62
       name: BackgroundPanel
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Back\u2026"
@@ -38574,7 +38576,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaAnimationCanvas
       icon: {fileID: 6918890264710435130, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -38690,9 +38692,9 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/StickerSpawnArea[0]"}'
       paths: []
-      tabWidth: 57
+      tabWidth: 56
       name: StickerSpawnArea
-      icon: {fileID: -1575620288787673585, guid: 0000000000000000d000000000000000, type: 0}
+      icon: {fileID: 5779557562189929939, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Stic\u2026"
       filterString: 
       newTab: 0
@@ -38773,7 +38775,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]"}'
       paths: []
-      tabWidth: 62
+      tabWidth: 60
       name: SupremeRevealContainer
       icon: {fileID: 5779557562189929939, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Supr\u2026"
@@ -38853,7 +38855,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]"}'
       paths: []
-      tabWidth: 62
+      tabWidth: 60
       name: SupremeRevealContainer
       icon: {fileID: 5779557562189929939, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Supr\u2026"
@@ -38930,7 +38932,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/WhiteFlashPanel[0]"}'
       paths: []
-      tabWidth: 61
+      tabWidth: 60
       name: WhiteFlashPanel
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Whit\u2026"
@@ -39028,7 +39030,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]"}'
       paths: []
-      tabWidth: 62
+      tabWidth: 60
       name: SupremeRevealContainer
       icon: {fileID: 5779557562189929939, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Supr\u2026"
@@ -39108,7 +39110,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/SupremeRevealContainer[0]/SupremeNameText[0]"}'
       paths: []
-      tabWidth: 62
+      tabWidth: 60
       name: SupremeNameText
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Supr\u2026"
@@ -39221,7 +39223,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/BackgroundPanel[0]"}'
       paths: []
-      tabWidth: 63
+      tabWidth: 62
       name: BackgroundPanel
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Back\u2026"
@@ -39319,7 +39321,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/Btn_ContinueAnim[0]"}'
       paths: []
-      tabWidth: 61
+      tabWidth: 59
       name: Btn_ContinueAnim
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Btn_\u2026"
@@ -39438,7 +39440,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaAnimationCanvas
       icon: {fileID: 6918890264710435130, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -39564,7 +39566,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaAnimationCanvas
       icon: {fileID: 6918890264710435130, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -39677,7 +39679,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"ShopUI_Canvas[0]/ShopUI_Root[0]/HoleScrollingBackground[0]"}'
       paths: []
-      tabWidth: 61
+      tabWidth: 60
       name: HoleScrollingBackground
       icon: {fileID: -3593279590788295529, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Hole\u2026"
@@ -39807,7 +39809,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaAnimationCanvas
       icon: {fileID: 6918890264710435130, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -39923,9 +39925,9 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/StickerSpawnArea[0]"}'
       paths: []
-      tabWidth: 57
+      tabWidth: 56
       name: StickerSpawnArea
-      icon: {fileID: -1575620288787673585, guid: 0000000000000000d000000000000000, type: 0}
+      icon: {fileID: 5779557562189929939, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Stic\u2026"
       filterString: 
       newTab: 0
@@ -40018,9 +40020,9 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/StickerSpawnArea[0]"}'
       paths: []
-      tabWidth: 57
+      tabWidth: 56
       name: StickerSpawnArea
-      icon: {fileID: -1575620288787673585, guid: 0000000000000000d000000000000000, type: 0}
+      icon: {fileID: 5779557562189929939, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Stic\u2026"
       filterString: 
       newTab: 0
@@ -40104,7 +40106,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]/StampsSpawnArea[0]"}'
       paths: []
-      tabWidth: 64
+      tabWidth: 63
       name: StampsSpawnArea
       icon: {fileID: 485006632639120110, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Stam\u2026"
@@ -40205,7 +40207,7 @@ MonoBehaviour:
       owner: {fileID: 0}
     - path: '{"sceneGUID":"3bea51b30b1a74742b70e245c7a07f9c","path":"GachaAnimationCanvas[0]"}'
       paths: []
-      tabWidth: 65
+      tabWidth: 64
       name: GachaAnimationCanvas
       icon: {fileID: 6918890264710435130, guid: 0000000000000000d000000000000000, type: 0}
       shortName: "Gach\u2026"
@@ -40323,6 +40325,8 @@ MonoBehaviour:
     playModeTransforms: []
     historyAssets:
     - assetGUIDs:
+      - 8105016687592461f977c054a80ce2f2
+    - assetGUIDs:
       - e7c0d4a01fadfda4ca0492984cd33e00
     - assetGUIDs:
       - e9cea8eb05b87414d9cc8f7fc8db4ae0
@@ -40342,11 +40346,9 @@ MonoBehaviour:
       - db3860f4120b12c4fb3da57cffbe7cbd
     - assetGUIDs:
       - 7f0f895d20658f142a06dc4fb49dce02
-    - assetGUIDs:
-      - 8f342294dfb958a4694b67859092b749
-    targetObject: {fileID: 11400000, guid: e7c0d4a01fadfda4ca0492984cd33e00, type: 2}
+    targetObject: {fileID: 11400000, guid: 8105016687592461f977c054a80ce2f2, type: 2}
     targetObjects: []
-    lastSelectedAsset: Assets/Celestial-Cross/Data/Units/MagicalGirls/Leidell/Pet/Coelho.asset
+    lastSelectedAsset: Assets/Readme.asset
     lastClickedTab: 108
     previousTab: 0
   - tracker:
@@ -41540,18 +41542,11 @@ MonoBehaviour:
     lastClickedTab: -1
     previousTab: 0
   - tracker:
-      mostClicked:
-      - paths:
-        - '{"sceneGUID":"075238abd19a8d247a9469e90793c27a","path":"StartSceneController[0]"}'
-        count: 1
-        gameObjects:
-        - {fileID: 0}
+      mostClicked: []
       recentlyClicked:
-      - paths:
-        - '{"sceneGUID":"075238abd19a8d247a9469e90793c27a","path":"StartSceneController[0]"}'
+      - paths: []
         count: 1
-        gameObjects:
-        - {fileID: 0}
+        gameObjects: []
       - paths: []
         count: 1
         gameObjects: []
@@ -41583,7 +41578,7 @@ MonoBehaviour:
       recentlyClickedContents: []
     sceneGUID: 075238abd19a8d247a9469e90793c27a
     sceneName: InicialScene
-    lastSaveTimePrint: 10:41 PM (July 7, 2026)
+    lastSaveTimePrint: 10:41 PM (July 26, 2026)
     gracePeriod: 3
     activeIndex: 0
     checkingToLoad: 0
@@ -41597,32 +41592,32 @@ MonoBehaviour:
     scrollPosition: {x: 0, y: 0}
     toolbarScrollPosition: {x: 0, y: 0}
     rawUserHeight: 0
-    lastValidTabWidth: 141
+    lastValidTabWidth: 65
     alreadyCalculatedHeight: 0
     lastKnownHeight: 0
     tabs:
-    - path: '{"sceneGUID":"075238abd19a8d247a9469e90793c27a","path":"StartSceneController[0]"}'
+    - path: 
       paths: []
-      tabWidth: 138
-      name: StartSceneController
-      icon: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
-      shortName: StartSceneController
+      tabWidth: 62
+      name: New Tab
+      icon: {fileID: 0}
+      shortName: New Tab
       filterString: 
-      newTab: 0
+      newTab: 1
       scrollPosition: 0
       isSelected: 0
       allCollapsed: 0
       runtimeFoldouts: 
       runtimeMultiComponents: []
       tabTextContent:
-        m_Text: StartSceneController
+        m_Text: New Tab
         m_Image: {fileID: 0}
         m_Tooltip: 
-        m_TextWithWhitespace: "StartSceneController\u200B"
+        m_TextWithWhitespace: "New Tab\u200B"
       multiEditMode: 0
       locked: 0
       hasPreview: 0
-      previewHeight: 13
+      previewHeight: 150
       debug: 0
       filtering: 0
       prefab: 0
@@ -41657,59 +41652,16 @@ MonoBehaviour:
       savePlayModeTransform: 0
       index: 0
       historyPosition: 0
-      componentMaps:
-      - index: 0
-        component: {fileID: 0}
-        missingComponentID: -1
-        foldout: 0
-        focusAfter: 0
-        awaitingScroll: 0
-        hidden: 0
-        componentName: recttransform
-        niceComponentName: rect transform
-      - index: 0
-        component: {fileID: 0}
-        missingComponentID: -1
-        foldout: 0
-        focusAfter: 0
-        awaitingScroll: 0
-        hidden: 0
-        componentName: canvasrenderer
-        niceComponentName: canvas renderer
-      historyPaths:
-      - paths:
-        - '{"sceneGUID":"075238abd19a8d247a9469e90793c27a","path":"StartSceneController[0]"}'
-        prefab: 0
-      - paths:
-        - '{"sceneGUID":"075238abd19a8d247a9469e90793c27a","path":"Canvas[0]/StartUI_Generated[0]/FloatingLogo[0]"}'
-        prefab: 0
-      - paths:
-        - '{"sceneGUID":"075238abd19a8d247a9469e90793c27a","path":"Canvas[0]/StartUI_Generated[0]/FloatingLogo[0]/FloatingLogo
-          (1)[0]"}'
-        prefab: 0
-      - paths:
-        - '{"sceneGUID":"075238abd19a8d247a9469e90793c27a","path":"Canvas[0]/StartUI_Generated[0]/StartButton[0]/Text[0]"}'
-        prefab: 0
-      - paths:
-        - '{"sceneGUID":"075238abd19a8d247a9469e90793c27a","path":"Canvas[0]/StartUI_Generated[0]/StartButton[0]"}'
-        prefab: 0
-      - paths:
-        - '{"sceneGUID":"075238abd19a8d247a9469e90793c27a","path":"Canvas[0]/StartUI_Generated[0]/Background[0]"}'
-        prefab: 0
-      - paths:
-        - '{"sceneGUID":"075238abd19a8d247a9469e90793c27a","path":"Canvas[0]"}'
-        prefab: 0
-      - paths:
-        - '{"sceneGUID":"075238abd19a8d247a9469e90793c27a","path":"Canvas[0]/StartUI_Generated[0]/Background
-          (1)[0]"}'
-        prefab: 0
-      - paths:
-        - '{"sceneGUID":"075238abd19a8d247a9469e90793c27a","path":"Canvas[0]/StartUI_Generated[0]"}'
-        prefab: 0
+      componentMaps: []
+      historyPaths: []
       owner: {fileID: 0}
     closedTabs: []
     playModeTransforms: []
     historyAssets:
+    - assetGUIDs:
+      - aae55989abe44784197dd80958fdd0f5
+    - assetGUIDs:
+      - 8105016687592461f977c054a80ce2f2
     - assetGUIDs:
       - e7c0d4a01fadfda4ca0492984cd33e00
     - assetGUIDs:
@@ -41725,18 +41677,14 @@ MonoBehaviour:
     - assetGUIDs:
       - 075238abd19a8d247a9469e90793c27a
     - assetGUIDs:
-      - aae55989abe44784197dd80958fdd0f5
-    - assetGUIDs:
       - db3860f4120b12c4fb3da57cffbe7cbd
     - assetGUIDs:
       - 7f0f895d20658f142a06dc4fb49dce02
-    - assetGUIDs:
-      - 8f342294dfb958a4694b67859092b749
-    targetObject: {fileID: 11400000, guid: e7c0d4a01fadfda4ca0492984cd33e00, type: 2}
+    targetObject: {fileID: 102900000, guid: aae55989abe44784197dd80958fdd0f5, type: 3}
     targetObjects: []
-    lastSelectedAsset: Assets/Celestial-Cross/Data/Units/MagicalGirls/Leidell/Pet/Coelho.asset
+    lastSelectedAsset: Assets/Celestial-Cross/Scenes/HubScene.unity
     lastClickedTab: -1
     previousTab: 0
-  tipsShown: 01000000000000000000000000000000000000000000000001000000010000000000000000000000000000000000000000000000010000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000010000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000
+  tipsShown: 01000000000000000100000001000000000000000100000001000000010000000100000001000000000000000100000000000000010000000100000000000000000000000100000001000000000000000100000001000000000000000000000001000000000000000000000001000000010000000100000001000000010000000000000000000000010000000100000001000000010000000000000001000000010000000100000001000000000000000100000001000000
   playModeStartScene: {}
   enteringPlayMode: 0
