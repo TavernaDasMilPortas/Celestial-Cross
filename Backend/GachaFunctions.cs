@@ -19,12 +19,14 @@ namespace CelestialCross.Backend
     {
         private readonly ILogger _logger;
         private readonly ILoggerFactory _loggerFactory;
+        private readonly PlayFabServerInstanceAPI _serverApi;
         private static readonly Random rng = new Random();
 
-        public GachaFunctions(ILoggerFactory loggerFactory)
+        public GachaFunctions(ILoggerFactory loggerFactory, PlayFabServerInstanceAPI serverApi)
         {
             _loggerFactory = loggerFactory;
             _logger = loggerFactory.CreateLogger<GachaFunctions>();
+            _serverApi = serverApi;
             GameDataService.Initialize();
         }
 
@@ -168,10 +170,8 @@ namespace CelestialCross.Backend
         {
             _logger.LogInformation("ExecuteGacha function triggered.");
 
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic context = JsonConvert.DeserializeObject(requestBody);
+            var (playFabId, context, _) = await AuthHelper.GetContextAsync(req);
             
-            string playFabId = context?.CallerEntityProfile?.Lineage?.MasterPlayerAccountId;
             if (string.IsNullOrEmpty(playFabId))
             {
                 var badResp = req.CreateResponse(HttpStatusCode.BadRequest);
@@ -192,15 +192,8 @@ namespace CelestialCross.Backend
             }
 
             // 1. Fetch Account Data from PlayFab
-            var apiSettings = new PlayFabApiSettings
-            {
-                TitleId = Environment.GetEnvironmentVariable("PLAYFAB_TITLE_ID") ?? "SEU_TITLE_ID",
-                DeveloperSecretKey = Environment.GetEnvironmentVariable("PLAYFAB_DEV_SECRET_KEY") ?? "SUA_SECRET_KEY"
-            };
-            var serverApi = new PlayFabServerInstanceAPI(apiSettings);
-
             var getDataRequest = new GetUserDataRequest { PlayFabId = playFabId, Keys = new List<string> { "AccountData" } };
-            var dataResult = await serverApi.GetUserDataAsync(getDataRequest);
+            var dataResult = await _serverApi.GetUserDataAsync(getDataRequest);
             if (dataResult.Error != null)
             {
                 var badResp = req.CreateResponse(HttpStatusCode.BadRequest);
@@ -320,7 +313,7 @@ namespace CelestialCross.Backend
                 Data = new Dictionary<string, string> { { "AccountData", JsonConvert.SerializeObject(accountData) } }
             };
 
-            var updateResult = await serverApi.UpdateUserDataAsync(updateDataRequest);
+            var updateResult = await _serverApi.UpdateUserDataAsync(updateDataRequest);
             if (updateResult.Error != null)
             {
                 var badResp = req.CreateResponse(HttpStatusCode.BadRequest);

@@ -89,6 +89,7 @@ namespace CelestialCross.Gacha.UI
         private GameObject currentSelectedStamp;
         private Tween currentStampTween;
         private bool sequenceFinished = false;
+        private bool wasPreparedForLoading = false;
 
         private Vector2[] constellationPositions = new Vector2[]
         {
@@ -113,6 +114,38 @@ namespace CelestialCross.Gacha.UI
             _masterSequence?.Kill();
         }
 
+        public void PrepareAndShowLoading()
+        {
+            wasPreparedForLoading = true;
+            gameObject.SetActive(true);
+            
+            if (btnContinue) btnContinue.gameObject.SetActive(false);
+            if (btnSkip) btnSkip.gameObject.SetActive(false);
+            
+            if (backgroundPanel) 
+            {
+                backgroundPanel.SetActive(true);
+                var cg = backgroundPanel.GetComponent<CanvasGroup>();
+                if (!cg) cg = backgroundPanel.AddComponent<CanvasGroup>();
+                
+                cg.DOFade(1f, backgroundFadeInDuration).From(0f).SetEase(Ease.OutCubic);
+                backgroundPanel.transform.DOScale(1f, backgroundFadeInDuration).From(Vector3.one * 1.05f).SetEase(Ease.OutCubic);
+            }
+
+            if (whiteFlashPanel) { whiteFlashPanel.alpha = 0; whiteFlashPanel.gameObject.SetActive(false); }
+            if (stickerSpawnArea) stickerSpawnArea.gameObject.SetActive(false);
+            if (stampsSpawnArea) stampsSpawnArea.gameObject.SetActive(false); 
+            if (objectToActivateAfterFlash) objectToActivateAfterFlash.SetActive(false);
+            if (supremeRevealContainer) 
+            {
+                supremeRevealContainer.gameObject.SetActive(false);
+                var cg = supremeRevealContainer.GetComponent<CanvasGroup>();
+                if (cg) cg.alpha = 0f;
+            }
+            
+            ClearBoard();
+        }
+
         public void PlayGachaSequence(List<RuntimeGachaResult> results, CelestialCross.Data.BannerPullVisualConfigSO bannerConfig, global::System.Action onFinished)
         {
             this.currentResults = results;
@@ -132,7 +165,7 @@ namespace CelestialCross.Gacha.UI
             if (btnContinue) btnContinue.gameObject.SetActive(false);
             if (btnSkip) btnSkip.gameObject.SetActive(true);
             
-            if (backgroundPanel) 
+            if (backgroundPanel && !wasPreparedForLoading) 
             {
                 backgroundPanel.SetActive(true);
                 var cg = backgroundPanel.GetComponent<CanvasGroup>();
@@ -145,14 +178,17 @@ namespace CelestialCross.Gacha.UI
             if (stampsSpawnArea) stampsSpawnArea.gameObject.SetActive(true); 
             if (objectToActivateAfterFlash) objectToActivateAfterFlash.SetActive(false);
             
-            if (supremeRevealContainer) 
+            if (!wasPreparedForLoading)
             {
-                supremeRevealContainer.gameObject.SetActive(false);
-                var cg = supremeRevealContainer.GetComponent<CanvasGroup>();
-                if (cg) cg.alpha = 0f;
-            }
+                if (supremeRevealContainer) 
+                {
+                    supremeRevealContainer.gameObject.SetActive(false);
+                    var cg = supremeRevealContainer.GetComponent<CanvasGroup>();
+                    if (cg) cg.alpha = 0f;
+                }
 
-            ClearBoard();
+                ClearBoard();
+            }
             PlayFullSequenceDOTween();
         }
 
@@ -163,8 +199,13 @@ namespace CelestialCross.Gacha.UI
                 .SetRecyclable(true)
                 .SetAutoKill(true);
 
-            BuildPhase0_BackgroundFadeIn(_masterSequence);
+            if (!wasPreparedForLoading)
+            {
+                BuildPhase0_BackgroundFadeIn(_masterSequence);
+            }
             BuildPhase1_Constellation(_masterSequence);
+            
+            wasPreparedForLoading = false; // reset for next pulls
             
             bool hasSupreme = currentResults.Any(r => r.Entry.Rarity == GachaRarity.Supreme);
             

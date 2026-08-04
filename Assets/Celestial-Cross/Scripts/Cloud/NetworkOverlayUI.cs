@@ -130,7 +130,7 @@ namespace CelestialCross.Cloud
         private IEnumerator RotateSpinnerRoutine()
         {
             float angle = 0f;
-            while (overlayContainer.activeSelf && spinnerImage != null)
+            while (overlayContainer != null && overlayContainer.activeSelf && spinnerImage != null)
             {
                 angle -= Time.unscaledDeltaTime * 360f; // 1 rotação por segundo
                 angle %= 360f;

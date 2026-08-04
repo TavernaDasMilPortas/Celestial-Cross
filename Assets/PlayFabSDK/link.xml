@@ -1,4 +1,9 @@
 <linker>
+  <!-- Preservar o assembly do PlayFab inteiro para evitar NullReferenceException 
+       no PocoJsonSerializerStrategy durante deserialização via reflection no IL2CPP -->
+  <assembly fullname="PlayFab" preserve="all"/>
+
+  <!-- Namespaces do System necessários para networking e serialização -->
   <assembly fullname="System">
     <namespace fullname="System.Net" preserve="all"/>
     <namespace fullname="System.Net.Configuration" preserve="all"/>
@@ -14,8 +19,5 @@
   <assembly fullname="Mono.Security">
     <namespace fullname="Mono.Security.Protocol.Tls" preserve="all"/>
     <namespace fullname="Mono.Security.X509" preserve="all"/>
-  </assembly>
-  <assembly fullname="Assembly-CSharp">
-    <namespace fullname="PlayFab.*" preserve="all"/>
   </assembly>
 </linker>

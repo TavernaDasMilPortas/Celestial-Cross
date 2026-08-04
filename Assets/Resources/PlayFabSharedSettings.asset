@@ -18,7 +18,7 @@ MonoBehaviour:
   RequestType: 0
   DisableDeviceInfo: 0
   DisableFocusTimeCollection: 0
-  RequestTimeout: 2000
+  RequestTimeout: 10000
   RequestKeepAlive: 1
   CompressResponses: 0
   DecompressWithDownloadHandler: 1

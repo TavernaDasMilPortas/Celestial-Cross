@@ -34,6 +34,12 @@ public class UserProfile
     public string ProfileIconID = "default";
     public int Level = 1;
     public int Experience = 0;
+    
+    // Social / Public
+    public string FriendCode = "";
+    public string GuildTag = "";
+    public string GuildName = "";
+    public string LastOnlineUTC = "";
 }
 
 [System.Serializable]

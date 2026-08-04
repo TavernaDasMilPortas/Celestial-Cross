@@ -6,6 +6,24 @@ using System.Linq;
 using System.Threading.Tasks;
 using CelestialCross.Storage;
 using CelestialCross.Authentication;
+using CelestialCross.Cloud;
+
+[System.Serializable]
+public class BootstrapDataResponse
+{
+    public bool Success;
+    public string FriendCode;
+    public ServerEconomyData Economy;
+    public string ServerTime;
+}
+
+[System.Serializable]
+public class ServerEconomyData
+{
+    public int Money;
+    public int StarMaps;
+    public int Stardust;
+}
 
 public class AccountManager : MonoBehaviour
 {
@@ -78,19 +96,28 @@ public class AccountManager : MonoBehaviour
 
     private async void Start()
     {
-        Debug.Log($"[AccountManager] Start chamado. useCloudSave: {useCloudSave}, useDebugProfile: {useDebugProfile}");
-        if (useCloudSave)
+        try
         {
-            if (CelestialCross.Authentication.PlayFabAuthManager.Instance == null)
+            Debug.Log($"[AccountManager] Start chamado. useCloudSave: {useCloudSave}, useDebugProfile: {useDebugProfile}");
+            if (useCloudSave)
             {
-                Debug.LogError("[AccountManager] PlayFabAuthManager not found in scene!");
-                return;
-            }
+                if (CelestialCross.Authentication.PlayFabAuthManager.Instance == null)
+                {
+                    Debug.LogError("[AccountManager] PlayFabAuthManager not found in scene!");
+                    return;
+                }
 
-            Debug.Log("[AccountManager] Iniciando login na nuvem...");
-            await CelestialCross.Authentication.PlayFabAuthManager.Instance.InitializeAndSignInAsync();
+                Debug.Log("[AccountManager] Iniciando login na nuvem...");
+                await CelestialCross.Authentication.PlayFabAuthManager.Instance.InitializeAndSignInAsync();
+            }
+            await LoadAndSyncAccountAsync();
         }
-        await LoadAndSyncAccountAsync();
+        catch (Exception ex)
+        {
+            Debug.LogError($"[AccountManager] Erro no Start (possivelmente sem internet): {ex.Message}");
+            // Fallback para carregar a conta local se a nuvem falhar
+            await LoadAndSyncAccountAsync();
+        }
     }
 
     public async Task LoadAndSyncAccountAsync()
@@ -153,7 +180,52 @@ public class AccountManager : MonoBehaviour
         }
 
         PlayerAccount?.EnsureInitialized();
+
+        if (useCloudSave && CelestialCross.Authentication.PlayFabAuthManager.Instance != null && CelestialCross.Authentication.PlayFabAuthManager.Instance.IsSignedIn)
+        {
+            // Substitui InitializeAccount e GetPlayerEconomy por uma única chamada de Bootstrap
+            var bootstrapResp = await PlayFabCloudFunctionCaller.ExecuteFunctionAsync<BootstrapDataResponse>("GetBootstrapData", new { });
+            if (bootstrapResp != null && bootstrapResp.Success)
+            {
+                if (!string.IsNullOrEmpty(bootstrapResp.FriendCode))
+                {
+                    PlayerAccount.Profile.FriendCode = bootstrapResp.FriendCode;
+                }
+
+                if (bootstrapResp.Economy != null)
+                {
+                    PlayerAccount.Money = bootstrapResp.Economy.Money;
+                    PlayerAccount.StarMaps = bootstrapResp.Economy.StarMaps;
+                    PlayerAccount.Stardust = bootstrapResp.Economy.Stardust;
+                }
+                
+                if (!string.IsNullOrEmpty(bootstrapResp.ServerTime))
+                {
+                    if (PlayerAccount.EnergyInfo == null)
+                    {
+                        PlayerAccount.EnergyInfo = new CelestialCross.Data.Energy.EnergyData();
+                    }
+                    PlayerAccount.EnergyInfo.LastServerTimestampUTC = bootstrapResp.ServerTime;
+                }
+            }
+        }
+
         Debug.Log($"[AccountManager] Conta carregada: {PlayerAccount.Money} Money, {PlayerAccount.Energy} Energy, {PlayerAccount.OwnedUnitIDs?.Count} Units, {PlayerAccount.OwnedRuntimePets?.Count} Pets, {PlayerAccount.OwnedArtifacts?.Count} Artifacts.");
+        
+        // Fase 3: Conectar ao Chat automaticamente usando os dados carregados
+        if (CelestialCross.Social.ChatManager.Instance != null && CelestialCross.Authentication.PlayFabAuthManager.Instance != null && CelestialCross.Authentication.PlayFabAuthManager.Instance.IsSignedIn)
+        {
+            string playFabId = CelestialCross.Authentication.PlayFabAuthManager.Instance.PlayFabId;
+            string playerName = PlayerAccount.Profile.PlayerName;
+            
+            if (string.Equals(playerName, "Viajante", StringComparison.OrdinalIgnoreCase) && !string.IsNullOrEmpty(PlayerAccount.Profile.FriendCode))
+            {
+                playerName = $"viajante({PlayerAccount.Profile.FriendCode})";
+            }
+            
+            CelestialCross.Social.ChatManager.Instance.ConnectToChat(playFabId, playerName);
+        }
+
         // Sincroniza local se viemos da nuvem ou vice-versa
         await SaveAccountAsync();
         Debug.Log("[AccountManager] Sincronização concluída. Disparando OnAccountReady...");
@@ -282,6 +354,9 @@ public class AccountManager : MonoBehaviour
         // Salva na nuvem se habilitado
         if (useCloudSave && CelestialCross.Authentication.PlayFabAuthManager.Instance != null && CelestialCross.Authentication.PlayFabAuthManager.Instance.IsSignedIn)
         {
+            // FASE 2: Não salvamos mais a economia inteira via client. O servidor tem a fonte de verdade para Economy (UserInternalData).
+            // O json que enviamos tem Money, StarMaps e Stardust, mas eles são apenas para backup local ou debug.
+            // Para transações reais, chamamos Azure Functions (SpendCurrency).
             await _cloudProvider.SaveAsync(accountKey, json);
         }
 
@@ -289,6 +364,41 @@ public class AccountManager : MonoBehaviour
     }
 
     public void SaveAccount() => _ = SaveAccountAsync();
+
+    // --- MÉTODOS DE ECONOMIA (Fase 2) ---
+    public async Task<bool> SpendCurrencyAsync(string currencyType, int amount)
+    {
+        if (amount <= 0) return false;
+
+        if (useCloudSave && CelestialCross.Authentication.PlayFabAuthManager.Instance != null && CelestialCross.Authentication.PlayFabAuthManager.Instance.IsSignedIn)
+        {
+            var req = new { CurrencyType = currencyType, Amount = amount };
+            var resp = await PlayFabCloudFunctionCaller.ExecuteFunctionAsync<BootstrapDataResponse>("SpendCurrency", req);
+            
+            if (resp != null && resp.Success && resp.Economy != null)
+            {
+                // Sincroniza localmente com o novo saldo do servidor
+                PlayerAccount.Money = resp.Economy.Money;
+                PlayerAccount.StarMaps = resp.Economy.StarMaps;
+                PlayerAccount.Stardust = resp.Economy.Stardust;
+                SaveAccount();
+                return true;
+            }
+            else
+            {
+                Debug.LogWarning($"[AccountManager] Falha ao gastar {amount} de {currencyType} no servidor.");
+                return false;
+            }
+        }
+        else
+        {
+            // Fallback para offline / local save
+            if (currencyType == "Money" && PlayerAccount.Money >= amount) { PlayerAccount.Money -= amount; SaveAccount(); return true; }
+            if (currencyType == "StarMaps" && PlayerAccount.StarMaps >= amount) { PlayerAccount.StarMaps -= amount; SaveAccount(); return true; }
+            if (currencyType == "Stardust" && PlayerAccount.Stardust >= amount) { PlayerAccount.Stardust -= amount; SaveAccount(); return true; }
+            return false;
+        }
+    }
 
     public void ApplyRewards(CelestialCross.Data.Dungeon.RuntimeReward reward)
     {

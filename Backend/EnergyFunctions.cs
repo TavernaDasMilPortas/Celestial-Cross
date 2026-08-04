@@ -15,10 +15,12 @@ namespace CelestialCross.Backend
     public class EnergyFunctions
     {
         private readonly ILogger _logger;
+        private readonly PlayFabServerInstanceAPI _serverApi;
 
-        public EnergyFunctions(ILoggerFactory loggerFactory)
+        public EnergyFunctions(ILoggerFactory loggerFactory, PlayFabServerInstanceAPI serverApi)
         {
             _logger = loggerFactory.CreateLogger<EnergyFunctions>();
+            _serverApi = serverApi;
         }
 
         [Function("GetServerTime")]
@@ -49,10 +51,8 @@ namespace CelestialCross.Backend
         {
             _logger.LogInformation("ConsumeEnergy: Processando requisição...");
 
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic context = JsonConvert.DeserializeObject(requestBody);
+            var (playFabId, context, _) = await AuthHelper.GetContextAsync(req);
             
-            string playFabId = context?.CallerEntityProfile?.Lineage?.MasterPlayerAccountId;
             if (string.IsNullOrEmpty(playFabId))
             {
                 var badResp = req.CreateResponse(HttpStatusCode.BadRequest);
@@ -74,20 +74,13 @@ namespace CelestialCross.Backend
                 return badResp;
             }
 
-            var apiSettings = new PlayFabApiSettings
-            {
-                TitleId = Environment.GetEnvironmentVariable("PLAYFAB_TITLE_ID") ?? "SEU_TITLE_ID",
-                DeveloperSecretKey = Environment.GetEnvironmentVariable("PLAYFAB_DEV_SECRET_KEY") ?? "SUA_SECRET_KEY"
-            };
-            var serverApi = new PlayFabServerInstanceAPI(apiSettings);
-
             var getDataRequest = new GetUserDataRequest
             {
                 PlayFabId = playFabId,
                 Keys = new List<string> { "EnergyData" }
             };
 
-            var dataResult = await serverApi.GetUserDataAsync(getDataRequest);
+            var dataResult = await _serverApi.GetUserDataAsync(getDataRequest);
             if (dataResult.Error != null)
             {
                 var badResp = req.CreateResponse(HttpStatusCode.BadRequest);
@@ -133,7 +126,7 @@ namespace CelestialCross.Backend
                 }
             };
 
-            var updateResult = await serverApi.UpdateUserDataAsync(updateDataRequest);
+            var updateResult = await _serverApi.UpdateUserDataAsync(updateDataRequest);
             if (updateResult.Error != null)
             {
                 var badResp = req.CreateResponse(HttpStatusCode.BadRequest);

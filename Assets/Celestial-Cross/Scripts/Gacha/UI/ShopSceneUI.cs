@@ -356,32 +356,66 @@ namespace CelestialCross.Gacha.UI
             if (availableBanners == null || availableBanners.Count == 0) return;
             var banner = availableBanners[currentBannerIndex];
             
+            // 1. Esconde a UI da loja e desativa os botões para evitar duplo clique
+            if (btnPull1 != null) btnPull1.interactable = false;
+            if (btnPull10 != null) btnPull10.interactable = false;
+            
+            if (contentBanners != null) contentBanners.SetActive(false);
+            if (active_tab_root != null) active_tab_root.gameObject.SetActive(false);
+            if (inactive_tab_root != null) inactive_tab_root.gameObject.SetActive(false);
+
+            // 2. Mostra o fundo estrelado imediatamente (Feedback instantâneo!)
+            if (animationController != null)
+            {
+                animationController.PrepareAndShowLoading();
+            }
+            
             var acc = AccountManager.Instance.PlayerAccount;
+            
+            // 3. Aguarda a requisição do servidor (isso causa a sensação de 'travamento' antes, agora escondida pelo fundo estrelado)
             var results = await GachaService.Instance.PerformPullsAsync(acc, banner, times);
 
             if (results != null && results.Count > 0)
             {
-                if (btnPull1 != null) btnPull1.interactable = false;
-                if (btnPull10 != null) btnPull10.interactable = false;
-
                 if (animationController != null)
                 {
+                    // 4. O servidor respondeu! Agora permite pular e começa a constelação
+                    if (animationController.btnSkip != null)
+                        animationController.btnSkip.gameObject.SetActive(true);
+                        
                     animationController.PlayGachaSequence(results, banner.pullVisualConfig, () => OnAnimationFinished(results));
                 }
                 else
                 {
-                    // Fallback se não tiver gacha controller
                     OnAnimationFinished(results);
                 }
             }
             else
             {
+                // Erro ou falha na requisição, restaura a UI
+                if (animationController != null) animationController.gameObject.SetActive(false);
+                if (contentBanners != null) contentBanners.SetActive(true);
+                if (active_tab_root != null) active_tab_root.gameObject.SetActive(true);
+                if (inactive_tab_root != null) inactive_tab_root.gameObject.SetActive(true);
                 RefreshUI();
+
+                // Mostra um aviso visual na própria UI
+                if (bannerTitle != null)
+                {
+                    bannerTitle.text = "<color=red>Falha de Conexão!</color>";
+                    bannerTitle.transform.DOPunchScale(Vector3.one * 0.2f, 0.5f, 5);
+                    DOVirtual.DelayedCall(3f, () => {
+                        if (this != null && this.gameObject.activeInHierarchy) RefreshUI();
+                    });
+                }
             }
         }
 
         private void OnAnimationFinished(List<RuntimeGachaResult> results)
         {
+            if (contentBanners != null) contentBanners.SetActive(true);
+            if (active_tab_root != null) active_tab_root.gameObject.SetActive(true);
+            if (inactive_tab_root != null) inactive_tab_root.gameObject.SetActive(true);
             RefreshUI();
         }
 

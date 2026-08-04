@@ -149,10 +149,8 @@ namespace CelestialCross.Backend
         {
             _logger.LogInformation("GenerateArtifact function triggered.");
 
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic context = JsonConvert.DeserializeObject(requestBody);
+            var (playFabId, context, _) = await AuthHelper.GetContextAsync(req);
             
-            string playFabId = context?.CallerEntityProfile?.Lineage?.MasterPlayerAccountId;
             if (string.IsNullOrEmpty(playFabId))
             {
                 var badResp = req.CreateResponse(HttpStatusCode.BadRequest);
@@ -160,7 +158,7 @@ namespace CelestialCross.Backend
                 return badResp;
             }
 
-            var args = context?.FunctionArgument;
+            var args = context["FunctionArgument"];
             if (args == null)
             {
                 var badResp = req.CreateResponse(HttpStatusCode.BadRequest);
@@ -168,9 +166,42 @@ namespace CelestialCross.Backend
                 return badResp;
             }
 
-            string setId = args.ArtifactSetId ?? "Set_Gladiator";
-            int rarity = (int)(args.Rarity ?? 2);
-            int stars = (int)(args.Stars ?? 3);
+            string setId = args["SetID"]?.ToString() ?? args["ArtifactSetId"]?.ToString() ?? "Set_Gladiator";
+            
+            int rarity = 0;
+            if (args["Rarity"] != null)
+            {
+                if (args["Rarity"].Type == Newtonsoft.Json.Linq.JTokenType.Integer)
+                    rarity = args["Rarity"].ToObject<int>();
+                else if (args["Rarity"].Type == Newtonsoft.Json.Linq.JTokenType.String)
+                {
+                    string rStr = args["Rarity"].ToString();
+                    if (rStr == "Common") rarity = 0;
+                    else if (rStr == "Uncommon") rarity = 1;
+                    else if (rStr == "Rare") rarity = 2;
+                    else if (rStr == "Epic") rarity = 3;
+                    else if (rStr == "Legendary") rarity = 4;
+                    else int.TryParse(rStr, out rarity);
+                }
+            }
+
+            int stars = 1;
+            if (args["Stars"] != null)
+            {
+                if (args["Stars"].Type == Newtonsoft.Json.Linq.JTokenType.Integer)
+                    stars = args["Stars"].ToObject<int>();
+                else if (args["Stars"].Type == Newtonsoft.Json.Linq.JTokenType.String)
+                {
+                    string sStr = args["Stars"].ToString();
+                    if (sStr == "One") stars = 1;
+                    else if (sStr == "Two") stars = 2;
+                    else if (sStr == "Three") stars = 3;
+                    else if (sStr == "Four") stars = 4;
+                    else if (sStr == "Five") stars = 5;
+                    else if (sStr == "Six") stars = 6;
+                    else int.TryParse(sStr, out stars);
+                }
+            }
 
             try
             {

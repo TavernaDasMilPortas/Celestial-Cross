@@ -77,19 +77,16 @@ namespace CelestialCross.System
             
             var activeConfig = GetActiveConfig();
 
-            // Pega a hora do servidor na nuvem
-            // Como é um stub, se retornar null usaremos UtcNow local como fallback.
             DateTime serverTime = DateTime.UtcNow;
-            try
+            
+            // O AccountManager (GetBootstrapData) já populou a hora do servidor no EnergyInfo
+            if (account.EnergyInfo != null && !string.IsNullOrEmpty(account.EnergyInfo.LastServerTimestampUTC))
             {
-                // Note: o servidor retorna uma string ISO 8601 ou objeto com a hora
-                var serverTimeResponse = await NetworkGuard.Instance.ExecuteWithGuardAsync<string>("GetServerTime", null, showOverlayOnWait: true);
-                if (!string.IsNullOrEmpty(serverTimeResponse) && DateTime.TryParse(serverTimeResponse, out DateTime parsedTime))
+                if (DateTime.TryParse(account.EnergyInfo.LastServerTimestampUTC, out DateTime parsedTime))
                 {
                     serverTime = parsedTime.ToUniversalTime();
                 }
             }
-            catch (Exception) { /* Ignora e usa fallback */ }
 
             if (account.EnergyInfo == null)
             {

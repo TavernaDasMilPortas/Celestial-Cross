@@ -81,10 +81,8 @@ namespace CelestialCross.Backend
         {
             _logger.LogInformation("GeneratePet function triggered.");
 
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic context = JsonConvert.DeserializeObject(requestBody);
+            var (playFabId, context, _) = await AuthHelper.GetContextAsync(req);
             
-            string playFabId = context?.CallerEntityProfile?.Lineage?.MasterPlayerAccountId;
             if (string.IsNullOrEmpty(playFabId))
             {
                 var badResp = req.CreateResponse(HttpStatusCode.BadRequest);
