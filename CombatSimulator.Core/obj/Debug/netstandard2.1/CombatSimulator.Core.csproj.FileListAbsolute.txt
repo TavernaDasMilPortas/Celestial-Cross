@@ -1,0 +1,11 @@
+C:\Users\Rubens\Bichinhos-Magicos\CombatSimulator.Core\bin\Debug\netstandard2.1\CombatSimulator.Core.deps.json
+C:\Users\Rubens\Bichinhos-Magicos\CombatSimulator.Core\bin\Debug\netstandard2.1\CombatSimulator.Core.dll
+C:\Users\Rubens\Bichinhos-Magicos\CombatSimulator.Core\bin\Debug\netstandard2.1\CombatSimulator.Core.pdb
+C:\Users\Rubens\Bichinhos-Magicos\CombatSimulator.Core\obj\Debug\netstandard2.1\CombatSimulator.Core.csproj.AssemblyReference.cache
+C:\Users\Rubens\Bichinhos-Magicos\CombatSimulator.Core\obj\Debug\netstandard2.1\CombatSimulator.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Rubens\Bichinhos-Magicos\CombatSimulator.Core\obj\Debug\netstandard2.1\CombatSimulator.Core.AssemblyInfoInputs.cache
+C:\Users\Rubens\Bichinhos-Magicos\CombatSimulator.Core\obj\Debug\netstandard2.1\CombatSimulator.Core.AssemblyInfo.cs
+C:\Users\Rubens\Bichinhos-Magicos\CombatSimulator.Core\obj\Debug\netstandard2.1\CombatSimulator.Core.csproj.CoreCompileInputs.cache
+C:\Users\Rubens\Bichinhos-Magicos\CombatSimulator.Core\obj\Debug\netstandard2.1\CombatSimulator.Core.sourcelink.json
+C:\Users\Rubens\Bichinhos-Magicos\CombatSimulator.Core\obj\Debug\netstandard2.1\CombatSimulator.Core.dll
+C:\Users\Rubens\Bichinhos-Magicos\CombatSimulator.Core\obj\Debug\netstandard2.1\CombatSimulator.Core.pdb
